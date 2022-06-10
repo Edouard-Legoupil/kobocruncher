@@ -24,7 +24,7 @@ plot_text(
 Plotting Open Text variables
 }
 \examples{
-plot_text(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.occupation")
 }

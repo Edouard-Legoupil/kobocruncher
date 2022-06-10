@@ -15,6 +15,6 @@ label_choiceset(xlsformpath, x)
 Get all the choices labels options for a specific variable
 }
 \examples{
-label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
                 x="profile.country")
 }

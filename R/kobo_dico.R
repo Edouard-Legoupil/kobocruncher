@@ -5,7 +5,7 @@
 #' @export
 
 #' @examples
-#' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR") )
+#' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' # Survey
 #' questions <- as.data.frame(dico[1])
 #' knitr::kable(head(questions, 10))

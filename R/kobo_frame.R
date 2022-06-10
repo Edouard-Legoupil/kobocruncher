@@ -7,8 +7,8 @@
 #' @export
 
 #' @examples
-#' data <- kobo_frame(datapath = system.file("data.xlsx", package = "koboloadeR"),
-#'                    xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"),
+#' data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
+#'                    xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
 #'                    var = "members.sex"   )
 #' knitr::kable(head(data,5))
 #'  

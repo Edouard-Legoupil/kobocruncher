@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_select_multiple_cross.R
 \name{plot_select_multiple_cross}
 \alias{plot_select_multiple_cross}
-\title{Plotting Select multiple variable}
+\title{Plotting Select multiple variable with cross tabulation on a second categorical variable}
 \usage{
 plot_select_multiple_cross(
   datapath = datapath,
@@ -24,11 +24,11 @@ plot_select_multiple_cross(
 \item{showcode}{display the code}
 }
 \description{
-Plotting Select multiple variable
+Plotting Select multiple variable with cross tabulation on a second categorical variable
 }
 \examples{
-plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.reason",
               crosstab = "location")
 }

@@ -32,8 +32,8 @@ and `system.file()` to read it in your examples.
 pkgload::load_all(path = here::here(), export_all = FALSE)
 
 # You will be able to read your example data file in each of your function examples and tests as follows
-datapath <- system.file("data.xlsx", package = "koboloadeR")
-form <- system.file("sample_xlsform.xlsx", package = "koboloadeR") 
+datapath <- system.file("data.xlsx", package = "kobocruncher")
+form <- system.file("sample_xlsform.xlsx", package = "kobocruncher") 
  
 ```
 
@@ -58,7 +58,7 @@ kobo_data <- function(datapath) {
 
 
 ```{r examples-kobo_data}
-datalist <- kobo_data(datapath = system.file("data.xlsx", package = "koboloadeR") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # MainFrame
 datalist[1]
 # Second Frame
@@ -195,7 +195,7 @@ kobo_dico <- function(xlsformpath) {
 
 
 ```{r examples-kobo_dico}
-dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR") )
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # Survey
 questions <- as.data.frame(dico[1])
 knitr::kable(head(questions, 10))
@@ -251,8 +251,8 @@ kobo_frame <- function(datapath,
 
 
 ```{r examples-kobo_frame}
-data <- kobo_frame(datapath = system.file("data.xlsx", package = "koboloadeR"),
-                   xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"),
+data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
+                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
                    var = "members.sex"   )
 knitr::kable(head(data,5))
  
@@ -283,7 +283,7 @@ label_varname <- function(xlsformpath, x) {
 
 ```{r examples-label_varname}
 
-label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               x ="profile.country")
 
 ```
@@ -312,7 +312,7 @@ label_varhint <- function(xlsformpath, x) {
 ```
 
 ```{r examples-label_varhint}
-label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               x ="profile.country")
 ```
 
@@ -345,7 +345,7 @@ label_choiceset <- function(xlsformpath,
 ```
 
 ```{r examples-label_choiceset}
-label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
                 x="profile.country")
 ```
 
@@ -377,7 +377,7 @@ label_choice <- function(xlsformpath, x ) {
 ```
 
 ```{r examples-label_choice}
-label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               x = "profile.country")
 
 ```
@@ -502,8 +502,8 @@ plot_select_one <- function(datapath  ,
 ```
 
 ```{r examples-plot_select_one}
-plot_select_one(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.country")
 ```
 
@@ -517,7 +517,7 @@ plot_select_one(datapath = system.file("data.xlsx", package = "koboloadeR"),
 # Plotting Select one variable with Crosstabulation
 
 ```{r function-plot_select_one_cross}
-#' @title Plotting Select one variable
+#' @title Plotting Select one variable with cross tabulation on a second categorical variable
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
 #' @param xlsformpath path to the xlsform file used to cole
 #' @param var name of the variable to display
@@ -631,8 +631,8 @@ plot_select_one_cross <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_select_one_cross}
-plot_select_one_cross(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_select_one_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.country",
               crosstab = "profile.occupation"
               )
@@ -760,8 +760,8 @@ plot_select_multiple <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_select_multiple}
-plot_select_multiple(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.reason"
             )
 ```
@@ -777,7 +777,7 @@ plot_select_multiple(datapath = system.file("data.xlsx", package = "koboloadeR")
 # Plotting Select multiple variable with cross-tabulation
 
 ```{r function-plot_select_multiple_cross}
-#' @title Plotting Select multiple variable
+#' @title Plotting Select multiple variable with cross tabulation on a second categorical variable
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
 #' @param xlsformpath path to the xlsform file used to cole
 #' @param var name of the variable to display
@@ -890,8 +890,8 @@ plot_select_multiple_cross <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_select_multiple_cross}
-plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.reason",
               crosstab = "location")
 ```
@@ -973,8 +973,8 @@ plot_integer <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_integer}
-plot_integer(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_integer(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "members.age")
 ```
 
@@ -1104,8 +1104,8 @@ plot_text <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_text}
-plot_text(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.occupation")
 ```
 
@@ -1137,7 +1137,7 @@ output_header <- function(xlsformpath = xlsformpath,
   title <- if(is.na(label)) glue::glue("({var})") else label
   # Join multiple strings into a single string.
   cat("---\n")
-  hdr <- stringr::str_c(strrep("# ", 1+lvl), title, sep = "   ")
+  hdr <- stringr::str_c(strrep("# ", 1+lvl), title, sep = "")
   cat("\n\n")
   cat("\n")
   cat(hdr)
@@ -1147,7 +1147,7 @@ output_header <- function(xlsformpath = xlsformpath,
 ```
 
 ```{r examples-output_header}
-output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile")
 ```
 
@@ -1199,8 +1199,8 @@ kobo_cruncher <- function(datapath = datapath,
 ```
 
 ```{r examples-kobo_cruncher}
-kobo_cruncher(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+kobo_cruncher(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               type = "select_one", 
               name = "profile.country",
               showcode = TRUE)
@@ -1217,14 +1217,13 @@ kobo_cruncher(datapath = system.file("data.xlsx", package = "koboloadeR"),
 
 
 ```{r function-template_exploration}
-#' Convert to UNHCR branded HTML website
-#'
-#' Format for converting from R Markdown to an UNHCR branded HTML website
+#' Initial Template for Automatic Data Exploration
 #'
 #' @importFrom unhcrdesign use_unhcr_bslib
 #' @rdname template_exploration
 #'
 #' @param ... extra parameters to pass to `rmarkdown::html_document`
+#' 
 #' @return An html report
 #'
 #' @export
@@ -1242,20 +1241,21 @@ template_exploration <- function(...) {
 # Report Template 2 for Joint Data Interpretation Session
 
 ```{r function-template_interpretation}
-#' Convert to UNHCR branded Powerpoint presentation
-#'
-#' Format for converting from R Markdown to an UNHCR branded Powerpoint presentation
+#' Second Template to prepare a presentation for the Joint Data Interpretation Session
+#' 
+#' See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305  
 #'
 #' @rdname template_interpretation
 #'
 #' @param ... extra parameters to pass to `officedown::rpptx_document`
+#' 
 #' @return A powerpoint report
 #'
 #' @export
 
 template_interpretation <- function(...) {
 
-  pptx_template <- pkg_resource("templates/pptx_template.pptx")
+  pptx_template <- pkg_resource("templates/pptx_template.pptx", package = "kobocruncher")
 
   officedown::rpptx_document(
     reference_doc = pptx_template,
@@ -1273,6 +1273,7 @@ template_interpretation <- function(...) {
 #' @param other_css Add extra css
 #' @param number_sections Number section headings
 #' @param ... Arguments passed to pagedown::html_paged
+#' 
 #' @rdname template_dissemination
 #'
 #' @return A pagedown report
@@ -1293,13 +1294,13 @@ template_dissemination <- function(back_html = TRUE,
   file.append(base_css, logo_css)
 
   # specific css files
-  paged_base_css <- pkg_resource("css/paged_base.css")
-  paged_simple_css <- pkg_resource("css/paged_simple.css")
+  paged_base_css <- pkg_resource("css/paged_base.css", package = "kobocruncher")
+  paged_simple_css <- pkg_resource("css/paged_simple.css", package = "kobocruncher")
 
   # html back-cover
   if (back_html) {
     back_html <-
-      pkg_resource("html/back_paged_simple.html")
+      pkg_resource("html/back_paged_simple.html", package = "kobocruncher")
   } else {
     back_html <- NULL
   }

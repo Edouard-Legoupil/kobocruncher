@@ -6,7 +6,7 @@
 #' @export
 
 #' @examples
-#' output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+#' output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
 #'               var = "profile")
 output_header <- function(xlsformpath = xlsformpath,
                             var) {
@@ -20,7 +20,7 @@ output_header <- function(xlsformpath = xlsformpath,
   title <- if(is.na(label)) glue::glue("({var})") else label
   # Join multiple strings into a single string.
   cat("---\n")
-  hdr <- stringr::str_c(strrep("# ", 1+lvl), title, sep = "   ")
+  hdr <- stringr::str_c(strrep("# ", 1+lvl), title, sep = "")
   cat("\n\n")
   cat("\n")
   cat(hdr)

@@ -7,7 +7,7 @@
 
 #' @examples
 #' 
-#' label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+#' label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
 #'               x ="profile.country")
 #' 
 label_varname <- function(xlsformpath, x) {

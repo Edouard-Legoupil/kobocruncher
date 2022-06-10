@@ -9,8 +9,8 @@
 #' @export
  
 #' @examples
-#' kobo_cruncher(datapath = system.file("data.xlsx", package = "koboloadeR"),
-#'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+#' kobo_cruncher(datapath = system.file("data.xlsx", package = "kobocruncher"),
+#'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
 #'               type = "select_one", 
 #'               name = "profile.country",
 #'               showcode = TRUE)

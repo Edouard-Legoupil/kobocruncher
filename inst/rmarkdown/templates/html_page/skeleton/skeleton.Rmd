@@ -2,7 +2,7 @@
 title: "Automatic Data Exploration Step"
 date: " `r format(Sys.Date(),  '%d %B %Y')`"
 output:
-  koboloadeR::template_exploration:
+  kobocruncher::template_exploration:
     toc: true
     toc_depth: 2
     toc_float: true
@@ -42,9 +42,14 @@ knitr::opts_chunk$set(echo = FALSE,
 extrafont::loadfonts(quiet=TRUE)
 options(scipen = 999) # turn-off scientific notation like 1e+48
 
-library("koboloadeR")
+library("kobocruncher")
 datapath <- here::here(params$datafolder, params$data)
 xlsformpath <- here::here(params$datafolder, params$form) 
+
+## The 2 lines below are for the demo 
+# Add # to comment them after once you have set up your report parameters..
+datapath <- system.file("data.xlsx", package = "kobocruncher")
+xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
 
 ```
 
@@ -105,13 +110,7 @@ The report can be regenerated as needed by:
 # Automatic Exploration
 
 ```{r  }
-## The 2 lines below are for the demo - please comment the 2 below 
-# and uncomment the one after once you have set up your report parameters..
-datapath <- system.file("data.xlsx", package = "koboloadeR")
-xlsformpath <-  system.file("sample_xlsform.xlsx", package = "koboloadeR")
-# datapath <- params$data
-# xlsformpath <-  params$form 
-
+datalist <- kobo_data(datapath = datapath )
 dico <- kobo_dico(xlsformpath = xlsformpath)
 questions <- as.data.frame(dico[1])
 crunchingparameters <- list(datapath = datapath,
@@ -127,9 +126,6 @@ crunchingparameters <- list(datapath = datapath,
 # https://purrr.tidyverse.org/reference/map2.html
 purrr::pwalk(crunchingparameters,
              kobo_cruncher)
-
-
-
 ```
 
 

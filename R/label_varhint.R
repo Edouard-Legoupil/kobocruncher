@@ -6,7 +6,7 @@
 #' @export
 
 #' @examples
-#' label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+#' label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
 #'               x ="profile.country")
 label_varhint <- function(xlsformpath, x) {
   dico <-  kobo_dico(xlsformpath = xlsformpath)

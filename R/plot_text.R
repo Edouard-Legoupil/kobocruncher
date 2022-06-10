@@ -8,8 +8,8 @@
 #' @export
 
 #' @examples
-#' plot_text(datapath = system.file("data.xlsx", package = "koboloadeR"),
-#'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+#' plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
+#'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
 #'               var = "profile.occupation")
 plot_text <- function(datapath = datapath, 
                       xlsformpath = xlsformpath,

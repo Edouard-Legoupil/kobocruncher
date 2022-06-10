@@ -2,7 +2,7 @@
 % Please edit documentation in R/template_interpretation.R
 \name{template_interpretation}
 \alias{template_interpretation}
-\title{Convert to UNHCR branded Powerpoint presentation}
+\title{Second Template to prepare a presentation for the Joint Data Interpretation Session}
 \usage{
 template_interpretation(...)
 }
@@ -13,5 +13,5 @@ template_interpretation(...)
 A powerpoint report
 }
 \description{
-Format for converting from R Markdown to an UNHCR branded Powerpoint presentation
+See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305
 }

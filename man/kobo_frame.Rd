@@ -17,8 +17,8 @@ kobo_frame(datapath, xlsformpath, var)
 get the correct frame for one selected variable - important when havving variables within a repeat
 }
 \examples{
-data <- kobo_frame(datapath = system.file("data.xlsx", package = "koboloadeR"),
-                   xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"),
+data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
+                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
                    var = "members.sex"   )
 knitr::kable(head(data,5))
  

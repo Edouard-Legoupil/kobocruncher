@@ -15,6 +15,6 @@ output_header(xlsformpath = xlsformpath, var)
 Output Header
 }
 \examples{
-output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile")
 }

@@ -6,7 +6,7 @@
 #' @export
 
 #' @examples
-#' label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+#' label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
 #'               x = "profile.country")
 #' 
 label_choice <- function(xlsformpath, x ) {

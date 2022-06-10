@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_select_one_cross.R
 \name{plot_select_one_cross}
 \alias{plot_select_one_cross}
-\title{Plotting Select one variable}
+\title{Plotting Select one variable with cross tabulation on a second categorical variable}
 \usage{
 plot_select_one_cross(
   datapath = datapath,
@@ -24,11 +24,11 @@ plot_select_one_cross(
 \item{showcode}{display the code}
 }
 \description{
-Plotting Select one variable
+Plotting Select one variable with cross tabulation on a second categorical variable
 }
 \examples{
-plot_select_one_cross(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_select_one_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.country",
               crosstab = "profile.occupation"
               )

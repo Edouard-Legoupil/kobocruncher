@@ -15,6 +15,6 @@ label_varhint(xlsformpath, x)
 Get Interpretation hint for a specific variable
 }
 \examples{
-label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               x ="profile.country")
 }

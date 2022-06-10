@@ -13,7 +13,7 @@ kobo_data(datapath)
 Data loading
 }
 \examples{
-datalist <- kobo_data(datapath = system.file("data.xlsx", package = "koboloadeR") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # MainFrame
 datalist[1]
 # Second Frame

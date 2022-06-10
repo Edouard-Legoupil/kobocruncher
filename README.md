@@ -17,7 +17,7 @@ remotes::install_github('vidonne/unhcrdown')
 remotes::install_github('vidonne/unhcrdesign')
 remotes::install_github('vidonne/unhcrtemplate')
 remotes::install_github('vidonne/unhcrtheme')
-## Now get koboloadeR
+## Now get kobocruncher
 remotes::install_github("Edouard-Legoupil/kobocruncher", Ncpus=4) 
 ```  
 

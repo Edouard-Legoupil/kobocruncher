@@ -16,7 +16,7 @@ Get the label for a specific variable
 }
 \examples{
 
-label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               x ="profile.country")
 
 }

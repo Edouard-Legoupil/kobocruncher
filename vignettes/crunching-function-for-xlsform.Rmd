@@ -32,7 +32,7 @@ and `system.file()` to read it in your examples.
 # Data loading
 
 ```{r examples-kobo_data}
-datalist <- kobo_data(datapath = system.file("data.xlsx", package = "koboloadeR") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # MainFrame
 datalist[1]
 # Second Frame
@@ -42,7 +42,7 @@ datalist[2]
 # Prepare data dictionnary
 
 ```{r examples-kobo_dico}
-dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR") )
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # Survey
 questions <- as.data.frame(dico[1])
 knitr::kable(head(questions, 10))
@@ -57,8 +57,8 @@ knitr::kable(head(metadata, 10))
 # Get frame for a variable
 
 ```{r examples-kobo_frame}
-data <- kobo_frame(datapath = system.file("data.xlsx", package = "koboloadeR"),
-                   xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"),
+data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
+                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
                    var = "members.sex"   )
 knitr::kable(head(data,5))
  
@@ -68,7 +68,7 @@ knitr::kable(head(data,5))
 
 ```{r examples-label_varname}
 
-label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               x ="profile.country")
 
 ```
@@ -76,21 +76,21 @@ label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobolo
 # Get interpretation hint for a specific variable
 
 ```{r examples-label_varhint}
-label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               x ="profile.country")
 ```
 
 # Get all the choices labels options for a specific variable
 
 ```{r examples-label_choiceset}
-label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
                 x="profile.country")
 ```
 
 # Get the label for a specific choice if available
 
 ```{r examples-label_choice}
-label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               x = "profile.country")
 
 ```
@@ -98,16 +98,16 @@ label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobolo
 # Plotting Select one variable
 
 ```{r examples-plot_select_one}
-plot_select_one(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.country")
 ```
 
 # Plotting Select one variable with Crosstabulation
 
 ```{r examples-plot_select_one_cross}
-plot_select_one_cross(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_select_one_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.country",
               crosstab = "profile.occupation"
               )
@@ -116,8 +116,8 @@ plot_select_one_cross(datapath = system.file("data.xlsx", package = "koboloadeR"
 # Plotting Select multiple variable
 
 ```{r examples-plot_select_multiple}
-plot_select_multiple(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.reason"
             )
 ```
@@ -125,8 +125,8 @@ plot_select_multiple(datapath = system.file("data.xlsx", package = "koboloadeR")
 # Plotting Select multiple variable with cross-tabulation
 
 ```{r examples-plot_select_multiple_cross}
-plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.reason",
               crosstab = "location")
 ```
@@ -134,31 +134,31 @@ plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobolo
 # Plotting Numeric variable
 
 ```{r examples-plot_integer}
-plot_integer(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_integer(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "members.age")
 ```
 
 # Plotting Open Text variable
 
 ```{r examples-plot_text}
-plot_text(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.occupation")
 ```
 
 # Output Header variable
 
 ```{r examples-output_header}
-output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile")
 ```
 
 # Crunching Variable based on type
 
 ```{r examples-kobo_cruncher}
-kobo_cruncher(datapath = system.file("data.xlsx", package = "koboloadeR"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+kobo_cruncher(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               type = "select_one", 
               name = "profile.country",
               showcode = TRUE)

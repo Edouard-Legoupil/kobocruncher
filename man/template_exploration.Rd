@@ -2,7 +2,7 @@
 % Please edit documentation in R/template_exploration.R
 \name{template_exploration}
 \alias{template_exploration}
-\title{Convert to UNHCR branded HTML website}
+\title{Initial Template for Automatic Data Exploration}
 \usage{
 template_exploration(...)
 }
@@ -13,5 +13,5 @@ template_exploration(...)
 An html report
 }
 \description{
-Format for converting from R Markdown to an UNHCR branded HTML website
+Initial Template for Automatic Data Exploration
 }
