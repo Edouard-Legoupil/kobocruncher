@@ -1129,6 +1129,7 @@ output_header <- function(xlsformpath = xlsformpath,
                             var) {
   dico <-  kobo_dico(xlsformpath = xlsformpath)
   
+  ## getting header levels
   lvl <- stringr::str_count(var, "\\.")
   
   label <- as.data.frame(dico[1]) |>
@@ -1136,8 +1137,10 @@ output_header <- function(xlsformpath = xlsformpath,
            dplyr::pull(label)
   title <- if(is.na(label)) glue::glue("({var})") else label
   # Join multiple strings into a single string.
+  hdr <- stringr::str_c(strrep("#", 1+lvl), " ", title, sep = "")
+  
+  ## Now Printing the headers
   cat("---\n")
-  hdr <- stringr::str_c(strrep("# ", 1+lvl), title, sep = "")
   cat("\n\n")
   cat("\n")
   cat(hdr)
@@ -1215,10 +1218,18 @@ kobo_cruncher(datapath = system.file("data.xlsx", package = "kobocruncher"),
 
 # Report Template 1 for Automatic Data Exploration
 
+The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
+
+It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
+
+This report also includes each plot syntax so that they can be easily pasted for the second report
+
 
 ```{r function-template_exploration}
 #' Initial Template for Automatic Data Exploration
-#'
+#' The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
+#' It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
+#'  This report also includes each plot syntax so that they can be easyly pasted for the second report
 #' @importFrom unhcrdesign use_unhcr_bslib
 #' @rdname template_exploration
 #'
@@ -1240,6 +1251,11 @@ template_exploration <- function(...) {
 
 # Report Template 2 for Joint Data Interpretation Session
 
+The second template is used following the systematic data exploration. 
+It will generate a powerpoint presentation
+
+See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305 
+
 ```{r function-template_interpretation}
 #' Second Template to prepare a presentation for the Joint Data Interpretation Session
 #' 
@@ -1254,8 +1270,11 @@ template_exploration <- function(...) {
 #' @export
 
 template_interpretation <- function(...) {
-
-  pptx_template <- pkg_resource("templates/pptx_template.pptx", package = "kobocruncher")
+ # locations of resource files in the package
+  pkg_resource = function(...) {
+    system.file(..., package = "kobocruncher")
+  }
+  pptx_template <- pkg_resource("templates/pptx_template.pptx")
 
   officedown::rpptx_document(
     reference_doc = pptx_template,
@@ -1266,9 +1285,14 @@ template_interpretation <- function(...) {
 
 # Report Template 3 for Dissemination and Data Story Telling Template
 
+The last template can be used to take note of the data interpretation session.
+
+It will generate a PDF or an paginated HTML page
+
 ```{r function-template_dissemination}
-#' Function for UNHCR paged simple template
-#'
+#' Report Template 3 for Dissemination and Data Story Telling Template
+#' The last template can be used to take note of the data interpretation session. 
+#' It will generate a PDF or an paginated HTML page
 #' @param back_html Back-cover HTML including contact information
 #' @param other_css Add extra css
 #' @param number_sections Number section headings
@@ -1283,9 +1307,12 @@ template_dissemination <- function(back_html = TRUE,
                          other_css = NULL,
                          number_sections = FALSE,
                          ...) {
+  pkg_resource = function(...) {
+    system.file(..., package = "kobocruncher")
+  }
   # base css files
   base_css <- unhcrdesign::use_unhcr_css(c("reset", "color_variables", "fonts"))
-
+  
   # logo css file
   logo_var <- paste0("  --unhcr-logoblue: url(\"", unhcrdesign::use_unhcr_logo(logo = "blue", data_uri = TRUE), "\");")
   logo_css <- tempfile(fileext = ".css")
@@ -1294,13 +1321,13 @@ template_dissemination <- function(back_html = TRUE,
   file.append(base_css, logo_css)
 
   # specific css files
-  paged_base_css <- pkg_resource("css/paged_base.css", package = "kobocruncher")
-  paged_simple_css <- pkg_resource("css/paged_simple.css", package = "kobocruncher")
+  paged_base_css <- pkg_resource("css/paged_base.css" )
+  paged_simple_css <- pkg_resource("css/paged_simple.css" )
 
   # html back-cover
   if (back_html) {
     back_html <-
-      pkg_resource("html/back_paged_simple.html", package = "kobocruncher")
+      pkg_resource("html/back_paged_simple.html" )
   } else {
     back_html <- NULL
   }

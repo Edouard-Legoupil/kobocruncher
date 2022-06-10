@@ -13,8 +13,11 @@
 #' @export
 
 template_interpretation <- function(...) {
-
-  pptx_template <- pkg_resource("templates/pptx_template.pptx", package = "kobocruncher")
+ # locations of resource files in the package
+  pkg_resource = function(...) {
+    system.file(..., package = "kobocruncher")
+  }
+  pptx_template <- pkg_resource("templates/pptx_template.pptx")
 
   officedown::rpptx_document(
     reference_doc = pptx_template,

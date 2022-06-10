@@ -169,7 +169,26 @@ kobo_cruncher(datapath = system.file("data.xlsx", package = "kobocruncher"),
 
 # Report Template 1 for Automatic Data Exploration
 
+The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
+
+It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
+
+This report also includes each plot syntax so that they can be easily pasted for the second report
+
+
+
 # Report Template 2 for Joint Data Interpretation Session
 
+The second template is used following the systematic data exploration. 
+It will generate a powerpoint presentation
+
+See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305 
+
+
 # Report Template 3 for Dissemination and Data Story Telling Template
+
+The last template can be used to take note of the data interpretation session.
+
+It will generate a PDF or an paginated HTML page
+
 

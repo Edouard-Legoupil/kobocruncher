@@ -21,3 +21,6 @@ reference:
   desc: Prebuild Report template to explore, interpret & Disseminate
   contents:
   - starts_with("template_")
+
+- text: News
+  href: news/index.html

@@ -96,7 +96,7 @@ and `system.file()` to read it in your examples.
 <h2 id="data-loading">Data loading<a class="anchor" aria-label="anchor" href="#data-loading"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span> <span class="op">)</span>
+<code class="sourceCode R"><span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 <span class="co"># MainFrame</span>
 <span class="va">datalist</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
 <span class="co">#&gt; [[1]]</span>
@@ -143,7 +143,7 @@ and `system.file()` to read it in your examples.
 <h2 id="prepare-data-dictionnary">Prepare data dictionnary<a class="anchor" aria-label="anchor" href="#prepare-data-dictionnary"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span> <span class="op">)</span>
+<code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4,</span>
 <span class="co">#&gt; 6, 8, 9, 10, 11, 13].</span>
 <span class="co"># Survey</span>
@@ -355,8 +355,8 @@ and `system.file()` to read it in your examples.
 <h2 id="get-frame-for-a-variable">Get frame for a variable<a class="anchor" aria-label="anchor" href="#get-frame-for-a-variable"></a>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_frame.html">kobo_frame</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>,
-                   xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_frame.html">kobo_frame</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
+                   xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
                    var <span class="op">=</span> <span class="st">"members.sex"</span>   <span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4,</span>
 <span class="co">#&gt; 6, 8, 9, 10, 11, 13].</span>
@@ -476,7 +476,7 @@ and `system.file()` to read it in your examples.
 </h2>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="fu"><a href="../reference/label_varname.html">label_varname</a></span><span class="op">(</span>xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<span class="fu"><a href="../reference/label_varname.html">label_varname</a></span><span class="op">(</span>xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               x <span class="op">=</span><span class="st">"profile.country"</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4,</span>
 <span class="co">#&gt; 6, 8, 9, 10, 11, 13].</span>
@@ -486,7 +486,7 @@ and `system.file()` to read it in your examples.
 <h2 id="get-interpretation-hint-for-a-specific-variable">Get interpretation hint for a specific variable<a class="anchor" aria-label="anchor" href="#get-interpretation-hint-for-a-specific-variable"></a>
 </h2>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/label_varhint.html">label_varhint</a></span><span class="op">(</span>xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/label_varhint.html">label_varhint</a></span><span class="op">(</span>xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               x <span class="op">=</span><span class="st">"profile.country"</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4,</span>
 <span class="co">#&gt; 6, 8, 9, 10, 11, 13].</span>
@@ -496,7 +496,7 @@ and `system.file()` to read it in your examples.
 <h2 id="get-all-the-choices-labels-options-for-a-specific-variable">Get all the choices labels options for a specific variable<a class="anchor" aria-label="anchor" href="#get-all-the-choices-labels-options-for-a-specific-variable"></a>
 </h2>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/label_choiceset.html">label_choiceset</a></span><span class="op">(</span>xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/label_choiceset.html">label_choiceset</a></span><span class="op">(</span>xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
                 x<span class="op">=</span><span class="st">"profile.country"</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4,</span>
 <span class="co">#&gt; 6, 8, 9, 10, 11, 13].</span>
@@ -513,7 +513,7 @@ and `system.file()` to read it in your examples.
 <h2 id="get-the-label-for-a-specific-choice-if-available">Get the label for a specific choice if available<a class="anchor" aria-label="anchor" href="#get-the-label-for-a-specific-choice-if-available"></a>
 </h2>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/label_choice.html">label_choice</a></span><span class="op">(</span>xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/label_choice.html">label_choice</a></span><span class="op">(</span>xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               x <span class="op">=</span> <span class="st">"profile.country"</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4,</span>
 <span class="co">#&gt; 6, 8, 9, 10, 11, 13].</span>
@@ -526,8 +526,8 @@ and `system.file()` to read it in your examples.
 <h2 id="plotting-select-one-variable">Plotting Select one variable<a class="anchor" aria-label="anchor" href="#plotting-select-one-variable"></a>
 </h2>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_select_one.html">plot_select_one</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>,
-              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_select_one.html">plot_select_one</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
+              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               var <span class="op">=</span> <span class="st">"profile.country"</span><span class="op">)</span>
 <span class="co">#&gt; Loading required package: ggplot2</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
@@ -542,8 +542,8 @@ and `system.file()` to read it in your examples.
 <h2 id="plotting-select-one-variable-with-crosstabulation">Plotting Select one variable with Crosstabulation<a class="anchor" aria-label="anchor" href="#plotting-select-one-variable-with-crosstabulation"></a>
 </h2>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_select_one_cross.html">plot_select_one_cross</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>,
-              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_select_one_cross.html">plot_select_one_cross</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
+              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               var <span class="op">=</span> <span class="st">"profile.country"</span>,
               crosstab <span class="op">=</span> <span class="st">"profile.occupation"</span>
               <span class="op">)</span>
@@ -557,8 +557,8 @@ and `system.file()` to read it in your examples.
 <h2 id="plotting-select-multiple-variable">Plotting Select multiple variable<a class="anchor" aria-label="anchor" href="#plotting-select-multiple-variable"></a>
 </h2>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_select_multiple.html">plot_select_multiple</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>,
-              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_select_multiple.html">plot_select_multiple</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
+              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               var <span class="op">=</span> <span class="st">"profile.reason"</span>
             <span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
@@ -573,8 +573,8 @@ and `system.file()` to read it in your examples.
 <h2 id="plotting-select-multiple-variable-with-cross-tabulation">Plotting Select multiple variable with cross-tabulation<a class="anchor" aria-label="anchor" href="#plotting-select-multiple-variable-with-cross-tabulation"></a>
 </h2>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_select_multiple_cross.html">plot_select_multiple_cross</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>,
-              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_select_multiple_cross.html">plot_select_multiple_cross</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
+              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               var <span class="op">=</span> <span class="st">"profile.reason"</span>,
               crosstab <span class="op">=</span> <span class="st">"location"</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
@@ -587,8 +587,8 @@ and `system.file()` to read it in your examples.
 <h2 id="plotting-numeric-variable">Plotting Numeric variable<a class="anchor" aria-label="anchor" href="#plotting-numeric-variable"></a>
 </h2>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_integer.html">plot_integer</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>,
-              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_integer.html">plot_integer</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
+              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               var <span class="op">=</span> <span class="st">"members.age"</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
 <span class="co">#&gt; Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
@@ -602,8 +602,8 @@ and `system.file()` to read it in your examples.
 <h2 id="plotting-open-text-variable">Plotting Open Text variable<a class="anchor" aria-label="anchor" href="#plotting-open-text-variable"></a>
 </h2>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_text.html">plot_text</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>,
-              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_text.html">plot_text</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
+              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               var <span class="op">=</span> <span class="st">"profile.occupation"</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
 <span class="co">#&gt; Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
@@ -638,7 +638,7 @@ and `system.file()` to read it in your examples.
 <h2 id="output-header-variable">Output Header variable<a class="anchor" aria-label="anchor" href="#output-header-variable"></a>
 </h2>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/output_header.html">output_header</a></span><span class="op">(</span> xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/output_header.html">output_header</a></span><span class="op">(</span> xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               var <span class="op">=</span> <span class="st">"profile"</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4,</span>
 <span class="co">#&gt; 6, 8, 9, 10, 11, 13].</span>
@@ -646,14 +646,14 @@ and `system.file()` to read it in your examples.
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; #    Respondant profile</span></code></pre></div>
+<span class="co">#&gt; # Respondant profile</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="crunching-variable-based-on-type">Crunching Variable based on type<a class="anchor" aria-label="anchor" href="#crunching-variable-based-on-type"></a>
 </h2>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/kobo_cruncher.html">kobo_cruncher</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>,
-              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"koboloadeR"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/kobo_cruncher.html">kobo_cruncher</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
+              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               type <span class="op">=</span> <span class="st">"select_one"</span>, 
               name <span class="op">=</span> <span class="st">"profile.country"</span>,
               showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -671,15 +671,28 @@ and `system.file()` to read it in your examples.
 <div class="section level2">
 <h2 id="report-template-1-for-automatic-data-exploration">Report Template 1 for Automatic Data Exploration<a class="anchor" aria-label="anchor" href="#report-template-1-for-automatic-data-exploration"></a>
 </h2>
+<p>The first RMD template gives an output in HTML for easy navigation -
+the left menu provides smooth transition.</p>
+<p>It includes a function to automatically run throughout all the survey
+content. During this stage, data cleaning and new variable creation can
+be performed through iterations</p>
+<p>This report also includes each plot syntax so that they can be easily
+pasted for the second report</p>
 </div>
 <div class="section level2">
 <h2 id="report-template-2-for-joint-data-interpretation-session">Report Template 2 for Joint Data Interpretation Session<a class="anchor" aria-label="anchor" href="#report-template-2-for-joint-data-interpretation-session"></a>
 </h2>
+<p>The second template is used following the systematic data
+exploration. It will generate a powerpoint presentation</p>
+<p>See a more detailed presentation of that step here: <a href="https://www.youtube.com/watch?v=0jE-Y7g88K4&amp;feature=youtu.be&amp;t=2305" class="external-link uri">https://www.youtube.com/watch?v=0jE-Y7g88K4&amp;feature=youtu.be&amp;t=2305</a></p>
 </div>
 <div class="section level2">
 <h2 id="report-template-3-for-dissemination-and-data-story-telling-template">Report Template 3 for Dissemination and Data Story Telling
 Template<a class="anchor" aria-label="anchor" href="#report-template-3-for-dissemination-and-data-story-telling-template"></a>
 </h2>
+<p>The last template can be used to take note of the data interpretation
+session.</p>
+<p>It will generate a PDF or an paginated HTML page</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

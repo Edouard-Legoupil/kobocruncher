@@ -12,6 +12,7 @@ output_header <- function(xlsformpath = xlsformpath,
                             var) {
   dico <-  kobo_dico(xlsformpath = xlsformpath)
   
+  ## getting header levels
   lvl <- stringr::str_count(var, "\\.")
   
   label <- as.data.frame(dico[1]) |>
@@ -19,8 +20,10 @@ output_header <- function(xlsformpath = xlsformpath,
            dplyr::pull(label)
   title <- if(is.na(label)) glue::glue("({var})") else label
   # Join multiple strings into a single string.
+  hdr <- stringr::str_c(strrep("#", 1+lvl), " ", title, sep = "")
+  
+  ## Now Printing the headers
   cat("---\n")
-  hdr <- stringr::str_c(strrep("# ", 1+lvl), title, sep = "")
   cat("\n\n")
   cat("\n")
   cat(hdr)

@@ -50,6 +50,21 @@
       <small>Source: <a href="https://github.com/Edouard-Legoupil/kobocruncher/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.0" id="kobocruncher-010">kobocruncher 0.1.0<a class="anchor" aria-label="anchor" href="#kobocruncher-010"></a></h2>
+<ul><li><p>Major re-factoring / simplification of the previous <a href="https://unhcr.github.io/koboloadeR/docs/" class="external-link">koboloader package</a> - nurtured by Hisham Galal !! Standard Reports are now available as a basic Rmd template rather than a function that would write down the Rmd directly…</p></li>
+<li><p>Now using the <a href="https://thinkr-open.github.io/fusen/index.html" class="external-link">Fusen package</a> to mainstream documentation and unit testing - see the dev folder to find out</p></li>
+<li><p>Created systematic reprex examples for all functions within the package</p></li>
+<li><p>Removed a lot of of unnecessary packages for the installation</p></li>
+<li><p>Removed for the time being the shinyApp part – will rework it later… hopefully with Golem!</p></li>
+<li><p>Remove all packages component related to API parsing - fully rely on all RIDL API from Ahmadou Dickoa - the recommended practices is to avoid starting any analysis before data is documented on <a href="http://ridl.unhcr.org" class="external-link uri">http://ridl.unhcr.org</a> - more on the automation from Kobotoolbox to RIDL is here: <a href="https://im.unhcr.org/ridl/" class="external-link uri">https://im.unhcr.org/ridl/</a></p></li>
+</ul><pre><code><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'dickoa/ridl'</span><span class="op">)</span></code></pre>
+<ul><li>Remove all packages component related to API parsing - fully rely on all styling packages from Cedric Vidonne. For non-UNHCR users, it shuld not be complicated to fork those packages and adjust them to your own organisation brand style.</li>
+</ul><pre><code><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'vidonne/unhcrdown'</span><span class="op">)</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'vidonne/unhcrdesign'</span><span class="op">)</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'vidonne/unhcrtemplate'</span><span class="op">)</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'vidonne/unhcrtheme'</span><span class="op">)</span></code></pre>
+</div>
   </main></div>
 
 

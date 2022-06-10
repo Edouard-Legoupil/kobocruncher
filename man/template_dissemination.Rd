@@ -2,7 +2,9 @@
 % Please edit documentation in R/template_dissemination.R
 \name{template_dissemination}
 \alias{template_dissemination}
-\title{Function for UNHCR paged simple template}
+\title{Report Template 3 for Dissemination and Data Story Telling Template
+The last template can be used to take note of the data interpretation session.
+It will generate a PDF or an paginated HTML page}
 \usage{
 template_dissemination(
   back_html = TRUE,
@@ -24,5 +26,7 @@ template_dissemination(
 A pagedown report
 }
 \description{
-Function for UNHCR paged simple template
+Report Template 3 for Dissemination and Data Story Telling Template
+The last template can be used to take note of the data interpretation session.
+It will generate a PDF or an paginated HTML page
 }

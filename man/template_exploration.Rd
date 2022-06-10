@@ -2,7 +2,10 @@
 % Please edit documentation in R/template_exploration.R
 \name{template_exploration}
 \alias{template_exploration}
-\title{Initial Template for Automatic Data Exploration}
+\title{Initial Template for Automatic Data Exploration
+The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
+It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
+This report also includes each plot syntax so that they can be easyly pasted for the second report}
 \usage{
 template_exploration(...)
 }
@@ -14,4 +17,7 @@ An html report
 }
 \description{
 Initial Template for Automatic Data Exploration
+The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
+It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
+This report also includes each plot syntax so that they can be easyly pasted for the second report
 }
