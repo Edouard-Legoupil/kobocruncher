@@ -1,0 +1,9 @@
+
+^dev$
+^LICENSE\.md$
+^README\.Rmd$
+^CODE_OF_CONDUCT\.md$
+^\.github$
+^.*\.Rproj$
+^\.Rproj\.user$
+^kobocruncher\.Rproj$

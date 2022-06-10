@@ -1,0 +1,23 @@
+url: ~
+template:
+  bootstrap: 5
+  params:
+    bootswatch: yeti
+
+reference:
+- title: Chart
+  desc: Crafted visualisation charts based on the data type
+- contents:
+  - starts_with("plot_")
+- title: Labeling
+  desc: Functions to relabel both variables and choices
+  contents:
+  - starts_with("label_")
+- title: Crunching
+  desc: Functions to automate the processing
+  contents:
+  - starts_with("kobo_")
+- title: Report Template
+  desc: Prebuild Report template to explore, interpret & Disseminate
+  contents:
+  - starts_with("template_")

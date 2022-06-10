@@ -1,0 +1,96 @@
+---
+title: "Data Dissemination"
+subtitle: "Call to Action & Data Stories"
+date: "`r format(Sys.Date(),  '%d %B %Y')`"
+author:
+  - name: Contact Name
+    affiliation: Job title
+    email: email@unhcr.org
+output:
+  koboloadeR::template_dissemination:
+    back_html: true
+paged-footnotes: true
+links-to-footnotes: true
+# Below are the Report parameters that you will need to adjust
+params:
+  datafolder: "data-raw"
+  data: "data.xlsx"
+  form: "form.xlsx"
+  crosstab: ""
+  datasource: ""
+# uncomment this line to produce HTML and PDF in RStudio:
+#knit: pagedown::chrome_print
+---
+
+
+<!--
+All packages used are loaded upfront so the reader knows which are required to replicate the analysis. 
+Messages and warnings resulting from loading the package are suppressed. 
+Explanation is provided regarding the purpose of each package (there are over 10,000 packages, don't assume that I know why you loaded each package).
+-->
+
+```{r setup}
+knitr::opts_chunk$set(echo = FALSE, 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      collapse = FALSE,
+                      comment = "#>",
+                      fig.align = "center")
+knitr::opts_chunk$set(fig.width = 12, fig.height = 9)
+set.seed(1)
+extrafont::loadfonts(quiet=TRUE)
+options(scipen = 999) # turn-off scientific notation like 1e+48
+
+
+library("koboloadeR")
+library("unhcrthemes")
+
+```
+
+
+<!--
+Original source where the data was obtained is cited and, if possible, hyperlinked. 
+Source data is thoroughly explained (i.e. what was the original purpose of the data, when was it collected, how many variables did the original have, explain any peculiarities of the source data such as how missing values are recorded, or how data was imputed, etc.). 
+Data importing and cleaning steps are explained in the text (tell me why you are doing the data cleaning activities that you perform) and follow a logical process.
+Once your data is clean, show what the final data set looks like. However, do not print off a data frame with 200+ rows; show me the data in the most condensed form possible. 
+Provide summary information about the variables of concern in your cleaned data set. Do not just print off a bunch of code chunks with str(), summary(), etc. Rather, provide me with a consolidated explanation, either with a table that provides summary info for each variable or a nicely written summary paragraph with inline code.
+-->
+
+
+
+```{r getdata}
+datapath <- here::here(params$datafolder, params$data)
+xlsformpath <- here::here(params$datafolder, params$form) 
+
+datalist <- kobo_data(datapath = datapath )
+dico <- kobo_dico(xlsformpath = xlsformpath)
+questions <- as.data.frame(dico[1])
+
+
+```
+
+
+# Introduction {-}
+<!-- 
+Provide an introduction that explains the problem statement you are addressing. Why should I be interested in this? 
+Provide a short explanation of how you plan to address this problem statement (the data used and the methodology employed) 
+Discuss your current proposed approach/analytic technique you think will address (fully or partially) this problem. 
+Explain how your analysis will help the consumer of your analysis.
+-->
+
+
+<!--
+Discuss how you plan to uncover new information in the data that is not self-evident. What are different ways you could look at this data to answer the questions you want to answer? Do you plan to slice and dice the data in different ways, create new variables, or join separate data frames to create new summary information? How could you summarize your data to answer key questions? 
+What types of plots and tables will help you to illustrate the findings to your questions? 
+What do you not know how to do right now that you need to learn to answer your questions? 
+Do you plan on incorporating any machine learning techniques (i.e. linear regression, discriminant analysis, cluster analysis) to answer your questions? 
+-->
+
+
+
+<!--
+4.1 Discuss how you plan to uncover new information in the data that is not self-evident. What are different ways you could look at this data to answer the questions you want to answer? Do you plan to slice and dice the data in different ways, create new variables, or join separate data frames to create new summary information? How could you summarize your data to answer key questions? 
+4.2 What types of plots and tables will help you to illustrate the findings to your questions? 
+4.3 What do you not know how to do right now that you need to learn to answer your questions? 
+4.4 Do you plan on incorporating any machine learning techniques (i.e. linear regression, discriminant analysis, cluster analysis) to answer your questions? 
+-->

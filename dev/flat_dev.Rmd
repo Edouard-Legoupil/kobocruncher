@@ -1,0 +1,1324 @@
+---
+title: "Developing and documenting all functions"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# Data examples to demo the package
+
+<!-- 
+ Store your dataset in a directory named "inst/" at the root of your project.
+ Use it for your tests in this Rmd thanks to `pkgload::load_all()` to make it available
+and `system.file()` to read it in your examples.
+-->
+
+```{r development-2}
+# Run all this chunk in the console directly
+# Create "inst/" directory
+#dir.create(here::here("inst"))
+
+# Example dataset
+# Make your dataset file available to the current Rmd
+pkgload::load_all(path = here::here(), export_all = FALSE)
+
+# You will be able to read your example data file in each of your function examples and tests as follows
+datapath <- system.file("data.xlsx", package = "koboloadeR")
+form <- system.file("sample_xlsform.xlsx", package = "koboloadeR") 
+ 
+```
+
+
+
+
+# Data loading
+
+```{r function-kobo_data}
+#' @title Data loading
+#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' @export
+
+kobo_data <- function(datapath) {
+   # cat(readxl::excel_sheets(datapath ))
+    datalist <- lapply(readxl::excel_sheets(datapath ), function(x) readxl::read_excel(datapath , sheet = x))
+    #names(datalist) <- readxl::excel_sheets(datapath )
+    return(datalist)
+}
+
+```
+
+
+```{r examples-kobo_data}
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "koboloadeR") )
+# MainFrame
+datalist[1]
+# Second Frame
+datalist[2]  
+```
+
+```{r tests-kobo_data}
+# test_that("kobo_data works", {
+# 
+# })
+```
+
+
+# Prepare data dictionnary
+
+```{r function-kobo_dico}
+#' @title Prepare Analysis plan
+#' @param xlsformpath path to the xlsform file used to collect the data
+#' @export
+
+kobo_dico <- function(xlsformpath) {
+   survey <- readxl::read_excel(xlsformpath,   
+                                sheet = "survey")
+  
+  variables <-  survey |>
+    ## Rename and use what ever label set is coming first 
+    dplyr::rename(label = dplyr::first(starts_with("label")),
+                  hint = dplyr::first(starts_with("hint"))) |>
+    
+    
+    # Clean the begin and end in case the _ would be missing...
+    dplyr::mutate(type = dplyr::recode(type, 
+                                        "begin group" = "begin_group" ,
+                                        "end group"   ="end_group",
+                                       "begin repeat" = "begin_repeat" ,
+                                       "end repeat"   ="end_repeat")) |>
+    
+    ## spearate the type
+    tidyr::separate(type, 
+                    into = c("type", "list_name"), 
+                    sep = " ") |>
+    
+    ## Need to add more cleaning in case...
+    #dplyr::filter(!(is.na(name))) |>
+    #dplyr::filter(!(is.na(label))) |>
+    dplyr::filter(!(is.na(type))) |>
+    
+    # capturing repeat
+    dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
+                                                  function (repeatvar, type, name) {
+                                                    if (type  == "begin_repeat")  c(repeatvar, name)
+                                                    else if (type  == "end_repeat") head(repeatvar, -1)
+                                                    else repeatvar
+                                                  }, .init = character()) |>tail(-1),
+                  ##Apply a function to each element of a list 
+                  repeatvar = purrr::map_chr(repeatvar,
+                                             stringr::str_c, 
+                                             collapse = ".") ,
+                  name = dplyr::case_when(repeatvar == "" ~ name,
+                                          type == "begin_repeat"~ repeatvar,
+                                          TRUE ~ stringr::str_c(repeatvar, name, sep = "."))) |>
+                 
+    
+      # capturing Group
+      dplyr::mutate(scope = purrr::accumulate2(type, name,
+                                               function (scope, 
+                                                         type, 
+                                                         name) {
+                                                 if (type == "begin_group") 
+                                                    c(scope, name)
+                                                    else if (type == "end_group") head(scope, -1)
+                                                 else scope
+                                               }, .init = character()) |> tail(-1),
+                    ##Apply a function to each element of a list 
+                    scope = purrr::map_chr(scope, 
+                                           stringr::str_c, 
+                                           collapse = "."),         
+                    
+                    name = dplyr::case_when(scope == "" ~ name,
+                                            type == "begin_group" ~ scope,
+                                            TRUE ~ stringr::str_c(scope, name, sep = "."))) 
+  
+  ## Add dataframe number
+  ## Counter..
+  variables$dataframenew <- 0
+  for (i in 2:nrow(variables)){
+    #i <- 10
+    #cat( variables[i, c("repeatvar")] )
+    if (variables[i, c("repeatvar")] != variables[i-1, c("repeatvar")] &
+        variables[i, c("repeatvar")] !="" ) {
+      variables[i, c("dataframenew")] <- 1
+    } else{
+      variables[i, c("dataframenew")] <- 0
+    }
+  }
+   ## Counter..
+  variables$dataframecount <- 1
+  for (i in 2:nrow(variables)){  
+    if (variables[i, c("repeatvar")] != "") {
+      variables[i, c("dataframecount")] <- variables[i-1, c("dataframecount")] + variables[i, c("dataframenew")]
+    } else{
+      variables[i, c("dataframecount")] <- variables[i-1, c("dataframecount")]
+    }
+    
+  }
+   ## Framenumber
+  variables$dataframe <- 1
+  for (i in 2:nrow(variables)){  
+    if (variables[i, c("repeatvar")] != "") {
+          variables[i, c("dataframe")] <- variables[i, c("dataframecount")] 
+        } else{
+          variables[i, c("dataframe")] <- 1
+        }
+   }
+  variables$dataframecount <- NULL
+  variables$dataframenew <- NULL
+  
+  
+
+     choices <- readxl::read_excel(xlsformpath,   sheet = "choices")  
+     modalities <- choices |>
+                   dplyr::rename(label = dplyr::first(matches("^label")))
+     
+     settings <- readxl::read_excel(xlsformpath,   
+                                sheet = "settings")
+     
+    ## Build dico object as list with both variables and modalities
+    return(list( variables, 
+                 modalities,
+                  settings))
+}
+
+```
+
+
+```{r examples-kobo_dico}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR") )
+# Survey
+questions <- as.data.frame(dico[1])
+knitr::kable(head(questions, 10))
+# Choices
+responses <- as.data.frame(dico[2])
+knitr::kable(head(responses, 10))
+# Settings
+metadata <- as.data.frame(dico[3])
+knitr::kable(head(metadata, 10))
+```
+
+```{r tests-kobo_dico}
+# test_that("kobo_dico works", {
+# 
+# })
+```
+
+# Get frame for a variable
+
+```{r function-kobo_frame}
+#' @title get the correct frame for one selected variable - important when havving variables within a repeat
+#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' @param xlsformpath path to the xlsform file used to collect the data
+#' @param var variable
+#' @export
+
+kobo_frame <- function(datapath,
+                       xlsformpath, 
+                       var) {
+  
+  datalist <- kobo_data(datapath )
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  
+  ## Identify the right frame number
+  dataframen <- as.data.frame(dico[1]) |>
+                  dplyr::filter(name == var) |>
+                  dplyr::pull(dataframe)  
+  ## Pull the data
+  data  <-  datalist[dataframen] |>
+              as.data.frame()
+  
+  ## Make sure the data actually contain the variable if not put to null
+  # if ( var %in% names(data)) {
+  #   data <- data
+  # }  else {
+  #   data <- data.frame()
+ # }
+    
+    return(data )
+}
+
+```
+
+
+```{r examples-kobo_frame}
+data <- kobo_frame(datapath = system.file("data.xlsx", package = "koboloadeR"),
+                   xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"),
+                   var = "members.sex"   )
+knitr::kable(head(data,5))
+ 
+```
+
+```{r tests-kobo_data}
+# test_that("kobo_data works", {
+# 
+# })
+```
+
+# Get the label for a specific variable
+
+```{r function-label_varname}
+#' @title Get the label for a specific variable
+#' @param xlsformpath path to the xlsform file used to collect the data
+#' @param x character with the variable name
+#' @export
+
+label_varname <- function(xlsformpath, x) {
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  as.data.frame( dico[1]) |>
+    dplyr::filter(name == x) |>
+    dplyr::pull(label)
+}
+
+```
+
+```{r examples-label_varname}
+
+label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              x ="profile.country")
+
+```
+
+```{r tests-label_varname}
+# test_that("label_varname works", {
+# 
+# })
+```
+
+# Get interpretation hint for a specific variable
+
+```{r function-label_varhint}
+#' @title Get Interpretation hint for a specific variable
+#' @param xlsformpath path to the xlsform file used to cole
+#' @param x variable
+#' @export
+
+label_varhint <- function(xlsformpath, x) {
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  as.data.frame(dico[1]) |>
+    dplyr::filter(name == x) |>
+    dplyr::pull(hint)
+}
+
+```
+
+```{r examples-label_varhint}
+label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              x ="profile.country")
+```
+
+```{r tests-label_varhint}
+# test_that("label_varhintworks", {
+# 
+# })
+```
+
+
+# Get all the choices labels options for a specific variable
+
+```{r function-label_choiceset}
+#' @title Get all the choices labels options for a specific variable
+#' @param xlsformpath path to the xlsform file used to cole
+#' @param x variable
+#' @export
+
+label_choiceset <- function(xlsformpath,
+                            x) {
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  lname <- as.data.frame(dico[1]) |>
+    dplyr::filter(name == x) |>
+    dplyr::pull(list_name)
+  
+ as.data.frame(dico[2]) |>
+    dplyr::filter(list_name == lname)
+}
+
+```
+
+```{r examples-label_choiceset}
+label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+                x="profile.country")
+```
+
+```{r tests-label_choiceset}
+# test_that("label_choiceset works", {
+# 
+# })
+```
+
+# Get the label for a specific choice if available
+
+```{r function-label_choice}
+#' @title Get the label for a specific choice if available
+#' @param xlsformpath path to the xlsform file used to cole
+#' @param x character with the code for the choice
+#' @export
+
+label_choice <- function(xlsformpath, x ) {
+   label_choiceset(xlsformpath = xlsformpath, x) %>%
+            ## Need to address situation where dictionary is empty
+           ## in this case we leave data as is...
+          dplyr::mutate( label = dplyr::if_else(is.na(label),name, label) ) %>%
+          
+          # create a named character object to relabel
+          { purrr::set_names(.$label, .$name) } 
+
+}
+
+```
+
+```{r examples-label_choice}
+label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              x = "profile.country")
+
+```
+
+```{r tests-label_choice}
+# test_that("label_choice works", {
+# 
+# })
+```
+
+
+
+
+# Plotting Select one variable
+
+```{r function-plot_select_one}
+#' @title Plotting Select one variable
+#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' @param xlsformpath path to the xlsform file used to cole
+#' @param var name of the variable to display
+#' @param showcode display the code
+#' @export
+
+plot_select_one <- function(datapath  ,
+                            xlsformpath  ,
+                            var,
+                            showcode = FALSE) {
+
+  require("ggplot2")
+  
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  ## Get default data source name 
+  datasource <- as.character(  dico[3][[1]]$form_title ) 
+ 
+  data <- kobo_frame(datapath = datapath,
+                   xlsformpath = xlsformpath,
+                   var = var  )
+  
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  
+  cnts <- data |>
+    tidyr::drop_na(tidyselect::all_of(var)) |>
+    # Lump together factor levels into "other"
+    dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5)) |>
+    dplyr::mutate(p = n/sum(n))
+  
+  ## Manage situation if ordinal variable (i.e. order is set in choices)
+  if (any(!is.na(label_choiceset(xlsformpath = xlsformpath, 
+                                 x = var)$order))) {
+    cnts <- cnts |>
+      dplyr::mutate(x = factor(x,
+                               levels = c(label_choiceset(xlsformpath = xlsformpath,
+                                                          x  = var)$name, "Other")))
+  } else {
+    cnts <- cnts |>
+      dplyr::mutate(x = factor(x,
+                               levels = x[order(n, decreasing=FALSE)]))
+  }
+  
+  ## Writing code instruction in report
+  if( showcode == TRUE) { cat(paste0("  `plot_select_one(\"", var, "\")` \n\n "))} else {}
+  #
+  # #cat("---\n")
+  # cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), " `plot_select_one(\"",var,"\")`  "))
+  # cat("\n\n") }
+  
+  
+  ## Put a condition in case there's no record
+  if (rr != 0 ) {
+    
+    ## plot
+    require(ggplot2)
+    p <- ggplot(cnts, aes(p, x)) +
+      geom_col(fill = "#0072BC") +
+      
+      #geom_label(aes(label = scales::label_percent(accuracy = .01)(p))) +
+      ## Position label differently in the bar in white - outside bar in black
+      geom_label( data =   function(x) subset(x, p < max(p) / 1.5),
+                  aes(label = scales::label_percent(accuracy = .01)(p)),
+                  hjust = -0.1 ,
+                  vjust = 0.5,
+                  colour = "black",
+                  fill = NA,
+                  label.size = NA,
+                  
+                  size = 4   ) +
+      geom_label( data =   function(x) subset(x, p >= max(p) / 1.5),
+                  aes(label = scales::label_percent(accuracy = .01)(p)),
+                  hjust = 1.1 ,
+                  vjust = 0.5,
+                  colour = "white",
+                  fill = NA,
+                  label.size = NA,
+                  
+                  size = 4   ) +
+      scale_x_continuous(labels = scales::label_percent()) +
+      # scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath, x = var)(x) |>
+      #                 stringr::str_wrap(40)}) +
+      coord_cartesian(clip = "off") +
+      labs(x = NULL, y = NULL,
+           title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
+                                                   x = var), 60),
+           subtitle = if (!is.na(label_varhint(xlsformpath = xlsformpath,
+                                               x= var))){
+             stringr::str_wrap(label_varhint(xlsformpath = xlsformpath,
+                                             x= var), 70)} else { ""},
+           caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records. \n Source: {datasource}")) +
+      theme_minimal( base_size = 15) +
+      geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
+      theme( panel.grid.major.x  = element_line(color = "#cbcbcb"),
+             panel.grid.major.y  = element_blank(),
+             panel.grid.minor = element_blank()    ) +
+      theme(plot.title.position = "plot")
+    
+    print(p)
+    
+  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
+  # cat("\n\n")
+}
+
+```
+
+```{r examples-plot_select_one}
+plot_select_one(datapath = system.file("data.xlsx", package = "koboloadeR"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              var = "profile.country")
+```
+
+```{r tests-plot_select_one}
+# test_that("plot_select_one works", {
+# 
+# })
+```
+
+
+# Plotting Select one variable with Crosstabulation
+
+```{r function-plot_select_one_cross}
+#' @title Plotting Select one variable
+#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' @param xlsformpath path to the xlsform file used to cole
+#' @param var name of the variable to display
+#' @param crosstab variable to use for cross tabulation
+#' @param showcode display the code
+#' @export
+
+plot_select_one_cross <- function(datapath = datapath,
+                            xlsformpath = xlsformpath,
+                            var, 
+                            crosstab , 
+                            showcode = FALSE) {
+  
+  require("ggplot2")
+  
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  data <- kobo_frame(datapath = datapath,
+                   xlsformpath = xlsformpath,
+                   var = var  )
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  ## Writing report
+  # cat("\n")
+ # cat(paste("####", label_varname(var)))
+  #cat(paste("#### Variable: ", var))
+  ## Put a condition in case there's no record
+  if (rr != 0 ) { 
+    if(crosstab != "") {
+      if( crosstab != var ) {
+        
+          ## Writing code instruction in report
+          if( showcode == TRUE) {
+            
+            cat(paste0("  `plot_select_one_cross(\"", var, "\",\"", crosstab, "\")` \n\n "))} 
+            # #cat("---\n")
+            #  cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), " `plot_select_one_cross(\"", var, "\",\"", crosstab, "\")`  " ))
+            # cat("\n\n") } 
+          else {}
+
+      cnts <- data |>
+        ## keep only the variable we need
+        tidyr::drop_na(tidyselect::all_of(c(var,crosstab))) |>
+        # Lump together factor levels into "other"
+        dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
+                     y := forcats::fct_lump_n(factor(.data[[crosstab]]), n = 5) ) |>
+        dplyr::mutate(p = n/sum(n)) |>
+        dplyr::group_by(y) |>
+        dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
+                      pcum = n / cumsum)  
+       
+       ## plot
+       p <- ggplot(cnts, 
+                  aes(x= pcum, 
+                      y = x)) +
+        geom_col(fill = "#0072BC") +
+        #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
+        ## Position label differently in the bar in white - outside bar in black
+        geom_label( data =   function(x) subset(x, pcum < max(pcum) / 1.5),
+                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                    hjust = -0.1 ,
+                    vjust = 0.5, 
+                    colour = "black", 
+                    fill = NA, 
+                    label.size = NA, 
+                     
+                    size = 3   ) +  
+        geom_label( data =   function(x) subset(x, pcum >= max(pcum) / 1.5),
+                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                    hjust = 1.1 ,
+                    vjust = 0.5, 
+                    colour = "white", 
+                    fill = NA, 
+                    label.size = NA, 
+                     
+                    size = 3   ) +   
+        scale_x_continuous(labels = scales::label_percent()) +
+         
+        facet_wrap( ~ y ,  nrow = 3 # ,
+          #             labeller = as_labeller(function(x) label_choice(xlsformpath = xlsformpath, 
+          #                                                             choices = choices,
+          #                                                             var = crosstab)(x))
+          ) +
+          # scale_y_discrete(labels = function(x) {label_choice(xlsformpath = xlsformpath, 
+          #                                                   choices = choices,
+          #                                                   var = var)(x) |>
+          #     stringr::str_wrap(40)}) +
+        coord_cartesian(clip = "off") +
+        labs(x = NULL, y = NULL,
+               title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
+                                                       x = var), 80),
+               subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
+                                                                                 x = crosstab)), 80),
+               caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+        theme_minimal( base_size = 13) +  
+        geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
+        theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
+                 panel.grid.major.y  = element_blank(), 
+                 panel.grid.minor = element_blank()    ) +
+        theme(plot.title.position = "plot")
+
+        print(p)
+    
+      }
+    } else { }
+  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong> \n\n")}
+  # cat("\n\n")
+}
+
+
+```
+
+```{r examples-plot_select_one_cross}
+plot_select_one_cross(datapath = system.file("data.xlsx", package = "koboloadeR"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              var = "profile.country",
+              crosstab = "profile.occupation"
+              )
+```
+
+```{r tests-plot_select_one_cross}
+# test_that("plot_select_one_cross works", {
+# 
+# })
+```
+
+
+
+# Plotting Select multiple variable
+
+```{r function-plot_select_multiple}
+#' @title Plotting Select multiple variable
+#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' @param xlsformpath path to the xlsform file used to cole
+#' @param var name of the variable to display
+#' @param showcode display the code
+#' @export
+
+plot_select_multiple <- function(datapath = datapath, 
+                                 xlsformpath = xlsformpath,
+                                 var, 
+                                 showcode = FALSE) {
+  
+  require("ggplot2")
+  
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  data <- kobo_frame(datapath = datapath,
+                   xlsformpath = xlsformpath,
+                   var = var  )
+  
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  nr <- sum(!is.na(data[[var]]))
+  cnts <- data |>
+    tidyr::drop_na(tidyselect::all_of(var)) |>
+    tidyr::separate_rows(.data[[var]], sep = " ") |>
+    # Lump together factor levels into "other"
+    dplyr::distinct(`X_id`, !!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5)) |>
+    dplyr::count(x := .data[[var]]) |>
+    dplyr::mutate(p = n/nr)
+  
+  ## Manage situation if ordinal variable (i.e. order is set in choices)
+  if (any(!is.na(label_choiceset(xlsformpath = xlsformpath,
+                           x = var)$order))) {
+    cnts <- cnts |>
+    dplyr::mutate(x = factor(x, 
+                             levels = c(label_choiceset(xlsformpath = xlsformpath,
+                                                          x = var)$name, "Other")))
+   } else {
+    cnts <- cnts |>
+             dplyr::mutate(x = factor(x,  
+                             levels = x[order(n, decreasing=FALSE)]))
+  }
+
+  ## If not empty
+  if (rr != 0 ) {  
+    
+    ## Writing code instruction in report
+    if( showcode == TRUE) {
+      cat(paste0("  `plot_select_multiple(\"", var, "\")` \n\n "))} 
+      #cat("---\n")
+      #  cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_select_multiple(\"", var, "\")`  "))
+      # cat("\n\n") } 
+    else {} 
+    
+    ## Plot
+     p <- ggplot(cnts, aes(p, x)) +
+      geom_col(fill = "#0072BC") +
+      #geom_label(aes(label = scales::label_percent(accuracy = .01)(p))) + 
+      ## Position label differently in the bar in white - outside bar in black
+      geom_label( data =   function(x) subset(x, p < max(p) / 1.5),
+                    aes(label = scales::label_percent(accuracy = .01)(p)),
+                    hjust = -0.1 ,
+                    vjust = 0.5, 
+                    colour = "black", 
+                    fill = NA, 
+                    label.size = NA, 
+                     
+                    size = 4   ) +  
+      geom_label( data =   function(x) subset(x, p >= max(p) / 1.5),
+                    aes(label = scales::label_percent(accuracy = .01)(p)),
+                    hjust = 1.1 ,
+                    vjust = 0.5, 
+                    colour = "white", 
+                    fill = NA, 
+                    label.size = NA, 
+                     
+                    size = 4   ) +   
+      
+      scale_x_continuous(labels = scales::label_percent()) +
+      # scale_y_discrete(labels = function(x) {label_choice(xlsformpath = xlsformpath,
+      #                                                   x = var)(x) |>
+      #     stringr::str_wrap(40)}) +
+      coord_cartesian(clip = "off") +
+      labs(x = NULL, y = NULL,
+           title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
+                                                         x= var), 60),
+           subtitle = if (!is.na(label_varhint(xlsformpath = xlsformpath,
+                                                        x = var))){ 
+                     stringr::str_wrap(label_varhint(xlsformpath = xlsformpath,
+                                                          x = var), 70)} else { ""},
+           caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+      theme_minimal( base_size = 15) + 
+      geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
+      theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
+             panel.grid.major.y  = element_blank(), 
+             panel.grid.minor = element_blank()    ) +
+      theme(plot.title.position = "plot")
+     
+     
+    print(p)
+    
+    #plot_select_multiple_cross(var,   crosstab)
+    
+  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong> \n\n")}
+  # cat("\n\n")
+}
+
+```
+
+```{r examples-plot_select_multiple}
+plot_select_multiple(datapath = system.file("data.xlsx", package = "koboloadeR"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              var = "profile.reason"
+            )
+```
+
+```{r tests-plot_select_multiple}
+# test_that("plot_select_multiple works", {
+# 
+# })
+```
+
+
+
+# Plotting Select multiple variable with cross-tabulation
+
+```{r function-plot_select_multiple_cross}
+#' @title Plotting Select multiple variable
+#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' @param xlsformpath path to the xlsform file used to cole
+#' @param var name of the variable to display
+#' @param crosstab variable to use for cross tabulation
+#' @param showcode display the code
+#' @export
+
+plot_select_multiple_cross <- function(datapath = datapath,
+                                       xlsformpath = xlsformpath,
+                                       var, 
+                                       crosstab , 
+                                       showcode = FALSE) {
+  
+  
+  require("ggplot2")
+  
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  data <- kobo_frame(datapath = datapath,
+                   xlsformpath = xlsformpath,
+                   var = var  )
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  nr <- sum(!is.na(data[[var]]))
+  ## Writing report
+  if (rr != 0 ) { 
+    
+    if(crosstab != "") {
+      if( crosstab != var ) {
+        
+          ## Writing code instruction in report
+          if( showcode == TRUE) {
+             cat(paste0("  `plot_select_multiple_cross(\"", var, "\",\"", crosstab, "\")` \n\n "))} 
+            #cat("---\n")
+            #  cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), " `plot_select_multiple_cross(\"", var, "\",\"", crosstab, "\")`  "))
+            # cat("\n\n") } 
+          else {}
+         
+      cntscross <- data |>
+        ## keep only the variable we need 
+        tidyr::drop_na( tidyselect::all_of(c(var,crosstab))) |>
+        ## Separate the var with select_multiple 
+        tidyr::separate_rows(.data[[var]], sep = " ") |>
+        # Lump together factor levels into "other"
+        dplyr::distinct(`X_id`, 
+                 !!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
+                 !!crosstab := forcats::fct_lump_n(factor(.data[[crosstab]]), n = 5) ) |>
+        # Lump together factor levels into "other"
+        dplyr::count(x := .data[[var]],
+                     y := .data[[crosstab]] ) |>
+        dplyr::mutate(p = n/sum(n)) |>
+        dplyr::group_by(y) |>
+        dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
+                      pcum = n / cumsum)  
+      ##plot
+       p <- ggplot(cntscross, 
+                  aes(x= pcum, 
+                      y = x)) +
+        geom_col(fill = "#0072BC") +
+        #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
+        ## Position label differently in the bar in white - outside bar in black
+        geom_label( data =   function(x) subset(x, pcum < max(pcum) / 1.5),
+                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                    hjust = -0.1 ,
+                    vjust = 0.5, 
+                    colour = "black", 
+                    fill = NA, 
+                    label.size = NA, 
+                     
+                    size = 3   ) +  
+        geom_label( data =   function(x) subset(x, pcum >= max(pcum) / 1.5),
+                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                    hjust = 1.1 ,
+                    vjust = 0.5, 
+                    colour = "white", 
+                    fill = NA, 
+                    label.size = NA, 
+                     
+                    size = 3   ) +   
+        scale_x_continuous(labels = scales::label_percent()) +
+        facet_wrap( ~ y ,  nrow = 3 #,
+                    # labeller = as_labeller(function(x) label_choice(xlsformpath = xlsformpath,
+                    #                                      x= crosstab)(x)) 
+                    ) +
+        # scale_y_discrete(labels = function(x) {label_choice(xlsformpath = xlsformpath,
+        #                                                   x = var)(x) |>
+        #     stringr::str_wrap(40)}) +
+        coord_cartesian(clip = "off") +
+        labs(x = NULL, y = NULL,
+             title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
+                                                         x = var), 80),
+             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
+                                                         x = crosstab)), 80),
+             caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+        theme_minimal( base_size = 13) +  
+        geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
+        theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
+               panel.grid.major.y  = element_blank(), 
+               panel.grid.minor = element_blank()    ) +
+        theme(plot.title.position = "plot")
+      
+       print(p)
+    }   
+    } else { }
+  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
+  # cat("\n\n")
+}
+
+
+```
+
+```{r examples-plot_select_multiple_cross}
+plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "koboloadeR"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              var = "profile.reason",
+              crosstab = "location")
+```
+
+```{r tests-plot_select_multiple_cross}
+# test_that("plot_select_multiple_cross works", {
+# 
+# })
+```
+
+
+
+# Plotting Numeric variable
+
+```{r function-plot_integer}
+#' @title Plotting numeric variable
+#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' @param xlsformpath path to the xlsform file used to cole
+#' @param var name of the variable to display
+#' @param showcode display the code
+#' @export
+
+plot_integer <- function(datapath = datapath, 
+                         xlsformpath = xlsformpath,
+                         var, 
+                         showcode = FALSE) {
+  
+  require("ggplot2")
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  data <- kobo_frame(datapath = datapath,
+                   xlsformpath = xlsformpath,
+                   var = var  )
+  ## Cast just in case...
+  data[[var]] <- as.integer(data[[var]])
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  # cat("---\n")
+  # cat("\n\n")
+  ## Put a condition in case there's no record
+  if (rr != 0 ) { 
+      ## Writing code instruction in report
+      if( showcode == TRUE) {
+        cat(paste0("  `plot_integer(\"", var, "\")` \n\n "))} 
+        #cat("---\n")
+        #  cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_integer(\"", var, "\")`  "))
+        # cat("\n\n") } 
+      else {}
+    
+    p <- ggplot(data) + 
+      geom_histogram(aes(.data[[var]]), 
+                     # bins = nclass.FD(na.omit(data[[var]])),
+                     fill = "#0072BC", 
+                     color = "white" 
+      ) +
+      # scale_y_continuous(labels = scales::label_percent()) +
+      labs(x = NULL, y = NULL,
+           title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
+                                         x = var), 60), 
+           subtitle = if (!is.na(label_varhint(xlsformpath = xlsformpath, 
+                                                         x = var))){ 
+                     stringr::str_wrap(label_varhint(xlsformpath = xlsformpath, 
+                                                   x = var), 70)} else { ""},
+           caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+  
+      theme_minimal( base_size = 13) +
+      geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
+      theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
+           panel.grid.major.x  = element_blank(), 
+           panel.grid.minor = element_blank()    ) +
+           theme(plot.title.position = "plot")
+    
+    print(p)
+    
+    } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
+  # cat("\n\n")
+}
+
+```
+
+```{r examples-plot_integer}
+plot_integer(datapath = system.file("data.xlsx", package = "koboloadeR"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              var = "members.age")
+```
+
+```{r tests-plot_integer}
+# test_that("plot_integer works", {
+# 
+# })
+```
+
+
+
+# Plotting Open Text variable
+
+```{r function-plot_text}
+#' @title Plotting Open Text variables
+#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' @param xlsformpath path to the xlsform file used to cole
+#' @param var name of the variable to display
+#' @param showcode display the code
+#' @export
+
+plot_text <- function(datapath = datapath, 
+                      xlsformpath = xlsformpath,
+                      var, 
+                      showcode = FALSE) {
+  
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  data <- kobo_frame(datapath = datapath,
+                   xlsformpath = xlsformpath,
+                   var = var  )
+  # cat("---\n")
+  # cat("\n\n")
+  #cat( stringr::str_wrap(  paste0(  label_varname(var), " (Open Text question)"), 70) )
+  # cat(paste("####", label_varname(var)))
+  # cat("\n\n")
+  #cat("Open Text question\n\n")
+  
+  rr <- mean(!is.na(data[[var]]))
+  require("tm")
+  #Replacing “/”, “@” and “|” with space:
+  toSpace <- tm::content_transformer(function (x , pattern ) gsub(pattern, " ", x))  
+  # Cleaning the text  #### 
+  docs <-  tm::Corpus(tm::VectorSource(data[[var]]))  %>%
+            #Text transformation to replace special characters from the text.
+            tm::tm_map(., toSpace, "/")  %>%
+            tm::tm_map(., toSpace, "@")  %>%
+            tm::tm_map(., toSpace, "\\|")  %>%
+            # Convert the text to lower case
+            tm::tm_map(., content_transformer(tolower))  %>%
+            # Remove numbers
+            tm::tm_map(., removeNumbers)  %>%
+            # Remove punctuations
+            tm::tm_map(.,  removePunctuation)  %>%
+            # Eliminate extra white spaces
+            tm::tm_map(.,  stripWhitespace)  %>%
+            # Text stemming - reduces words to their root form.
+            tm::tm_map(.,  stemDocument)  %>%
+            # Remove common stopwords depending on language
+            # The information value of ‘stopwords’ is near zero due to the fact that they 
+            # are so common in a language. Removing this kind of words is useful before
+            # further analyses. 
+            tm::tm_map(., removeWords, stopwords("english"))  %>%
+            # Remove your own stop word
+            tm::tm_map(., removeWords, c("blabla1", "blabla2")) 
+  
+    # Step 4 : Build a term-document matrix ####
+    # Table containing the frequency of the words. Column names are words and row names are documents. 
+    dtm <- tm::TermDocumentMatrix(docs)
+    m <- as.matrix(dtm)
+    v <- sort(rowSums(m),decreasing=TRUE)
+    d <- data.frame(word = names(v),freq=v)
+    #head(d, 10)
+  
+    ## Put a condition in case there's no record
+    if(nrow(d) > 0 ) {
+      
+        ## Writing code instruction in report
+        if( showcode == TRUE) {
+          #cat("---\n")
+          
+          cat(paste0("  `plot_text(\"", var, "\")`  \n\n"))} 
+          # cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_text(\"", var, "\")`  "))
+          # cat("\n\n") } 
+        else {}
+      
+      # Step 5 : Generate the Word cloud  ####
+      #The importance of words can be illustrated as a word cloud as follow :
+      set.seed(1234)
+      wordcloud::wordcloud(words = d$word, # words : the words to be plotted
+                                freq = d$freq,  # freq : their frequencies
+                                min.freq = 1,  # min.freq : words with frequency below min.freq will not be plotted
+                                max.words=200, # max.words : maximum number of words to be plotted
+                                random.order=FALSE, # random.order : plot words in random order. If false, they will be plotted in decreasing frequency
+                                rot.per=0.25,   # rot.per : proportion words with 90 degree rotation (vertical text)
+                                colors= RColorBrewer::brewer.pal(8, "Dark2")) # colors : color words from least to most frequent. Use, for example, colors =“black” for single color.
+    title( main = stringr::str_wrap( label_varname(xlsformpath = xlsformpath, 
+                                                  x= var), 70),
+           sub = glue::glue("Open Text question \n Source: {datasource}" ))  
+    
+         
+      # p1 <- ggplot(d, 
+      #              aes(label = word,
+      #                  size = freq,
+      #                  color = freq )) +
+      #       ggwordcloud::geom_text_wordcloud(area_corr = TRUE,
+      #                                        rm_outside = TRUE,
+      #                                        eccentricity = 1) +
+      #       scale_size_area(max_size = 50) +
+      #       # scale_radius(range = c(0, 10),  limits = c(0, NA)) +
+      #       scale_color_gradient(low = "darkred", high = "red") +
+      #       labs(x = NULL, y = NULL,
+      #        title = str_wrap(survey_label(var), 60), 
+      #        subtitle = if (!is.na(label_varhint(var))){ 
+      #          stringr::str_wrap(label_varhint(var), 70)} else { ""},
+      #        caption = glue::glue("Wordcloud displaying an Open Text question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
+      #   
+      #       theme_minimal( base_size = 13)  
+      # print(p1)
+      
+    
+  } else { cat("<strong style=\"color:#0072BC;\">No significant text for this specific question!</strong>\n\n")}
+  
+  # cat("\n\n")
+}
+
+```
+
+```{r examples-plot_text}
+plot_text(datapath = system.file("data.xlsx", package = "koboloadeR"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              var = "profile.occupation")
+```
+
+```{r tests-plot_text}
+# test_that("plot_text works", {
+# 
+# })
+```
+
+
+
+# Output Header variable
+
+```{r function-output_header}
+#' @title Output Header
+#' @param xlsformpath path to the xlsform file used to colllect the data
+#' @param var name of the variable to display
+#' @export
+
+output_header <- function(xlsformpath = xlsformpath,
+                            var) {
+  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  
+  lvl <- stringr::str_count(var, "\\.")
+  
+  label <- as.data.frame(dico[1]) |>
+           dplyr::filter(name == var) |>
+           dplyr::pull(label)
+  title <- if(is.na(label)) glue::glue("({var})") else label
+  # Join multiple strings into a single string.
+  cat("---\n")
+  hdr <- stringr::str_c(strrep("# ", 1+lvl), title, sep = "   ")
+  cat("\n\n")
+  cat("\n")
+  cat(hdr)
+  cat("\n\n")
+}
+
+```
+
+```{r examples-output_header}
+output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              var = "profile")
+```
+
+```{r tests-output_header}
+# test_that("output_header works", {
+# 
+# })
+```
+
+
+
+# Crunching Variable based on type
+
+```{r function-kobo_cruncher}
+#' @title Crunch a variable
+#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' @param xlsformpath path to the xlsform file used to colllect the data
+#' @param type type of the variable to display
+#' @param name name of the variable to display
+#' @param showcode display the code
+#' @export
+ 
+kobo_cruncher <- function(datapath = datapath, 
+                          xlsformpath = xlsformpath,
+                          type, 
+                          name, 
+                          showcode = TRUE) {
+  
+  if (type == "begin_group") output_header(xlsformpath = xlsformpath, 
+                                           var = name)
+  else if (type == "select_one") plot_select_one(datapath = datapath, 
+                                                 xlsformpath = xlsformpath,
+                                                 var = name, 
+                                                 showcode = TRUE)
+  else if (type == "select_multiple") plot_select_multiple(datapath = datapath,
+                                                           xlsformpath = xlsformpath, 
+                                                           var = name, 
+                                                           showcode = TRUE)
+  else if (type == "integer") plot_integer(datapath = datapath, 
+                                           xlsformpath = xlsformpath,
+                                           var = name, 
+                                           showcode = TRUE)
+  else if (type == "text") plot_text(datapath = datapath, 
+                                     xlsformpath = xlsformpath, 
+                                     var = name, 
+                                     showcode = TRUE)
+}
+
+```
+
+```{r examples-kobo_cruncher}
+kobo_cruncher(datapath = system.file("data.xlsx", package = "koboloadeR"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "koboloadeR"), 
+              type = "select_one", 
+              name = "profile.country",
+              showcode = TRUE)
+```
+
+```{r tests-kobo_cruncher}
+# test_that("survey_label works", {
+# 
+# })
+```
+ 
+
+# Report Template 1 for Automatic Data Exploration
+
+
+```{r function-template_exploration}
+#' Convert to UNHCR branded HTML website
+#'
+#' Format for converting from R Markdown to an UNHCR branded HTML website
+#'
+#' @importFrom unhcrdesign use_unhcr_bslib
+#' @rdname template_exploration
+#'
+#' @param ... extra parameters to pass to `rmarkdown::html_document`
+#' @return An html report
+#'
+#' @export
+
+template_exploration <- function(...) {
+  
+  unhcr_theme <- unhcrdesign::use_unhcr_bslib()
+  
+  rmarkdown::html_document( theme = unhcr_theme,
+                            ...)
+}
+
+```
+
+# Report Template 2 for Joint Data Interpretation Session
+
+```{r function-template_interpretation}
+#' Convert to UNHCR branded Powerpoint presentation
+#'
+#' Format for converting from R Markdown to an UNHCR branded Powerpoint presentation
+#'
+#' @rdname template_interpretation
+#'
+#' @param ... extra parameters to pass to `officedown::rpptx_document`
+#' @return A powerpoint report
+#'
+#' @export
+
+template_interpretation <- function(...) {
+
+  pptx_template <- pkg_resource("templates/pptx_template.pptx")
+
+  officedown::rpptx_document(
+    reference_doc = pptx_template,
+    ...
+  )
+}
+```
+
+# Report Template 3 for Dissemination and Data Story Telling Template
+
+```{r function-template_dissemination}
+#' Function for UNHCR paged simple template
+#'
+#' @param back_html Back-cover HTML including contact information
+#' @param other_css Add extra css
+#' @param number_sections Number section headings
+#' @param ... Arguments passed to pagedown::html_paged
+#' @rdname template_dissemination
+#'
+#' @return A pagedown report
+#' @export
+
+template_dissemination <- function(back_html = TRUE,
+                         other_css = NULL,
+                         number_sections = FALSE,
+                         ...) {
+  # base css files
+  base_css <- unhcrdesign::use_unhcr_css(c("reset", "color_variables", "fonts"))
+
+  # logo css file
+  logo_var <- paste0("  --unhcr-logoblue: url(\"", unhcrdesign::use_unhcr_logo(logo = "blue", data_uri = TRUE), "\");")
+  logo_css <- tempfile(fileext = ".css")
+  writeLines(c(":root {", logo_var, "}"), con = logo_css)
+
+  file.append(base_css, logo_css)
+
+  # specific css files
+  paged_base_css <- pkg_resource("css/paged_base.css")
+  paged_simple_css <- pkg_resource("css/paged_simple.css")
+
+  # html back-cover
+  if (back_html) {
+    back_html <-
+      pkg_resource("html/back_paged_simple.html")
+  } else {
+    back_html <- NULL
+  }
+  # template
+  pagedown::html_paged(
+    css = c(base_css, paged_base_css,
+            paged_simple_css, other_css),
+    includes = list(after_body = back_html),
+    number_sections = number_sections,
+    ...)
+}
+
+
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_dev.Rmd", vignette_name = "Crunching Function for XlsForm")
+```
+

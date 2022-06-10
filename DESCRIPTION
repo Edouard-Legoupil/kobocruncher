@@ -1,0 +1,42 @@
+Package: kobocruncher
+Title: A Metapackage For Survey Data Crunching
+Version: 0.2.1
+Authors@R: c(
+    person("Edouard", "Legoupil", , "legoupil@unhcr.org", role = c("aut", "cre")),
+    person("Hisham", "Galal", , "galalh@unhcr.org", role = "aut")
+  )
+Description: An organized workflow generating 'Rmd' files from an extended
+    'xlsform' questionnaire structure to facilitate survey data crunching.
+License: GPL-3
+URL: https://Edouard-Legoupil.github.io/kobocruncher/docs/
+BugReports: https://github.com/Edouard-Legoupil/kobocruncher/issues
+Imports: 
+    dplyr,
+    forcats,
+    ggplot2,
+    glue,
+    magrittr,
+    officedown,
+    pagedown,
+    purrr,
+    RColorBrewer,
+    readxl,
+    rmarkdown,
+    scales,
+    stringr,
+    tidyr,
+    tidyselect,
+    tm,
+    unhcrdesign,
+    wordcloud
+Suggests: 
+    knitr,
+    koboloadeR,
+    testthat
+VignetteBuilder: 
+    knitr
+Remotes: 
+    vidonne/unhcrdesign
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.0
