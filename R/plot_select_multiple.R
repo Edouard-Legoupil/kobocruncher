@@ -54,11 +54,7 @@ plot_select_multiple <- function(datapath = datapath,
     
     ## Writing code instruction in report
     if( showcode == TRUE) {
-      cat(paste0("  `plot_select_multiple(\"", var, "\")` \n\n "))} 
-      #cat("---\n")
-      #  cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_select_multiple(\"", var, "\")`  "))
-      # cat("\n\n") } 
-    else {} 
+      cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_select_multiple(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}   else {} 
     
     ## Plot
      p <- ggplot(cnts, aes(p, x)) +

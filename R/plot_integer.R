@@ -32,11 +32,7 @@ plot_integer <- function(datapath = datapath,
   if (rr != 0 ) { 
       ## Writing code instruction in report
       if( showcode == TRUE) {
-        cat(paste0("  `plot_integer(\"", var, "\")` \n\n "))} 
-        #cat("---\n")
-        #  cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_integer(\"", var, "\")`  "))
-        # cat("\n\n") } 
-      else {}
+        cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_integer(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}    else {}
     
     p <- ggplot(data) + 
       geom_histogram(aes(.data[[var]]), 

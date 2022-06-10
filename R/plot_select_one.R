@@ -49,11 +49,7 @@ plot_select_one <- function(datapath  ,
   }
   
   ## Writing code instruction in report
-  if( showcode == TRUE) { cat(paste0("  `plot_select_one(\"", var, "\")` \n\n "))} else {}
-  #
-  # #cat("---\n")
-  # cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), " `plot_select_one(\"",var,"\")`  "))
-  # cat("\n\n") }
+  if( showcode == TRUE) { cat(paste0( fontawesome::fa_png("far fa-copy", fill ="grey"), "`plot_select_one(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}  else {}
   
   
   ## Put a condition in case there's no record

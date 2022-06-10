@@ -38,11 +38,7 @@ plot_select_multiple_cross <- function(datapath = datapath,
         
           ## Writing code instruction in report
           if( showcode == TRUE) {
-             cat(paste0("  `plot_select_multiple_cross(\"", var, "\",\"", crosstab, "\")` \n\n "))} 
-            #cat("---\n")
-            #  cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), " `plot_select_multiple_cross(\"", var, "\",\"", crosstab, "\")`  "))
-            # cat("\n\n") } 
-          else {}
+             cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", crosstab, "\")` \n\n "))}   else {}
          
       cntscross <- data |>
         ## keep only the variable we need 

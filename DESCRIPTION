@@ -12,6 +12,7 @@ URL: https://Edouard-Legoupil.github.io/kobocruncher/docs/
 BugReports: https://github.com/Edouard-Legoupil/kobocruncher/issues
 Imports: 
     dplyr,
+    fontawesome,
     forcats,
     ggplot2,
     glue,

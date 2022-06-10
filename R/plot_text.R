@@ -69,12 +69,7 @@ plot_text <- function(datapath = datapath,
       
         ## Writing code instruction in report
         if( showcode == TRUE) {
-          #cat("---\n")
-          
-          cat(paste0("  `plot_text(\"", var, "\")`  \n\n"))} 
-          # cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_text(\"", var, "\")`  "))
-          # cat("\n\n") } 
-        else {}
+          cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_text(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")`  \n\n"))}   else {}
       
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :

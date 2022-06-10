@@ -39,13 +39,8 @@ plot_select_one_cross <- function(datapath = datapath,
       if( crosstab != var ) {
         
           ## Writing code instruction in report
-          if( showcode == TRUE) {
-            
-            cat(paste0("  `plot_select_one_cross(\"", var, "\",\"", crosstab, "\")` \n\n "))} 
-            # #cat("---\n")
-            #  cat(paste0("##### ",fontawesome::fa_png("far fa-copy", fill ="grey"), " `plot_select_one_cross(\"", var, "\",\"", crosstab, "\")`  " ))
-            # cat("\n\n") } 
-          else {}
+          if( showcode == TRUE) { 
+            cat(paste0( fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", crosstab, "\")` \n\n "))}     else {}
 
       cnts <- data |>
         ## keep only the variable we need
