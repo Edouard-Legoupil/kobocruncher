@@ -6,4 +6,6 @@
 ^\.github$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^docs$
+^_pkgdown\.yml$
 ^kobocruncher\.Rproj$

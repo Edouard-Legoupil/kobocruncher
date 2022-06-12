@@ -37,6 +37,9 @@
     <loc>/reference/kobo_frame.html</loc>
   </url>
   <url>
+    <loc>/reference/kobo_prepare_form.html</loc>
+  </url>
+  <url>
     <loc>/reference/label_choice.html</loc>
   </url>
   <url>
@@ -55,7 +58,13 @@
     <loc>/reference/pipe.html</loc>
   </url>
   <url>
+    <loc>/reference/plo_correlation.html</loc>
+  </url>
+  <url>
     <loc>/reference/plot_integer.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_integer_cross.html</loc>
   </url>
   <url>
     <loc>/reference/plot_select_multiple.html</loc>
@@ -73,12 +82,12 @@
     <loc>/reference/plot_text.html</loc>
   </url>
   <url>
-    <loc>/reference/template_dissemination.html</loc>
+    <loc>/reference/template_1_exploration.html</loc>
   </url>
   <url>
-    <loc>/reference/template_exploration.html</loc>
+    <loc>/reference/template_2_interpretation.html</loc>
   </url>
   <url>
-    <loc>/reference/template_interpretation.html</loc>
+    <loc>/reference/template_3_dissemination.html</loc>
   </url>
 </urlset>

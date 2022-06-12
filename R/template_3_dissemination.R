@@ -8,18 +8,13 @@
 #' @param number_sections Number section headings
 #' @param ... Arguments passed to pagedown::html_paged
 #' 
-#' @rdname template_dissemination
-#'
 #' @return A pagedown report
 #' @export
 
-template_dissemination <- function(back_html = TRUE,
+template_3_dissemination <- function(back_html = TRUE,
                          other_css = NULL,
                          number_sections = FALSE,
                          ...) {
-  pkg_resource = function(...) {
-    system.file(..., package = "kobocruncher")
-  }
   # base css files
   base_css <- unhcrdesign::use_unhcr_css(c("reset", "color_variables", "fonts"))
   
@@ -31,13 +26,12 @@ template_dissemination <- function(back_html = TRUE,
   file.append(base_css, logo_css)
 
   # specific css files
-  paged_base_css <- pkg_resource("css/paged_base.css" )
-  paged_simple_css <- pkg_resource("css/paged_simple.css" )
+  paged_base_css <- system.file("css/paged_base.css", package = "kobocruncher")
+  paged_simple_css <- system.file("css/paged_simple.css", package = "kobocruncher")
 
   # html back-cover
   if (back_html) {
-    back_html <-
-      pkg_resource("html/back_paged_simple.html" )
+    back_html <- system.file("html/back_paged_simple.html", package = "kobocruncher")
   } else {
     back_html <- NULL
   }

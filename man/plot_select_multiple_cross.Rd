@@ -24,7 +24,7 @@ plot_select_multiple_cross(
 \item{showcode}{display the code}
 }
 \description{
-Plotting Select multiple variable with cross tabulation on a second categorical variable
+Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
 }
 \examples{
 plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),

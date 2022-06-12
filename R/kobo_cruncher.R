@@ -5,6 +5,8 @@
 #' @param xlsformpath path to the xlsform file used to colllect the data
 #' @param type type of the variable to display
 #' @param name name of the variable to display
+#' @param disaggregation vector with the potential variables to use for crosstabulation
+#' @param correlate vector with the potential variables to use for testing statistical association
 #' @param showcode display the code
 #' @export
  
@@ -18,10 +20,13 @@ kobo_cruncher <- function(datapath = datapath,
                           xlsformpath = xlsformpath,
                           type, 
                           name, 
+                          disaggregation = "", 
+                          correlate = "", 
                           showcode = TRUE) {
   
   if (type == "begin_group") output_header(xlsformpath = xlsformpath, 
                                            var = name)
+  
   else if (type == "select_one") plot_select_one(datapath = datapath, 
                                                  xlsformpath = xlsformpath,
                                                  var = name, 

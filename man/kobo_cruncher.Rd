@@ -9,6 +9,8 @@ kobo_cruncher(
   xlsformpath = xlsformpath,
   type,
   name,
+  disaggregation = "",
+  correlate = "",
   showcode = TRUE
 )
 }
@@ -20,6 +22,10 @@ kobo_cruncher(
 \item{type}{type of the variable to display}
 
 \item{name}{name of the variable to display}
+
+\item{disaggregation}{vector with the potential variables to use for crosstabulation}
+
+\item{correlate}{vector with the potential variables to use for testing statistical association}
 
 \item{showcode}{display the code}
 }

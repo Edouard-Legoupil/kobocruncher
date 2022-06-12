@@ -24,3 +24,7 @@ remotes::install_github("Edouard-Legoupil/kobocruncher", Ncpus=4)
 ## Contributing
 
 Contributions to the packages are welcome. Please read first the [contribution guidelines](CONTRIBUTING.html), follow the [code of conduct](CODE_OF_CONDUCT.html) and use the [issue template](ISSUE_TEMPLATE.html).
+
+## Reference
+
+https://boxuancui.github.io/DataExplorer/ 

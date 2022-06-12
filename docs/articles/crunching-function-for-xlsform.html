@@ -140,6 +140,10 @@ and `system.file()` to read it in your examples.
 <span class="co">#&gt; <span style="color: #949494;">#   `_submission__tags` &lt;lgl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="extend-the-xlsform-to-add-instructions-for-the-analysis-plan">Extend the xlsform to add instructions for the analysis plan<a class="anchor" aria-label="anchor" href="#extend-the-xlsform-to-add-instructions-for-the-analysis-plan"></a>
+</h2>
+</div>
+<div class="section level2">
 <h2 id="prepare-data-dictionnary">Prepare data dictionnary<a class="anchor" aria-label="anchor" href="#prepare-data-dictionnary"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -599,9 +603,25 @@ and `system.file()` to read it in your examples.
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_integer-1.png" width="700"></p>
 </div>
 <div class="section level2">
-<h2 id="plotting-open-text-variable">Plotting Open Text variable<a class="anchor" aria-label="anchor" href="#plotting-open-text-variable"></a>
+<h2 id="plotting-numeric-variable-with-cross-tabulation">Plotting Numeric variable with cross-tabulation<a class="anchor" aria-label="anchor" href="#plotting-numeric-variable-with-cross-tabulation"></a>
 </h2>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_integer_cross.html">plot_integer_cross</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
+              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
+              var <span class="op">=</span> <span class="st">"members.age"</span>,
+              crosstab <span class="op">=</span> <span class="st">"location"</span><span class="op">)</span>
+<span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
+<span class="co">#&gt; Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
+<span class="co">#&gt; Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
+<span class="co">#&gt; Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
+<span class="co">#&gt; Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
+<span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
+<p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_integer_cross-1.png" width="700"></p>
+</div>
+<div class="section level2">
+<h2 id="plotting-open-text-variable">Plotting Open Text variable<a class="anchor" aria-label="anchor" href="#plotting-open-text-variable"></a>
+</h2>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_text.html">plot_text</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
               xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               var <span class="op">=</span> <span class="st">"profile.occupation"</span><span class="op">)</span>
@@ -635,9 +655,18 @@ and `system.file()` to read it in your examples.
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_text-1.png" width="700"></p>
 </div>
 <div class="section level2">
+<h2 id="plotting-correlation">Plotting Correlation<a class="anchor" aria-label="anchor" href="#plotting-correlation"></a>
+</h2>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plo_correlation.html">plo_correlation</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
+              xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
+              var <span class="op">=</span> <span class="st">"profile.occupation"</span><span class="op">)</span>
+<span class="co">#&gt; NULL</span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="output-header-variable">Output Header variable<a class="anchor" aria-label="anchor" href="#output-header-variable"></a>
 </h2>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/output_header.html">output_header</a></span><span class="op">(</span> xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               var <span class="op">=</span> <span class="st">"profile"</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4,</span>
@@ -651,7 +680,7 @@ and `system.file()` to read it in your examples.
 <div class="section level2">
 <h2 id="crunching-variable-based-on-type">Crunching Variable based on type<a class="anchor" aria-label="anchor" href="#crunching-variable-based-on-type"></a>
 </h2>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/kobo_cruncher.html">kobo_cruncher</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>,
               xlsformpath <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span>, 
               type <span class="op">=</span> <span class="st">"select_one"</span>, 

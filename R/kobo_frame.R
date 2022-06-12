@@ -27,6 +27,13 @@ kobo_frame <- function(datapath,
   data  <-  datalist[dataframen] |>
               as.data.frame()
   
+
+## get correct id whether the frmae is nested one or not.. 
+if ("_id" %in% colnames(data)) { data$X_id <-  data$`_id` } else {  }
+if ("_index" %in% colnames(data)) { data$X_id <-  data$`_index` } else {  }
+if ("X_index" %in% colnames(data)) { data$X_id <-  data$X_index  } else { }
+if ("X_id" %in% colnames(data)) { data$X_id <-  row.names(data)  } else { }
+  
   ## Make sure the data actually contain the variable if not put to null
   # if ( var %in% names(data)) {
   #   data <- data

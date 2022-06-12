@@ -3,24 +3,14 @@
 #' Second Template to prepare a presentation for the Joint Data Interpretation Session
 #' 
 #' See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305  
-#'
-#' @rdname template_interpretation
-#'
-#' @param ... extra parameters to pass to `officedown::rpptx_document`
-#' 
+#'#'
+#' @param ... extra parameters to pass to `officedown::rpptx_document`#' 
 #' @return A powerpoint report
 #'
 #' @export
 
-template_interpretation <- function(...) {
+template_2_interpretation <- function(...) {
  # locations of resource files in the package
-  pkg_resource = function(...) {
-    system.file(..., package = "kobocruncher")
-  }
-  pptx_template <- pkg_resource("templates/pptx_template.pptx")
-
-  officedown::rpptx_document(
-    reference_doc = pptx_template,
-    ...
-  )
+  pptx_template <- system.file("templates/pptx_template.pptx", package = "kobocruncher")
+  officedown::rpptx_document(  reference_doc = pptx_template,  ...  )
 }

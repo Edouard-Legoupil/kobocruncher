@@ -5,7 +5,6 @@
 #' It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
 #'  This report also includes each plot syntax so that they can be easyly pasted for the second report
 #' @importFrom unhcrdesign use_unhcr_bslib
-#' @rdname template_exploration
 #'
 #' @param ... extra parameters to pass to `rmarkdown::html_document`
 #' 
@@ -13,7 +12,7 @@
 #'
 #' @export
 
-template_exploration <- function(...) {
+template_1_exploration <- function(...) {
   
   unhcr_theme <- unhcrdesign::use_unhcr_bslib()
   

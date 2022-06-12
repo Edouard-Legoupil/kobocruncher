@@ -12,7 +12,15 @@
 #' datalist[2]  
 kobo_data <- function(datapath) {
    # cat(readxl::excel_sheets(datapath ))
-    datalist <- lapply(readxl::excel_sheets(datapath ), function(x) readxl::read_excel(datapath , sheet = x))
+    datalist <- lapply(readxl::excel_sheets(datapath ), function(x) readxl::read_excel(datapath , sheet = x))  
+    
+    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("/", ".", colnames(y)); y})
+    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_001", ".", colnames(y)); y})
+    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_002", ".", colnames(y)); y})
+    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_003", ".", colnames(y)); y})
+    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_004", ".", colnames(y)); y})
+    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_005", ".", colnames(y)); y})
+    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_006", ".", colnames(y)); y})
     #names(datalist) <- readxl::excel_sheets(datapath )
     return(datalist)
 }

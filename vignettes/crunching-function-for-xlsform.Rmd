@@ -39,6 +39,8 @@ datalist[1]
 datalist[2]  
 ```
 
+# Extend the xlsform to add instructions for the analysis plan
+
 # Prepare data dictionnary
 
 ```{r examples-kobo_dico}
@@ -139,10 +141,27 @@ plot_integer(datapath = system.file("data.xlsx", package = "kobocruncher"),
               var = "members.age")
 ```
 
+# Plotting Numeric variable with cross-tabulation
+
+```{r examples-plot_integer_cross}
+plot_integer_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+              var = "members.age",
+              crosstab = "location")
+```
+
 # Plotting Open Text variable
 
 ```{r examples-plot_text}
 plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+              var = "profile.occupation")
+```
+
+# Plotting Correlation
+
+```{r examples-plo_correlation}
+plo_correlation(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.occupation")
 ```
