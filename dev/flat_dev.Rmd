@@ -92,7 +92,8 @@ datalist[2]
 #'  An additional worksheet is also created to document the information required for registration on UNHCR CKAN instance http://ridl.unhcr.org
 #'  
 #'  1. Configuration of how questions are grouped together in the report:
-#'     - chapter: by default the crunching report is presented according to the group. Once set, this will replace the original grouping. Only variable defined within a chapter will be displayed in the crunching report.
+#'     - chapter: by default the crunching report is presented according to the group. Once set, this will replace the original grouping. Only variable defined within a chapter will be displayed in the crunching report. By dafault chapter will follow the questions sequence - if chapters start with a number that number will overrule the sequence
+#'     - subchapter: provides a second level of details below the chapter if subchapters start with a number that number will overrule the sequence
 #' 
 #'  2. Configuration for data manipulation:
 #'     - clean: define what variable shall be re-categorized during cleaning - a local copy of all levels will be locally saved in order to do the mapping in excel. When the mapping is available, it will be automatically applied to the data. Can be useful to reduce the number of categories.
@@ -101,9 +102,10 @@ datalist[2]
 #'  3. Configuration of specific charts, visualization and analysis: 
 #'  
 #'     - disaggregation: define variable to use for visual crosstabulation - functions with "_cross"
-#'     - correlate: define the variable to use to explore statistical association - works under certan restrictions (i.e. between 2 categorical variables only): kobo_correlate
+#'     - correlate: define the variable to use to explore statistical association - works under certain restrictions (i.e. between 2 categorical variables only): kobo_correlate
 #'     - cluster: define variable to generate an unsupervised classification (i.e. hierarchical clustering based on multiple correspondance analysis) kobo_cluster
 #'     - predict: define variable to use to generate predictive model, ie.e the target variable and the predictors.  kobo_predict
+#'     - score: define the different dimensions of a score - and used the score set up for the choice test different aggregation approaches
 #'     - mappoint, mappoly: define the variable to use to generate maps - kobo_map
 #'  
 #' In case if those fields do not yet exist, the function will create dummy column for each one.
@@ -153,9 +155,9 @@ kobo_prepare_form <- function(xlsformpath,
         type = character(),
         name = character(),
         label = character(),
-        labelReport = character(),
+        labelQ = character(),
         hint = character(),
-        hintReport = character(),
+        hintQ = character(),
         relevant = character(),
         required = character(),
         constraint = character(),
@@ -196,6 +198,7 @@ kobo_prepare_form <- function(xlsformpath,
       # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
     } else {    survey$hint <- ""   }
     if ("chapter" %in% colnames(survey)) { } else { survey$chapter <- ""   }
+    if ("subchapter" %in% colnames(survey)) { } else { survey$subchapter <- ""   }
     if ("correlate" %in% colnames(survey)) {
       # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
     } else {  survey$correlate <- ""}
@@ -212,6 +215,9 @@ kobo_prepare_form <- function(xlsformpath,
     if ("predict" %in% colnames(survey)) { 
       # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
     } else { survey$predict <- ""  }
+    if ("score" %in% colnames(survey)) { 
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+    } else { survey$score <- ""  }
     if ("mappoint" %in% colnames(survey)) {
       # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
     } else { survey$mappoint <- ""}
@@ -223,10 +229,10 @@ kobo_prepare_form <- function(xlsformpath,
     
     ### order in user friendly    way
     namesOfSur <- c( "type", "name", "label", "hint", 
-                     "chapter",
+                     "chapter", "subchapter",
                      "anonymise",  "clean"     ,
                      "disaggregation", "correlate",
-                     "cluster"  , "predict" ,
+                     "cluster"  , "predict" ,"score" ,
                      "mappoint",  "mappoly",
                      "label.lenght",
                      "labelQ", "hintQ",
@@ -424,9 +430,11 @@ kobo_dico <- function(xlsformpath) {
                                        "end repeat"   ="end_repeat")) |>
     
     ## spearate the type
+    
     tidyr::separate(type, 
                     into = c("type", "list_name"), 
-                    sep = " ") |>
+                    sep = " ",
+                    fill = "right") |>
     
     ## Need to add more cleaning in case...
     #dplyr::filter(!(is.na(name))) |>
@@ -564,7 +572,6 @@ kobo_frame <- function(datapath,
   data  <-  datalist[dataframen] |>
               as.data.frame()
   
-
 ## get correct id whether the frmae is nested one or not.. 
 if ("_id" %in% colnames(data)) { data$X_id <-  data$`_id` } else {  }
 if ("_index" %in% colnames(data)) { data$X_id <-  data$`_index` } else {  }
@@ -672,8 +679,12 @@ label_choiceset <- function(xlsformpath,
     dplyr::filter(name == x) |>
     dplyr::pull(list_name)
   
- as.data.frame(dico[2]) |>
-    dplyr::filter(list_name == lname)
+  dict <- 
+    as.data.frame(dico[2]) |>
+    dplyr::filter(list_name == lname) |> 
+    (\(x) purrr::set_names(x$label, x$name))()
+  
+  function(y) { dict[y] |> tidyr::replace_na("Other") }
 }
 
 ```
@@ -807,8 +818,8 @@ plot_select_one <- function(datapath  ,
                   
                   size = 4   ) +
       scale_x_continuous(labels = scales::label_percent()) +
-      # scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath, x = var)(x) |>
-      #                 stringr::str_wrap(40)}) +
+      scale_y_discrete(labels = function(x, var) {label_choiceset(xlsformpath = xlsformpath, x= rlang::as_string(rlang::expr(var)) )(x) |>
+                      stringr::str_wrap(40)}) +
       coord_cartesian(clip = "off") +
       labs(x = NULL, y = NULL,
            title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
@@ -1268,7 +1279,7 @@ plot_integer <- function(datapath = datapath,
         cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_integer(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}    else {}
     
     p <- ggplot(data) + 
-      geom_histogram(aes(.data[[var]]), 
+      geom_histogram(aes( x= .data[[var]]), 
                      # bins = nclass.FD(na.omit(data[[var]])),
                      fill = "#0072BC", 
                      color = "white" 
@@ -1347,21 +1358,19 @@ plot_integer_cross <- function(datapath = datapath,
         cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_integer(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}    else {}
     
     p <- ggplot(data) + 
-      geom_histogram(aes(.data[[var]]), 
-                     # bins = nclass.FD(na.omit(data[[var]])),
+      geom_boxplot(aes(x = .data[[var]], y =  .data[[crosstab]]), 
                      fill = "#0072BC", 
                      color = "white" 
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
       labs(x = NULL, y = NULL,
-           title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
-                                         x = var), 60), 
-           subtitle = if (!is.na(label_varhint(xlsformpath = xlsformpath, 
-                                                         x = var))){ 
-                     stringr::str_wrap(label_varhint(xlsformpath = xlsformpath, 
-                                                   x = var), 70)} else { ""},
+             title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
+                                                         x = var), 80),
+             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
+                                                         x = crosstab)), 80),
            caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-  
+      
+       scale_size_area(max_size = 10) +
       theme_minimal( base_size = 13) +
       geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
@@ -1381,7 +1390,7 @@ plot_integer_cross <- function(datapath = datapath,
 plot_integer_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "members.age",
-              crosstab = "location")
+              crosstab = "members.sex")
 ```
 
 ```{r tests-plot_integer_cros}
@@ -1516,7 +1525,7 @@ plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
 
 # Plotting Correlation
 
-```{r function-plo_correlation}
+```{r function-plot_correlation}
 #' @title Plotting Correlation
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
 #' @param xlsformpath path to the xlsform file used to cole
@@ -1524,10 +1533,26 @@ plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
 #' @param showcode display the code
 #' @export
 
-plo_correlation <- function(datapath = datapath, 
+plot_correlation <- function(datapath = datapath, 
                       xlsformpath = xlsformpath,
                       var, 
                       showcode = FALSE) {
+  
+  
+  
+ p <-   corrplot::corrplot(stats::chisq.test(MainDataFrame$monit.FamiliyLeft,MainDataFrame$monit.RouteIncident)$residuals,
+is.cor = FALSE, # use for general matrix to convert to Sq form
+cl.pos = "n", ## Do not display the color legend
+cl.cex = 0.7, # Size of all label
+tl.cex = 0.7, # Size of axis label
+tl.srt = 45, # string rotation in degrees
+tl.col = "black", # color of text label.
+addCoef.col = "grey", # add coeff in the chart
+number.cex = 3/ncol(stats::chisq.test(MainDataFrame$monit.FamiliyLeft,MainDataFrame$monit.RouteIncident)), # size of coeff
+mar = c(0.5,0.5,4, 0.5), ## margin of plots
+title = paste0("Correlation between ", , " & ", )) 
+ 
+ print(p)
   
  
 }
