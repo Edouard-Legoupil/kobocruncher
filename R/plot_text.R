@@ -29,6 +29,10 @@ plot_text <- function(datapath = datapath,
   #cat("Open Text question\n\n")
   
   rr <- mean(!is.na(data[[var]]))
+   if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else { 
+      
   require("tm")
   #Replacing “/”, “@” and “|” with space:
   toSpace <- tm::content_transformer(function (x , pattern ) gsub(pattern, " ", x))  
@@ -109,5 +113,6 @@ plot_text <- function(datapath = datapath,
   } else { cat("<strong style=\"color:#0072BC;\">No significant text for this specific question!</strong>\n\n")}
   
   # cat("\n\n")
+  }
 }
 

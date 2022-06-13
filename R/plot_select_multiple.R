@@ -14,6 +14,12 @@
 #'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
 #'               var = "profile.reason"
 #'             )
+#' 
+#' plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
+#'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+#'               var = "profile.reason1"
+#'             )
+#' 
 plot_select_multiple <- function(datapath = datapath, 
                                  xlsformpath = xlsformpath,
                                  var, 
@@ -30,7 +36,14 @@ plot_select_multiple <- function(datapath = datapath,
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   nr <- sum(!is.na(data[[var]]))
+
   
+  if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else {
+  
+  ## If not empty
+  if (rr != 0 & ! (is.nan(rr)) ) {    
   
   cnts <- data |>
     tidyr::drop_na(tidyselect::all_of(var)) |>
@@ -43,20 +56,14 @@ plot_select_multiple <- function(datapath = datapath,
     dplyr::mutate(p = n/nr)
   
   ## Manage situation if ordinal variable (i.e. order is set in choices)
-  if (any(!is.na(label_choiceset(xlsformpath = xlsformpath,
-                           x = var)$order))) {
+  if (any(!is.na(dplyr::filter(dico[[2]], list_name == var)$order))) {
     cnts <- cnts |>
-    dplyr::mutate(x = factor(x, 
-                             levels = c(label_choiceset(xlsformpath = xlsformpath,
-                                                          x = var)$name, "Other")))
-   } else {
+      dplyr::mutate(x = forcats::fct_reorder(x, order, as.numeric))
+  } else {
     cnts <- cnts |>
-             dplyr::mutate(x = factor(x,  
-                             levels = x[order(n, decreasing=FALSE)]))
+      dplyr::mutate(x = forcats::fct_reorder(x, n))
   }
 
-  ## If not empty
-  if (rr != 0 ) {  
     
     ## Writing code instruction in report
     if( showcode == TRUE) {
@@ -87,9 +94,9 @@ plot_select_multiple <- function(datapath = datapath,
                     size = 4   ) +   
       
       scale_x_continuous(labels = scales::label_percent()) +
-      # scale_y_discrete(labels = function(x) {label_choice(xlsformpath = xlsformpath,
-      #                                                   x = var)(x) |>
-      #     stringr::str_wrap(40)}) +
+      scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+                                                        x = var)(x) |>
+          stringr::str_wrap(40)}) +
       coord_cartesian(clip = "off") +
       labs(x = NULL, y = NULL,
            title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
@@ -109,9 +116,11 @@ plot_select_multiple <- function(datapath = datapath,
      
     print(p)
     
-    #plot_select_multiple_cross(var,   crosstab)
+    #plot_select_multiple_cross(var,   by_var)
     
   } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong> \n\n")}
   # cat("\n\n")
+    
+  }  
 }
 

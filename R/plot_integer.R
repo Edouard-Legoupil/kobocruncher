@@ -28,15 +28,19 @@ plot_integer <- function(datapath = datapath,
   rr <- mean(!is.na(data[[var]]))
   # cat("---\n")
   # cat("\n\n")
-  ## Put a condition in case there's no record
-  if (rr != 0 ) { 
+ if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else {
+  
+  ## Writing report
+  if (rr != 0 & ! (is.nan(rr))  ) { 
       ## Writing code instruction in report
       if( showcode == TRUE) {
         cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_integer(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}    else {}
     
     p <- ggplot(data) + 
-      geom_histogram(aes(.data[[var]]), 
-                     # bins = nclass.FD(na.omit(data[[var]])),
+      geom_histogram(aes( x= .data[[var]]), 
+                    # bins = nclass.FD(na.omit(data[[var]])),
                      fill = "#0072BC", 
                      color = "white" 
       ) +
@@ -61,5 +65,6 @@ plot_integer <- function(datapath = datapath,
     
     } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
   # cat("\n\n")
+  }
 }
 

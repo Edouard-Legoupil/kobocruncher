@@ -4,7 +4,7 @@
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
 #' @param xlsformpath path to the xlsform file used to cole
 #' @param var name of the variable to display
-#' @param crosstab variable to use for cross tabulation
+#' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
@@ -12,11 +12,11 @@
 #' plot_integer_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
 #'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
 #'               var = "members.age",
-#'               crosstab = "location")
+#'               by_var = "members.sex")
 plot_integer_cross <- function(datapath = datapath, 
                          xlsformpath = xlsformpath,
                          var, 
-                         crosstab ,
+                         by_var ,
                          showcode = FALSE) {
   
   require("ggplot2")
@@ -31,28 +31,33 @@ plot_integer_cross <- function(datapath = datapath,
   rr <- mean(!is.na(data[[var]]))
   # cat("---\n")
   # cat("\n\n")
-  ## Put a condition in case there's no record
-  if (rr != 0 ) { 
+ if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else {
+  
+  ## Writing report
+  if (rr != 0 & ! (is.nan(rr)) ) { 
       ## Writing code instruction in report
       if( showcode == TRUE) {
         cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_integer(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}    else {}
     
     p <- ggplot(data) + 
-      geom_histogram(aes(.data[[var]]), 
-                     # bins = nclass.FD(na.omit(data[[var]])),
+      geom_boxplot(aes(x = .data[[var]], y =  .data[[by_var]]), 
                      fill = "#0072BC", 
                      color = "white" 
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
       labs(x = NULL, y = NULL,
-           title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
-                                         x = var), 60), 
-           subtitle = if (!is.na(label_varhint(xlsformpath = xlsformpath, 
-                                                         x = var))){ 
-                     stringr::str_wrap(label_varhint(xlsformpath = xlsformpath, 
-                                                   x = var), 70)} else { ""},
+             title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
+                                                         x = var), 80),
+             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
+                                                         x = by_var)), 80),
            caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-  
+      
+      scale_size_area(max_size = 10) +        
+      scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+                                                          x = var)(x) |>
+            stringr::str_wrap(40)}) +
       theme_minimal( base_size = 13) +
       geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
@@ -64,5 +69,6 @@ plot_integer_cross <- function(datapath = datapath,
     
     } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
   # cat("\n\n")
+  }
 }
 

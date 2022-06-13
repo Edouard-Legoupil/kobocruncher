@@ -8,7 +8,7 @@ plot_integer_cross(
   datapath = datapath,
   xlsformpath = xlsformpath,
   var,
-  crosstab,
+  by_var,
   showcode = FALSE
 )
 }
@@ -19,7 +19,7 @@ plot_integer_cross(
 
 \item{var}{name of the variable to display}
 
-\item{crosstab}{variable to use for cross tabulation}
+\item{by_var}{variable to use for cross tabulation}
 
 \item{showcode}{display the code}
 }
@@ -30,5 +30,5 @@ Plotting numeric variable
 plot_integer_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "members.age",
-              crosstab = "location")
+              by_var = "members.sex")
 }

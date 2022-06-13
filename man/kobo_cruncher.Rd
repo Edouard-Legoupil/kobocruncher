@@ -23,7 +23,7 @@ kobo_cruncher(
 
 \item{name}{name of the variable to display}
 
-\item{disaggregation}{vector with the potential variables to use for crosstabulation}
+\item{disaggregation}{vector with the potential variables to use for cross tabulation}
 
 \item{correlate}{vector with the potential variables to use for testing statistical association}
 

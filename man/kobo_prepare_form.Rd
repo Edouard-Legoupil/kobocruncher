@@ -2,9 +2,9 @@
 % Please edit documentation in R/kobo_prepare_form.R
 \name{kobo_prepare_form}
 \alias{kobo_prepare_form}
-\title{Prepare XLSform}
+\title{Prepare XLSform and review Analysis}
 \usage{
-kobo_prepare_form(xlsformpath, xlsformpathout, language = "::english (en)")
+kobo_prepare_form(xlsformpath, xlsformpathout, language = "", ridl = "")
 }
 \arguments{
 \item{xlsformpath}{The full path and filename of the xlsform to be accessed (has to be xlsx file)}
@@ -12,6 +12,8 @@ kobo_prepare_form(xlsformpath, xlsformpathout, language = "::english (en)")
 \item{xlsformpathout}{The full path and filename of the xlsform to be accessed (has to be xlsx file)}
 
 \item{language}{Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file -default is  ::english (en)}
+
+\item{ridl}{If available, it will prefill the RIDL info through what was already recorded there}
 }
 \description{
 Prepare XLSform by adding instructions for the analysis plan and checking that structure and settings are correct.
@@ -21,7 +23,8 @@ An additional worksheet is also created to document the information required for
 \enumerate{
 \item Configuration of how questions are grouped together in the report:
 \itemize{
-\item chapter: by default the crunching report is presented according to the group. Once set, this will replace the original grouping. Only variable defined within a chapter will be displayed in the crunching report.
+\item chapter: by default the crunching report is presented according to the group. Once set, this will replace the original grouping. Only variable defined within a chapter will be displayed in the crunching report. By dafault chapter will follow the questions sequence - if chapters start with a number that number will overrule the sequence
+\item subchapter: provides a second level of details below the chapter if subchapters start with a number that number will overrule the sequence
 }
 \item Configuration for data manipulation:
 \itemize{
@@ -30,10 +33,11 @@ An additional worksheet is also created to document the information required for
 }
 \item Configuration of specific charts, visualization and analysis:
 \itemize{
-\item disaggregation: define variable to use for visual crosstabulation - functions with "_cross"
-\item correlate: define the variable to use to explore statistical association - works under certan restrictions (i.e. between 2 categorical variables only): kobo_correlate
+\item disaggregation: define variable to use for visual by_varulation - functions with "_cross"
+\item correlate: define the variable to use to explore statistical association - works under certain restrictions (i.e. between 2 categorical variables only): kobo_correlate
 \item cluster: define variable to generate an unsupervised classification (i.e. hierarchical clustering based on multiple correspondance analysis) kobo_cluster
 \item predict: define variable to use to generate predictive model, ie.e the target variable and the predictors.  kobo_predict
+\item score: define the different dimensions of a score - and used the score set up for the choice test different aggregation approaches
 \item mappoint, mappoly: define the variable to use to generate maps - kobo_map
 }
 }

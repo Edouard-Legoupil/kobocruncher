@@ -6,7 +6,7 @@
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
 #' @param xlsformpath path to the xlsform file used to cole
 #' @param var name of the variable to display
-#' @param crosstab variable to use for cross tabulation
+#' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
@@ -14,11 +14,11 @@
 #' plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
 #'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
 #'               var = "profile.reason",
-#'               crosstab = "location")
+#'               by_var = "location")
 plot_select_multiple_cross <- function(datapath = datapath,
                                        xlsformpath = xlsformpath,
                                        var, 
-                                       crosstab , 
+                                       by_var , 
                                        showcode = FALSE) {
   
   
@@ -32,29 +32,34 @@ plot_select_multiple_cross <- function(datapath = datapath,
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   nr <- sum(!is.na(data[[var]]))
+  
+ if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else {
+  
   ## Writing report
-  if (rr != 0 ) { 
+  if (rr != 0 & ! (is.nan(rr))  ) { 
     
-    if(crosstab != "") {
-      if( crosstab != var ) {
+    if(by_var != "") {
+      if( by_var != var ) {
         
           ## Writing code instruction in report
           if( showcode == TRUE) {
-             cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", crosstab, "\")` \n\n "))}   else {}
+             cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", by_var, "\")` \n\n "))}   else {}
 
         
       cntscross <- data |>
         ## keep only the variable we need 
-        tidyr::drop_na( tidyselect::all_of(c(var,crosstab))) |>
+        tidyr::drop_na( tidyselect::all_of(c(var,by_var))) |>
         ## Separate the var with select_multiple 
         tidyr::separate_rows(.data[[var]], sep = " ") |>
         # Lump together factor levels into "other"
         dplyr::distinct(`X_id`, 
                  !!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
-                 !!crosstab := forcats::fct_lump_n(factor(.data[[crosstab]]), n = 5) ) |>
+                 !!by_var := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
         # Lump together factor levels into "other"
         dplyr::count(x := .data[[var]],
-                     y := .data[[crosstab]] ) |>
+                     y := .data[[by_var]] ) |>
         dplyr::mutate(p = n/sum(n)) |>
         dplyr::group_by(y) |>
         dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
@@ -85,19 +90,19 @@ plot_select_multiple_cross <- function(datapath = datapath,
                      
                     size = 3   ) +   
         scale_x_continuous(labels = scales::label_percent()) +
-        facet_wrap( ~ y ,  nrow = 3 #,
-                    # labeller = as_labeller(function(x) label_choice(xlsformpath = xlsformpath,
-                    #                                      x= crosstab)(x)) 
+        facet_wrap( ~ y ,  nrow = 3,
+                    labeller = as_labeller(function(x) label_choiceset(xlsformpath = xlsformpath,
+                                                         x= by_var)(x))
                     ) +
-        # scale_y_discrete(labels = function(x) {label_choice(xlsformpath = xlsformpath,
-        #                                                   x = var)(x) |>
-        #     stringr::str_wrap(40)}) +
+        scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+                                                          x = var)(x) |>
+            stringr::str_wrap(40)}) +
         coord_cartesian(clip = "off") +
         labs(x = NULL, y = NULL,
              title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
                                                          x = var), 80),
              subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
-                                                         x = crosstab)), 80),
+                                                         x = by_var)), 80),
              caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
         theme_minimal( base_size = 13) +  
         geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
@@ -111,6 +116,8 @@ plot_select_multiple_cross <- function(datapath = datapath,
     } else { }
   } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
   # cat("\n\n")
+    
+  }
 }
 
 

@@ -28,4 +28,10 @@ plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.reason"
             )
+
+plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+              var = "profile.reason1"
+            )
+
 }

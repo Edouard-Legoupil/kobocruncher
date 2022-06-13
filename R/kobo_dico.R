@@ -34,8 +34,9 @@ kobo_dico <- function(xlsformpath) {
     
     ## spearate the type
     tidyr::separate(type, 
-                    into = c("type", "list_name"), 
-                    sep = " ") |>
+                        into = c("type", "list_name"), 
+                        sep = " ",
+                        fill = "right")   |>
     
     ## Need to add more cleaning in case...
     #dplyr::filter(!(is.na(name))) |>
@@ -76,6 +77,9 @@ kobo_dico <- function(xlsformpath) {
                     name = dplyr::case_when(scope == "" ~ name,
                                             type == "begin_group" ~ scope,
                                             TRUE ~ stringr::str_c(scope, name, sep = "."))) 
+  
+  
+  ## Fix when we have calculate variable - either numeric or select_one
   
   ## Add dataframe number
   ## Counter..

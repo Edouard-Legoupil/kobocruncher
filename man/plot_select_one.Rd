@@ -2,9 +2,7 @@
 % Please edit documentation in R/plot_select_one.R
 \name{plot_select_one}
 \alias{plot_select_one}
-\title{Plotting Select one variable
-
-Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency}
+\title{Plotting Select one variable}
 \usage{
 plot_select_one(datapath, xlsformpath, var, showcode = FALSE)
 }
@@ -18,12 +16,14 @@ plot_select_one(datapath, xlsformpath, var, showcode = FALSE)
 \item{showcode}{display the code}
 }
 \description{
-Plotting Select one variable
-
 Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
 }
 \examples{
 plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.country")
+
+plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+              var = "profile.countryerror")
 }

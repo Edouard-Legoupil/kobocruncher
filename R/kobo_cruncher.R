@@ -5,7 +5,7 @@
 #' @param xlsformpath path to the xlsform file used to colllect the data
 #' @param type type of the variable to display
 #' @param name name of the variable to display
-#' @param disaggregation vector with the potential variables to use for crosstabulation
+#' @param disaggregation vector with the potential variables to use for cross tabulation
 #' @param correlate vector with the potential variables to use for testing statistical association
 #' @param showcode display the code
 #' @export
@@ -35,7 +35,7 @@ kobo_cruncher <- function(datapath = datapath,
                                                            xlsformpath = xlsformpath, 
                                                            var = name, 
                                                            showcode = TRUE)
-  else if (type == "integer") plot_integer(datapath = datapath, 
+  else if (type %in% c("numeric", "integer")) plot_integer(datapath = datapath, 
                                            xlsformpath = xlsformpath,
                                            var = name, 
                                            showcode = TRUE)

@@ -85,16 +85,16 @@ label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocr
 # Get all the choices labels options for a specific variable
 
 ```{r examples-label_choiceset}
+data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
+                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
+                   var = "profile.country"   )
 label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-                x="profile.country")
-```
+                x="profile.country")(data$profile.country)
 
-# Get the label for a specific choice if available
-
-```{r examples-label_choice}
-label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              x = "profile.country")
-
+## Test when there's no dictionnary
+data$profile.occupation
+label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+                x="profile.occupation")(data$profile.occupation)
 ```
 
 # Plotting Select one variable
@@ -103,15 +103,19 @@ label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocr
 plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.country")
+
+plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+              var = "profile.countryerror")
 ```
 
-# Plotting Select one variable with Crosstabulation
+# Plotting Select one variable with by_varulation
 
 ```{r examples-plot_select_one_cross}
 plot_select_one_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.country",
-              crosstab = "profile.occupation"
+              by_var = "profile.occupation"
               )
 ```
 
@@ -122,6 +126,12 @@ plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.reason"
             )
+
+plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+              var = "profile.reason1"
+            )
+
 ```
 
 # Plotting Select multiple variable with cross-tabulation
@@ -130,7 +140,7 @@ plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher
 plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.reason",
-              crosstab = "location")
+              by_var = "location")
 ```
 
 # Plotting Numeric variable
@@ -147,7 +157,7 @@ plot_integer(datapath = system.file("data.xlsx", package = "kobocruncher"),
 plot_integer_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "members.age",
-              crosstab = "location")
+              by_var = "members.sex")
 ```
 
 # Plotting Open Text variable
@@ -160,8 +170,8 @@ plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
 
 # Plotting Correlation
 
-```{r examples-plo_correlation}
-plo_correlation(datapath = system.file("data.xlsx", package = "kobocruncher"),
+```{r examples-plot_correlation}
+plot_correlation(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.occupation")
 ```

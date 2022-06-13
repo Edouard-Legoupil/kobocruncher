@@ -2,7 +2,7 @@
 % Please edit documentation in R/label_choiceset.R
 \name{label_choiceset}
 \alias{label_choiceset}
-\title{Get all the choices labels options for a specific variable}
+\title{Get all the choices labels options for a specific variable if available}
 \usage{
 label_choiceset(xlsformpath, x)
 }
@@ -12,9 +12,18 @@ label_choiceset(xlsformpath, x)
 \item{x}{variable}
 }
 \description{
-Get all the choices labels options for a specific variable
+This labeling function ia function factory - https://adv-r.hadley.nz/function-factories.html
+The output of this function is actually a function
 }
 \examples{
+data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
+                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
+                   var = "profile.country"   )
 label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-                x="profile.country")
+                x="profile.country")(data$profile.country)
+
+## Test when there's no dictionnary
+data$profile.occupation
+label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+                x="profile.occupation")(data$profile.occupation)
 }

@@ -82,10 +82,9 @@ datalist[2]
 # Extend the xlsform to add instructions for the analysis plan
 
 ```{r function-kobo_prepare_form}
-#' @name kobo_prepare_form
-#' @rdname kobo_prepare_form
-#' @title  Prepare XLSform
-#'
+
+#' @title Prepare XLSform and review Analysis
+#' 
 #' @description  Prepare XLSform by adding instructions for the analysis plan and checking that structure and settings are correct.
 #' 
 #'  Once those elements are set up, they will be automatically considered during the automatic crunching phase.
@@ -101,7 +100,7 @@ datalist[2]
 #'  
 #'  3. Configuration of specific charts, visualization and analysis: 
 #'  
-#'     - disaggregation: define variable to use for visual crosstabulation - functions with "_cross"
+#'     - disaggregation: define variable to use for visual by_varulation - functions with "_cross"
 #'     - correlate: define the variable to use to explore statistical association - works under certain restrictions (i.e. between 2 categorical variables only): kobo_correlate
 #'     - cluster: define variable to generate an unsupervised classification (i.e. hierarchical clustering based on multiple correspondance analysis) kobo_cluster
 #'     - predict: define variable to use to generate predictive model, ie.e the target variable and the predictors.  kobo_predict
@@ -114,11 +113,13 @@ datalist[2]
 #' @param xlsformpath The full path and filename of the xlsform to be accessed (has to be xlsx file)
 #' @param xlsformpathout The full path and filename of the xlsform to be accessed (has to be xlsx file)
 #' @param language Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file -default is  ::english (en)
+#' @param ridl If available, it will prefill the RIDL info through what was already recorded there
 #'
 #' @export 
 kobo_prepare_form <- function(xlsformpath,
                               xlsformpathout,
-                              language = "::english (en)") {
+                              language = "",
+                              ridl = "") {
   
   # Excel Styling Elements
   # To add filters for sheet, we have to set the range for addAutoFilter() function
@@ -188,42 +189,68 @@ kobo_prepare_form <- function(xlsformpath,
     ## Clean the label and hint in relation with the selected language
     names(survey)[tolower(names(survey)) == paste0("label",language )] <- "label"
     names(survey)[tolower(names(survey)) == paste0("hint",language )] <- "hint"
-    namesOfSur <- c("type", "name" , "label")
-    if (sum(namesOfSur %in% colnames(survey)) != length(namesOfSur)) {
-      return(structure('Please make sure the survey sheet haas at minima the following columns: "type", "name" , "label" ', class = "try-error"))
-    }
+
     
     ## Adding variable if not present and checking the content of the variable to build up the analysis plan summary... 
-    if ("hint" %in% colnames(survey)) { 
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-    } else {    survey$hint <- ""   }
+    if ("hint" %in% colnames(survey)) {   } else {    survey$hint <- ""   }
     if ("chapter" %in% colnames(survey)) { } else { survey$chapter <- ""   }
     if ("subchapter" %in% colnames(survey)) { } else { survey$subchapter <- ""   }
-    if ("correlate" %in% colnames(survey)) {
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-    } else {  survey$correlate <- ""}
-    if ("disaggregation" %in% colnames(survey)) { 
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-    } else { survey$disaggregation <- ""  }
-    if ("clean" %in% colnames(survey)) { 
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-    } else {  survey$clean <- "" }
-    if ("anonymise" %in% colnames(survey)) { 
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-    } else {survey$anonymise <- ""}
+    if ("correlate" %in% colnames(survey)) {    } else {  survey$correlate <- ""}
+    if ("disaggregation" %in% colnames(survey)) { } else { survey$disaggregation <- ""  }
+    if ("clean" %in% colnames(survey)) {     } else {  survey$clean <- "" }
+    if ("anonymise" %in% colnames(survey)) {     } else {survey$anonymise <- ""}
     if ("cluster" %in% colnames(survey)) { } else { survey$cluster <- ""}
-    if ("predict" %in% colnames(survey)) { 
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-    } else { survey$predict <- ""  }
-    if ("score" %in% colnames(survey)) { 
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-    } else { survey$score <- ""  }
-    if ("mappoint" %in% colnames(survey)) {
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-    } else { survey$mappoint <- ""}
+    if ("predict" %in% colnames(survey)) {     } else { survey$predict <- ""  }
+    if ("score" %in% colnames(survey)) {     } else { survey$score <- ""  }
+    if ("mappoint" %in% colnames(survey)) {    } else { survey$mappoint <- ""}
     if ("mappoly" %in% colnames(survey)) {    } else { survey$mappoly <- ""}
     
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
     survey$label.lenght <- nchar(survey$label)
+    ## add the full name that will be used by functions
+    survey$fullname <- survey |> 
+      # capturing repeat
+      dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
+                                                    function (repeatvar, type, name) {
+                                                      if (type  == "begin_repeat")  c(repeatvar, name)
+                                                      else if (type  == "end_repeat") head(repeatvar, -1)
+                                                      else repeatvar
+                                                    }, .init = character()) |>tail(-1),
+                    ##Apply a function to each element of a list 
+                    repeatvar = purrr::map_chr(repeatvar,
+                                               stringr::str_c, 
+                                               collapse = ".") ,
+                    name = dplyr::case_when(repeatvar == "" ~ name,
+                                            type == "begin_repeat"~ repeatvar,
+                                            TRUE ~ stringr::str_c(repeatvar, name, sep = "."))) |>
+      
+      
+      # capturing Group
+      dplyr::mutate(scope = purrr::accumulate2(type, name,
+                                               function (scope, 
+                                                         type, 
+                                                         name) {
+                                                 if (type == "begin_group") 
+                                                   c(scope, name)
+                                                 else if (type == "end_group") head(scope, -1)
+                                                 else scope
+                                               }, .init = character()) |> tail(-1),
+                    ##Apply a function to each element of a list 
+                    scope = purrr::map_chr(scope, 
+                                           stringr::str_c, 
+                                           collapse = "."),         
+                    
+                    name = dplyr::case_when(scope == "" ~ name,
+                                            type == "begin_group" ~ scope,
+                                            TRUE ~ stringr::str_c(scope, name, sep = "."))) |>
+                    dplyr::pull(name)
     if ("labelQ" %in% colnames(survey)) {    } else {  survey$labelQ <- survey$label }
     if ("hintQ" %in% colnames(survey)) {    } else { survey$hintQ <- survey$hint}
     
@@ -234,7 +261,7 @@ kobo_prepare_form <- function(xlsformpath,
                      "disaggregation", "correlate",
                      "cluster"  , "predict" ,"score" ,
                      "mappoint",  "mappoly",
-                     "label.lenght",
+                     "label.lenght", "fullname",
                      "labelQ", "hintQ",
                      "required", "relevant",
                      "constraint", "calculation" )
@@ -283,6 +310,8 @@ kobo_prepare_form <- function(xlsformpath,
       return(structure('Please make sure the choices sheet has at minima the following columns:
                         "list_name", "name" , "label"', class = "try-error"))
     }
+    
+    choices$label.lenght <- nchar(choices$label)
     choices$labelQ <- choices$label   
     ### add column if not present
     if ("order" %in% colnames(choices)) { } else { choices$order <- ""}
@@ -430,11 +459,10 @@ kobo_dico <- function(xlsformpath) {
                                        "end repeat"   ="end_repeat")) |>
     
     ## spearate the type
-    
     tidyr::separate(type, 
-                    into = c("type", "list_name"), 
-                    sep = " ",
-                    fill = "right") |>
+                        into = c("type", "list_name"), 
+                        sep = " ",
+                        fill = "right")   |>
     
     ## Need to add more cleaning in case...
     #dplyr::filter(!(is.na(name))) |>
@@ -475,6 +503,9 @@ kobo_dico <- function(xlsformpath) {
                     name = dplyr::case_when(scope == "" ~ name,
                                             type == "begin_group" ~ scope,
                                             TRUE ~ stringr::str_c(scope, name, sep = "."))) 
+  
+  
+  ## Fix when we have calculate variable - either numeric or select_one
   
   ## Add dataframe number
   ## Counter..
@@ -542,12 +573,6 @@ metadata <- as.data.frame(dico[3])
 knitr::kable(head(metadata, 10))
 ```
 
-```{r tests-kobo_dico}
-# test_that("kobo_dico works", {
-# 
-# })
-```
-
 # Get frame for a variable
 
 ```{r function-kobo_frame}
@@ -579,11 +604,13 @@ if ("X_index" %in% colnames(data)) { data$X_id <-  data$X_index  } else { }
 if ("X_id" %in% colnames(data)) { data$X_id <-  row.names(data)  } else { }
   
   ## Make sure the data actually contain the variable if not put to null
-  # if ( var %in% names(data)) {
-  #   data <- data
-  # }  else {
-  #   data <- data.frame()
- # }
+ if ( var %in% names(data)) {
+   data <- data
+ }  else {
+   data <- data.frame( type = character())
+   names(data)[1] <- var  
+  
+ }
     
     return(data )
 }
@@ -597,12 +624,6 @@ data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher")
                    var = "members.sex"   )
 knitr::kable(head(data,5))
  
-```
-
-```{r tests-kobo_data}
-# test_that("kobo_data works", {
-# 
-# })
 ```
 
 # Get the label for a specific variable
@@ -667,7 +688,10 @@ label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocr
 # Get all the choices labels options for a specific variable
 
 ```{r function-label_choiceset}
-#' @title Get all the choices labels options for a specific variable
+#' @title Get all the choices labels options for a specific variable if available
+#' 
+#' @description This labeling function ia function factory - https://adv-r.hadley.nz/function-factories.html
+#' The output of this function is actually a function
 #' @param xlsformpath path to the xlsform file used to cole
 #' @param x variable
 #' @export
@@ -684,14 +708,24 @@ label_choiceset <- function(xlsformpath,
     dplyr::filter(list_name == lname) |> 
     (\(x) purrr::set_names(x$label, x$name))()
   
-  function(y) { dict[y] |> tidyr::replace_na("Other") }
+#  function(y) { dict[y] |> tidyr::replace_na("Other") }
+  function(y) { dplyr::if_else(is.na(dict[y]), y, dict[y]) }
+
 }
 
 ```
 
 ```{r examples-label_choiceset}
+data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
+                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
+                   var = "profile.country"   )
 label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-                x="profile.country")
+                x="profile.country")(data$profile.country)
+
+## Test when there's no dictionnary
+data$profile.occupation
+label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+                x="profile.occupation")(data$profile.occupation)
 ```
 
 ```{r tests-label_choiceset}
@@ -700,48 +734,13 @@ label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kob
 # })
 ```
 
-# Get the label for a specific choice if available
-
-```{r function-label_choice}
-#' @title Get the label for a specific choice if available
-#' @param xlsformpath path to the xlsform file used to cole
-#' @param x character with the code for the choice
-#' @export
-
-label_choice <- function(xlsformpath, x ) {
-   label_choiceset(xlsformpath = xlsformpath, x) %>%
-            ## Need to address situation where dictionary is empty
-           ## in this case we leave data as is...
-          dplyr::mutate( label = dplyr::if_else(is.na(label),name, label) ) %>%
-          
-          # create a named character object to relabel
-          { purrr::set_names(.$label, .$name) } 
-
-}
-
-```
-
-```{r examples-label_choice}
-label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              x = "profile.country")
-
-```
-
-```{r tests-label_choice}
-# test_that("label_choice works", {
-# 
-# })
-```
-
-
 
 
 # Plotting Select one variable
 
 ```{r function-plot_select_one}
 #' @title Plotting Select one variable
-#' 
-#' Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
+#' @description Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
 #' @param xlsformpath path to the xlsform file used to cole
 #' @param var name of the variable to display
@@ -766,31 +765,36 @@ plot_select_one <- function(datapath  ,
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   
+  if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else {
+  
+  ## Put a condition in case there's no record
+  if (rr != 0  & ! (is.nan(rr)) ) {
+  
   cnts <- data |>
     tidyr::drop_na(tidyselect::all_of(var)) |>
     # Lump together factor levels into "other"
     dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5)) |>
     dplyr::mutate(p = n/sum(n))
   
+  
+  listvar <- as.data.frame(dico[[1]]) |>
+             dplyr::filter( name ==var ) |>
+             dplyr::pull(list_name)
+  
   ## Manage situation if ordinal variable (i.e. order is set in choices)
-  if (any(!is.na(label_choiceset(xlsformpath = xlsformpath, 
-                                 x = var)$order))) {
+  if (any(!is.na(dplyr::filter(dico[[2]], list_name == listvar)$order))) {
     cnts <- cnts |>
-      dplyr::mutate(x = factor(x,
-                               levels = c(label_choiceset(xlsformpath = xlsformpath,
-                                                          x  = var)$name, "Other")))
+      dplyr::mutate(x = forcats::fct_reorder(x, order, as.numeric))
   } else {
     cnts <- cnts |>
-      dplyr::mutate(x = factor(x,
-                               levels = x[order(n, decreasing=FALSE)]))
+      dplyr::mutate(x = forcats::fct_reorder(x, n))
   }
   
   ## Writing code instruction in report
   if( showcode == TRUE) { cat(paste0( fontawesome::fa_png("far fa-copy", fill ="grey"), "`plot_select_one(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}  else {}
   
-  
-  ## Put a condition in case there's no record
-  if (rr != 0 ) {
     
     ## plot
     require(ggplot2)
@@ -818,7 +822,7 @@ plot_select_one <- function(datapath  ,
                   
                   size = 4   ) +
       scale_x_continuous(labels = scales::label_percent()) +
-      scale_y_discrete(labels = function(x, var) {label_choiceset(xlsformpath = xlsformpath, x= rlang::as_string(rlang::expr(var)) )(x) |>
+      scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath, x = var)(x) |>
                       stringr::str_wrap(40)}) +
       coord_cartesian(clip = "off") +
       labs(x = NULL, y = NULL,
@@ -838,9 +842,10 @@ plot_select_one <- function(datapath  ,
     
     print(p)
     
-  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
+  } else { cat("<strong style=\"color:#0072BC;\"> No recorded answers for this specific question!</strong>\n\n")}
   # cat("\n\n")
-}
+  }
+}  
 
 ```
 
@@ -848,6 +853,10 @@ plot_select_one <- function(datapath  ,
 plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.country")
+
+plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+              var = "profile.countryerror")
 ```
 
 ```{r tests-plot_select_one}
@@ -857,7 +866,7 @@ plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
 ```
 
 
-# Plotting Select one variable with Crosstabulation
+# Plotting Select one variable with by_varulation
 
 ```{r function-plot_select_one_cross}
 #' @title Plotting Select one variable with cross tabulation on a second categorical variable
@@ -866,14 +875,14 @@ plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
 #' @param xlsformpath path to the xlsform file used to cole
 #' @param var name of the variable to display
-#' @param crosstab variable to use for cross tabulation
+#' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
 plot_select_one_cross <- function(datapath = datapath,
                             xlsformpath = xlsformpath,
                             var, 
-                            crosstab , 
+                            by_var , 
                             showcode = FALSE) {
   
   require("ggplot2")
@@ -889,21 +898,26 @@ plot_select_one_cross <- function(datapath = datapath,
   # cat("\n")
  # cat(paste("####", label_varname(var)))
   #cat(paste("#### Variable: ", var))
+  
+  if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else {
+  
   ## Put a condition in case there's no record
-  if (rr != 0 ) { 
-    if(crosstab != "") {
-      if( crosstab != var ) {
+  if (rr != 0 & ! (is.nan(rr)) ) { 
+    if(by_var != "") {
+      if( by_var != var ) {
         
           ## Writing code instruction in report
           if( showcode == TRUE) { 
-            cat(paste0( fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", crosstab, "\")` \n\n "))}     else {}
+            cat(paste0( fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", by_var, "\")` \n\n "))}     else {}
 
       cnts <- data |>
         ## keep only the variable we need
-        tidyr::drop_na(tidyselect::all_of(c(var,crosstab))) |>
+        tidyr::drop_na(tidyselect::all_of(c(var,by_var))) |>
         # Lump together factor levels into "other"
         dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
-                     y := forcats::fct_lump_n(factor(.data[[crosstab]]), n = 5) ) |>
+                     y := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
         dplyr::mutate(p = n/sum(n)) |>
         dplyr::group_by(y) |>
         dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
@@ -936,21 +950,19 @@ plot_select_one_cross <- function(datapath = datapath,
                     size = 3   ) +   
         scale_x_continuous(labels = scales::label_percent()) +
          
-        facet_wrap( ~ y ,  nrow = 3 # ,
-          #             labeller = as_labeller(function(x) label_choice(xlsformpath = xlsformpath, 
-          #                                                             choices = choices,
-          #                                                             var = crosstab)(x))
+        facet_wrap( ~ y ,  nrow = 3  ,
+                      labeller = as_labeller(function(x) label_choiceset(xlsformpath = xlsformpath,
+                                                                      x = by_var)(x))
           ) +
-          # scale_y_discrete(labels = function(x) {label_choice(xlsformpath = xlsformpath, 
-          #                                                   choices = choices,
-          #                                                   var = var)(x) |>
-          #     stringr::str_wrap(40)}) +
+          scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+                                                            x = var)(x) |>
+              stringr::str_wrap(40)}) +
         coord_cartesian(clip = "off") +
         labs(x = NULL, y = NULL,
                title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
                                                        x = var), 80),
                subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
-                                                                                 x = crosstab)), 80),
+                                                                                 x = by_var)), 80),
                caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
         theme_minimal( base_size = 13) +  
         geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
@@ -965,6 +977,7 @@ plot_select_one_cross <- function(datapath = datapath,
     } else { }
   } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong> \n\n")}
   # cat("\n\n")
+  }
 }
 
 
@@ -974,7 +987,7 @@ plot_select_one_cross <- function(datapath = datapath,
 plot_select_one_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.country",
-              crosstab = "profile.occupation"
+              by_var = "profile.occupation"
               )
 ```
 
@@ -1014,7 +1027,14 @@ plot_select_multiple <- function(datapath = datapath,
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   nr <- sum(!is.na(data[[var]]))
+
   
+  if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else {
+  
+  ## If not empty
+  if (rr != 0 & ! (is.nan(rr)) ) {    
   
   cnts <- data |>
     tidyr::drop_na(tidyselect::all_of(var)) |>
@@ -1027,20 +1047,14 @@ plot_select_multiple <- function(datapath = datapath,
     dplyr::mutate(p = n/nr)
   
   ## Manage situation if ordinal variable (i.e. order is set in choices)
-  if (any(!is.na(label_choiceset(xlsformpath = xlsformpath,
-                           x = var)$order))) {
+  if (any(!is.na(dplyr::filter(dico[[2]], list_name == var)$order))) {
     cnts <- cnts |>
-    dplyr::mutate(x = factor(x, 
-                             levels = c(label_choiceset(xlsformpath = xlsformpath,
-                                                          x = var)$name, "Other")))
-   } else {
+      dplyr::mutate(x = forcats::fct_reorder(x, order, as.numeric))
+  } else {
     cnts <- cnts |>
-             dplyr::mutate(x = factor(x,  
-                             levels = x[order(n, decreasing=FALSE)]))
+      dplyr::mutate(x = forcats::fct_reorder(x, n))
   }
 
-  ## If not empty
-  if (rr != 0 ) {  
     
     ## Writing code instruction in report
     if( showcode == TRUE) {
@@ -1071,9 +1085,9 @@ plot_select_multiple <- function(datapath = datapath,
                     size = 4   ) +   
       
       scale_x_continuous(labels = scales::label_percent()) +
-      # scale_y_discrete(labels = function(x) {label_choice(xlsformpath = xlsformpath,
-      #                                                   x = var)(x) |>
-      #     stringr::str_wrap(40)}) +
+      scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+                                                        x = var)(x) |>
+          stringr::str_wrap(40)}) +
       coord_cartesian(clip = "off") +
       labs(x = NULL, y = NULL,
            title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
@@ -1093,10 +1107,12 @@ plot_select_multiple <- function(datapath = datapath,
      
     print(p)
     
-    #plot_select_multiple_cross(var,   crosstab)
+    #plot_select_multiple_cross(var,   by_var)
     
   } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong> \n\n")}
   # cat("\n\n")
+    
+  }  
 }
 
 ```
@@ -1106,6 +1122,12 @@ plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.reason"
             )
+
+plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
+              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+              var = "profile.reason1"
+            )
+
 ```
 
 ```{r tests-plot_select_multiple}
@@ -1125,14 +1147,14 @@ plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
 #' @param xlsformpath path to the xlsform file used to cole
 #' @param var name of the variable to display
-#' @param crosstab variable to use for cross tabulation
+#' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
 plot_select_multiple_cross <- function(datapath = datapath,
                                        xlsformpath = xlsformpath,
                                        var, 
-                                       crosstab , 
+                                       by_var , 
                                        showcode = FALSE) {
   
   
@@ -1146,29 +1168,34 @@ plot_select_multiple_cross <- function(datapath = datapath,
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   nr <- sum(!is.na(data[[var]]))
+  
+ if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else {
+  
   ## Writing report
-  if (rr != 0 ) { 
+  if (rr != 0 & ! (is.nan(rr))  ) { 
     
-    if(crosstab != "") {
-      if( crosstab != var ) {
+    if(by_var != "") {
+      if( by_var != var ) {
         
           ## Writing code instruction in report
           if( showcode == TRUE) {
-             cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", crosstab, "\")` \n\n "))}   else {}
+             cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", by_var, "\")` \n\n "))}   else {}
 
         
       cntscross <- data |>
         ## keep only the variable we need 
-        tidyr::drop_na( tidyselect::all_of(c(var,crosstab))) |>
+        tidyr::drop_na( tidyselect::all_of(c(var,by_var))) |>
         ## Separate the var with select_multiple 
         tidyr::separate_rows(.data[[var]], sep = " ") |>
         # Lump together factor levels into "other"
         dplyr::distinct(`X_id`, 
                  !!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
-                 !!crosstab := forcats::fct_lump_n(factor(.data[[crosstab]]), n = 5) ) |>
+                 !!by_var := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
         # Lump together factor levels into "other"
         dplyr::count(x := .data[[var]],
-                     y := .data[[crosstab]] ) |>
+                     y := .data[[by_var]] ) |>
         dplyr::mutate(p = n/sum(n)) |>
         dplyr::group_by(y) |>
         dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
@@ -1199,19 +1226,19 @@ plot_select_multiple_cross <- function(datapath = datapath,
                      
                     size = 3   ) +   
         scale_x_continuous(labels = scales::label_percent()) +
-        facet_wrap( ~ y ,  nrow = 3 #,
-                    # labeller = as_labeller(function(x) label_choice(xlsformpath = xlsformpath,
-                    #                                      x= crosstab)(x)) 
+        facet_wrap( ~ y ,  nrow = 3,
+                    labeller = as_labeller(function(x) label_choiceset(xlsformpath = xlsformpath,
+                                                         x= by_var)(x))
                     ) +
-        # scale_y_discrete(labels = function(x) {label_choice(xlsformpath = xlsformpath,
-        #                                                   x = var)(x) |>
-        #     stringr::str_wrap(40)}) +
+        scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+                                                          x = var)(x) |>
+            stringr::str_wrap(40)}) +
         coord_cartesian(clip = "off") +
         labs(x = NULL, y = NULL,
              title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
                                                          x = var), 80),
              subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
-                                                         x = crosstab)), 80),
+                                                         x = by_var)), 80),
              caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
         theme_minimal( base_size = 13) +  
         geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
@@ -1225,6 +1252,8 @@ plot_select_multiple_cross <- function(datapath = datapath,
     } else { }
   } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
   # cat("\n\n")
+    
+  }
 }
 
 
@@ -1234,7 +1263,7 @@ plot_select_multiple_cross <- function(datapath = datapath,
 plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.reason",
-              crosstab = "location")
+              by_var = "location")
 ```
 
 ```{r tests-plot_select_multiple_cross}
@@ -1272,15 +1301,19 @@ plot_integer <- function(datapath = datapath,
   rr <- mean(!is.na(data[[var]]))
   # cat("---\n")
   # cat("\n\n")
-  ## Put a condition in case there's no record
-  if (rr != 0 ) { 
+ if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else {
+  
+  ## Writing report
+  if (rr != 0 & ! (is.nan(rr))  ) { 
       ## Writing code instruction in report
       if( showcode == TRUE) {
         cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_integer(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}    else {}
     
     p <- ggplot(data) + 
       geom_histogram(aes( x= .data[[var]]), 
-                     # bins = nclass.FD(na.omit(data[[var]])),
+                    # bins = nclass.FD(na.omit(data[[var]])),
                      fill = "#0072BC", 
                      color = "white" 
       ) +
@@ -1305,6 +1338,7 @@ plot_integer <- function(datapath = datapath,
     
     } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
   # cat("\n\n")
+  }
 }
 
 ```
@@ -1329,14 +1363,14 @@ plot_integer(datapath = system.file("data.xlsx", package = "kobocruncher"),
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
 #' @param xlsformpath path to the xlsform file used to cole
 #' @param var name of the variable to display
-#' @param crosstab variable to use for cross tabulation
+#' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
 plot_integer_cross <- function(datapath = datapath, 
                          xlsformpath = xlsformpath,
                          var, 
-                         crosstab ,
+                         by_var ,
                          showcode = FALSE) {
   
   require("ggplot2")
@@ -1351,14 +1385,18 @@ plot_integer_cross <- function(datapath = datapath,
   rr <- mean(!is.na(data[[var]]))
   # cat("---\n")
   # cat("\n\n")
-  ## Put a condition in case there's no record
-  if (rr != 0 ) { 
+ if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else {
+  
+  ## Writing report
+  if (rr != 0 & ! (is.nan(rr)) ) { 
       ## Writing code instruction in report
       if( showcode == TRUE) {
         cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_integer(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}    else {}
     
     p <- ggplot(data) + 
-      geom_boxplot(aes(x = .data[[var]], y =  .data[[crosstab]]), 
+      geom_boxplot(aes(x = .data[[var]], y =  .data[[by_var]]), 
                      fill = "#0072BC", 
                      color = "white" 
       ) +
@@ -1367,10 +1405,13 @@ plot_integer_cross <- function(datapath = datapath,
              title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
                                                          x = var), 80),
              subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
-                                                         x = crosstab)), 80),
+                                                         x = by_var)), 80),
            caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
       
-       scale_size_area(max_size = 10) +
+      scale_size_area(max_size = 10) +        
+      scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+                                                          x = var)(x) |>
+            stringr::str_wrap(40)}) +
       theme_minimal( base_size = 13) +
       geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
@@ -1382,6 +1423,7 @@ plot_integer_cross <- function(datapath = datapath,
     
     } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
   # cat("\n\n")
+  }
 }
 
 ```
@@ -1390,7 +1432,7 @@ plot_integer_cross <- function(datapath = datapath,
 plot_integer_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "members.age",
-              crosstab = "members.sex")
+              by_var = "members.sex")
 ```
 
 ```{r tests-plot_integer_cros}
@@ -1427,6 +1469,10 @@ plot_text <- function(datapath = datapath,
   #cat("Open Text question\n\n")
   
   rr <- mean(!is.na(data[[var]]))
+   if ( is.nan(rr)) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else { 
+      
   require("tm")
   #Replacing “/”, “@” and “|” with space:
   toSpace <- tm::content_transformer(function (x , pattern ) gsub(pattern, " ", x))  
@@ -1507,6 +1553,7 @@ plot_text <- function(datapath = datapath,
   } else { cat("<strong style=\"color:#0072BC;\">No significant text for this specific question!</strong>\n\n")}
   
   # cat("\n\n")
+  }
 }
 
 ```
@@ -1530,43 +1577,69 @@ plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
 #' @param xlsformpath path to the xlsform file used to cole
 #' @param var name of the variable to display
+#' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
 plot_correlation <- function(datapath = datapath, 
                       xlsformpath = xlsformpath,
                       var, 
+                      by_var, 
                       showcode = FALSE) {
   
-  
-  
- p <-   corrplot::corrplot(stats::chisq.test(MainDataFrame$monit.FamiliyLeft,MainDataFrame$monit.RouteIncident)$residuals,
-is.cor = FALSE, # use for general matrix to convert to Sq form
-cl.pos = "n", ## Do not display the color legend
-cl.cex = 0.7, # Size of all label
-tl.cex = 0.7, # Size of axis label
-tl.srt = 45, # string rotation in degrees
-tl.col = "black", # color of text label.
-addCoef.col = "grey", # add coeff in the chart
-number.cex = 3/ncol(stats::chisq.test(MainDataFrame$monit.FamiliyLeft,MainDataFrame$monit.RouteIncident)), # size of coeff
-mar = c(0.5,0.5,4, 0.5), ## margin of plots
-title = paste0("Correlation between ", , " & ", )) 
- 
- print(p)
-  
- 
+   # ### Testing number of levels for the 2 variables as 'x' and 'y' must have at least 2 levels
+   # if ( by_var != var &
+   #      (nlevels(as.factor(as.character(formula$target))) > 1 ) &
+   #      (nlevels(as.factor(as.character(formula$tested))) > 1 ) &
+   #                     
+   #      ## If too many levels, the corrogram is not legible...
+   #      (nlevels(as.factor(as.character(formula$target))) < 8 ) &
+   #      (nlevels(as.factor(as.character(formula$tested))) < 8 ) &
+   #      ## May have class with zero value...
+   #      n.class == n.class.notnull
+   #                     
+   #                )
+   #                { p.value  <- round(stats::chisq.test(formula$target,formula$tested)$p.value,4)
+   #                } else {            }
+   #              
+   #              ## Subsetting results on test where p-value is below 0.05
+   #              chiquare.true <- chiquare.resultall[ chiquare.resultall$p.value <= 0.05, ]
+   #              
+   #              ### Case there not any positive test
+   #              if (p.value <= 0.05 ) {
+   #                cat("No significant association found for this question...\n")
+   #              } else {
+   #                ## now generating correlation plot for each of the dependent.
+   # 
+   #                 p <-   corrplot::corrplot(stats::chisq.test(
+   #                   MainDataFrame$monit.FamiliyLeft,
+   #                   MainDataFrame$monit.RouteIncident)$residuals,
+   #                is.cor = FALSE, # use for general matrix to convert to Sq form
+   #                cl.pos = "n", ## Do not display the color legend
+   #                cl.cex = 0.7, # Size of all label
+   #                tl.cex = 0.7, # Size of axis label
+   #                tl.srt = 45, # string rotation in degrees
+   #                tl.col = "black", # color of text label.
+   #                addCoef.col = "grey", # add coeff in the chart
+   #                number.cex = 3/ncol(stats::chisq.test(MainDataFrame$monit.FamiliyLeft,MainDataFrame$monit.RouteIncident)), # size of coeff
+   #                mar = c(0.5,0.5,4, 0.5), ## margin of plots
+   #                title = paste0("Correlation between ", , " & ", )) 
+   #                 
+   #                 print(p)
+   # 
+   #              }
 }
 
 ```
 
-```{r examples-plo_correlation}
-plo_correlation(datapath = system.file("data.xlsx", package = "kobocruncher"),
+```{r examples-plot_correlation}
+plot_correlation(datapath = system.file("data.xlsx", package = "kobocruncher"),
               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               var = "profile.occupation")
 ```
 
-```{r tests-plo_correlation}
-# test_that("plo_correlation works", {
+```{r tests-plot_correlation}
+# test_that("plot_correlation works", {
 # 
 # })
 ```
@@ -1624,7 +1697,7 @@ output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobo
 #' @param xlsformpath path to the xlsform file used to colllect the data
 #' @param type type of the variable to display
 #' @param name name of the variable to display
-#' @param disaggregation vector with the potential variables to use for crosstabulation
+#' @param disaggregation vector with the potential variables to use for cross tabulation
 #' @param correlate vector with the potential variables to use for testing statistical association
 #' @param showcode display the code
 #' @export
@@ -1648,7 +1721,7 @@ kobo_cruncher <- function(datapath = datapath,
                                                            xlsformpath = xlsformpath, 
                                                            var = name, 
                                                            showcode = TRUE)
-  else if (type == "integer") plot_integer(datapath = datapath, 
+  else if (type %in% c("numeric", "integer")) plot_integer(datapath = datapath, 
                                            xlsformpath = xlsformpath,
                                            var = name, 
                                            showcode = TRUE)
