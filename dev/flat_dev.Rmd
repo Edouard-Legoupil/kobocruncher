@@ -534,12 +534,6 @@ metadata <- as.data.frame(dico[3])
 knitr::kable(head(metadata, 10))
 ```
 
-```{r tests-kobo_dico}
-# test_that("kobo_dico works", {
-# 
-# })
-```
-
 # Get frame for a variable
 
 ```{r function-kobo_frame}
@@ -590,12 +584,6 @@ data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher")
                    var = "members.sex"   )
 knitr::kable(head(data,5))
  
-```
-
-```{r tests-kobo_data}
-# test_that("kobo_data works", {
-# 
-# })
 ```
 
 # Get the label for a specific variable
@@ -672,8 +660,12 @@ label_choiceset <- function(xlsformpath,
     dplyr::filter(name == x) |>
     dplyr::pull(list_name)
   
- as.data.frame(dico[2]) |>
-    dplyr::filter(list_name == lname)
+  dict <- 
+    as.data.frame(dico[2]) |>
+    dplyr::filter(list_name == lname) |> 
+    (\(x) purrr::set_names(x$label, x$name))()
+  
+  function(y) { dict[y] |> tidyr::replace_na("Other") }
 }
 
 ```
@@ -697,7 +689,7 @@ label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kob
 #' @param x character with the code for the choice
 #' @export
 
-label_choice <- function(xlsformpath, x ) {
+label_choice <- function(xlsformpath, x, data ) {
    label_choiceset(xlsformpath = xlsformpath, x) %>%
             ## Need to address situation where dictionary is empty
            ## in this case we leave data as is...
@@ -710,7 +702,7 @@ label_choice <- function(xlsformpath, x ) {
 
 ```
 
-```{r examples-label_choice}
+```{r examples-label_choice, eval = FALSE}
 label_choice(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
               x = "profile.country")
 
@@ -762,16 +754,12 @@ plot_select_one <- function(datapath  ,
     dplyr::mutate(p = n/sum(n))
   
   ## Manage situation if ordinal variable (i.e. order is set in choices)
-  if (any(!is.na(label_choiceset(xlsformpath = xlsformpath, 
-                                 x = var)$order))) {
+  if (any(!is.na(dplyr::filter(dico[[2]], list_name == var)$order))) {
     cnts <- cnts |>
-      dplyr::mutate(x = factor(x,
-                               levels = c(label_choiceset(xlsformpath = xlsformpath,
-                                                          x  = var)$name, "Other")))
+      dplyr::mutate(x = forcats::fct_reorder(x, order, as.numeric))
   } else {
     cnts <- cnts |>
-      dplyr::mutate(x = factor(x,
-                               levels = x[order(n, decreasing=FALSE)]))
+      dplyr::mutate(x = forcats::fct_reorder(x, n))
   }
   
   ## Writing code instruction in report
@@ -807,8 +795,8 @@ plot_select_one <- function(datapath  ,
                   
                   size = 4   ) +
       scale_x_continuous(labels = scales::label_percent()) +
-      # scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath, x = var)(x) |>
-      #                 stringr::str_wrap(40)}) +
+      scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath, x = var)(x) |>
+                      stringr::str_wrap(40)}) +
       coord_cartesian(clip = "off") +
       labs(x = NULL, y = NULL,
            title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
@@ -1016,16 +1004,12 @@ plot_select_multiple <- function(datapath = datapath,
     dplyr::mutate(p = n/nr)
   
   ## Manage situation if ordinal variable (i.e. order is set in choices)
-  if (any(!is.na(label_choiceset(xlsformpath = xlsformpath,
-                           x = var)$order))) {
+  if (any(!is.na(dplyr::filter(dico[[2]], list_name == var)$order))) {
     cnts <- cnts |>
-    dplyr::mutate(x = factor(x, 
-                             levels = c(label_choiceset(xlsformpath = xlsformpath,
-                                                          x = var)$name, "Other")))
-   } else {
+      dplyr::mutate(x = forcats::fct_reorder(x, order, as.numeric))
+  } else {
     cnts <- cnts |>
-             dplyr::mutate(x = factor(x,  
-                             levels = x[order(n, decreasing=FALSE)]))
+      dplyr::mutate(x = forcats::fct_reorder(x, n))
   }
 
   ## If not empty
