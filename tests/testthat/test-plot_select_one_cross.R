@@ -3,15 +3,3 @@
 # test_that("plot_select_one_cross works", {
 # 
 # })
-
-# test_that("plot_select_multiple_cross works", {
-# 
-# })
-
-# test_that("plot_integer_cros works", {
-# 
-# })
-
-# test_that("plot_correlation works", {
-# 
-# })

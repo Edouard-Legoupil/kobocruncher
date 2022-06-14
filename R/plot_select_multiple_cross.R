@@ -35,9 +35,23 @@ plot_select_multiple_cross <- function(datalist = datalist,
   rr <- mean(!is.na(data[[var]]))
   nr <- sum(!is.na(data[[var]]))
   
- if ( is.nan(rr)) {
+   data2 <- kobo_frame(datalist = datalist,
+                   dico = dico,
+                   var = by_var   )
+  
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  rr2 <- mean(!is.na(data2[[by_var]]))
+  ## Writing report
+  # cat("\n")
+ # cat(paste("####", label_varname(var)))
+  #cat(paste("#### Variable: ", var))
+  
+  if ( is.nan(rr) | is.nan(rr2) ) {
     cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
-  } else {
+  } else if (  ! (identical(data,data2))  ) {
+    # nothing to do - the variable are not in the same frame
+    } else {
   
   ## Writing report
   if (rr != 0 & ! (is.nan(rr))  ) { 

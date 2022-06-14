@@ -843,7 +843,7 @@ label_choiceset(dico = dico,
 
 ## Univariate
 
-### Plotting Select one variable
+## Plotting Select one variable
 
 ```{r function-plot_select_one}
 #' @title Plotting Select one variable
@@ -979,7 +979,7 @@ plot_select_one(datalist = datalist,
 ```
 
 
-### Plotting Select multiple variable
+## Plotting Select multiple variable
 
 ```{r function-plot_select_multiple}
 #' @title Plotting Select multiple variable
@@ -1123,7 +1123,7 @@ plot_select_multiple(datalist = datalist,
 ```
 
 
-### Plotting Numeric variable
+## Plotting Numeric variable
 
 ```{r function-plot_integer}
 #' @title Plotting numeric variable
@@ -1210,7 +1210,7 @@ plot_integer(datalist = datalist,
 ```
 
 
-### Plotting Open Text variable
+## Plotting Open Text variable
 
 ```{r function-plot_text}
 #' @title Plotting Open Text variables
@@ -1346,7 +1346,7 @@ plot_text(datalist = datalist,
 
 ## Bivariate
 
-### Plotting Select one variable with cross tabulation
+## Plotting Select one variable with cross tabulation
 
 ```{r function-plot_select_one_cross}
 #' @title Plotting Select one variable with cross tabulation on a second categorical variable
@@ -1499,7 +1499,7 @@ plot_select_one_cross(datalist = datalist,
 
 
 
-### Plotting Select multiple variable with cross-tabulation
+## Plotting Select multiple variable with cross-tabulation
 
 ```{r function-plot_select_multiple_cross}
 #' @title Plotting Select multiple variable with cross tabulation on a second categorical variable
@@ -1653,7 +1653,7 @@ plot_select_multiple_cross(datalist = datalist,
 
 
 
-### Plotting Numeric variable with cross-tabulation
+## Plotting Numeric variable with cross-tabulation
 
 ```{r function-plot_integer_cross}
 #' @title Plotting numeric variable
@@ -1757,7 +1757,7 @@ plot_integer_cross(datalist = datalist,
 ```
 
 
-### Plotting Correlation
+## Plotting Correlation
 
 ```{r function-plot_correlation}
 #' @title Plotting Correlation
@@ -1839,15 +1839,15 @@ plot_correlation(datalist = datalist,
 
 ## Multivariate
 
-### Plotting clusters
+## Plotting clusters
 
  to do....
  
-### Plotting prediction
+## Plotting prediction
 
  to do....
 
-### Plotting scores
+## Plotting scores
 
  to do....
 

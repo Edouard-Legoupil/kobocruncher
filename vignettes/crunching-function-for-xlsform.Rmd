@@ -146,7 +146,7 @@ label_choiceset(dico = dico,
 
 ## Univariate
 
-### Plotting Select one variable
+## Plotting Select one variable
 
 ```{r examples-plot_select_one}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -163,7 +163,7 @@ plot_select_one(datalist = datalist,
               showcode = TRUE)
 ```
 
-### Plotting Select multiple variable
+## Plotting Select multiple variable
 
 ```{r examples-plot_select_multiple}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -184,7 +184,7 @@ plot_select_multiple(datalist = datalist,
 
 ```
 
-### Plotting Numeric variable
+## Plotting Numeric variable
 
 ```{r examples-plot_integer}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -196,7 +196,7 @@ plot_integer(datalist = datalist,
               showcode = TRUE)
 ```
 
-### Plotting Open Text variable
+## Plotting Open Text variable
 
 ```{r examples-plot_text}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -210,7 +210,7 @@ plot_text(datalist = datalist,
 
 ## Bivariate
 
-### Plotting Select one variable with cross tabulation
+## Plotting Select one variable with cross tabulation
 
 ```{r examples-plot_select_one_cross}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -232,7 +232,7 @@ plot_select_one_cross(datalist = datalist,
 
 ```
 
-### Plotting Select multiple variable with cross-tabulation
+## Plotting Select multiple variable with cross-tabulation
 
 ```{r examples-plot_select_multiple_cross}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -245,7 +245,7 @@ plot_select_multiple_cross(datalist = datalist,
               showcode = TRUE)
 ```
 
-### Plotting Numeric variable with cross-tabulation
+## Plotting Numeric variable with cross-tabulation
 
 ```{r examples-plot_integer_cross}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -258,7 +258,7 @@ plot_integer_cross(datalist = datalist,
               showcode = TRUE)
 ```
 
-### Plotting Correlation
+## Plotting Correlation
 
 ```{r examples-plot_correlation}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -271,17 +271,17 @@ plot_correlation(datalist = datalist,
 
 ## Multivariate
 
-### Plotting clusters
+## Plotting clusters
 
  to do....
  
 
-### Plotting prediction
+## Plotting prediction
 
  to do....
 
 
-### Plotting scores
+## Plotting scores
 
  to do....
 
