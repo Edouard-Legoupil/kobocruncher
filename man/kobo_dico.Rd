@@ -7,7 +7,10 @@
 kobo_dico(xlsformpath)
 }
 \arguments{
-\item{xlsformpath}{path to the xlsform file used to collect the data}
+\item{xlsformpath}{path to the (extended) xlsform file used to collect the data}
+}
+\value{
+A "kobodico" S3 class object (list) formatted to the specifications of "kobocruncher".
 }
 \description{
 Prepare Analysis plan
@@ -23,4 +26,7 @@ knitr::kable(head(responses, 10))
 # Settings
 metadata <- as.data.frame(dico[3])
 knitr::kable(head(metadata, 10))
+# Report ToC
+toc <- as.data.frame(dico[4])
+knitr::kable(head(toc, 10))
 }

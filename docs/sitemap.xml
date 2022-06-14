@@ -40,9 +40,6 @@
     <loc>/reference/kobo_prepare_form.html</loc>
   </url>
   <url>
-    <loc>/reference/label_choice.html</loc>
-  </url>
-  <url>
     <loc>/reference/label_choiceset.html</loc>
   </url>
   <url>
@@ -52,13 +49,13 @@
     <loc>/reference/label_varname.html</loc>
   </url>
   <url>
-    <loc>/reference/output_header.html</loc>
-  </url>
-  <url>
     <loc>/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>/reference/plo_correlation.html</loc>
+    <loc>/reference/plot_correlation.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_header.html</loc>
   </url>
   <url>
     <loc>/reference/plot_integer.html</loc>

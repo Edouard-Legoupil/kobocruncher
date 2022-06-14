@@ -2,13 +2,17 @@
 
 #' @title Data loading
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' 
+#' @return A "datalist" S3 class object (list) formatted to the specifications of "kobocruncher".
+#'  
 #' @export
 
 #' @examples
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 #' # MainFrame
 #' datalist[1]
-#' # Second Frame
+#' # Second Frame - based on presence of repeat within the form, aka nested or
+#' # hierarchical data structure, etc... 
 #' datalist[2]  
 kobo_data <- function(datapath) {
    # cat(readxl::excel_sheets(datapath ))
@@ -22,6 +26,8 @@ kobo_data <- function(datapath) {
     datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_005", ".", colnames(y)); y})
     datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_006", ".", colnames(y)); y})
     #names(datalist) <- readxl::excel_sheets(datapath )
+    
+    class(datalist) <- "datalist" # assigns a "datalist" class to the list. Helpful for later on.
     return(datalist)
 }
 

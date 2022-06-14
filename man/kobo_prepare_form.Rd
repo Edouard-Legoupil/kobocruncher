@@ -17,6 +17,8 @@ kobo_prepare_form(xlsformpath, xlsformpathout, language = "", ridl = "")
 }
 \description{
 Prepare XLSform by adding instructions for the analysis plan and checking that structure and settings are correct.
+This function open the xlsform - extend if required including the excel formatting,
+display the analysis plan summary and resave the file at the end.
 
 Once those elements are set up, they will be automatically considered during the automatic crunching phase.
 An additional worksheet is also created to document the information required for registration on UNHCR CKAN instance http://ridl.unhcr.org
@@ -33,7 +35,7 @@ An additional worksheet is also created to document the information required for
 }
 \item Configuration of specific charts, visualization and analysis:
 \itemize{
-\item disaggregation: define variable to use for visual by_varulation - functions with "_cross"
+\item disaggregation: define variable to use for visual cross tabulation - functions with "_cross"
 \item correlate: define the variable to use to explore statistical association - works under certain restrictions (i.e. between 2 categorical variables only): kobo_correlate
 \item cluster: define variable to generate an unsupervised classification (i.e. hierarchical clustering based on multiple correspondance analysis) kobo_cluster
 \item predict: define variable to use to generate predictive model, ie.e the target variable and the predictors.  kobo_predict
@@ -44,4 +46,8 @@ An additional worksheet is also created to document the information required for
 
 In case if those fields do not yet exist, the function will create dummy column for each one.
 Also, coloring all rows that have type equal to "begin group", "end group", "begin repeat" or "end repeat" for better legibility
+}
+\examples{
+# kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
+#                   xlsformpathout = "form_with_plan.xlsx")
 }

@@ -39,12 +39,16 @@ form <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
 
 
 
+# Preparing objects 
 
-# Data loading
+## Data loading
 
 ```{r function-kobo_data}
 #' @title Data loading
 #' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
+#' 
+#' #' @return A "datalist" S3 class object (list) formatted to the specifications of "kobocruncher".
+#'  
 #' @export
 
 kobo_data <- function(datapath) {
@@ -59,6 +63,8 @@ kobo_data <- function(datapath) {
     datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_005", ".", colnames(y)); y})
     datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_006", ".", colnames(y)); y})
     #names(datalist) <- readxl::excel_sheets(datapath )
+    
+    class(datalist) <- "datalist" # assigns a "datalist" class to the list. Helpful for later on.
     return(datalist)
 }
 
@@ -69,7 +75,8 @@ kobo_data <- function(datapath) {
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # MainFrame
 datalist[1]
-# Second Frame
+# Second Frame - based on presence of repeat within the form, aka nested or
+# hierarchical data structure, etc... 
 datalist[2]  
 ```
 
@@ -79,13 +86,17 @@ datalist[2]
 # })
 ```
 
-# Extend the xlsform to add instructions for the analysis plan
+## Extend the xlsform to add instructions for the analysis plan
+
+Now we can extend the xlsform that was used to document key next steps in the data preparation.
 
 ```{r function-kobo_prepare_form}
 
 #' @title Prepare XLSform and review Analysis
 #' 
 #' @description  Prepare XLSform by adding instructions for the analysis plan and checking that structure and settings are correct.
+#' This function open the xlsform - extend if required including the excel formatting, 
+#' display the analysis plan summary and resave the file at the end. 
 #' 
 #'  Once those elements are set up, they will be automatically considered during the automatic crunching phase.
 #'  An additional worksheet is also created to document the information required for registration on UNHCR CKAN instance http://ridl.unhcr.org
@@ -100,7 +111,7 @@ datalist[2]
 #'  
 #'  3. Configuration of specific charts, visualization and analysis: 
 #'  
-#'     - disaggregation: define variable to use for visual by_varulation - functions with "_cross"
+#'     - disaggregation: define variable to use for visual cross tabulation - functions with "_cross"
 #'     - correlate: define the variable to use to explore statistical association - works under certain restrictions (i.e. between 2 categorical variables only): kobo_correlate
 #'     - cluster: define variable to generate an unsupervised classification (i.e. hierarchical clustering based on multiple correspondance analysis) kobo_cluster
 #'     - predict: define variable to use to generate predictive model, ie.e the target variable and the predictors.  kobo_predict
@@ -204,15 +215,6 @@ kobo_prepare_form <- function(xlsformpath,
     if ("score" %in% colnames(survey)) {     } else { survey$score <- ""  }
     if ("mappoint" %in% colnames(survey)) {    } else { survey$mappoint <- ""}
     if ("mappoly" %in% colnames(survey)) {    } else { survey$mappoly <- ""}
-    
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
     survey$label.lenght <- nchar(survey$label)
     ## add the full name that will be used by functions
     survey$fullname <- survey |> 
@@ -316,7 +318,7 @@ kobo_prepare_form <- function(xlsformpath,
     ### add column if not present
     if ("order" %in% colnames(choices)) { } else { choices$order <- ""}
     if ("score" %in% colnames(choices)) {  } else { choices$score <- ""}
-    namesOfCho <- c("list_name", "name", "label",  "order", "score","labelQ") 
+    namesOfCho <- c("list_name", "name", "label",  "order", "score","label.lenght","labelQ") 
     namesOfCho <- as.data.frame(namesOfCho) |>
       dplyr::filter(namesOfCho %in% colnames(choices)) |>
       dplyr::pull() 
@@ -400,6 +402,16 @@ kobo_prepare_form <- function(xlsformpath,
     if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
     openxlsx::saveWorkbook(wb, xlsformpathout)
     cat("\n******************** Summary of the Analysis Plan *********************\n \n")
+    
+    
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
     ## get a summary of what we have
     ## Check Variable lenght
     # if( length(survey$label) )
@@ -423,6 +435,12 @@ kobo_prepare_form <- function(xlsformpath,
 
 ```
 
+
+```{r examples-kobo_prepare_form}
+# kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
+#                   xlsformpathout = "form_with_plan.xlsx")
+```
+
 ```{r tests-kobo_prepare_form}
 # test_that("kobo_prepare_form works", {
 # 
@@ -430,15 +448,13 @@ kobo_prepare_form <- function(xlsformpath,
 ```
 
 
-
-
-
-
-# Prepare data dictionnary
+## Prepare data dictionnary
 
 ```{r function-kobo_dico}
 #' @title Prepare Analysis plan
-#' @param xlsformpath path to the xlsform file used to collect the data
+#' @param xlsformpath path to the (extended) xlsform file used to collect the data
+#' 
+#' @return A "kobodico" S3 class object (list) formatted to the specifications of "kobocruncher".
 #' @export
 
 kobo_dico <- function(xlsformpath) {
@@ -542,19 +558,83 @@ kobo_dico <- function(xlsformpath) {
   variables$dataframecount <- NULL
   variables$dataframenew <- NULL
   
+    if ("chapter" %in% colnames(variables)) { } else {  variables$chapter <- NA  }
+    if ("subchapter" %in% colnames( variables)) { } else {  variables$subchapter <- NA   }
+    if ("disaggregation" %in% colnames(variables)) { } else {  variables$disaggregation <- NA  }
+    if ("correlate" %in% colnames( variables)) { } else {  variables$correlate <- NA   }
   
 
      choices <- readxl::read_excel(xlsformpath,   sheet = "choices")  
+    if ("order" %in% colnames( choices)) { } else {  choices$order <- NA   }
      modalities <- choices |>
                    dplyr::rename(label = dplyr::first(matches("^label")))
      
      settings <- readxl::read_excel(xlsformpath,   
                                 sheet = "settings")
      
+     ## Build the question order for the crunching report
+     if (  nrow(as.data.frame(variables)|> dplyr::filter(! is.na(chapter)))  > 1 ) {
+       
+       
+      ## Reinsert chapter and subchapter as begin_group
+       subchapterorder <- as.data.frame(variables) |>
+          dplyr::distinct(chapter, subchapter) |>
+          dplyr::filter(! is.na(chapter) ) |>
+          dplyr::mutate( subchapternum = dplyr::row_number())
+        
+        plansub  <- as.data.frame(variables) |>
+            dplyr::filter(! is.na(chapter) ) |>
+           dplyr::filter( ! type  %in% c("begin_group", "end_group") )  |>
+           dplyr::group_by( chapter, subchapter) |>
+           dplyr::summarise( type = "begin_group",
+                      name =  "labelsub.chapter" ) |>
+           dplyr::mutate( label = subchapter) |>
+           dplyr::bind_rows(as.data.frame(variables) |>
+                              dplyr::filter(! is.na(chapter) ) |>
+                              dplyr::filter( ! type  %in% c("begin_group", "end_group") ) ) |>
+           dplyr::left_join(subchapterorder, by = c("chapter", "subchapter")) |>
+           #dplyr::mutate_at(vars( ), ~replace(., is.na(.) , '')) %>%
+           dplyr::arrange(subchapternum)  |>
+          dplyr::mutate( labelsub.chapter = paste0("labelsub.chapter" , subchapternum ) ) |>
+          dplyr::mutate(  name= dplyr::case_when(
+              name == "labelsub.chapter" ~ labelsub.chapter ,
+              TRUE ~ name) )
+        
+        chapterorder <- as.data.frame(variables) |>
+          dplyr::distinct(chapter) |>
+          dplyr::filter(! is.na(chapter) ) |>
+          dplyr::mutate( chapternum = dplyr::row_number())
+        
+        plan  <- as.data.frame(variables) |>
+          dplyr::filter(! is.na(chapter) ) |>
+          dplyr::filter( ! type  %in% c("begin_group", "end_group") )  |>
+          dplyr::group_by( chapter) |>
+          dplyr::summarise( type = "begin_group",
+                            name = "labelchapter" ) |>
+           dplyr::mutate( label = chapter) |>
+          dplyr::bind_rows(plansub ) |>
+          dplyr::left_join(chapterorder, by = c("chapter" )) |>
+          #dplyr::mutate_at(vars( ), ~replace(., is.na(.) , '')) %>%
+          dplyr::arrange(chapternum) |>
+          dplyr::mutate( labelchapter = paste0("labelchapter" , chapternum ) ) |>
+          dplyr::mutate(  name= dplyr::case_when(
+              name == "labelchapter" ~ labelchapter ,
+              TRUE ~ name) ) |>
+          dplyr::select( type, label,name)
+        
+        } else { 
+        plan <- as.data.frame(variables) |>
+          dplyr::select(type, label,name)|>
+          dplyr::filter( ! type  %in% c("note",  "end_group") )
+       }
+       
+    dico <- list( variables, 
+                         modalities,
+                         settings,
+                          plan)
+    class(dico) <- "kobodico" # assigns a "kobodico" class to the list. Helpful for later on. 
     ## Build dico object as list with both variables and modalities
-    return(list( variables, 
-                 modalities,
-                  settings))
+    return(dico )
 }
 
 ```
@@ -571,23 +651,35 @@ knitr::kable(head(responses, 10))
 # Settings
 metadata <- as.data.frame(dico[3])
 knitr::kable(head(metadata, 10))
+# Report ToC
+toc <- as.data.frame(dico[4])
+knitr::kable(head(toc, 10))
 ```
 
-# Get frame for a variable
+# Data Processing
+
+## Cleaning
+
+## Anonymisation
+
+## Indicator Calculation
+
+
+
+# Labeling functions
+
+## Get the correct frame for a specific variable
 
 ```{r function-kobo_frame}
-#' @title get the correct frame for one selected variable - important when havving variables within a repeat
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to collect the data
+#' @title get the correct frame for one selected variable - important when having variables within a repeat
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var variable
 #' @export
 
-kobo_frame <- function(datapath,
-                       xlsformpath, 
+kobo_frame <- function(datalist,
+                       dico, 
                        var) {
-  
-  datalist <- kobo_data(datapath )
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   
   ## Identify the right frame number
   dataframen <- as.data.frame(dico[1]) |>
@@ -619,23 +711,25 @@ if ("X_id" %in% colnames(data)) { data$X_id <-  row.names(data)  } else { }
 
 
 ```{r examples-kobo_frame}
-data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
-                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = "members.sex"   )
 knitr::kable(head(data,5))
  
 ```
 
-# Get the label for a specific variable
+## Get the label for a specific variable
 
 ```{r function-label_varname}
 #' @title Get the label for a specific variable
-#' @param xlsformpath path to the xlsform file used to collect the data
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param x character with the variable name
 #' @export
 
-label_varname <- function(xlsformpath, x) {
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
+label_varname <- function(dico, x) {
   as.data.frame( dico[1]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(label)
@@ -644,8 +738,9 @@ label_varname <- function(xlsformpath, x) {
 ```
 
 ```{r examples-label_varname}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 
-label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+label_varname(dico = dico, 
               x ="profile.country")
 
 ```
@@ -656,16 +751,15 @@ label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocr
 # })
 ```
 
-# Get interpretation hint for a specific variable
+## Get interpretation hint for a specific variable
 
 ```{r function-label_varhint}
 #' @title Get Interpretation hint for a specific variable
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param x variable
 #' @export
 
-label_varhint <- function(xlsformpath, x) {
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
+label_varhint <- function(dico, x) {
   as.data.frame(dico[1]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(hint)
@@ -674,7 +768,9 @@ label_varhint <- function(xlsformpath, x) {
 ```
 
 ```{r examples-label_varhint}
-label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+
+label_varhint(dico = dico, 
               x ="profile.country")
 ```
 
@@ -685,20 +781,19 @@ label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocr
 ```
 
 
-# Get all the choices labels options for a specific variable
+## Get all the choices labels options for a specific variable
 
 ```{r function-label_choiceset}
 #' @title Get all the choices labels options for a specific variable if available
 #' 
 #' @description This labeling function ia function factory - https://adv-r.hadley.nz/function-factories.html
 #' The output of this function is actually a function
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param x variable
 #' @export
 
-label_choiceset <- function(xlsformpath,
+label_choiceset <- function(dico,
                             x) {
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   lname <- as.data.frame(dico[1]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(list_name)
@@ -716,15 +811,19 @@ label_choiceset <- function(xlsformpath,
 ```
 
 ```{r examples-label_choiceset}
-data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
-                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = "profile.country"   )
-label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+
+label_choiceset(dico = dico, 
                 x="profile.country")(data$profile.country)
 
 ## Test when there's no dictionnary
 data$profile.occupation
-label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+label_choiceset(dico = dico, 
                 x="profile.occupation")(data$profile.occupation)
 ```
 
@@ -734,32 +833,30 @@ label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kob
 # })
 ```
 
+# Plotting Functions
 
-
-# Plotting Select one variable
+## Plotting Select one variable
 
 ```{r function-plot_select_one}
 #' @title Plotting Select one variable
 #' @description Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param showcode display the code
 #' @export
 
-plot_select_one <- function(datapath  ,
-                            xlsformpath  ,
+plot_select_one <- function(datalist  ,
+                            dico  ,
                             var,
                             showcode = FALSE) {
 
   require("ggplot2")
-  
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   ## Get default data source name 
   datasource <- as.character(  dico[3][[1]]$form_title ) 
  
-  data <- kobo_frame(datapath = datapath,
-                   xlsformpath = xlsformpath,
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = var  )
   
   ## get response rate: rr
@@ -793,7 +890,10 @@ plot_select_one <- function(datapath  ,
   }
   
   ## Writing code instruction in report
-  if( showcode == TRUE) { cat(paste0( fontawesome::fa_png("far fa-copy", fill ="grey"), "`plot_select_one(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}  else {}
+  if( showcode == TRUE) { cat(paste0( label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"),
+                                      "`plot_select_one(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}  else {}
   
     
     ## plot
@@ -822,15 +922,15 @@ plot_select_one <- function(datapath  ,
                   
                   size = 4   ) +
       scale_x_continuous(labels = scales::label_percent()) +
-      scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath, x = var)(x) |>
+      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico, x = var)(x) |>
                       stringr::str_wrap(40)}) +
       coord_cartesian(clip = "off") +
       labs(x = NULL, y = NULL,
-           title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
+           title = stringr::str_wrap(label_varname(dico = dico,
                                                    x = var), 60),
-           subtitle = if (!is.na(label_varhint(xlsformpath = xlsformpath,
+           subtitle = if (!is.na(label_varhint(dico = dico,
                                                x= var))){
-             stringr::str_wrap(label_varhint(xlsformpath = xlsformpath,
+             stringr::str_wrap(label_varhint(dico = dico,
                                              x= var), 70)} else { ""},
            caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records. \n Source: {datasource}")) +
       theme_minimal( base_size = 15) +
@@ -850,13 +950,18 @@ plot_select_one <- function(datapath  ,
 ```
 
 ```{r examples-plot_select_one}
-plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.country")
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 
-plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.countryerror")
+plot_select_one(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              showcode = TRUE)
+
+plot_select_one(datalist = datalist,
+              dico = dico, 
+              var = "profile.countryerror",
+              showcode = TRUE)
 ```
 
 ```{r tests-plot_select_one}
@@ -866,31 +971,29 @@ plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
 ```
 
 
-# Plotting Select one variable with by_varulation
+## Plotting Select one variable with cross tabulation
 
 ```{r function-plot_select_one_cross}
 #' @title Plotting Select one variable with cross tabulation on a second categorical variable
 #' @description
 #' Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
-plot_select_one_cross <- function(datapath = datapath,
-                            xlsformpath = xlsformpath,
+plot_select_one_cross <- function(datalist = datalist,
+                            dico = dico,
                             var, 
                             by_var , 
                             showcode = FALSE) {
   
   require("ggplot2")
-  
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datapath = datapath,
-                   xlsformpath = xlsformpath,
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = var  )
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
@@ -910,7 +1013,9 @@ plot_select_one_cross <- function(datapath = datapath,
         
           ## Writing code instruction in report
           if( showcode == TRUE) { 
-            cat(paste0( fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", by_var, "\")` \n\n "))}     else {}
+            cat(paste0( label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}     else {}
 
       cnts <- data |>
         ## keep only the variable we need
@@ -951,17 +1056,17 @@ plot_select_one_cross <- function(datapath = datapath,
         scale_x_continuous(labels = scales::label_percent()) +
          
         facet_wrap( ~ y ,  nrow = 3  ,
-                      labeller = as_labeller(function(x) label_choiceset(xlsformpath = xlsformpath,
+                      labeller = as_labeller(function(x) label_choiceset(dico = dico,
                                                                       x = by_var)(x))
           ) +
-          scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+          scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                             x = var)(x) |>
               stringr::str_wrap(40)}) +
         coord_cartesian(clip = "off") +
         labs(x = NULL, y = NULL,
-               title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
+               title = stringr::str_wrap(label_varname(dico = dico,
                                                        x = var), 80),
-               subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
+               subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
                                                                                  x = by_var)), 80),
                caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
         theme_minimal( base_size = 13) +  
@@ -984,10 +1089,14 @@ plot_select_one_cross <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_select_one_cross}
-plot_select_one_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_select_one_cross(datalist = datalist,
+              dico = dico, 
               var = "profile.country",
-              by_var = "profile.occupation"
+              by_var = "profile.occupation",
+              showcode = TRUE
               )
 ```
 
@@ -999,29 +1108,27 @@ plot_select_one_cross(datapath = system.file("data.xlsx", package = "kobocrunche
 
 
 
-# Plotting Select multiple variable
+## Plotting Select multiple variable
 
 ```{r function-plot_select_multiple}
 #' @title Plotting Select multiple variable
 #' #' @description
 #' Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param showcode display the code
 #' @export
 
-plot_select_multiple <- function(datapath = datapath, 
-                                 xlsformpath = xlsformpath,
+plot_select_multiple <- function(datalist = datalist, 
+                                 dico = dico,
                                  var, 
                                  showcode = FALSE) {
   
   require("ggplot2")
-  
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datapath = datapath,
-                   xlsformpath = xlsformpath,
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = var  )
   
   ## get response rate: rr
@@ -1058,7 +1165,9 @@ plot_select_multiple <- function(datapath = datapath,
     
     ## Writing code instruction in report
     if( showcode == TRUE) {
-      cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_select_multiple(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}   else {} 
+      cat(paste0(label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_multiple(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}   else {} 
     
     ## Plot
      p <- ggplot(cnts, aes(p, x)) +
@@ -1085,16 +1194,16 @@ plot_select_multiple <- function(datapath = datapath,
                     size = 4   ) +   
       
       scale_x_continuous(labels = scales::label_percent()) +
-      scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                         x = var)(x) |>
           stringr::str_wrap(40)}) +
       coord_cartesian(clip = "off") +
       labs(x = NULL, y = NULL,
-           title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
+           title = stringr::str_wrap(label_varname(dico = dico,
                                                          x= var), 60),
-           subtitle = if (!is.na(label_varhint(xlsformpath = xlsformpath,
+           subtitle = if (!is.na(label_varhint(dico = dico,
                                                         x = var))){ 
-                     stringr::str_wrap(label_varhint(xlsformpath = xlsformpath,
+                     stringr::str_wrap(label_varhint(dico = dico,
                                                           x = var), 70)} else { ""},
            caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
       theme_minimal( base_size = 15) + 
@@ -1118,14 +1227,20 @@ plot_select_multiple <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_select_multiple}
-plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.reason"
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+
+plot_select_multiple(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason",
+              showcode = TRUE
             )
 
-plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.reason1"
+plot_select_multiple(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason1",
+              showcode = TRUE
             )
 
 ```
@@ -1138,32 +1253,30 @@ plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher
 
 
 
-# Plotting Select multiple variable with cross-tabulation
+## Plotting Select multiple variable with cross-tabulation
 
 ```{r function-plot_select_multiple_cross}
 #' @title Plotting Select multiple variable with cross tabulation on a second categorical variable
 #' @description
 #' Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
-plot_select_multiple_cross <- function(datapath = datapath,
-                                       xlsformpath = xlsformpath,
+plot_select_multiple_cross <- function(datalist = datalist,
+                                       dico = dico,
                                        var, 
                                        by_var , 
                                        showcode = FALSE) {
   
   
   require("ggplot2")
-  
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datapath = datapath,
-                   xlsformpath = xlsformpath,
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = var  )
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
@@ -1181,7 +1294,9 @@ plot_select_multiple_cross <- function(datapath = datapath,
         
           ## Writing code instruction in report
           if( showcode == TRUE) {
-             cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", by_var, "\")` \n\n "))}   else {}
+             cat(paste0(label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}   else {}
 
         
       cntscross <- data |>
@@ -1227,17 +1342,17 @@ plot_select_multiple_cross <- function(datapath = datapath,
                     size = 3   ) +   
         scale_x_continuous(labels = scales::label_percent()) +
         facet_wrap( ~ y ,  nrow = 3,
-                    labeller = as_labeller(function(x) label_choiceset(xlsformpath = xlsformpath,
+                    labeller = as_labeller(function(x) label_choiceset(dico = dico,
                                                          x= by_var)(x))
                     ) +
-        scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+        scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                           x = var)(x) |>
             stringr::str_wrap(40)}) +
         coord_cartesian(clip = "off") +
         labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
+             title = stringr::str_wrap(label_varname(dico = dico, 
                                                          x = var), 80),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
+             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
                                                          x = by_var)), 80),
              caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
         theme_minimal( base_size = 13) +  
@@ -1260,10 +1375,14 @@ plot_select_multiple_cross <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_select_multiple_cross}
-plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_select_multiple_cross(datalist = datalist,
+              dico = dico, 
               var = "profile.reason",
-              by_var = "location")
+              by_var = "location",
+              showcode = TRUE)
 ```
 
 ```{r tests-plot_select_multiple_cross}
@@ -1274,26 +1393,25 @@ plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocr
 
 
 
-# Plotting Numeric variable
+## Plotting Numeric variable
 
 ```{r function-plot_integer}
 #' @title Plotting numeric variable
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param showcode display the code
 #' @export
 
-plot_integer <- function(datapath = datapath, 
-                         xlsformpath = xlsformpath,
+plot_integer <- function(datalist = datalist, 
+                         dico = dico,
                          var, 
                          showcode = FALSE) {
   
-  require("ggplot2")
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
+  require("ggplot2") 
   datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datapath = datapath,
-                   xlsformpath = xlsformpath,
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = var  )
   ## Cast just in case...
   data[[var]] <- as.integer(data[[var]])
@@ -1309,7 +1427,9 @@ plot_integer <- function(datapath = datapath,
   if (rr != 0 & ! (is.nan(rr))  ) { 
       ## Writing code instruction in report
       if( showcode == TRUE) {
-        cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_integer(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}    else {}
+        cat(paste0(label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
     
     p <- ggplot(data) + 
       geom_histogram(aes( x= .data[[var]]), 
@@ -1319,11 +1439,11 @@ plot_integer <- function(datapath = datapath,
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
       labs(x = NULL, y = NULL,
-           title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
+           title = stringr::str_wrap(label_varname(dico = dico, 
                                          x = var), 60), 
-           subtitle = if (!is.na(label_varhint(xlsformpath = xlsformpath, 
+           subtitle = if (!is.na(label_varhint(dico = dico, 
                                                          x = var))){ 
-                     stringr::str_wrap(label_varhint(xlsformpath = xlsformpath, 
+                     stringr::str_wrap(label_varhint(dico = dico, 
                                                    x = var), 70)} else { ""},
            caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
   
@@ -1344,9 +1464,13 @@ plot_integer <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_integer}
-plot_integer(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "members.age")
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_integer(datalist = datalist,
+              dico = dico, 
+              var = "members.age",
+              showcode = TRUE)
 ```
 
 ```{r tests-plot_integer}
@@ -1356,28 +1480,27 @@ plot_integer(datapath = system.file("data.xlsx", package = "kobocruncher"),
 ```
 
 
-# Plotting Numeric variable with cross-tabulation
+## Plotting Numeric variable with cross-tabulation
 
 ```{r function-plot_integer_cross}
 #' @title Plotting numeric variable
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
-plot_integer_cross <- function(datapath = datapath, 
-                         xlsformpath = xlsformpath,
+plot_integer_cross <- function(datalist = datalist, 
+                         dico = dico,
                          var, 
                          by_var ,
                          showcode = FALSE) {
   
   require("ggplot2")
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datapath = datapath,
-                   xlsformpath = xlsformpath,
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = var  )
   ## Cast just in case...
   data[[var]] <- as.integer(data[[var]])
@@ -1393,7 +1516,9 @@ plot_integer_cross <- function(datapath = datapath,
   if (rr != 0 & ! (is.nan(rr)) ) { 
       ## Writing code instruction in report
       if( showcode == TRUE) {
-        cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_integer(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}    else {}
+        cat(paste0(label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
     
     p <- ggplot(data) + 
       geom_boxplot(aes(x = .data[[var]], y =  .data[[by_var]]), 
@@ -1402,14 +1527,14 @@ plot_integer_cross <- function(datapath = datapath,
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
       labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath, 
+             title = stringr::str_wrap(label_varname(dico = dico, 
                                                          x = var), 80),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
+             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
                                                          x = by_var)), 80),
            caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
       
       scale_size_area(max_size = 10) +        
-      scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                           x = var)(x) |>
             stringr::str_wrap(40)}) +
       theme_minimal( base_size = 13) +
@@ -1429,10 +1554,14 @@ plot_integer_cross <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_integer_cross}
-plot_integer_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_integer_cross(datalist = datalist,
+              dico = dico, 
               var = "members.age",
-              by_var = "members.sex")
+              by_var = "members.sex",
+              showcode = TRUE)
 ```
 
 ```{r tests-plot_integer_cros}
@@ -1441,25 +1570,24 @@ plot_integer_cross(datapath = system.file("data.xlsx", package = "kobocruncher")
 # })
 ```
 
-# Plotting Open Text variable
+## Plotting Open Text variable
 
 ```{r function-plot_text}
 #' @title Plotting Open Text variables
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param showcode display the code
 #' @export
 
-plot_text <- function(datapath = datapath, 
-                      xlsformpath = xlsformpath,
+plot_text <- function(datalist = datalist, 
+                      dico = dico,
                       var, 
                       showcode = FALSE) {
   
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datapath = datapath,
-                   xlsformpath = xlsformpath,
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = var  )
   # cat("---\n")
   # cat("\n\n")
@@ -1513,7 +1641,9 @@ plot_text <- function(datapath = datapath,
       
         ## Writing code instruction in report
         if( showcode == TRUE) {
-          cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_text(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")`  \n\n"))}   else {}
+          cat(paste0(label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_text(datalist = datalist, dico = dico, \"", var, "\")`  \n\n"))}   else {}
       
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :
@@ -1525,7 +1655,7 @@ plot_text <- function(datapath = datapath,
                                 random.order=FALSE, # random.order : plot words in random order. If false, they will be plotted in decreasing frequency
                                 rot.per=0.25,   # rot.per : proportion words with 90 degree rotation (vertical text)
                                 colors= RColorBrewer::brewer.pal(8, "Dark2")) # colors : color words from least to most frequent. Use, for example, colors =“black” for single color.
-    title( main = stringr::str_wrap( label_varname(xlsformpath = xlsformpath, 
+    title( main = stringr::str_wrap( label_varname(dico = dico, 
                                                   x= var), 70),
            sub = glue::glue("Open Text question \n Source: {datasource}" ))  
     
@@ -1559,9 +1689,13 @@ plot_text <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_text}
-plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.occupation")
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_text(datalist = datalist,
+              dico = dico, 
+              var = "profile.occupation",
+              showcode = TRUE)
 ```
 
 ```{r tests-plot_text}
@@ -1570,19 +1704,22 @@ plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
 # })
 ```
 
-# Plotting Correlation
+## Plotting Correlation
 
 ```{r function-plot_correlation}
 #' @title Plotting Correlation
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to cole
+#' 
+#' @description blbla
+#' 
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
-plot_correlation <- function(datapath = datapath, 
-                      xlsformpath = xlsformpath,
+plot_correlation <- function(datalist = datalist, 
+                      dico = dico,
                       var, 
                       by_var, 
                       showcode = FALSE) {
@@ -1633,8 +1770,11 @@ plot_correlation <- function(datapath = datapath,
 ```
 
 ```{r examples-plot_correlation}
-plot_correlation(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_correlation(datalist = datalist,
+              dico = dico, 
               var = "profile.occupation")
 ```
 
@@ -1644,25 +1784,39 @@ plot_correlation(datapath = system.file("data.xlsx", package = "kobocruncher"),
 # })
 ```
 
-# Output Header variable
+## Plotting Header variable
 
-```{r function-output_header}
+```{r function-plot_header}
 #' @title Output Header
-#' @param xlsformpath path to the xlsform file used to colllect the data
+#' 
+#' @description Function to add headings within the crunching report - 
+#' Headings are by defaults the groups defined in the xlsform - 
+#' but can be replaced within the analysis plan by chapter and subchapter
+#' 
+#' @param dico path to the xlsform file used to colllect the data
 #' @param var name of the variable to display
 #' @export
 
-output_header <- function(xlsformpath = xlsformpath,
+plot_header <- function(dico = dico,
                             var) {
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
-  
   ## getting header levels
   lvl <- stringr::str_count(var, "\\.")
   
   label <- as.data.frame(dico[1]) |>
            dplyr::filter(name == var) |>
            dplyr::pull(label)
-  title <- if(is.na(label)) glue::glue("({var})") else label
+
+  ## In case the header comes from chapter   
+  lbchap <- as.data.frame(dico[4]) |>
+            dplyr::filter(name == var) |>
+            dplyr::pull(label)
+
+  if(identical(label, character(0)) ) 
+    {title <- glue::glue("{lbchap}") } else {
+      if(is.na(label)) { title <- glue::glue("({var})") } else 
+      { title <- label} 
+   } 
+  
   # Join multiple strings into a single string.
   hdr <- stringr::str_c(strrep("#", 1+lvl), " ", title, sep = "")
   
@@ -1676,69 +1830,142 @@ output_header <- function(xlsformpath = xlsformpath,
 
 ```
 
-```{r examples-output_header}
-output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+```{r examples-plot_header}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+
+plot_header( dico = dico, 
               var = "profile")
 ```
 
-```{r tests-output_header}
-# test_that("output_header works", {
+```{r tests-plot_header}
+# test_that("plot_header works", {
 # 
 # })
 ```
 
+# Report generation
 
-
-# Crunching Variable based on type
+## Crunching Variables based on a plan
 
 ```{r function-kobo_cruncher}
-#' @title Crunch a variable
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to colllect the data
-#' @param type type of the variable to display
-#' @param name name of the variable to display
-#' @param disaggregation vector with the potential variables to use for cross tabulation
-#' @param correlate vector with the potential variables to use for testing statistical association
-#' @param showcode display the code
+#' @title Crunch a variable, used in conjunction with the analysis plan 
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico path to the xlsform file used to colllect the data
 #' @export
  
-kobo_cruncher <- function(datapath = datapath, 
-                          xlsformpath = xlsformpath,
-                          type, 
-                          name, 
-                          disaggregation = "", 
-                          correlate = "", 
-                          showcode = TRUE) {
+kobo_cruncher <- function(datalist = datalist, 
+                          dico = dico) {
   
-  if (type == "begin_group") output_header(xlsformpath = xlsformpath, 
-                                           var = name)
   
-  else if (type == "select_one") plot_select_one(datapath = datapath, 
-                                                 xlsformpath = xlsformpath,
-                                                 var = name, 
-                                                 showcode = TRUE)
-  else if (type == "select_multiple") plot_select_multiple(datapath = datapath,
-                                                           xlsformpath = xlsformpath, 
-                                                           var = name, 
-                                                           showcode = TRUE)
-  else if (type %in% c("numeric", "integer")) plot_integer(datapath = datapath, 
-                                           xlsformpath = xlsformpath,
-                                           var = name, 
-                                           showcode = TRUE)
-  else if (type == "text") plot_text(datapath = datapath, 
-                                     xlsformpath = xlsformpath, 
-                                     var = name, 
-                                     showcode = TRUE)
+  questions <- as.data.frame(dico[4])
+  disaggregation <-  c(as.data.frame(dico[1]) |> 
+                        dplyr::filter( !(is.na(disaggregation))) |>
+                        dplyr::pull(name) )
+  
+  correlate <-   c(as.data.frame(dico[1]) |> 
+                   dplyr::filter( !(is.na(correlate))) |>
+                   dplyr::pull(name))
+  
+  
+  ## If disaggregation not included in the function argument then use what's set up in the analysis plan
+  if (  length(disaggregation) == 1 ) { 
+    if (  disaggregation == "" ) { 
+      disaggregation <- as.data.frame(dico[1]) |> 
+        dplyr::filter( !(is.na(disaggregation))) |>
+        dplyr::pull(name) } }
+  
+
+  # If correlate not included in the function argument then use what's set up in the analysis plan
+  if (length(correlate) ==1) {
+    if (correlate == "") { correlate <- as.data.frame(dico[1])|> 
+      dplyr::filter( !(is.na(correlate))) |>
+      dplyr::pull(name) }}
+  
+  ## Looping around the questions as set up in the report plan ###
+  for ( i in 1:nrow(questions)) {
+      type <-  questions[ i, c("type")]
+      name <- questions[ i, c("name")]
+      
+      ## Univariate analysis ######
+      if (type == "begin_group") plot_header(dico = dico, 
+                                               var = name)
+      
+      if (type == "select_one") plot_select_one(datalist = datalist, 
+                                                dico = dico,
+                                                var = name, 
+                                                showcode = TRUE)
+      
+      if (type == "select_multiple") plot_select_multiple(datalist = datalist,
+                                                          dico = dico, 
+                                                          var = name, 
+                                                          showcode = TRUE)
+      
+      if (type %in% c("numeric", "integer")) plot_integer(datalist = datalist, 
+                                                          dico = dico,
+                                                          var = name, 
+                                                          showcode = TRUE)
+      
+      if (type == "text") plot_text(datalist = datalist, 
+                                    dico = dico, 
+                                    var = name, 
+                                    showcode = TRUE)
+      
+    
+       ## Bivariate analysis #####
+      if (type == "select_one" &  length(disaggregation)>=1 ) {
+        for (disag in disaggregation  ){
+          if(disag  != "")
+            plot_select_one_cross(datalist = datalist, 
+                                  dico = dico,
+                                  var = name, 
+                                  by_var = disag,
+                                  showcode = TRUE) }
+      }
+      if (type == "select_multiple" &  length(disaggregation)>=1 ) {
+        for (disag in disaggregation  ){
+          if(disag  != "")
+            plot_select_multiple_cross(datalist = datalist, 
+                                  dico = dico,
+                                  var = name, 
+                                  by_var = disag,
+                                  showcode = TRUE) }
+      }
+      if (type %in% c("numeric", "integer") &  length(disaggregation)>=1 ) {
+        for (disag in disaggregation  ){
+          
+          if(disag  != "")
+            plot_integer_cross(datalist = datalist, 
+                               dico = dico,
+                               var = name, 
+                               by_var = disag,
+                               showcode = TRUE) }
+      }
+    
+    ## Statistical Association  #
+      if (type == "select_one" &  length(correlate)>=1 ) {
+        for (correl in correlate  ){
+          
+          if(correl  != "")
+            plot_correlation(datalist = datalist, 
+                             dico = dico,
+                             var = name, 
+                             by_var = correl,
+                             showcode = TRUE) }
+      }
+  
+  }
 }
 
 ```
 
 ```{r examples-kobo_cruncher}
-kobo_cruncher(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              type = "select_one", 
-              name = "profile.country",
-              showcode = TRUE)
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+kobo_cruncher(datalist = datalist,
+              dico = dico)
+
+
 ```
 
 ```{r tests-kobo_cruncher}
@@ -1748,7 +1975,7 @@ kobo_cruncher(datapath = system.file("data.xlsx", package = "kobocruncher"),
 ```
  
 
-# Report Template 1 for Automatic Data Exploration
+## Report Template 1 for Automatic Data Exploration
 
 The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
 
@@ -1771,16 +1998,14 @@ This report also includes each plot syntax so that they can be easily pasted for
 #' @export
 
 template_1_exploration <- function(...) {
-  
   unhcr_theme <- unhcrdesign::use_unhcr_bslib()
-  
   rmarkdown::html_document( theme = unhcr_theme,
                             ...)
 }
 
 ```
 
-# Report Template 2 for Joint Data Interpretation Session
+## Report Template 2 for Joint Data Interpretation Session
 
 The second template is used following the systematic data exploration. 
 It will generate a powerpoint presentation
@@ -1804,7 +2029,7 @@ template_2_interpretation <- function(...) {
 }
 ```
 
-# Report Template 3 for Dissemination and Data Story Telling Template
+## Report Template 3 for Dissemination and Data Story Telling Template
 
 The last template can be used to take note of the data interpretation session.
 
@@ -1822,7 +2047,8 @@ It will generate a PDF or an paginated HTML page
 #' @return A pagedown report
 #' @export
 
-template_3_dissemination <- function(back_html = TRUE,
+template_3_dissemination <- function(
+                         back_html = TRUE,
                          other_css = NULL,
                          number_sections = FALSE,
                          ...) {
@@ -1833,7 +2059,6 @@ template_3_dissemination <- function(back_html = TRUE,
   logo_var <- paste0("  --unhcr-logoblue: url(\"", unhcrdesign::use_unhcr_logo(logo = "blue", data_uri = TRUE), "\");")
   logo_css <- tempfile(fileext = ".css")
   writeLines(c(":root {", logo_var, "}"), con = logo_css)
-
   file.append(base_css, logo_css)
 
   # specific css files

@@ -2,7 +2,7 @@
 title: "Exploratory Data Analysis Step"
 date: " `r format(Sys.Date(),  '%d %B %Y')`"
 output:
-  kobocruncher::template_exploration:
+  kobocruncher::template_1_exploration:
     toc: true
     toc_depth: 2
     toc_float: true
@@ -50,7 +50,7 @@ library("kobocruncher")
 ```
 
 
-```{r setup, include=FALSE}
+```{r param, include=FALSE}
 ## In case the ridl parameters is set, the below will get the data from the ckan container 
 
 datapath <- here::here(params$datafolder, params$data)
@@ -62,43 +62,15 @@ xlsformpath <- here::here(params$datafolder, params$form)
 # Add # to comment them after once you have set up your report parameters..
 datapath <- system.file("data.xlsx", package = "kobocruncher")
 xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
-#######
-datalist <- kobo_data(datapath = datapath )
-dico <- kobo_dico(xlsformpath = xlsformpath)
-questions <- as.data.frame(dico[1])
 
-```
-
-```{r analysis_plan}
-## Let's extract the analysis plan from the xlsform - or extend the current one
-kobo_prepare_form(xlsformpath = here::here(params$datafolder, params$dataform) ,
-                 xlsformpathout =  here::here(params$datafolder, "form_with_plan.xlsx")  ,
-                 language = "" ) ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
-
-```
-
-```{r anonymize_data}
-## In case it set up in your Below is an initial statistical disclosure risk 
-
-```
-
-```{r clean_data}
-## When iterating during the initial data exploration, you may add here specific cleaning steps 
-
-```
-
-```{r Indicator_calculation}
-## When iterating during the initial data exploration, you may create here calculated variables
-# Thi step is also called : Feature engineering, i.e. the process of creating new features from existing ones.
-# Newly engineered features often generate valuable insights.
 
 ```
 
 # Crunching step
 
-This data crunching report allows to quickly explore the results of the survey that can be regenerated as needed. The objective of this report is to allow to quickly identify potential patterns in your dataset. A quick screening of this initial report should allow to select the most meaningful graphs.
+This data crunching report allows to quickly explore the results of the survey. It can be regenerated as needed based on the analysis plan you did set up. The objective of this report is to allow to quickly identify potential patterns in your dataset. A quick screening of this initial report should allow to select the most meaningful graphs.
 
-The crunching process produces a lot of visuals. Therefore it is key to carefully select the most relevant visual that will be presented for potential interpretation in the next step. A typical data interpretation session shall not last more than 2hours and include more than 60 visuals to look at in order to keep participants with a good focus level.
+The crunching process produces a lot of visuals. Therefore it is key to carefully select the most relevant visual that will be presented for potential interpretation in the next step. To do so, you simply copy-paste the short syntax in a second notebook to generate as powerpoint presentation. A typical data interpretation session shall not last more than 2hours and include more than 60 visuals to look at in order to keep participants with a good focus level.
  
 In order to guide this selection phase, data experts, in collaboration with the data analysis group, can use the following elements:
  
@@ -114,13 +86,13 @@ In order to guide this selection phase, data experts, in collaboration with the 
  
 When analyzing those representations in a collective setting during data interpretation sessions, you may:  
  
-  *  __Reflect__: question data quality and/or make suggestions to adjust questions, identify additional cleaning steps;   
+  1.  __Reflect__: question data quality and/or make suggestions to adjust questions, identify additional cleaning steps;   
 
-  *  __Interpret__: develop qualitative interpretations of data patterns;     
+  2.  __Interpret__: develop qualitative interpretations of data patterns;     
 
-  *  __Recommend__: suggest recommendations in terms of programmatic adjustment;    
+  3.  __Recommend__: suggest recommendations in terms of programmatic adjustment;    
 
-  *  __Classify__: define level of sensitivity for certain topics if required;     
+  4.  __Classify__: define level of sensitivity for certain topics if required;     
 
 The report can be regenerated as needed by:  
 
@@ -132,19 +104,47 @@ The report can be regenerated as needed by:
  
   *  appending calculated indicators to your data frame to reshape variable - also called feature engineering. 
 
+# Analysis Plan 
+
+```{r analysis_plan}
+## Let's extract the analysis plan from the xlsform - or extend the current one
+kobo_prepare_form(xlsformpath = here::here(params$datafolder, params$form) ,
+                 xlsformpathout =  here::here(params$datafolder, params$form)  ,
+                 language = "" ) ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
+
+#######
+datalist <- kobo_data(datapath = datapath )
+dico <- kobo_dico(xlsformpath = xlsformpath)
+questions <- as.data.frame(dico[4])
+```
+
+
+```{r clean_data}
+## When iterating during the initial data exploration, you may add here specific cleaning steps 
+
+```
+
+
+```{r anonymize_data}
+## In case it set up in your Below is an initial statistical disclosure risk 
+
+```
+
+```{r Indicator_calculation}
+## When iterating during the initial data exploration, you may create here calculated variables
+# Thi step is also called : Feature engineering, i.e. the process of creating new features from existing ones.
+# Newly engineered features often generate valuable insights.
+
+```
+
+
+
 
 # Automatic Exploration
 
 ```{r cruncher, results='asis' }
-crunchingparameters <- list(datapath = datapath,
-                         xlsformpath =  xlsformpath,
-                         type = questions$type,
-                         name =  questions$name,
-                         showcode = TRUE)
-# Map over multiple inputs simultaneously
-# https://purrr.tidyverse.org/reference/map2.html
-purrr::pwalk(crunchingparameters,
-             kobo_cruncher)
+kobo_cruncher(datapath = datapath,
+             xlsformpath =  xlsformpath)
 
 ## add cluster analysis if set up
 ## add prediction if set up

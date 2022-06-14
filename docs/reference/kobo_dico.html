@@ -63,47 +63,53 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>xlsformpath</dt>
-<dd><p>path to the xlsform file used to collect the data</p></dd>
+<dd><p>path to the (extended) xlsform file used to collect the data</p></dd>
+
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>A "kobodico" S3 class object (list) formatted to the specifications of "kobocruncher".</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu">kobo_dico</span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Expected 2 pieces. Missing pieces filled with `NA` in 9 rows [1, 2, 4, 6, 8, 9, 10, 11, 13].</span>
 <span class="r-in"><span class="co"># Survey</span></span>
 <span class="r-in"><span class="va">questions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">dico</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">questions</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |type            |list_name |name               |label                                           |hint           |repeatvar |scope   | dataframe|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |:---------------|:---------|:------------------|:-----------------------------------------------|:--------------|:---------|:-------|---------:|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |today           |NA        |today              |NA                                              |NA             |          |        |         1|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |date            |NA        |date               |Interview  date                                 |this is a hint |          |        |         1|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |select_one      |location  |location           |Where is the interview taking place             |this is a hint |          |        |         1|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |begin_group     |NA        |profile            |Respondant profile                              |NA             |          |profile |         1|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |select_one      |countries |profile.country    |What is your country of Origin?                 |this is a hint |          |profile |         1|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |text            |NA        |profile.occupation |What's you occupation?                          |this is a hint |          |profile |         1|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |select_multiple |reasons   |profile.reason     |Why did you left?                               |this is a hint |          |profile |         1|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |integer         |NA        |profile.HHSize     |What's the size of your household?              |this is a hint |          |profile |         1|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |end_group       |NA        |NA                 |NA                                              |NA             |          |        |         1|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |begin_repeat    |NA        |members            |Please enter information for each family member |NA             |members   |        |         2|</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |type            |list_name |name               |label                                           |hint           |repeatvar |scope   | dataframe|chapter |subchapter |disaggregation |correlate |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |:---------------|:---------|:------------------|:-----------------------------------------------|:--------------|:---------|:-------|---------:|:-------|:----------|:--------------|:---------|</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |today           |NA        |today              |NA                                              |NA             |          |        |         1|NA      |NA         |NA             |NA        |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |date            |NA        |date               |Interview  date                                 |this is a hint |          |        |         1|NA      |NA         |NA             |NA        |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |select_one      |location  |location           |Where is the interview taking place             |this is a hint |          |        |         1|NA      |NA         |NA             |NA        |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |begin_group     |NA        |profile            |Respondant profile                              |NA             |          |profile |         1|NA      |NA         |NA             |NA        |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |select_one      |countries |profile.country    |What is your country of Origin?                 |this is a hint |          |profile |         1|NA      |NA         |NA             |NA        |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |text            |NA        |profile.occupation |What's you occupation?                          |this is a hint |          |profile |         1|NA      |NA         |NA             |NA        |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |select_multiple |reasons   |profile.reason     |Why did you left?                               |this is a hint |          |profile |         1|NA      |NA         |NA             |NA        |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |integer         |NA        |profile.HHSize     |What's the size of your household?              |this is a hint |          |profile |         1|NA      |NA         |NA             |NA        |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |end_group       |NA        |NA                 |NA                                              |NA             |          |        |         1|NA      |NA         |NA             |NA        |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |begin_repeat    |NA        |members            |Please enter information for each family member |NA             |members   |        |         2|NA      |NA         |NA             |NA        |</span>
 <span class="r-in"><span class="co"># Choices</span></span>
 <span class="r-in"><span class="va">responses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">dico</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">responses</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |list_name |name             |label            |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |:---------|:----------------|:----------------|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |location  |home             |Home             |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |location  |subcenter        |Community Center |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |location  |private_facility |Private facility |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |sex       |male             |Male             |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |sex       |female           |Female           |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |countries |COL              |Colombia         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |countries |CUB              |Cuba             |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |countries |SLV              |El Salvador      |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |countries |GTM              |Guatemala        |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |countries |HND              |Honduras         |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |list_name |name             |label            |order |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |:---------|:----------------|:----------------|:-----|</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |location  |home             |Home             |NA    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |location  |subcenter        |Community Center |NA    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |location  |private_facility |Private facility |NA    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |sex       |male             |Male             |NA    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |sex       |female           |Female           |NA    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |countries |COL              |Colombia         |NA    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |countries |CUB              |Cuba             |NA    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |countries |SLV              |El Salvador      |NA    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |countries |GTM              |Guatemala        |NA    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |countries |HND              |Honduras         |NA    |</span>
 <span class="r-in"><span class="co"># Settings</span></span>
 <span class="r-in"><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">dico</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">metadata</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
@@ -112,6 +118,23 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> |form_title                |form_id    |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |:-------------------------|:----------|</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |Sample Dataset KoboloadeR |koboloadeR |</span>
+<span class="r-in"><span class="co"># Report ToC</span></span>
+<span class="r-in"><span class="va">toc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">dico</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">toc</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |type            |label                                           |name               |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |:---------------|:-----------------------------------------------|:------------------|</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |today           |NA                                              |today              |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |date            |Interview  date                                 |date               |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |select_one      |Where is the interview taking place             |location           |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |begin_group     |Respondant profile                              |profile            |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |select_one      |What is your country of Origin?                 |profile.country    |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |text            |What's you occupation?                          |profile.occupation |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |select_multiple |Why did you left?                               |profile.reason     |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |integer         |What's the size of your household?              |profile.HHSize     |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |begin_repeat    |Please enter information for each family member |members            |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |integer         |Age                                             |members.age        |</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -123,7 +146,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

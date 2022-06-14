@@ -5,17 +5,17 @@
 \title{Plotting Select multiple variable with cross tabulation on a second categorical variable}
 \usage{
 plot_select_multiple_cross(
-  datapath = datapath,
-  xlsformpath = xlsformpath,
+  datalist = datalist,
+  dico = dico,
   var,
   by_var,
   showcode = FALSE
 )
 }
 \arguments{
-\item{datapath}{path to the file with the data format as extracted from kobo with dot as group separator and xml header}
+\item{datalist}{An object of the "datalist" class as defined in kobocruncher}
 
-\item{xlsformpath}{path to the xlsform file used to cole}
+\item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
 
 \item{var}{name of the variable to display}
 
@@ -27,8 +27,12 @@ plot_select_multiple_cross(
 Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
 }
 \examples{
-plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_select_multiple_cross(datalist = datalist,
+              dico = dico, 
               var = "profile.reason",
-              by_var = "location")
+              by_var = "location",
+              showcode = TRUE)
 }

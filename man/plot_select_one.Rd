@@ -4,12 +4,12 @@
 \alias{plot_select_one}
 \title{Plotting Select one variable}
 \usage{
-plot_select_one(datapath, xlsformpath, var, showcode = FALSE)
+plot_select_one(datalist, dico, var, showcode = FALSE)
 }
 \arguments{
-\item{datapath}{path to the file with the data format as extracted from kobo with dot as group separator and xml header}
+\item{datalist}{An object of the "datalist" class as defined in kobocruncher}
 
-\item{xlsformpath}{path to the xlsform file used to cole}
+\item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
 
 \item{var}{name of the variable to display}
 
@@ -19,11 +19,16 @@ plot_select_one(datapath, xlsformpath, var, showcode = FALSE)
 Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
 }
 \examples{
-plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.country")
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 
-plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.countryerror")
+plot_select_one(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              showcode = TRUE)
+
+plot_select_one(datalist = datalist,
+              dico = dico, 
+              var = "profile.countryerror",
+              showcode = TRUE)
 }

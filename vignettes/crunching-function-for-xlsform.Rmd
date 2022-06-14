@@ -29,19 +29,30 @@ and `system.file()` to read it in your examples.
 -->
 
 
-# Data loading
+# Preparing objects 
+
+## Data loading
 
 ```{r examples-kobo_data}
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # MainFrame
 datalist[1]
-# Second Frame
+# Second Frame - based on presence of repeat within the form, aka nested or
+# hierarchical data structure, etc... 
 datalist[2]  
 ```
 
-# Extend the xlsform to add instructions for the analysis plan
+## Extend the xlsform to add instructions for the analysis plan
 
-# Prepare data dictionnary
+Now we can extend the xlsform that was used to document key next steps in the data preparation.
+
+
+```{r examples-kobo_prepare_form}
+# kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
+#                   xlsformpathout = "form_with_plan.xlsx")
+```
+
+## Prepare data dictionnary
 
 ```{r examples-kobo_dico}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -54,149 +65,214 @@ knitr::kable(head(responses, 10))
 # Settings
 metadata <- as.data.frame(dico[3])
 knitr::kable(head(metadata, 10))
+# Report ToC
+toc <- as.data.frame(dico[4])
+knitr::kable(head(toc, 10))
 ```
 
-# Get frame for a variable
+# Data Processing
+
+## Cleaning
+
+## Anonymisation
+
+## Indicator Calculation
+
+# Labeling functions
+
+## Get the correct frame for a specific variable
 
 ```{r examples-kobo_frame}
-data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
-                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = "members.sex"   )
 knitr::kable(head(data,5))
  
 ```
 
-# Get the label for a specific variable
+## Get the label for a specific variable
 
 ```{r examples-label_varname}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 
-label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+label_varname(dico = dico, 
               x ="profile.country")
 
 ```
 
-# Get interpretation hint for a specific variable
+## Get interpretation hint for a specific variable
 
 ```{r examples-label_varhint}
-label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+
+label_varhint(dico = dico, 
               x ="profile.country")
 ```
 
-# Get all the choices labels options for a specific variable
+## Get all the choices labels options for a specific variable
 
 ```{r examples-label_choiceset}
-data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
-                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = "profile.country"   )
-label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+
+label_choiceset(dico = dico, 
                 x="profile.country")(data$profile.country)
 
 ## Test when there's no dictionnary
 data$profile.occupation
-label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+label_choiceset(dico = dico, 
                 x="profile.occupation")(data$profile.occupation)
 ```
 
-# Plotting Select one variable
+# Plotting Functions
+
+## Plotting Select one variable
 
 ```{r examples-plot_select_one}
-plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.country")
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 
-plot_select_one(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.countryerror")
+plot_select_one(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              showcode = TRUE)
+
+plot_select_one(datalist = datalist,
+              dico = dico, 
+              var = "profile.countryerror",
+              showcode = TRUE)
 ```
 
-# Plotting Select one variable with by_varulation
+## Plotting Select one variable with cross tabulation
 
 ```{r examples-plot_select_one_cross}
-plot_select_one_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_select_one_cross(datalist = datalist,
+              dico = dico, 
               var = "profile.country",
-              by_var = "profile.occupation"
+              by_var = "profile.occupation",
+              showcode = TRUE
               )
 ```
 
-# Plotting Select multiple variable
+## Plotting Select multiple variable
 
 ```{r examples-plot_select_multiple}
-plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.reason"
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+
+plot_select_multiple(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason",
+              showcode = TRUE
             )
 
-plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.reason1"
+plot_select_multiple(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason1",
+              showcode = TRUE
             )
 
 ```
 
-# Plotting Select multiple variable with cross-tabulation
+## Plotting Select multiple variable with cross-tabulation
 
 ```{r examples-plot_select_multiple_cross}
-plot_select_multiple_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_select_multiple_cross(datalist = datalist,
+              dico = dico, 
               var = "profile.reason",
-              by_var = "location")
+              by_var = "location",
+              showcode = TRUE)
 ```
 
-# Plotting Numeric variable
+## Plotting Numeric variable
 
 ```{r examples-plot_integer}
-plot_integer(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "members.age")
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_integer(datalist = datalist,
+              dico = dico, 
+              var = "members.age",
+              showcode = TRUE)
 ```
 
-# Plotting Numeric variable with cross-tabulation
+## Plotting Numeric variable with cross-tabulation
 
 ```{r examples-plot_integer_cross}
-plot_integer_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_integer_cross(datalist = datalist,
+              dico = dico, 
               var = "members.age",
-              by_var = "members.sex")
+              by_var = "members.sex",
+              showcode = TRUE)
 ```
 
-# Plotting Open Text variable
+## Plotting Open Text variable
 
 ```{r examples-plot_text}
-plot_text(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "profile.occupation")
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_text(datalist = datalist,
+              dico = dico, 
+              var = "profile.occupation",
+              showcode = TRUE)
 ```
 
-# Plotting Correlation
+## Plotting Correlation
 
 ```{r examples-plot_correlation}
-plot_correlation(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_correlation(datalist = datalist,
+              dico = dico, 
               var = "profile.occupation")
 ```
 
-# Output Header variable
+## Plotting Header variable
 
-```{r examples-output_header}
-output_header( xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+```{r examples-plot_header}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+
+plot_header( dico = dico, 
               var = "profile")
 ```
 
-# Crunching Variable based on type
+# Report generation
+
+## Crunching Variables based on a plan
 
 ```{r examples-kobo_cruncher}
-kobo_cruncher(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              type = "select_one", 
-              name = "profile.country",
-              showcode = TRUE)
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+kobo_cruncher(datalist = datalist,
+              dico = dico)
+
+
 ```
 
  
 
 
-# Report Template 1 for Automatic Data Exploration
+## Report Template 1 for Automatic Data Exploration
 
 The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
 
@@ -206,7 +282,7 @@ This report also includes each plot syntax so that they can be easily pasted for
 
 
 
-# Report Template 2 for Joint Data Interpretation Session
+## Report Template 2 for Joint Data Interpretation Session
 
 The second template is used following the systematic data exploration. 
 It will generate a powerpoint presentation
@@ -214,7 +290,7 @@ It will generate a powerpoint presentation
 See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305 
 
 
-# Report Template 3 for Dissemination and Data Story Telling Template
+## Report Template 3 for Dissemination and Data Story Telling Template
 
 The last template can be used to take note of the data interpretation session.
 

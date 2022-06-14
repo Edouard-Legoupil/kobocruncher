@@ -13,9 +13,7 @@
 #' @export
 
 template_1_exploration <- function(...) {
-  
   unhcr_theme <- unhcrdesign::use_unhcr_bslib()
-  
   rmarkdown::html_document( theme = unhcr_theme,
                             ...)
 }

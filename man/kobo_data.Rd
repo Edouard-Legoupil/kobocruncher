@@ -9,6 +9,9 @@ kobo_data(datapath)
 \arguments{
 \item{datapath}{path to the file with the data format as extracted from kobo with dot as group separator and xml header}
 }
+\value{
+A "datalist" S3 class object (list) formatted to the specifications of "kobocruncher".
+}
 \description{
 Data loading
 }
@@ -16,6 +19,7 @@ Data loading
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # MainFrame
 datalist[1]
-# Second Frame
+# Second Frame - based on presence of repeat within the form, aka nested or
+# hierarchical data structure, etc... 
 datalist[2]  
 }

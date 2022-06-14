@@ -11,7 +11,8 @@
 #' @return A pagedown report
 #' @export
 
-template_3_dissemination <- function(back_html = TRUE,
+template_3_dissemination <- function(
+                         back_html = TRUE,
                          other_css = NULL,
                          number_sections = FALSE,
                          ...) {
@@ -22,7 +23,6 @@ template_3_dissemination <- function(back_html = TRUE,
   logo_var <- paste0("  --unhcr-logoblue: url(\"", unhcrdesign::use_unhcr_logo(logo = "blue", data_uri = TRUE), "\");")
   logo_css <- tempfile(fileext = ".css")
   writeLines(c(":root {", logo_var, "}"), con = logo_css)
-
   file.append(base_css, logo_css)
 
   # specific css files

@@ -5,17 +5,17 @@
 \title{Plotting numeric variable}
 \usage{
 plot_integer_cross(
-  datapath = datapath,
-  xlsformpath = xlsformpath,
+  datalist = datalist,
+  dico = dico,
   var,
   by_var,
   showcode = FALSE
 )
 }
 \arguments{
-\item{datapath}{path to the file with the data format as extracted from kobo with dot as group separator and xml header}
+\item{datalist}{An object of the "datalist" class as defined in kobocruncher}
 
-\item{xlsformpath}{path to the xlsform file used to cole}
+\item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
 
 \item{var}{name of the variable to display}
 
@@ -27,8 +27,12 @@ plot_integer_cross(
 Plotting numeric variable
 }
 \examples{
-plot_integer_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_integer_cross(datalist = datalist,
+              dico = dico, 
               var = "members.age",
-              by_var = "members.sex")
+              by_var = "members.sex",
+              showcode = TRUE)
 }

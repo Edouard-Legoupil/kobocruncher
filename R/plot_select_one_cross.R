@@ -3,31 +3,33 @@
 #' @title Plotting Select one variable with cross tabulation on a second categorical variable
 #' @description
 #' Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
 #' @param showcode display the code
 #' @export
 
 #' @examples
-#' plot_select_one_cross(datapath = system.file("data.xlsx", package = "kobocruncher"),
-#'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+#' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+#' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+#' 
+#' plot_select_one_cross(datalist = datalist,
+#'               dico = dico, 
 #'               var = "profile.country",
-#'               by_var = "profile.occupation"
+#'               by_var = "profile.occupation",
+#'               showcode = TRUE
 #'               )
-plot_select_one_cross <- function(datapath = datapath,
-                            xlsformpath = xlsformpath,
+plot_select_one_cross <- function(datalist = datalist,
+                            dico = dico,
                             var, 
                             by_var , 
                             showcode = FALSE) {
   
   require("ggplot2")
-  
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datapath = datapath,
-                   xlsformpath = xlsformpath,
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = var  )
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
@@ -47,7 +49,9 @@ plot_select_one_cross <- function(datapath = datapath,
         
           ## Writing code instruction in report
           if( showcode == TRUE) { 
-            cat(paste0( fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\",\"", by_var, "\")` \n\n "))}     else {}
+            cat(paste0( label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}     else {}
 
       cnts <- data |>
         ## keep only the variable we need
@@ -88,17 +92,17 @@ plot_select_one_cross <- function(datapath = datapath,
         scale_x_continuous(labels = scales::label_percent()) +
          
         facet_wrap( ~ y ,  nrow = 3  ,
-                      labeller = as_labeller(function(x) label_choiceset(xlsformpath = xlsformpath,
+                      labeller = as_labeller(function(x) label_choiceset(dico = dico,
                                                                       x = by_var)(x))
           ) +
-          scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+          scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                             x = var)(x) |>
               stringr::str_wrap(40)}) +
         coord_cartesian(clip = "off") +
         labs(x = NULL, y = NULL,
-               title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
+               title = stringr::str_wrap(label_varname(dico = dico,
                                                        x = var), 80),
-               subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(xlsformpath = xlsformpath,
+               subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
                                                                                  x = by_var)), 80),
                caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
         theme_minimal( base_size = 13) +  

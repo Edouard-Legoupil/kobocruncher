@@ -4,10 +4,10 @@
 \alias{label_varname}
 \title{Get the label for a specific variable}
 \usage{
-label_varname(xlsformpath, x)
+label_varname(dico, x)
 }
 \arguments{
-\item{xlsformpath}{path to the xlsform file used to collect the data}
+\item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
 
 \item{x}{character with the variable name}
 }
@@ -15,8 +15,9 @@ label_varname(xlsformpath, x)
 Get the label for a specific variable
 }
 \examples{
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 
-label_varname(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+label_varname(dico = dico, 
               x ="profile.country")
 
 }

@@ -3,34 +3,38 @@
 #' @title Plotting Select multiple variable
 #' @description
 #' Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
-#' @param datapath path to the file with the data format as extracted from kobo with dot as group separator and xml header
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param showcode display the code
 #' @export
 
 #' @examples
-#' plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
-#'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-#'               var = "profile.reason"
+#' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+#' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+#' 
+#' 
+#' plot_select_multiple(datalist = datalist,
+#'               dico = dico, 
+#'               var = "profile.reason",
+#'               showcode = TRUE
 #'             )
 #' 
-#' plot_select_multiple(datapath = system.file("data.xlsx", package = "kobocruncher"),
-#'               xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-#'               var = "profile.reason1"
+#' plot_select_multiple(datalist = datalist,
+#'               dico = dico, 
+#'               var = "profile.reason1",
+#'               showcode = TRUE
 #'             )
 #' 
-plot_select_multiple <- function(datapath = datapath, 
-                                 xlsformpath = xlsformpath,
+plot_select_multiple <- function(datalist = datalist, 
+                                 dico = dico,
                                  var, 
                                  showcode = FALSE) {
   
   require("ggplot2")
-  
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datapath = datapath,
-                   xlsformpath = xlsformpath,
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = var  )
   
   ## get response rate: rr
@@ -67,7 +71,9 @@ plot_select_multiple <- function(datapath = datapath,
     
     ## Writing code instruction in report
     if( showcode == TRUE) {
-      cat(paste0(fontawesome::fa_png("far fa-copy", fill ="grey"),"  `plot_select_multiple(datapath = datapath, xlsformpath = xlsformpath, \"", var, "\")` \n\n "))}   else {} 
+      cat(paste0(label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_multiple(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}   else {} 
     
     ## Plot
      p <- ggplot(cnts, aes(p, x)) +
@@ -94,16 +100,16 @@ plot_select_multiple <- function(datapath = datapath,
                     size = 4   ) +   
       
       scale_x_continuous(labels = scales::label_percent()) +
-      scale_y_discrete(labels = function(x) {label_choiceset(xlsformpath = xlsformpath,
+      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                         x = var)(x) |>
           stringr::str_wrap(40)}) +
       coord_cartesian(clip = "off") +
       labs(x = NULL, y = NULL,
-           title = stringr::str_wrap(label_varname(xlsformpath = xlsformpath,
+           title = stringr::str_wrap(label_varname(dico = dico,
                                                          x= var), 60),
-           subtitle = if (!is.na(label_varhint(xlsformpath = xlsformpath,
+           subtitle = if (!is.na(label_varhint(dico = dico,
                                                         x = var))){ 
-                     stringr::str_wrap(label_varhint(xlsformpath = xlsformpath,
+                     stringr::str_wrap(label_varhint(dico = dico,
                                                           x = var), 70)} else { ""},
            caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
       theme_minimal( base_size = 15) + 

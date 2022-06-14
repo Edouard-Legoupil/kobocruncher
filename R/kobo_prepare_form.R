@@ -4,6 +4,8 @@
 #' @title Prepare XLSform and review Analysis
 #' 
 #' @description  Prepare XLSform by adding instructions for the analysis plan and checking that structure and settings are correct.
+#' This function open the xlsform - extend if required including the excel formatting, 
+#' display the analysis plan summary and resave the file at the end. 
 #' 
 #'  Once those elements are set up, they will be automatically considered during the automatic crunching phase.
 #'  An additional worksheet is also created to document the information required for registration on UNHCR CKAN instance http://ridl.unhcr.org
@@ -18,7 +20,7 @@
 #'  
 #'  3. Configuration of specific charts, visualization and analysis: 
 #'  
-#'     - disaggregation: define variable to use for visual by_varulation - functions with "_cross"
+#'     - disaggregation: define variable to use for visual cross tabulation - functions with "_cross"
 #'     - correlate: define the variable to use to explore statistical association - works under certain restrictions (i.e. between 2 categorical variables only): kobo_correlate
 #'     - cluster: define variable to generate an unsupervised classification (i.e. hierarchical clustering based on multiple correspondance analysis) kobo_cluster
 #'     - predict: define variable to use to generate predictive model, ie.e the target variable and the predictors.  kobo_predict
@@ -34,6 +36,9 @@
 #' @param ridl If available, it will prefill the RIDL info through what was already recorded there
 #'
 #' @export 
+#' @examples
+#' # kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
+#' #                   xlsformpathout = "form_with_plan.xlsx")
 kobo_prepare_form <- function(xlsformpath,
                               xlsformpathout,
                               language = "",
@@ -122,15 +127,6 @@ kobo_prepare_form <- function(xlsformpath,
     if ("score" %in% colnames(survey)) {     } else { survey$score <- ""  }
     if ("mappoint" %in% colnames(survey)) {    } else { survey$mappoint <- ""}
     if ("mappoly" %in% colnames(survey)) {    } else { survey$mappoly <- ""}
-    
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
     survey$label.lenght <- nchar(survey$label)
     ## add the full name that will be used by functions
     survey$fullname <- survey |> 
@@ -234,7 +230,7 @@ kobo_prepare_form <- function(xlsformpath,
     ### add column if not present
     if ("order" %in% colnames(choices)) { } else { choices$order <- ""}
     if ("score" %in% colnames(choices)) {  } else { choices$score <- ""}
-    namesOfCho <- c("list_name", "name", "label",  "order", "score","labelQ") 
+    namesOfCho <- c("list_name", "name", "label",  "order", "score","label.lenght","labelQ") 
     namesOfCho <- as.data.frame(namesOfCho) |>
       dplyr::filter(namesOfCho %in% colnames(choices)) |>
       dplyr::pull() 
@@ -318,6 +314,16 @@ kobo_prepare_form <- function(xlsformpath,
     if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
     openxlsx::saveWorkbook(wb, xlsformpathout)
     cat("\n******************** Summary of the Analysis Plan *********************\n \n")
+    
+    
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
+      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
     ## get a summary of what we have
     ## Check Variable lenght
     # if( length(survey$label) )

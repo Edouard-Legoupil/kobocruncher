@@ -4,17 +4,12 @@
 \alias{plot_integer}
 \title{Plotting numeric variable}
 \usage{
-plot_integer(
-  datapath = datapath,
-  xlsformpath = xlsformpath,
-  var,
-  showcode = FALSE
-)
+plot_integer(datalist = datalist, dico = dico, var, showcode = FALSE)
 }
 \arguments{
-\item{datapath}{path to the file with the data format as extracted from kobo with dot as group separator and xml header}
+\item{datalist}{An object of the "datalist" class as defined in kobocruncher}
 
-\item{xlsformpath}{path to the xlsform file used to cole}
+\item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
 
 \item{var}{name of the variable to display}
 
@@ -24,7 +19,11 @@ plot_integer(
 Plotting numeric variable
 }
 \examples{
-plot_integer(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              var = "members.age")
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_integer(datalist = datalist,
+              dico = dico, 
+              var = "members.age",
+              showcode = TRUE)
 }

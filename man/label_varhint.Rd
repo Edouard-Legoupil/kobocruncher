@@ -4,10 +4,10 @@
 \alias{label_varhint}
 \title{Get Interpretation hint for a specific variable}
 \usage{
-label_varhint(xlsformpath, x)
+label_varhint(dico, x)
 }
 \arguments{
-\item{xlsformpath}{path to the xlsform file used to cole}
+\item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
 
 \item{x}{variable}
 }
@@ -15,6 +15,8 @@ label_varhint(xlsformpath, x)
 Get Interpretation hint for a specific variable
 }
 \examples{
-label_varhint(xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+
+label_varhint(dico = dico, 
               x ="profile.country")
 }

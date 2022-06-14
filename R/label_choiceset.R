@@ -4,24 +4,27 @@
 #' 
 #' @description This labeling function ia function factory - https://adv-r.hadley.nz/function-factories.html
 #' The output of this function is actually a function
-#' @param xlsformpath path to the xlsform file used to cole
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param x variable
 #' @export
 
 #' @examples
-#' data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
-#'                    xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
+#' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+#' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+#' 
+#' data <- kobo_frame(datalist = datalist,
+#'                    dico = dico,
 #'                    var = "profile.country"   )
-#' label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+#' 
+#' label_choiceset(dico = dico, 
 #'                 x="profile.country")(data$profile.country)
 #' 
 #' ## Test when there's no dictionnary
 #' data$profile.occupation
-#' label_choiceset(xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
+#' label_choiceset(dico = dico, 
 #'                 x="profile.occupation")(data$profile.occupation)
-label_choiceset <- function(xlsformpath,
+label_choiceset <- function(dico,
                             x) {
-  dico <-  kobo_dico(xlsformpath = xlsformpath)
   lname <- as.data.frame(dico[1]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(list_name)

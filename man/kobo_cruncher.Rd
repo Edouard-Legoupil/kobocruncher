@@ -2,40 +2,24 @@
 % Please edit documentation in R/kobo_cruncher.R
 \name{kobo_cruncher}
 \alias{kobo_cruncher}
-\title{Crunch a variable}
+\title{Crunch a variable, used in conjunction with the analysis plan}
 \usage{
-kobo_cruncher(
-  datapath = datapath,
-  xlsformpath = xlsformpath,
-  type,
-  name,
-  disaggregation = "",
-  correlate = "",
-  showcode = TRUE
-)
+kobo_cruncher(datalist = datalist, dico = dico)
 }
 \arguments{
-\item{datapath}{path to the file with the data format as extracted from kobo with dot as group separator and xml header}
+\item{datalist}{An object of the "datalist" class as defined in kobocruncher}
 
-\item{xlsformpath}{path to the xlsform file used to colllect the data}
-
-\item{type}{type of the variable to display}
-
-\item{name}{name of the variable to display}
-
-\item{disaggregation}{vector with the potential variables to use for cross tabulation}
-
-\item{correlate}{vector with the potential variables to use for testing statistical association}
-
-\item{showcode}{display the code}
+\item{dico}{path to the xlsform file used to colllect the data}
 }
 \description{
-Crunch a variable
+Crunch a variable, used in conjunction with the analysis plan
 }
 \examples{
-kobo_cruncher(datapath = system.file("data.xlsx", package = "kobocruncher"),
-              xlsformpath =  system.file("sample_xlsform.xlsx", package = "kobocruncher"), 
-              type = "select_one", 
-              name = "profile.country",
-              showcode = TRUE)
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+kobo_cruncher(datalist = datalist,
+              dico = dico)
+
+
 }

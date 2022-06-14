@@ -2,23 +2,26 @@
 % Please edit documentation in R/kobo_frame.R
 \name{kobo_frame}
 \alias{kobo_frame}
-\title{get the correct frame for one selected variable - important when havving variables within a repeat}
+\title{get the correct frame for one selected variable - important when having variables within a repeat}
 \usage{
-kobo_frame(datapath, xlsformpath, var)
+kobo_frame(datalist, dico, var)
 }
 \arguments{
-\item{datapath}{path to the file with the data format as extracted from kobo with dot as group separator and xml header}
+\item{datalist}{An object of the "datalist" class as defined in kobocruncher}
 
-\item{xlsformpath}{path to the xlsform file used to collect the data}
+\item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
 
 \item{var}{variable}
 }
 \description{
-get the correct frame for one selected variable - important when havving variables within a repeat
+get the correct frame for one selected variable - important when having variables within a repeat
 }
 \examples{
-data <- kobo_frame(datapath = system.file("data.xlsx", package = "kobocruncher"),
-                   xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher"),
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+data <- kobo_frame(datalist = datalist,
+                   dico = dico,
                    var = "members.sex"   )
 knitr::kable(head(data,5))
  
