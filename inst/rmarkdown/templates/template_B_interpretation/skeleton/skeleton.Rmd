@@ -4,7 +4,7 @@ subtitle: "Based on Key Research Questions"
 author: "Your name"
 date: "`r format(Sys.Date(),  '%d %B %Y')`"
 output:
-  kobocruncher::template_interpretation
+  kobocruncher::template_B_interpretation
 params:
   datafolder: "data-raw"
   data: "data.xlsx"

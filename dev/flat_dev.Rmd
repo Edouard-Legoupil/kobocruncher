@@ -660,9 +660,15 @@ knitr::kable(head(toc, 10))
 
 ## Cleaning
 
+ to do....
+
 ## Anonymisation
 
+ to do....
+
 ## Indicator Calculation
+
+ to do....
 
 
 
@@ -835,7 +841,9 @@ label_choiceset(dico = dico,
 
 # Plotting Functions
 
-## Plotting Select one variable
+## Univariate
+
+### Plotting Select one variable
 
 ```{r function-plot_select_one}
 #' @title Plotting Select one variable
@@ -971,144 +979,7 @@ plot_select_one(datalist = datalist,
 ```
 
 
-## Plotting Select one variable with cross tabulation
-
-```{r function-plot_select_one_cross}
-#' @title Plotting Select one variable with cross tabulation on a second categorical variable
-#' @description
-#' Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
-#' @param datalist An object of the "datalist" class as defined in kobocruncher 
-#' @param dico An object of the "kobodico" class format as defined in kobocruncher
-#' @param var name of the variable to display
-#' @param by_var variable to use for cross tabulation
-#' @param showcode display the code
-#' @export
-
-plot_select_one_cross <- function(datalist = datalist,
-                            dico = dico,
-                            var, 
-                            by_var , 
-                            showcode = FALSE) {
-  
-  require("ggplot2")
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datalist = datalist,
-                   dico = dico,
-                   var = var  )
-  ## get response rate: rr
-  rr <- mean(!is.na(data[[var]]))
-  ## Writing report
-  # cat("\n")
- # cat(paste("####", label_varname(var)))
-  #cat(paste("#### Variable: ", var))
-  
-  if ( is.nan(rr)) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
-  } else {
-  
-  ## Put a condition in case there's no record
-  if (rr != 0 & ! (is.nan(rr)) ) { 
-    if(by_var != "") {
-      if( by_var != var ) {
-        
-          ## Writing code instruction in report
-          if( showcode == TRUE) { 
-            cat(paste0( label_varname(dico = dico,
-                                                   x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}     else {}
-
-      cnts <- data |>
-        ## keep only the variable we need
-        tidyr::drop_na(tidyselect::all_of(c(var,by_var))) |>
-        # Lump together factor levels into "other"
-        dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
-                     y := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
-        dplyr::mutate(p = n/sum(n)) |>
-        dplyr::group_by(y) |>
-        dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                      pcum = n / cumsum)  
-       
-       ## plot
-       p <- ggplot(cnts, 
-                  aes(x= pcum, 
-                      y = x)) +
-        geom_col(fill = "#0072BC") +
-        #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
-        ## Position label differently in the bar in white - outside bar in black
-        geom_label( data =   function(x) subset(x, pcum < max(pcum) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                    hjust = -0.1 ,
-                    vjust = 0.5, 
-                    colour = "black", 
-                    fill = NA, 
-                    label.size = NA, 
-                     
-                    size = 3   ) +  
-        geom_label( data =   function(x) subset(x, pcum >= max(pcum) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                    hjust = 1.1 ,
-                    vjust = 0.5, 
-                    colour = "white", 
-                    fill = NA, 
-                    label.size = NA, 
-                     
-                    size = 3   ) +   
-        scale_x_continuous(labels = scales::label_percent()) +
-         
-        facet_wrap( ~ y ,  nrow = 3  ,
-                      labeller = as_labeller(function(x) label_choiceset(dico = dico,
-                                                                      x = by_var)(x))
-          ) +
-          scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
-                                                            x = var)(x) |>
-              stringr::str_wrap(40)}) +
-        coord_cartesian(clip = "off") +
-        labs(x = NULL, y = NULL,
-               title = stringr::str_wrap(label_varname(dico = dico,
-                                                       x = var), 80),
-               subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
-                                                                                 x = by_var)), 80),
-               caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-        theme_minimal( base_size = 13) +  
-        geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
-        theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
-                 panel.grid.major.y  = element_blank(), 
-                 panel.grid.minor = element_blank()    ) +
-        theme(plot.title.position = "plot")
-
-        print(p)
-    
-      }
-    } else { }
-  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong> \n\n")}
-  # cat("\n\n")
-  }
-}
-
-
-```
-
-```{r examples-plot_select_one_cross}
-dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-
-plot_select_one_cross(datalist = datalist,
-              dico = dico, 
-              var = "profile.country",
-              by_var = "profile.occupation",
-              showcode = TRUE
-              )
-```
-
-```{r tests-plot_select_one_cross}
-# test_that("plot_select_one_cross works", {
-# 
-# })
-```
-
-
-
-## Plotting Select multiple variable
+### Plotting Select multiple variable
 
 ```{r function-plot_select_multiple}
 #' @title Plotting Select multiple variable
@@ -1252,148 +1123,7 @@ plot_select_multiple(datalist = datalist,
 ```
 
 
-
-## Plotting Select multiple variable with cross-tabulation
-
-```{r function-plot_select_multiple_cross}
-#' @title Plotting Select multiple variable with cross tabulation on a second categorical variable
-#' @description
-#' Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
-#' @param datalist An object of the "datalist" class as defined in kobocruncher 
-#' @param dico An object of the "kobodico" class format as defined in kobocruncher
-#' @param var name of the variable to display
-#' @param by_var variable to use for cross tabulation
-#' @param showcode display the code
-#' @export
-
-plot_select_multiple_cross <- function(datalist = datalist,
-                                       dico = dico,
-                                       var, 
-                                       by_var , 
-                                       showcode = FALSE) {
-  
-  
-  require("ggplot2")
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datalist = datalist,
-                   dico = dico,
-                   var = var  )
-  ## get response rate: rr
-  rr <- mean(!is.na(data[[var]]))
-  nr <- sum(!is.na(data[[var]]))
-  
- if ( is.nan(rr)) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
-  } else {
-  
-  ## Writing report
-  if (rr != 0 & ! (is.nan(rr))  ) { 
-    
-    if(by_var != "") {
-      if( by_var != var ) {
-        
-          ## Writing code instruction in report
-          if( showcode == TRUE) {
-             cat(paste0(label_varname(dico = dico,
-                                                   x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}   else {}
-
-        
-      cntscross <- data |>
-        ## keep only the variable we need 
-        tidyr::drop_na( tidyselect::all_of(c(var,by_var))) |>
-        ## Separate the var with select_multiple 
-        tidyr::separate_rows(.data[[var]], sep = " ") |>
-        # Lump together factor levels into "other"
-        dplyr::distinct(`X_id`, 
-                 !!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
-                 !!by_var := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
-        # Lump together factor levels into "other"
-        dplyr::count(x := .data[[var]],
-                     y := .data[[by_var]] ) |>
-        dplyr::mutate(p = n/sum(n)) |>
-        dplyr::group_by(y) |>
-        dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                      pcum = n / cumsum)  
-      ##plot
-       p <- ggplot(cntscross, 
-                  aes(x= pcum, 
-                      y = x)) +
-        geom_col(fill = "#0072BC") +
-        #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
-        ## Position label differently in the bar in white - outside bar in black
-        geom_label( data =   function(x) subset(x, pcum < max(pcum) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                    hjust = -0.1 ,
-                    vjust = 0.5, 
-                    colour = "black", 
-                    fill = NA, 
-                    label.size = NA, 
-                     
-                    size = 3   ) +  
-        geom_label( data =   function(x) subset(x, pcum >= max(pcum) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                    hjust = 1.1 ,
-                    vjust = 0.5, 
-                    colour = "white", 
-                    fill = NA, 
-                    label.size = NA, 
-                     
-                    size = 3   ) +   
-        scale_x_continuous(labels = scales::label_percent()) +
-        facet_wrap( ~ y ,  nrow = 3,
-                    labeller = as_labeller(function(x) label_choiceset(dico = dico,
-                                                         x= by_var)(x))
-                    ) +
-        scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
-                                                          x = var)(x) |>
-            stringr::str_wrap(40)}) +
-        coord_cartesian(clip = "off") +
-        labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(dico = dico, 
-                                                         x = var), 80),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
-                                                         x = by_var)), 80),
-             caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-        theme_minimal( base_size = 13) +  
-        geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
-        theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
-               panel.grid.major.y  = element_blank(), 
-               panel.grid.minor = element_blank()    ) +
-        theme(plot.title.position = "plot")
-      
-       print(p)
-    }   
-    } else { }
-  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
-  # cat("\n\n")
-    
-  }
-}
-
-
-```
-
-```{r examples-plot_select_multiple_cross}
-dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-
-plot_select_multiple_cross(datalist = datalist,
-              dico = dico, 
-              var = "profile.reason",
-              by_var = "location",
-              showcode = TRUE)
-```
-
-```{r tests-plot_select_multiple_cross}
-# test_that("plot_select_multiple_cross works", {
-# 
-# })
-```
-
-
-
-## Plotting Numeric variable
+### Plotting Numeric variable
 
 ```{r function-plot_integer}
 #' @title Plotting numeric variable
@@ -1480,97 +1210,7 @@ plot_integer(datalist = datalist,
 ```
 
 
-## Plotting Numeric variable with cross-tabulation
-
-```{r function-plot_integer_cross}
-#' @title Plotting numeric variable
-#' @param datalist An object of the "datalist" class as defined in kobocruncher 
-#' @param dico An object of the "kobodico" class format as defined in kobocruncher
-#' @param var name of the variable to display
-#' @param by_var variable to use for cross tabulation
-#' @param showcode display the code
-#' @export
-
-plot_integer_cross <- function(datalist = datalist, 
-                         dico = dico,
-                         var, 
-                         by_var ,
-                         showcode = FALSE) {
-  
-  require("ggplot2")
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
-  data <- kobo_frame(datalist = datalist,
-                   dico = dico,
-                   var = var  )
-  ## Cast just in case...
-  data[[var]] <- as.integer(data[[var]])
-  ## get response rate: rr
-  rr <- mean(!is.na(data[[var]]))
-  # cat("---\n")
-  # cat("\n\n")
- if ( is.nan(rr)) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
-  } else {
-  
-  ## Writing report
-  if (rr != 0 & ! (is.nan(rr)) ) { 
-      ## Writing code instruction in report
-      if( showcode == TRUE) {
-        cat(paste0(label_varname(dico = dico,
-                                                   x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
-    
-    p <- ggplot(data) + 
-      geom_boxplot(aes(x = .data[[var]], y =  .data[[by_var]]), 
-                     fill = "#0072BC", 
-                     color = "white" 
-      ) +
-      # scale_y_continuous(labels = scales::label_percent()) +
-      labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(dico = dico, 
-                                                         x = var), 80),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
-                                                         x = by_var)), 80),
-           caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-      
-      scale_size_area(max_size = 10) +        
-      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
-                                                          x = var)(x) |>
-            stringr::str_wrap(40)}) +
-      theme_minimal( base_size = 13) +
-      geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
-      theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
-           panel.grid.major.x  = element_blank(), 
-           panel.grid.minor = element_blank()    ) +
-           theme(plot.title.position = "plot")
-    
-    print(p)
-    
-    } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
-  # cat("\n\n")
-  }
-}
-
-```
-
-```{r examples-plot_integer_cross}
-dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-
-plot_integer_cross(datalist = datalist,
-              dico = dico, 
-              var = "members.age",
-              by_var = "members.sex",
-              showcode = TRUE)
-```
-
-```{r tests-plot_integer_cros}
-# test_that("plot_integer_cros works", {
-# 
-# })
-```
-
-## Plotting Open Text variable
+### Plotting Open Text variable
 
 ```{r function-plot_text}
 #' @title Plotting Open Text variables
@@ -1704,7 +1344,420 @@ plot_text(datalist = datalist,
 # })
 ```
 
-## Plotting Correlation
+## Bivariate
+
+### Plotting Select one variable with cross tabulation
+
+```{r function-plot_select_one_cross}
+#' @title Plotting Select one variable with cross tabulation on a second categorical variable
+#' @description
+#' Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @param var name of the variable to display
+#' @param by_var variable to use for cross tabulation
+#' @param showcode display the code
+#' @export
+
+plot_select_one_cross <- function(datalist = datalist,
+                            dico = dico,
+                            var, 
+                            by_var , 
+                            showcode = FALSE) {
+  
+  require("ggplot2")
+  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
+                   var = var  )
+  
+  data2 <- kobo_frame(datalist = datalist,
+                   dico = dico,
+                   var = by_var   )
+  
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  rr2 <- mean(!is.na(data2[[by_var]]))
+  ## Writing report
+  # cat("\n")
+ # cat(paste("####", label_varname(var)))
+  #cat(paste("#### Variable: ", var))
+  
+  if ( is.nan(rr) | is.nan(rr2) ) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else if (  ! (identical(data,data2))  ) {
+    # nothing to do - the variable are not in the same frame
+    } else {
+  
+  ## Put a condition in case there's no record
+  if (rr != 0 & ! (is.nan(rr)) ) { 
+    if(by_var != "") {
+      if( by_var != var ) {
+        
+          ## Writing code instruction in report
+          if( showcode == TRUE) { 
+            cat(paste0( label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}     else {}
+
+      cnts <- data |>
+        ## keep only the variable we need
+        tidyr::drop_na(tidyselect::all_of(c(var,by_var))) |>
+        # Lump together factor levels into "other"
+        dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
+                     y := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
+        dplyr::mutate(p = n/sum(n)) |>
+        dplyr::group_by(y) |>
+        dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
+                      pcum = n / cumsum)  
+       
+       ## plot
+       p <- ggplot(cnts, 
+                  aes(x= pcum, 
+                      y = x)) +
+        geom_col(fill = "#0072BC") +
+        #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
+        ## Position label differently in the bar in white - outside bar in black
+        geom_label( data =   function(x) subset(x, pcum < max(pcum) / 1.5),
+                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                    hjust = -0.1 ,
+                    vjust = 0.5, 
+                    colour = "black", 
+                    fill = NA, 
+                    label.size = NA, 
+                     
+                    size = 3   ) +  
+        geom_label( data =   function(x) subset(x, pcum >= max(pcum) / 1.5),
+                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                    hjust = 1.1 ,
+                    vjust = 0.5, 
+                    colour = "white", 
+                    fill = NA, 
+                    label.size = NA, 
+                     
+                    size = 3   ) +   
+        scale_x_continuous(labels = scales::label_percent()) +
+         
+        facet_wrap( ~ y ,  nrow = 3  ,
+                      labeller = as_labeller(function(x) label_choiceset(dico = dico,
+                                                                      x = by_var)(x))
+          ) +
+          scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
+                                                            x = var)(x) |>
+              stringr::str_wrap(40)}) +
+        coord_cartesian(clip = "off") +
+        labs(x = NULL, y = NULL,
+               title = stringr::str_wrap(label_varname(dico = dico,
+                                                       x = var), 80),
+               subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
+                                                                                 x = by_var)), 80),
+               caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+        theme_minimal( base_size = 13) +  
+        geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
+        theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
+                 panel.grid.major.y  = element_blank(), 
+                 panel.grid.minor = element_blank()    ) +
+        theme(plot.title.position = "plot")
+
+        print(p)
+    
+      }
+    } else { }
+  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong> \n\n")}
+  # cat("\n\n")
+  }
+}
+
+
+```
+
+```{r examples-plot_select_one_cross}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_select_one_cross(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              by_var = "profile.occupation",
+              showcode = TRUE
+              )
+## test if variable are not in the same frame...
+plot_select_one_cross(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              by_var = "members.sex",
+              showcode = TRUE
+              )
+
+```
+
+```{r tests-plot_select_one_cross}
+# test_that("plot_select_one_cross works", {
+# 
+# })
+```
+
+
+
+### Plotting Select multiple variable with cross-tabulation
+
+```{r function-plot_select_multiple_cross}
+#' @title Plotting Select multiple variable with cross tabulation on a second categorical variable
+#' @description
+#' Note that if the column order is set in the xlsform choice part, the variable will be de factor considered as ordinal and the default ordering will not be done based on frequency
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @param var name of the variable to display
+#' @param by_var variable to use for cross tabulation
+#' @param showcode display the code
+#' @export
+
+plot_select_multiple_cross <- function(datalist = datalist,
+                                       dico = dico,
+                                       var, 
+                                       by_var , 
+                                       showcode = FALSE) {
+  
+  
+  require("ggplot2")
+  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
+                   var = var  )
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  nr <- sum(!is.na(data[[var]]))
+  
+   data2 <- kobo_frame(datalist = datalist,
+                   dico = dico,
+                   var = by_var   )
+  
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  rr2 <- mean(!is.na(data2[[by_var]]))
+  ## Writing report
+  # cat("\n")
+ # cat(paste("####", label_varname(var)))
+  #cat(paste("#### Variable: ", var))
+  
+  if ( is.nan(rr) | is.nan(rr2) ) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else if (  ! (identical(data,data2))  ) {
+    # nothing to do - the variable are not in the same frame
+    } else {
+  
+  ## Writing report
+  if (rr != 0 & ! (is.nan(rr))  ) { 
+    
+    if(by_var != "") {
+      if( by_var != var ) {
+        
+          ## Writing code instruction in report
+          if( showcode == TRUE) {
+             cat(paste0(label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}   else {}
+
+        
+      cntscross <- data |>
+        ## keep only the variable we need 
+        tidyr::drop_na( tidyselect::all_of(c(var,by_var))) |>
+        ## Separate the var with select_multiple 
+        tidyr::separate_rows(.data[[var]], sep = " ") |>
+        # Lump together factor levels into "other"
+        dplyr::distinct(`X_id`, 
+                 !!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
+                 !!by_var := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
+        # Lump together factor levels into "other"
+        dplyr::count(x := .data[[var]],
+                     y := .data[[by_var]] ) |>
+        dplyr::mutate(p = n/sum(n)) |>
+        dplyr::group_by(y) |>
+        dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
+                      pcum = n / cumsum)  
+      ##plot
+       p <- ggplot(cntscross, 
+                  aes(x= pcum, 
+                      y = x)) +
+        geom_col(fill = "#0072BC") +
+        #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
+        ## Position label differently in the bar in white - outside bar in black
+        geom_label( data =   function(x) subset(x, pcum < max(pcum) / 1.5),
+                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                    hjust = -0.1 ,
+                    vjust = 0.5, 
+                    colour = "black", 
+                    fill = NA, 
+                    label.size = NA, 
+                     
+                    size = 3   ) +  
+        geom_label( data =   function(x) subset(x, pcum >= max(pcum) / 1.5),
+                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                    hjust = 1.1 ,
+                    vjust = 0.5, 
+                    colour = "white", 
+                    fill = NA, 
+                    label.size = NA, 
+                     
+                    size = 3   ) +   
+        scale_x_continuous(labels = scales::label_percent()) +
+        facet_wrap( ~ y ,  nrow = 3,
+                    labeller = as_labeller(function(x) label_choiceset(dico = dico,
+                                                         x= by_var)(x))
+                    ) +
+        scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
+                                                          x = var)(x) |>
+            stringr::str_wrap(40)}) +
+        coord_cartesian(clip = "off") +
+        labs(x = NULL, y = NULL,
+             title = stringr::str_wrap(label_varname(dico = dico, 
+                                                         x = var), 80),
+             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
+                                                         x = by_var)), 80),
+             caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+        theme_minimal( base_size = 13) +  
+        geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
+        theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
+               panel.grid.major.y  = element_blank(), 
+               panel.grid.minor = element_blank()    ) +
+        theme(plot.title.position = "plot")
+      
+       print(p)
+    }   
+    } else { }
+  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
+  # cat("\n\n")
+    
+  }
+}
+
+
+```
+
+```{r examples-plot_select_multiple_cross}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_select_multiple_cross(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason",
+              by_var = "location",
+              showcode = TRUE)
+```
+
+```{r tests-plot_select_multiple_cross}
+# test_that("plot_select_multiple_cross works", {
+# 
+# })
+```
+
+
+
+### Plotting Numeric variable with cross-tabulation
+
+```{r function-plot_integer_cross}
+#' @title Plotting numeric variable
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @param var name of the variable to display
+#' @param by_var variable to use for cross tabulation
+#' @param showcode display the code
+#' @export
+
+plot_integer_cross <- function(datalist = datalist, 
+                         dico = dico,
+                         var, 
+                         by_var ,
+                         showcode = FALSE) {
+  
+  require("ggplot2")
+  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  data <- kobo_frame(datalist = datalist,
+                   dico = dico,
+                   var = var  )
+  ## Cast just in case...
+  data[[var]] <- as.integer(data[[var]])
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  
+   data2 <- kobo_frame(datalist = datalist,
+                   dico = dico,
+                   var = by_var   )
+  
+  ## get response rate: rr
+  rr <- mean(!is.na(data[[var]]))
+  rr2 <- mean(!is.na(data2[[by_var]]))
+  ## Writing report
+  # cat("\n")
+ # cat(paste("####", label_varname(var)))
+  #cat(paste("#### Variable: ", var))
+  
+  if ( is.nan(rr) | is.nan(rr2) ) {
+    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+  } else if (  ! (identical(data,data2))  ) {
+    # nothing to do - the variable are not in the same frame
+    } else {
+  
+  ## Writing report
+  if (rr != 0 & ! (is.nan(rr)) ) { 
+      ## Writing code instruction in report
+      if( showcode == TRUE) {
+        cat(paste0(label_varname(dico = dico,
+                                                   x = var), "\n",
+                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
+    
+    p <- ggplot(data) + 
+      geom_boxplot(aes(x = .data[[var]], y =  .data[[by_var]]), 
+                     fill = "#0072BC", 
+                     color = "white" 
+      ) +
+      # scale_y_continuous(labels = scales::label_percent()) +
+      labs(x = NULL, y = NULL,
+             title = stringr::str_wrap(label_varname(dico = dico, 
+                                                         x = var), 80),
+             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
+                                                         x = by_var)), 80),
+           caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+      
+      scale_size_area(max_size = 10) +        
+      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
+                                                          x = var)(x) |>
+            stringr::str_wrap(40)}) +
+      theme_minimal( base_size = 13) +
+      geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
+      theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
+           panel.grid.major.x  = element_blank(), 
+           panel.grid.minor = element_blank()    ) +
+           theme(plot.title.position = "plot")
+    
+    print(p)
+    
+    } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
+  # cat("\n\n")
+  }
+}
+
+```
+
+```{r examples-plot_integer_cross}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_integer_cross(datalist = datalist,
+              dico = dico, 
+              var = "members.age",
+              by_var = "members.sex",
+              showcode = TRUE)
+```
+
+```{r tests-plot_integer_cros}
+# test_that("plot_integer_cros works", {
+# 
+# })
+```
+
+
+### Plotting Correlation
 
 ```{r function-plot_correlation}
 #' @title Plotting Correlation
@@ -1783,6 +1836,21 @@ plot_correlation(datalist = datalist,
 # 
 # })
 ```
+
+## Multivariate
+
+### Plotting clusters
+
+ to do....
+ 
+### Plotting prediction
+
+ to do....
+
+### Plotting scores
+
+ to do....
+
 
 ## Plotting Header variable
 
@@ -1975,7 +2043,7 @@ kobo_cruncher(datalist = datalist,
 ```
  
 
-## Report Template 1 for Automatic Data Exploration
+## Report Template A for Automatic Data Exploration
 
 The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
 
@@ -1984,7 +2052,7 @@ It includes a function to automatically run throughout all the survey content. D
 This report also includes each plot syntax so that they can be easily pasted for the second report
 
 
-```{r function-template_1_exploration}
+```{r function-template_A_exploration}
 #' Initial Template for Automatic Data Exploration
 #' The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
 #' It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
@@ -1997,7 +2065,7 @@ This report also includes each plot syntax so that they can be easily pasted for
 #'
 #' @export
 
-template_1_exploration <- function(...) {
+template_A_exploration <- function(...) {
   unhcr_theme <- unhcrdesign::use_unhcr_bslib()
   rmarkdown::html_document( theme = unhcr_theme,
                             ...)
@@ -2005,14 +2073,14 @@ template_1_exploration <- function(...) {
 
 ```
 
-## Report Template 2 for Joint Data Interpretation Session
+## Report Template B for Joint Data Interpretation Session
 
 The second template is used following the systematic data exploration. 
 It will generate a powerpoint presentation
 
 See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305 
 
-```{r function-template_2_interpretation}
+```{r function-template_B_interpretation}
 #' Second Template to prepare a presentation for the Joint Data Interpretation Session
 #' 
 #' See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305  
@@ -2022,20 +2090,20 @@ See a more detailed presentation of that step here: https://www.youtube.com/watc
 #'
 #' @export
 
-template_2_interpretation <- function(...) {
+template_B_interpretation <- function(...) {
  # locations of resource files in the package
   pptx_template <- system.file("templates/pptx_template.pptx", package = "kobocruncher")
   officedown::rpptx_document(  reference_doc = pptx_template,  ...  )
 }
 ```
 
-## Report Template 3 for Dissemination and Data Story Telling Template
+## Report Template C for Dissemination and Data Story Telling Template
 
 The last template can be used to take note of the data interpretation session.
 
 It will generate a PDF or an paginated HTML page
 
-```{r function-template_3_dissemination}
+```{r function-template_C_dissemination}
 #' Report Template 3 for Dissemination and Data Story Telling Template
 #' The last template can be used to take note of the data interpretation session. 
 #' It will generate a PDF or an paginated HTML page
@@ -2047,7 +2115,7 @@ It will generate a PDF or an paginated HTML page
 #' @return A pagedown report
 #' @export
 
-template_3_dissemination <- function(
+template_C_dissemination <- function(
                          back_html = TRUE,
                          other_css = NULL,
                          number_sections = FALSE,

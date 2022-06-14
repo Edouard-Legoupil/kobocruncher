@@ -496,14 +496,17 @@ steps in the data preparation.</p>
 <div class="section level3">
 <h3 id="cleaning">Cleaning<a class="anchor" aria-label="anchor" href="#cleaning"></a>
 </h3>
+<p>to do….</p>
 </div>
 <div class="section level3">
 <h3 id="anonymisation">Anonymisation<a class="anchor" aria-label="anchor" href="#anonymisation"></a>
 </h3>
+<p>to do….</p>
 </div>
 <div class="section level3">
 <h3 id="indicator-calculation">Indicator Calculation<a class="anchor" aria-label="anchor" href="#indicator-calculation"></a>
 </h3>
+<p>to do….</p>
 </div>
 </div>
 <div class="section level2">
@@ -684,8 +687,11 @@ steps in the data preparation.</p>
 <h2 id="plotting-functions">Plotting Functions<a class="anchor" aria-label="anchor" href="#plotting-functions"></a>
 </h2>
 <div class="section level3">
-<h3 id="plotting-select-one-variable">Plotting Select one variable<a class="anchor" aria-label="anchor" href="#plotting-select-one-variable"></a>
+<h3 id="univariate">Univariate<a class="anchor" aria-label="anchor" href="#univariate"></a>
 </h3>
+<div class="section level4">
+<h4 id="plotting-select-one-variable">Plotting Select one variable<a class="anchor" aria-label="anchor" href="#plotting-select-one-variable"></a>
+</h4>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 <span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
@@ -708,29 +714,10 @@ steps in the data preparation.</p>
               showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; &lt;strong style="color:#0072BC;"&gt;This variable could not be identified in the dataset&lt;/strong&gt;</span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="plotting-select-one-variable-with-cross-tabulation">Plotting Select one variable with cross tabulation<a class="anchor" aria-label="anchor" href="#plotting-select-one-variable-with-cross-tabulation"></a>
-</h3>
+<div class="section level4">
+<h4 id="plotting-select-multiple-variable">Plotting Select multiple variable<a class="anchor" aria-label="anchor" href="#plotting-select-multiple-variable"></a>
+</h4>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
-<span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
-
-<span class="fu"><a href="../reference/plot_select_one_cross.html">plot_select_one_cross</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,
-              dico <span class="op">=</span> <span class="va">dico</span>, 
-              var <span class="op">=</span> <span class="st">"profile.country"</span>,
-              by_var <span class="op">=</span> <span class="st">"profile.occupation"</span>,
-              showcode <span class="op">=</span> <span class="cn">TRUE</span>
-              <span class="op">)</span>
-<span class="co">#&gt; What is your country of Origin?</span>
-<span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/&gt;&lt;/svg&gt;  `plot_select_one_cross(datalist = datalist, dico = dico, "profile.country","profile.occupation")` </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span></code></pre></div>
-<p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_one_cross-1.png" width="700"></p>
-</div>
-<div class="section level3">
-<h3 id="plotting-select-multiple-variable">Plotting Select multiple variable<a class="anchor" aria-label="anchor" href="#plotting-select-multiple-variable"></a>
-</h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 <span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 
@@ -745,7 +732,7 @@ steps in the data preparation.</p>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_multiple-1.png" width="700"></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu"><a href="../reference/plot_select_multiple.html">plot_select_multiple</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,
               dico <span class="op">=</span> <span class="va">dico</span>, 
@@ -754,28 +741,10 @@ steps in the data preparation.</p>
             <span class="op">)</span>
 <span class="co">#&gt; &lt;strong style="color:#0072BC;"&gt;This variable could not be identified in the dataset&lt;/strong&gt;</span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="plotting-select-multiple-variable-with-cross-tabulation">Plotting Select multiple variable with cross-tabulation<a class="anchor" aria-label="anchor" href="#plotting-select-multiple-variable-with-cross-tabulation"></a>
-</h3>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
-<span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
-
-<span class="fu"><a href="../reference/plot_select_multiple_cross.html">plot_select_multiple_cross</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,
-              dico <span class="op">=</span> <span class="va">dico</span>, 
-              var <span class="op">=</span> <span class="st">"profile.reason"</span>,
-              by_var <span class="op">=</span> <span class="st">"location"</span>,
-              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Why did you left?</span>
-<span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/&gt;&lt;/svg&gt;  `plot_select_multiple_cross(datalist = datalist, dico = dico, "profile.reason","location")` </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span></code></pre></div>
-<p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_multiple_cross-1.png" width="700"></p>
-</div>
-<div class="section level3">
-<h3 id="plotting-numeric-variable">Plotting Numeric variable<a class="anchor" aria-label="anchor" href="#plotting-numeric-variable"></a>
-</h3>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="section level4">
+<h4 id="plotting-numeric-variable">Plotting Numeric variable<a class="anchor" aria-label="anchor" href="#plotting-numeric-variable"></a>
+</h4>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 <span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 
@@ -790,28 +759,10 @@ steps in the data preparation.</p>
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_integer-1.png" width="700"></p>
 </div>
-<div class="section level3">
-<h3 id="plotting-numeric-variable-with-cross-tabulation">Plotting Numeric variable with cross-tabulation<a class="anchor" aria-label="anchor" href="#plotting-numeric-variable-with-cross-tabulation"></a>
-</h3>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
-<span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
-
-<span class="fu"><a href="../reference/plot_integer_cross.html">plot_integer_cross</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,
-              dico <span class="op">=</span> <span class="va">dico</span>, 
-              var <span class="op">=</span> <span class="st">"members.age"</span>,
-              by_var <span class="op">=</span> <span class="st">"members.sex"</span>,
-              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Age</span>
-<span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/&gt;&lt;/svg&gt;  `plot_integer(datalist = datalist, dico = dico, "members.age")` </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span></code></pre></div>
-<p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_integer_cross-1.png" width="700"></p>
-</div>
-<div class="section level3">
-<h3 id="plotting-open-text-variable">Plotting Open Text variable<a class="anchor" aria-label="anchor" href="#plotting-open-text-variable"></a>
-</h3>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="section level4">
+<h4 id="plotting-open-text-variable">Plotting Open Text variable<a class="anchor" aria-label="anchor" href="#plotting-open-text-variable"></a>
+</h4>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 <span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 
@@ -846,10 +797,74 @@ steps in the data preparation.</p>
 <span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/&gt;&lt;/svg&gt;  `plot_text(datalist = datalist, dico = dico, "profile.occupation")`</span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_text-1.png" width="700"></p>
 </div>
+</div>
 <div class="section level3">
-<h3 id="plotting-correlation">Plotting Correlation<a class="anchor" aria-label="anchor" href="#plotting-correlation"></a>
+<h3 id="bivariate">Bivariate<a class="anchor" aria-label="anchor" href="#bivariate"></a>
 </h3>
+<div class="section level4">
+<h4 id="plotting-select-one-variable-with-cross-tabulation">Plotting Select one variable with cross tabulation<a class="anchor" aria-label="anchor" href="#plotting-select-one-variable-with-cross-tabulation"></a>
+</h4>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
+<span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
+
+<span class="fu"><a href="../reference/plot_select_one_cross.html">plot_select_one_cross</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,
+              dico <span class="op">=</span> <span class="va">dico</span>, 
+              var <span class="op">=</span> <span class="st">"profile.country"</span>,
+              by_var <span class="op">=</span> <span class="st">"profile.occupation"</span>,
+              showcode <span class="op">=</span> <span class="cn">TRUE</span>
+              <span class="op">)</span>
+<span class="co">#&gt; What is your country of Origin?</span>
+<span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/&gt;&lt;/svg&gt;  `plot_select_one_cross(datalist = datalist, dico = dico, "profile.country","profile.occupation")` </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span></code></pre></div>
+<p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_one_cross-1.png" width="700"></p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## test if variable are not in the same frame...</span>
+<span class="fu"><a href="../reference/plot_select_one_cross.html">plot_select_one_cross</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,
+              dico <span class="op">=</span> <span class="va">dico</span>, 
+              var <span class="op">=</span> <span class="st">"profile.country"</span>,
+              by_var <span class="op">=</span> <span class="st">"members.sex"</span>,
+              showcode <span class="op">=</span> <span class="cn">TRUE</span>
+              <span class="op">)</span>
+<span class="co">#&gt; NULL</span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="plotting-select-multiple-variable-with-cross-tabulation">Plotting Select multiple variable with cross-tabulation<a class="anchor" aria-label="anchor" href="#plotting-select-multiple-variable-with-cross-tabulation"></a>
+</h4>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
+<span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
+
+<span class="fu"><a href="../reference/plot_select_multiple_cross.html">plot_select_multiple_cross</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,
+              dico <span class="op">=</span> <span class="va">dico</span>, 
+              var <span class="op">=</span> <span class="st">"profile.reason"</span>,
+              by_var <span class="op">=</span> <span class="st">"location"</span>,
+              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; Why did you left?</span>
+<span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/&gt;&lt;/svg&gt;  `plot_select_multiple_cross(datalist = datalist, dico = dico, "profile.reason","location")` </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span></code></pre></div>
+<p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_multiple_cross-1.png" width="700"></p>
+</div>
+<div class="section level4">
+<h4 id="plotting-numeric-variable-with-cross-tabulation">Plotting Numeric variable with cross-tabulation<a class="anchor" aria-label="anchor" href="#plotting-numeric-variable-with-cross-tabulation"></a>
+</h4>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
+<span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
+
+<span class="fu"><a href="../reference/plot_integer_cross.html">plot_integer_cross</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,
+              dico <span class="op">=</span> <span class="va">dico</span>, 
+              var <span class="op">=</span> <span class="st">"members.age"</span>,
+              by_var <span class="op">=</span> <span class="st">"members.sex"</span>,
+              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; NULL</span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="plotting-correlation">Plotting Correlation<a class="anchor" aria-label="anchor" href="#plotting-correlation"></a>
+</h4>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 <span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 
@@ -858,10 +873,30 @@ steps in the data preparation.</p>
               var <span class="op">=</span> <span class="st">"profile.occupation"</span><span class="op">)</span>
 <span class="co">#&gt; NULL</span></code></pre></div>
 </div>
+</div>
+<div class="section level3">
+<h3 id="multivariate">Multivariate<a class="anchor" aria-label="anchor" href="#multivariate"></a>
+</h3>
+<div class="section level4">
+<h4 id="plotting-clusters">Plotting clusters<a class="anchor" aria-label="anchor" href="#plotting-clusters"></a>
+</h4>
+<p>to do….</p>
+</div>
+<div class="section level4">
+<h4 id="plotting-prediction">Plotting prediction<a class="anchor" aria-label="anchor" href="#plotting-prediction"></a>
+</h4>
+<p>to do….</p>
+</div>
+<div class="section level4">
+<h4 id="plotting-scores">Plotting scores<a class="anchor" aria-label="anchor" href="#plotting-scores"></a>
+</h4>
+<p>to do….</p>
+</div>
+</div>
 <div class="section level3">
 <h3 id="plotting-header-variable">Plotting Header variable<a class="anchor" aria-label="anchor" href="#plotting-header-variable"></a>
 </h3>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 
 <span class="fu"><a href="../reference/plot_header.html">plot_header</a></span><span class="op">(</span> dico <span class="op">=</span> <span class="va">dico</span>, 
@@ -879,7 +914,7 @@ steps in the data preparation.</p>
 <div class="section level3">
 <h3 id="crunching-variables-based-on-a-plan">Crunching Variables based on a plan<a class="anchor" aria-label="anchor" href="#crunching-variables-based-on-a-plan"></a>
 </h3>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 <span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 
@@ -944,7 +979,7 @@ steps in the data preparation.</p>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-7.png" width="700"></p>
 </div>
 <div class="section level3">
-<h3 id="report-template-1-for-automatic-data-exploration">Report Template 1 for Automatic Data Exploration<a class="anchor" aria-label="anchor" href="#report-template-1-for-automatic-data-exploration"></a>
+<h3 id="report-template-a-for-automatic-data-exploration">Report Template A for Automatic Data Exploration<a class="anchor" aria-label="anchor" href="#report-template-a-for-automatic-data-exploration"></a>
 </h3>
 <p>The first RMD template gives an output in HTML for easy navigation -
 the left menu provides smooth transition.</p>
@@ -955,15 +990,15 @@ be performed through iterations</p>
 pasted for the second report</p>
 </div>
 <div class="section level3">
-<h3 id="report-template-2-for-joint-data-interpretation-session">Report Template 2 for Joint Data Interpretation Session<a class="anchor" aria-label="anchor" href="#report-template-2-for-joint-data-interpretation-session"></a>
+<h3 id="report-template-b-for-joint-data-interpretation-session">Report Template B for Joint Data Interpretation Session<a class="anchor" aria-label="anchor" href="#report-template-b-for-joint-data-interpretation-session"></a>
 </h3>
 <p>The second template is used following the systematic data
 exploration. It will generate a powerpoint presentation</p>
 <p>See a more detailed presentation of that step here: <a href="https://www.youtube.com/watch?v=0jE-Y7g88K4&amp;feature=youtu.be&amp;t=2305" class="external-link uri">https://www.youtube.com/watch?v=0jE-Y7g88K4&amp;feature=youtu.be&amp;t=2305</a></p>
 </div>
 <div class="section level3">
-<h3 id="report-template-3-for-dissemination-and-data-story-telling-template">Report Template 3 for Dissemination and Data Story Telling
-Template<a class="anchor" aria-label="anchor" href="#report-template-3-for-dissemination-and-data-story-telling-template"></a>
+<h3 id="report-template-c-for-dissemination-and-data-story-telling-template">Report Template C for Dissemination and Data Story Telling
+Template<a class="anchor" aria-label="anchor" href="#report-template-c-for-dissemination-and-data-story-telling-template"></a>
 </h3>
 <p>The last template can be used to take note of the data interpretation
 session.</p>

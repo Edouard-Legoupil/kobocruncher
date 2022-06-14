@@ -74,9 +74,20 @@ knitr::kable(head(toc, 10))
 
 ## Cleaning
 
+ to do....
+
+
 ## Anonymisation
 
+ to do....
+
+
 ## Indicator Calculation
+
+ to do....
+
+
+
 
 # Labeling functions
 
@@ -133,7 +144,9 @@ label_choiceset(dico = dico,
 
 # Plotting Functions
 
-## Plotting Select one variable
+## Univariate
+
+### Plotting Select one variable
 
 ```{r examples-plot_select_one}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -150,21 +163,7 @@ plot_select_one(datalist = datalist,
               showcode = TRUE)
 ```
 
-## Plotting Select one variable with cross tabulation
-
-```{r examples-plot_select_one_cross}
-dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-
-plot_select_one_cross(datalist = datalist,
-              dico = dico, 
-              var = "profile.country",
-              by_var = "profile.occupation",
-              showcode = TRUE
-              )
-```
-
-## Plotting Select multiple variable
+### Plotting Select multiple variable
 
 ```{r examples-plot_select_multiple}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -185,7 +184,55 @@ plot_select_multiple(datalist = datalist,
 
 ```
 
-## Plotting Select multiple variable with cross-tabulation
+### Plotting Numeric variable
+
+```{r examples-plot_integer}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_integer(datalist = datalist,
+              dico = dico, 
+              var = "members.age",
+              showcode = TRUE)
+```
+
+### Plotting Open Text variable
+
+```{r examples-plot_text}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_text(datalist = datalist,
+              dico = dico, 
+              var = "profile.occupation",
+              showcode = TRUE)
+```
+
+## Bivariate
+
+### Plotting Select one variable with cross tabulation
+
+```{r examples-plot_select_one_cross}
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+plot_select_one_cross(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              by_var = "profile.occupation",
+              showcode = TRUE
+              )
+## test if variable are not in the same frame...
+plot_select_one_cross(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              by_var = "members.sex",
+              showcode = TRUE
+              )
+
+```
+
+### Plotting Select multiple variable with cross-tabulation
 
 ```{r examples-plot_select_multiple_cross}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -198,19 +245,7 @@ plot_select_multiple_cross(datalist = datalist,
               showcode = TRUE)
 ```
 
-## Plotting Numeric variable
-
-```{r examples-plot_integer}
-dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-
-plot_integer(datalist = datalist,
-              dico = dico, 
-              var = "members.age",
-              showcode = TRUE)
-```
-
-## Plotting Numeric variable with cross-tabulation
+### Plotting Numeric variable with cross-tabulation
 
 ```{r examples-plot_integer_cross}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -223,19 +258,7 @@ plot_integer_cross(datalist = datalist,
               showcode = TRUE)
 ```
 
-## Plotting Open Text variable
-
-```{r examples-plot_text}
-dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-
-plot_text(datalist = datalist,
-              dico = dico, 
-              var = "profile.occupation",
-              showcode = TRUE)
-```
-
-## Plotting Correlation
+### Plotting Correlation
 
 ```{r examples-plot_correlation}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -245,6 +268,24 @@ plot_correlation(datalist = datalist,
               dico = dico, 
               var = "profile.occupation")
 ```
+
+## Multivariate
+
+### Plotting clusters
+
+ to do....
+ 
+
+### Plotting prediction
+
+ to do....
+
+
+### Plotting scores
+
+ to do....
+
+
 
 ## Plotting Header variable
 
@@ -272,7 +313,7 @@ kobo_cruncher(datalist = datalist,
  
 
 
-## Report Template 1 for Automatic Data Exploration
+## Report Template A for Automatic Data Exploration
 
 The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
 
@@ -282,7 +323,7 @@ This report also includes each plot syntax so that they can be easily pasted for
 
 
 
-## Report Template 2 for Joint Data Interpretation Session
+## Report Template B for Joint Data Interpretation Session
 
 The second template is used following the systematic data exploration. 
 It will generate a powerpoint presentation
@@ -290,7 +331,7 @@ It will generate a powerpoint presentation
 See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305 
 
 
-## Report Template 3 for Dissemination and Data Story Telling Template
+## Report Template C for Dissemination and Data Story Telling Template
 
 The last template can be used to take note of the data interpretation session.
 

@@ -2,7 +2,7 @@
 title: "Exploratory Data Analysis Step"
 date: " `r format(Sys.Date(),  '%d %B %Y')`"
 output:
-  kobocruncher::template_1_exploration:
+  kobocruncher::template_A_exploration:
     toc: true
     toc_depth: 2
     toc_float: true
@@ -60,8 +60,8 @@ xlsformpath <- here::here(params$datafolder, params$form)
 ## The 2 lines below are for the demo ##
 ########################################
 # Add # to comment them after once you have set up your report parameters..
-datapath <- system.file("data.xlsx", package = "kobocruncher")
-xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
+# datapath <- system.file("data.xlsx", package = "kobocruncher")
+# xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
 
 
 ```
@@ -143,8 +143,8 @@ questions <- as.data.frame(dico[4])
 # Automatic Exploration
 
 ```{r cruncher, results='asis' }
-kobo_cruncher(datapath = datapath,
-             xlsformpath =  xlsformpath)
+kobo_cruncher(datalist = datalist,
+              dico = dico)
 
 ## add cluster analysis if set up
 ## add prediction if set up

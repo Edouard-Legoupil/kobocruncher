@@ -36,4 +36,12 @@ plot_select_one_cross(datalist = datalist,
               by_var = "profile.occupation",
               showcode = TRUE
               )
+## test if variable are not in the same frame...
+plot_select_one_cross(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              by_var = "members.sex",
+              showcode = TRUE
+              )
+
 }

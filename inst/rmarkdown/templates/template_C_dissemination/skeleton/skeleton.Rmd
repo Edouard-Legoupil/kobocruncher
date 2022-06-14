@@ -7,7 +7,7 @@ author:
     affiliation: Job title
     email: email@unhcr.org
 output:
-  kobocruncher::template_dissemination:
+  kobocruncher::template_C_dissemination:
     back_html: true
 paged-footnotes: true
 links-to-footnotes: true

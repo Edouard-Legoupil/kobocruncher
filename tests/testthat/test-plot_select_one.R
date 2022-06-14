@@ -3,3 +3,15 @@
 # test_that("plot_select_one works", {
 # 
 # })
+
+# test_that("plot_select_multiple works", {
+# 
+# })
+
+# test_that("plot_integer works", {
+# 
+# })
+
+# test_that("plot_text works", {
+# 
+# })

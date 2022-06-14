@@ -11,7 +11,7 @@
 #' @return A pagedown report
 #' @export
 
-template_3_dissemination <- function(
+template_C_dissemination <- function(
                          back_html = TRUE,
                          other_css = NULL,
                          number_sections = FALSE,

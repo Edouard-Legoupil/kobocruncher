@@ -9,7 +9,7 @@
 #'
 #' @export
 
-template_2_interpretation <- function(...) {
+template_B_interpretation <- function(...) {
  # locations of resource files in the package
   pptx_template <- system.file("templates/pptx_template.pptx", package = "kobocruncher")
   officedown::rpptx_document(  reference_doc = pptx_template,  ...  )
