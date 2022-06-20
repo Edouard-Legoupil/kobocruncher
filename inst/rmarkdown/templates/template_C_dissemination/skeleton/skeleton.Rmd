@@ -7,10 +7,12 @@ author:
     affiliation: Job title
     email: email@unhcr.org
 output:
-  kobocruncher::template_C_dissemination:
+  unhcrdown::paged_simple:
     back_html: true
 paged-footnotes: true
 links-to-footnotes: true
+# uncomment this line to produce HTML and PDF in RStudio:
+#knit: pagedown::chrome_print
 # Below are the Report parameters that you will need to adjust
 params:
   datafolder: "data-raw"
@@ -18,8 +20,6 @@ params:
   form: "form.xlsx"
   crosstab: ""
   datasource: ""
-# uncomment this line to produce HTML and PDF in RStudio:
-#knit: pagedown::chrome_print
 ---
 
 
@@ -59,12 +59,12 @@ Provide summary information about the variables of concern in your cleaned data 
 
 
 ```{r getdata}
-datapath <- here::here(params$datafolder, params$data)
-xlsformpath <- here::here(params$datafolder, params$form) 
-
-datalist <- kobo_data(datapath = datapath )
-dico <- kobo_dico(xlsformpath = xlsformpath)
-questions <- as.data.frame(dico[1])
+# datapath <- here::here(params$datafolder, params$data)
+# xlsformpath <- here::here(params$datafolder, params$form) 
+# 
+# datalist <- kobo_data(datapath = datapath )
+# dico <- kobo_dico(xlsformpath = xlsformpath)
+# questions <- as.data.frame(dico[1])
 
 
 ```

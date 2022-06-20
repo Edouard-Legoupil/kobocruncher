@@ -23,7 +23,8 @@ plot_integer_cross <- function(datalist = datalist,
                          by_var ,
                          showcode = FALSE) {
   
-  require("ggplot2")
+  requireNamespace("ggplot2")
+  requireNamespace("dplyr")
   datasource <- as.character(  dico[3][[1]]$form_title ) 
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -59,7 +60,8 @@ plot_integer_cross <- function(datalist = datalist,
                                                    x = var), "\n",
                                       fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
     
-    p <- ggplot(data) + 
+    require(ggplot2)
+    p <- ggplot2::ggplot(data) + 
       geom_boxplot(aes(x = .data[[var]], y =  .data[[by_var]]), 
                      fill = "#0072BC", 
                      color = "white" 

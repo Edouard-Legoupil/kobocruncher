@@ -17,6 +17,8 @@
 #'               var = "profile")
 plot_header <- function(dico = dico,
                             var) {
+  
+  requireNamespace("dplyr")
   ## getting header levels
   lvl <- stringr::str_count(var, "\\.")
   

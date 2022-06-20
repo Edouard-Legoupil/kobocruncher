@@ -16,31 +16,35 @@ Imports:
     forcats,
     ggplot2,
     glue,
+    graphics,
     jsonlite,
+    likert,
     magrittr,
-    officedown,
     openxlsx,
-    pagedown,
     purrr,
     RColorBrewer,
     readxl,
-    rmarkdown,
     scales,
+    showtext,
+    stats,
     stringr,
+    sysfonts,
+    systemfonts,
     tidyr,
     tidyselect,
     tm,
-    unhcrdesign,
+    utils,
     wordcloud
 Suggests: 
     knitr,
-    koboloadeR,
+    rmarkdown,
     testthat
 VignetteBuilder: 
     knitr
 Remotes: 
     vidonne/unhcrdesign
-    vidonne/unhcrtheme
+    vidonne/unhcrthemes
+    vidonne/unhcrdown
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0

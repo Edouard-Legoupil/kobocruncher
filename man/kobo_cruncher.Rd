@@ -2,7 +2,7 @@
 % Please edit documentation in R/kobo_cruncher.R
 \name{kobo_cruncher}
 \alias{kobo_cruncher}
-\title{Crunch a variable, used in conjunction with the analysis plan}
+\title{Crunch all variables according to the analysis plan}
 \usage{
 kobo_cruncher(datalist = datalist, dico = dico)
 }
@@ -12,7 +12,7 @@ kobo_cruncher(datalist = datalist, dico = dico)
 \item{dico}{path to the xlsform file used to colllect the data}
 }
 \description{
-Crunch a variable, used in conjunction with the analysis plan
+Crunch all variables according to the analysis plan
 }
 \examples{
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )

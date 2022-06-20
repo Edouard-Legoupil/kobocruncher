@@ -134,9 +134,9 @@ kobo_prepare_form <- function(xlsformpath,
       dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
                                                     function (repeatvar, type, name) {
                                                       if (type  == "begin_repeat")  c(repeatvar, name)
-                                                      else if (type  == "end_repeat") head(repeatvar, -1)
+                                                      else if (type  == "end_repeat") utils::head(repeatvar, -1)
                                                       else repeatvar
-                                                    }, .init = character()) |>tail(-1),
+                                                    }, .init = character()) |> utils::tail(-1),
                     ##Apply a function to each element of a list 
                     repeatvar = purrr::map_chr(repeatvar,
                                                stringr::str_c, 
@@ -153,9 +153,9 @@ kobo_prepare_form <- function(xlsformpath,
                                                          name) {
                                                  if (type == "begin_group") 
                                                    c(scope, name)
-                                                 else if (type == "end_group") head(scope, -1)
+                                                 else if (type == "end_group") utils::head(scope, -1)
                                                  else scope
-                                               }, .init = character()) |> tail(-1),
+                                               }, .init = character()) |> utils::tail(-1),
                     ##Apply a function to each element of a list 
                     scope = purrr::map_chr(scope, 
                                            stringr::str_c, 

@@ -20,6 +20,7 @@ plot_text <- function(datalist = datalist,
                       var, 
                       showcode = FALSE) {
   
+  requireNamespace("dplyr")
   datasource <- as.character(  dico[3][[1]]$form_title ) 
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -90,12 +91,12 @@ plot_text <- function(datalist = datalist,
                                 random.order=FALSE, # random.order : plot words in random order. If false, they will be plotted in decreasing frequency
                                 rot.per=0.25,   # rot.per : proportion words with 90 degree rotation (vertical text)
                                 colors= RColorBrewer::brewer.pal(8, "Dark2")) # colors : color words from least to most frequent. Use, for example, colors =“black” for single color.
-    title( main = stringr::str_wrap( label_varname(dico = dico, 
+    graphics::title( main = stringr::str_wrap( label_varname(dico = dico, 
                                                   x= var), 70),
            sub = glue::glue("Open Text question \n Source: {datasource}" ))  
     
          
-      # p1 <- ggplot(d, 
+      # p1 <- ggplot2::ggplot(d, 
       #              aes(label = word,
       #                  size = freq,
       #                  color = freq )) +

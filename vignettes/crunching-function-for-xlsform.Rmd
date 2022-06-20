@@ -58,16 +58,16 @@ Now we can extend the xlsform that was used to document key next steps in the da
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # Survey
 questions <- as.data.frame(dico[1])
-knitr::kable(head(questions, 10))
+knitr::kable(utils::head(questions, 10))
 # Choices
 responses <- as.data.frame(dico[2])
-knitr::kable(head(responses, 10))
+knitr::kable(utils::head(responses, 10))
 # Settings
 metadata <- as.data.frame(dico[3])
-knitr::kable(head(metadata, 10))
+knitr::kable(utils::head(metadata, 10))
 # Report ToC
 toc <- as.data.frame(dico[4])
-knitr::kable(head(toc, 10))
+knitr::kable(utils::head(toc, 10))
 ```
 
 # Data Processing
@@ -75,6 +75,7 @@ knitr::kable(head(toc, 10))
 ## Cleaning
 
  to do....
+ 
 
 
 ## Anonymisation
@@ -100,7 +101,7 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 data <- kobo_frame(datalist = datalist,
                    dico = dico,
                    var = "members.sex"   )
-knitr::kable(head(data,5))
+knitr::kable(utils::head(data,5))
  
 ```
 
@@ -271,6 +272,8 @@ plot_correlation(datalist = datalist,
 
 ## Multivariate
 
+## Plotting Likert
+
 ## Plotting clusters
 
  to do....
@@ -323,6 +326,21 @@ This report also includes each plot syntax so that they can be easily pasted for
 
 
 
+```{r template_1_exploration}
+#' Initial Template for Automatic Data Exploration
+#' The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
+#' It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
+#'  This report also includes each plot syntax so that they can be easyly pasted for the second report
+# usethis::use_rmarkdown_template(
+#   template_name = "template_1_exploration",
+#   template_dir = NULL,
+#   template_description = "Automatic Data Exploration - html",
+#   template_create_dir = TRUE
+# )
+
+
+```
+
 ## Report Template B for Joint Data Interpretation Session
 
 The second template is used following the systematic data exploration. 
@@ -331,10 +349,37 @@ It will generate a powerpoint presentation
 See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305 
 
 
+```{r template_2_interpretation}
+#' Second Template to prepare a presentation for the Joint Data Interpretation Session
+#' 
+# usethis::use_rmarkdown_template(
+#   template_name = "template_2_interpretation",
+#   template_dir = NULL,
+#   template_description = "Joint Data Interpretation",
+#   template_create_dir = TRUE
+# )
+
+```
+
 ## Report Template C for Dissemination and Data Story Telling Template
 
 The last template can be used to take note of the data interpretation session.
 
 It will generate a PDF or an paginated HTML page
 
+
+```{r template_3_dissemination}
+#' Report Template 3 for Dissemination and Data Story Telling Template
+#' The last template can be used to take note of the data interpretation session. 
+#' It will generate a PDF or an paginated HTML page
+# usethis::use_rmarkdown_template(
+#   template_name = "template_3_dissemination",
+#   template_dir = NULL,
+#   template_description = "Data brief and Story Telling",
+#   template_create_dir = TRUE
+# )
+
+
+
+```
 

@@ -34,7 +34,8 @@ plot_select_one_cross <- function(datalist = datalist,
                             by_var , 
                             showcode = FALSE) {
   
-  require("ggplot2")
+  requireNamespace("ggplot2")
+  requireNamespace("dplyr")
   datasource <- as.character(  dico[3][[1]]$form_title ) 
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -81,7 +82,8 @@ plot_select_one_cross <- function(datalist = datalist,
                       pcum = n / cumsum)  
        
        ## plot
-       p <- ggplot(cnts, 
+       require(ggplot2)
+       p <- ggplot2::ggplot(cnts, 
                   aes(x= pcum, 
                       y = x)) +
         geom_col(fill = "#0072BC") +

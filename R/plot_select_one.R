@@ -26,7 +26,8 @@ plot_select_one <- function(datalist  ,
                             var,
                             showcode = FALSE) {
 
-  require("ggplot2")
+  requireNamespace("ggplot2")
+  requireNamespace("dplyr")
   ## Get default data source name 
   datasource <- as.character(  dico[3][[1]]$form_title ) 
  
@@ -73,7 +74,7 @@ plot_select_one <- function(datalist  ,
     
     ## plot
     require(ggplot2)
-    p <- ggplot(cnts, aes(p, x)) +
+    p <- ggplot2::ggplot(cnts, aes(p, x)) +
       geom_col(fill = "#0072BC") +
       
       #geom_label(aes(label = scales::label_percent(accuracy = .01)(p))) +

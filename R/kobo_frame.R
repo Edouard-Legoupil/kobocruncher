@@ -13,7 +13,7 @@
 #' data <- kobo_frame(datalist = datalist,
 #'                    dico = dico,
 #'                    var = "members.sex"   )
-#' knitr::kable(head(data,5))
+#' knitr::kable(utils::head(data,5))
 #'  
 kobo_frame <- function(datalist,
                        dico, 

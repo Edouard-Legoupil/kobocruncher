@@ -31,7 +31,8 @@ plot_select_multiple <- function(datalist = datalist,
                                  var, 
                                  showcode = FALSE) {
   
-  require("ggplot2")
+  requireNamespace("ggplot2")
+  requireNamespace("dplyr")
   datasource <- as.character(  dico[3][[1]]$form_title ) 
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -75,8 +76,9 @@ plot_select_multiple <- function(datalist = datalist,
                                                    x = var), "\n",
                                       fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_multiple(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}   else {} 
     
+    require(ggplot2)
     ## Plot
-     p <- ggplot(cnts, aes(p, x)) +
+     p <- ggplot2::ggplot(cnts, aes(p, x)) +
       geom_col(fill = "#0072BC") +
       #geom_label(aes(label = scales::label_percent(accuracy = .01)(p))) + 
       ## Position label differently in the bar in white - outside bar in black

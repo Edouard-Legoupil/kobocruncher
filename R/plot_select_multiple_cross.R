@@ -26,7 +26,8 @@ plot_select_multiple_cross <- function(datalist = datalist,
                                        showcode = FALSE) {
   
   
-  require("ggplot2")
+  requireNamespace("ggplot2")
+  requireNamespace("dplyr")
   datasource <- as.character(  dico[3][[1]]$form_title ) 
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -83,7 +84,9 @@ plot_select_multiple_cross <- function(datalist = datalist,
         dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
                       pcum = n / cumsum)  
       ##plot
-       p <- ggplot(cntscross, 
+      
+       require(ggplot2)
+       p <- ggplot2::ggplot(cntscross, 
                   aes(x= pcum, 
                       y = x)) +
         geom_col(fill = "#0072BC") +

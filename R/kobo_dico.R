@@ -10,24 +10,24 @@
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' # Survey
 #' questions <- as.data.frame(dico[1])
-#' knitr::kable(head(questions, 10))
+#' knitr::kable(utils::head(questions, 10))
 #' # Choices
 #' responses <- as.data.frame(dico[2])
-#' knitr::kable(head(responses, 10))
+#' knitr::kable(utils::head(responses, 10))
 #' # Settings
 #' metadata <- as.data.frame(dico[3])
-#' knitr::kable(head(metadata, 10))
+#' knitr::kable(utils::head(metadata, 10))
 #' # Report ToC
 #' toc <- as.data.frame(dico[4])
-#' knitr::kable(head(toc, 10))
+#' knitr::kable(utils::head(toc, 10))
 kobo_dico <- function(xlsformpath) {
    survey <- readxl::read_excel(xlsformpath,   
                                 sheet = "survey")
   
   variables <-  survey |>
     ## Rename and use what ever label set is coming first 
-    dplyr::rename(label = dplyr::first(starts_with("label")),
-                  hint = dplyr::first(starts_with("hint"))) |>
+    dplyr::rename(label = dplyr::first(tidyselect::starts_with("label")),
+                  hint = dplyr::first(tidyselect::starts_with("hint"))) |>
     
     
     # Clean the begin and end in case the _ would be missing...
@@ -52,9 +52,9 @@ kobo_dico <- function(xlsformpath) {
     dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
                                                   function (repeatvar, type, name) {
                                                     if (type  == "begin_repeat")  c(repeatvar, name)
-                                                    else if (type  == "end_repeat") head(repeatvar, -1)
+                                                    else if (type  == "end_repeat") utils::head(repeatvar, -1)
                                                     else repeatvar
-                                                  }, .init = character()) |>tail(-1),
+                                                  }, .init = character()) |> utils::tail(-1),
                   ##Apply a function to each element of a list 
                   repeatvar = purrr::map_chr(repeatvar,
                                              stringr::str_c, 
@@ -71,9 +71,9 @@ kobo_dico <- function(xlsformpath) {
                                                          name) {
                                                  if (type == "begin_group") 
                                                     c(scope, name)
-                                                    else if (type == "end_group") head(scope, -1)
+                                                    else if (type == "end_group") utils::head(scope, -1)
                                                  else scope
-                                               }, .init = character()) |> tail(-1),
+                                               }, .init = character()) |> utils::tail(-1),
                     ##Apply a function to each element of a list 
                     scope = purrr::map_chr(scope, 
                                            stringr::str_c, 
@@ -124,7 +124,11 @@ kobo_dico <- function(xlsformpath) {
     if ("chapter" %in% colnames(variables)) { } else {  variables$chapter <- NA  }
     if ("subchapter" %in% colnames( variables)) { } else {  variables$subchapter <- NA   }
     if ("disaggregation" %in% colnames(variables)) { } else {  variables$disaggregation <- NA  }
-    if ("correlate" %in% colnames( variables)) { } else {  variables$correlate <- NA   }
+    if ("correlate" %in% colnames( variables)) { } else {  variables$correlate <- NA   }  
+  
+  # Adding the appearance variable that will be used for likert charts
+  # to check and check and remove label appearance 
+    if ("appearance" %in% colnames(variables)) {   } else {   variables$appearance <- NA  }
   
 
      choices <- readxl::read_excel(xlsformpath,   sheet = "choices")  

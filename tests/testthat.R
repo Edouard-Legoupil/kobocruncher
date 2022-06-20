@@ -1,4 +1,4 @@
 library(testthat)
-library(koboloadeR)
+library(kobocruncher)
 
-test_check("koboloadeR")
+test_check("kobocruncher")
