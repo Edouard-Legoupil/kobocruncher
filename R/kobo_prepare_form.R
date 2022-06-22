@@ -310,10 +310,69 @@ kobo_prepare_form <- function(xlsformpath,
     openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(ridl_choices), widths = "auto")
     openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(ridl_choices), gridExpand = TRUE)
     
+    
+    
+    ###  indicator sheet ######################################
+    indicator <- tryCatch({
+      as.data.frame(readxl::read_excel(form_tmp, sheet = "indicator"),stringsAsFactors = FALSE)
+    }, error = function(err) {
+      data.frame(
+        type = character(),
+        name = character(),
+        label = character(),
+        hint = character(),
+        dataframe = character(),
+        calculation = character(),
+        chapter = character(),
+        subchapter = character(),
+        disaggregation = character(),
+        correlate = character(),
+        cluster = character(),
+        predict = character(),
+        score = character(),
+        mappoint = character(),
+        mappoly = character(),
+        stringsAsFactors = FALSE
+      )
+     }
+    )
+        if ("type" %in% colnames(indicator)) {   } else {    indicator$type <- ""   }
+        if ("name" %in% colnames(indicator)) {   } else {    indicator$name <- ""   }
+        if ("label" %in% colnames(indicator)) {   } else {    indicator$label <- ""   }
+        if ("hint" %in% colnames(indicator)) {   } else {    indicator$hint <- ""   }
+        if ("dataframe" %in% colnames(indicator)) { } else { indicator$dataframe <- ""   }
+        if ("calculation" %in% colnames(indicator)) { } else { indicator$calculation <- ""   }
+        if ("chapter" %in% colnames(indicator)) { } else { indicator$chapter <- ""   }
+        if ("subchapter" %in% colnames(indicator)) { } else { indicator$subchapter <- ""   }
+        if ("correlate" %in% colnames(indicator)) {    } else {  indicator$correlate <- ""}
+        if ("disaggregation" %in% colnames(indicator)) { } else { indicator$disaggregation <- ""  }
+        if ("cluster" %in% colnames(indicator)) { } else { indicator$cluster <- ""}
+        if ("predict" %in% colnames(indicator)) {     } else { indicator$predict <- ""  }
+        if ("score" %in% colnames(indicator)) {     } else { indicator$score <- ""  }
+        if ("mappoint" %in% colnames(indicator)) {    } else { indicator$mappoint <- ""}
+        if ("mappoly" %in% colnames(indicator)) {    } else { indicator$mappoly <- ""}
+
+    indicator <- indicator[ ,c("type","name","label", "hint",
+                               "dataframe", "calculation",
+                               "chapter","subchapter", "disaggregation", "correlate",
+                                "cluster", "predict", "score", "mappoint", "mappoly")]
+    sheetname <- "indicator"
+    openxlsx::addWorksheet(wb, sheetname)
+    openxlsx::writeData(wb, sheetname, indicator, withFilter = TRUE)
+    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(indicator), widths = "auto")
+    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(indicator), gridExpand = TRUE)
+
+    
+    
+    cat("\n******************** Summary of the Analysis Plan *********************\n \n")
     ### Saving final ######################################    
     if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
     openxlsx::saveWorkbook(wb, xlsformpathout)
-    cat("\n******************** Summary of the Analysis Plan *********************\n \n")
+    
+    
+    
+    
+    
     
     
       # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }

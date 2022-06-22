@@ -9,12 +9,22 @@
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @export
 
+#' @title Plotting Likert
+#' 
+#' @description Detect if we have more than 3 questions with the same response options within the same questions group
+#' and represent the result using a standard likert plot - build from  https://github.com/jbryer/likert
+#' 
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @export
+
 plot_likert <- function(datalist = datalist,
                         dico = dico) {
 
   require(dplyr)
-    require(ggplot2)
-  require(likert) 
+  require(ggplot2)
+  require(likert)
+  require(cowplot)
   ## Check the frequency of list_name within each group,
   ## Filter the combination of list and group where we have more than 3 occurrences
   # not taking in account when the appearance is not "label"
@@ -26,6 +36,7 @@ plot_likert <- function(datalist = datalist,
     dplyr::filter( cnt >= 3)
 
   for (i in 1:nrow(grouplikert)  ) {
+    
     ## getting the group and corresponding label
     scopei <-   as.character(grouplikert[i, c("scope")])
     labelgroup <- as.data.frame(dico[1]) |>
@@ -39,7 +50,7 @@ plot_likert <- function(datalist = datalist,
       dplyr::filter( list_name ==   list_namei) |>
       dplyr::select( name, label)  |>
       dplyr::distinct() 
-    labelrecode <- stats::setNames(as.character(nlevel_likert$label), nlevel_likert$name)
+    labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
     
     ##  Subsetting data - checking levels - and applying label
     var <- as.data.frame(dico[1]) |>
@@ -65,11 +76,31 @@ plot_likert <- function(datalist = datalist,
     likertframe.obj <- likert::likert(likertframe)
 
     ## Now generate the plot
-    print(plot(likertframe.obj,
-               #center = 2,
-               wrap= 90) +
-            labs(title = labelgroup) 
-    )
+  a <- plot(likertframe.obj,
+            #center = 2,
+            wrap= 62) +
+    labs(title = labelgroup)+
+    # guides(fill=guide_legend(title=NULL),    color=guide_legend(nrow=2, byrow=TRUE))  +
+    unhcrthemes::theme_unhcr(grid="X") +
+    theme(plot.title=element_text(size=32, face="bold", color="black"), 
+          plot.subtitle=element_text(size=19, face="italic", color="black"), 
+          text = element_text(size=22, color = "#333333"), 
+          #legend.position="right",legend.direction="vertical"), legend.margin=margin()
+          legend.position="bottom",
+          legend.box="vertical")
+  
+  ## Extract the legend to put it fully down
+  p1_legend <- cowplot::get_legend(a + 
+                            theme(legend.position="bottom", legend.box="vertical", legend.margin=margin(t = 0, unit='cm')) )
+                            #+guides(fill=guide_legend(title=NULL), color=guide_legend(nrow=2, byrow=TRUE)) )
+  
+  #cowplot::ggdraw(p1_legend)
+  print( cowplot::plot_grid(a +  theme(legend.position = 'none'), 
+                            p1_legend ,
+                            nrow = 2, 
+                            rel_heights = c(1, 0.1)))
+    
+    
   }
 }
 

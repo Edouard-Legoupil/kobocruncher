@@ -68,6 +68,9 @@ knitr::kable(utils::head(metadata, 10))
 # Report ToC
 toc <- as.data.frame(dico[4])
 knitr::kable(utils::head(toc, 10))
+# Indicator
+indicator <- as.data.frame(dico[5])
+knitr::kable(utils::head(indicator, 10))
 ```
 
 # Data Processing
@@ -75,6 +78,21 @@ knitr::kable(utils::head(toc, 10))
 ## Cleaning
 
  to do....
+
+
+
+```{r examples-kobo_clean}
+# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+# 
+# kobo_clean(datalist = datalist,
+#                    dico = dico,
+#                 indicatoradd = indicatoradd   )
+
+
+ 
+```
+
  
 
 
@@ -83,12 +101,42 @@ knitr::kable(utils::head(toc, 10))
  to do....
 
 
+
+```{r examples-kobo_anonymise}
+# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+# 
+# kobo_anonymise(datalist = datalist,
+#                    dico = dico,
+#                 indicatoradd = indicatoradd   )
+
+
+ 
+```
+
 ## Indicator Calculation
 
- to do....
+Indicator calculation 
 
 
 
+```{r examples-kobo_indicator}
+# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+# 
+# indicatoradd <- c(  name =  "has.female.members",
+#               type = "select_one",
+#               label = "Is ",
+#               dataframe = "1",
+#               calculation = "")
+# 
+# kobo_indicator(datalist = datalist,
+#                    dico = dico,
+#                 indicatoradd = indicatoradd   )
+
+
+ 
+```
 
 # Labeling functions
 

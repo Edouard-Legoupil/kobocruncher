@@ -20,10 +20,14 @@
 #' # Report ToC
 #' toc <- as.data.frame(dico[4])
 #' knitr::kable(utils::head(toc, 10))
+#' # Indicator
+#' indicator <- as.data.frame(dico[5])
+#' knitr::kable(utils::head(indicator, 10))
 kobo_dico <- function(xlsformpath) {
    survey <- readxl::read_excel(xlsformpath,   
                                 sheet = "survey")
   
+   ## variables ###############
   variables <-  survey |>
     ## Rename and use what ever label set is coming first 
     dplyr::rename(label = dplyr::first(tidyselect::starts_with("label")),
@@ -139,6 +143,7 @@ kobo_dico <- function(xlsformpath) {
      settings <- readxl::read_excel(xlsformpath,   
                                 sheet = "settings")
      
+     ### Building the plan ######
      ## Build the question order for the crunching report
      if (  nrow(as.data.frame(variables)|> dplyr::filter(! is.na(chapter)))  > 1 ) {
        
@@ -195,10 +200,59 @@ kobo_dico <- function(xlsformpath) {
           dplyr::filter( ! type  %in% c("note",  "end_group") )
        }
        
+     ## adding indicators 
+    indicator <- tryCatch({
+      as.data.frame(readxl::read_excel(xlsformpath,   
+                                sheet = "indicator"),stringsAsFactors = FALSE)
+        }, error = function(err) {
+          data.frame(
+            type = character(),
+            name = character(),
+            label = character(),
+            hint = character(),
+            dataframe = character(),
+            calculation = character(),
+            chapter = character(),
+            subchapter = character(),
+            disaggregation = character(),
+            correlate = character(),
+            cluster = character(),
+            predict = character(),
+            score = character(),
+            mappoint = character(),
+            mappoly = character(),
+            stringsAsFactors = FALSE
+          )
+         }
+        )
+        if ("type" %in% colnames(indicator)) {   } else {    indicator$type <- ""   }
+        if ("name" %in% colnames(indicator)) {   } else {    indicator$name <- ""   }
+        if ("label" %in% colnames(indicator)) {   } else {    indicator$label <- ""   }
+        if ("hint" %in% colnames(indicator)) {   } else {    indicator$hint <- ""   }
+        if ("dataframe" %in% colnames(indicator)) { } else { indicator$dataframe <- ""   }
+        if ("calculation" %in% colnames(indicator)) { } else { indicator$calculation <- ""   }
+        if ("chapter" %in% colnames(indicator)) { } else { indicator$chapter <- ""   }
+        if ("subchapter" %in% colnames(indicator)) { } else { indicator$subchapter <- ""   }
+        if ("correlate" %in% colnames(indicator)) {    } else {  indicator$correlate <- ""}
+        if ("disaggregation" %in% colnames(indicator)) { } else { indicator$disaggregation <- ""  }
+        if ("cluster" %in% colnames(indicator)) { } else { indicator$cluster <- ""}
+        if ("predict" %in% colnames(indicator)) {     } else { indicator$predict <- ""  }
+        if ("score" %in% colnames(indicator)) {     } else { indicator$score <- ""  }
+        if ("mappoint" %in% colnames(indicator)) {    } else { indicator$mappoint <- ""}
+        if ("mappoly" %in% colnames(indicator)) {    } else { indicator$mappoly <- ""}
+    
+        indicator <- indicator[ ,c("type","name","label", "hint",
+                                   "dataframe", "calculation",
+                                   "chapter","subchapter", "disaggregation", "correlate",
+                                    "cluster", "predict", "score", "mappoint", "mappoly")]
+     
+     
+     
     dico <- list( variables, 
-                         modalities,
-                         settings,
-                          plan)
+                  modalities,
+                  settings,
+                  plan,
+                  indicator)
     class(dico) <- "kobodico" # assigns a "kobodico" class to the list. Helpful for later on. 
     ## Build dico object as list with both variables and modalities
     return(dico )

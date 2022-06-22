@@ -29,4 +29,7 @@ knitr::kable(utils::head(metadata, 10))
 # Report ToC
 toc <- as.data.frame(dico[4])
 knitr::kable(utils::head(toc, 10))
+# Indicator
+indicator <- as.data.frame(dico[5])
+knitr::kable(utils::head(indicator, 10))
 }

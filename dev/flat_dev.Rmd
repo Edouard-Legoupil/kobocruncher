@@ -403,10 +403,69 @@ kobo_prepare_form <- function(xlsformpath,
     openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(ridl_choices), widths = "auto")
     openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(ridl_choices), gridExpand = TRUE)
     
+    
+    
+    ###  indicator sheet ######################################
+    indicator <- tryCatch({
+      as.data.frame(readxl::read_excel(form_tmp, sheet = "indicator"),stringsAsFactors = FALSE)
+    }, error = function(err) {
+      data.frame(
+        type = character(),
+        name = character(),
+        label = character(),
+        hint = character(),
+        dataframe = character(),
+        calculation = character(),
+        chapter = character(),
+        subchapter = character(),
+        disaggregation = character(),
+        correlate = character(),
+        cluster = character(),
+        predict = character(),
+        score = character(),
+        mappoint = character(),
+        mappoly = character(),
+        stringsAsFactors = FALSE
+      )
+     }
+    )
+        if ("type" %in% colnames(indicator)) {   } else {    indicator$type <- ""   }
+        if ("name" %in% colnames(indicator)) {   } else {    indicator$name <- ""   }
+        if ("label" %in% colnames(indicator)) {   } else {    indicator$label <- ""   }
+        if ("hint" %in% colnames(indicator)) {   } else {    indicator$hint <- ""   }
+        if ("dataframe" %in% colnames(indicator)) { } else { indicator$dataframe <- ""   }
+        if ("calculation" %in% colnames(indicator)) { } else { indicator$calculation <- ""   }
+        if ("chapter" %in% colnames(indicator)) { } else { indicator$chapter <- ""   }
+        if ("subchapter" %in% colnames(indicator)) { } else { indicator$subchapter <- ""   }
+        if ("correlate" %in% colnames(indicator)) {    } else {  indicator$correlate <- ""}
+        if ("disaggregation" %in% colnames(indicator)) { } else { indicator$disaggregation <- ""  }
+        if ("cluster" %in% colnames(indicator)) { } else { indicator$cluster <- ""}
+        if ("predict" %in% colnames(indicator)) {     } else { indicator$predict <- ""  }
+        if ("score" %in% colnames(indicator)) {     } else { indicator$score <- ""  }
+        if ("mappoint" %in% colnames(indicator)) {    } else { indicator$mappoint <- ""}
+        if ("mappoly" %in% colnames(indicator)) {    } else { indicator$mappoly <- ""}
+
+    indicator <- indicator[ ,c("type","name","label", "hint",
+                               "dataframe", "calculation",
+                               "chapter","subchapter", "disaggregation", "correlate",
+                                "cluster", "predict", "score", "mappoint", "mappoly")]
+    sheetname <- "indicator"
+    openxlsx::addWorksheet(wb, sheetname)
+    openxlsx::writeData(wb, sheetname, indicator, withFilter = TRUE)
+    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(indicator), widths = "auto")
+    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(indicator), gridExpand = TRUE)
+
+    
+    
+    cat("\n******************** Summary of the Analysis Plan *********************\n \n")
     ### Saving final ######################################    
     if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
     openxlsx::saveWorkbook(wb, xlsformpathout)
-    cat("\n******************** Summary of the Analysis Plan *********************\n \n")
+    
+    
+    
+    
+    
     
     
       # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
@@ -466,6 +525,7 @@ kobo_dico <- function(xlsformpath) {
    survey <- readxl::read_excel(xlsformpath,   
                                 sheet = "survey")
   
+   ## variables ###############
   variables <-  survey |>
     ## Rename and use what ever label set is coming first 
     dplyr::rename(label = dplyr::first(tidyselect::starts_with("label")),
@@ -581,6 +641,7 @@ kobo_dico <- function(xlsformpath) {
      settings <- readxl::read_excel(xlsformpath,   
                                 sheet = "settings")
      
+     ### Building the plan ######
      ## Build the question order for the crunching report
      if (  nrow(as.data.frame(variables)|> dplyr::filter(! is.na(chapter)))  > 1 ) {
        
@@ -637,10 +698,59 @@ kobo_dico <- function(xlsformpath) {
           dplyr::filter( ! type  %in% c("note",  "end_group") )
        }
        
+     ## adding indicators 
+    indicator <- tryCatch({
+      as.data.frame(readxl::read_excel(xlsformpath,   
+                                sheet = "indicator"),stringsAsFactors = FALSE)
+        }, error = function(err) {
+          data.frame(
+            type = character(),
+            name = character(),
+            label = character(),
+            hint = character(),
+            dataframe = character(),
+            calculation = character(),
+            chapter = character(),
+            subchapter = character(),
+            disaggregation = character(),
+            correlate = character(),
+            cluster = character(),
+            predict = character(),
+            score = character(),
+            mappoint = character(),
+            mappoly = character(),
+            stringsAsFactors = FALSE
+          )
+         }
+        )
+        if ("type" %in% colnames(indicator)) {   } else {    indicator$type <- ""   }
+        if ("name" %in% colnames(indicator)) {   } else {    indicator$name <- ""   }
+        if ("label" %in% colnames(indicator)) {   } else {    indicator$label <- ""   }
+        if ("hint" %in% colnames(indicator)) {   } else {    indicator$hint <- ""   }
+        if ("dataframe" %in% colnames(indicator)) { } else { indicator$dataframe <- ""   }
+        if ("calculation" %in% colnames(indicator)) { } else { indicator$calculation <- ""   }
+        if ("chapter" %in% colnames(indicator)) { } else { indicator$chapter <- ""   }
+        if ("subchapter" %in% colnames(indicator)) { } else { indicator$subchapter <- ""   }
+        if ("correlate" %in% colnames(indicator)) {    } else {  indicator$correlate <- ""}
+        if ("disaggregation" %in% colnames(indicator)) { } else { indicator$disaggregation <- ""  }
+        if ("cluster" %in% colnames(indicator)) { } else { indicator$cluster <- ""}
+        if ("predict" %in% colnames(indicator)) {     } else { indicator$predict <- ""  }
+        if ("score" %in% colnames(indicator)) {     } else { indicator$score <- ""  }
+        if ("mappoint" %in% colnames(indicator)) {    } else { indicator$mappoint <- ""}
+        if ("mappoly" %in% colnames(indicator)) {    } else { indicator$mappoly <- ""}
+    
+        indicator <- indicator[ ,c("type","name","label", "hint",
+                                   "dataframe", "calculation",
+                                   "chapter","subchapter", "disaggregation", "correlate",
+                                    "cluster", "predict", "score", "mappoint", "mappoly")]
+     
+     
+     
     dico <- list( variables, 
-                         modalities,
-                         settings,
-                          plan)
+                  modalities,
+                  settings,
+                  plan,
+                  indicator)
     class(dico) <- "kobodico" # assigns a "kobodico" class to the list. Helpful for later on. 
     ## Build dico object as list with both variables and modalities
     return(dico )
@@ -663,6 +773,9 @@ knitr::kable(utils::head(metadata, 10))
 # Report ToC
 toc <- as.data.frame(dico[4])
 knitr::kable(utils::head(toc, 10))
+# Indicator
+indicator <- as.data.frame(dico[5])
+knitr::kable(utils::head(indicator, 10))
 ```
 
 # Data Processing
@@ -670,16 +783,191 @@ knitr::kable(utils::head(toc, 10))
 ## Cleaning
 
  to do....
+
+
+```{r function-kobo_clean}
+#' @title Apply cleaning to selected variables within the xlsform
+#' 
+#' @description Basic data cleaning is often required. This functions covers tow use cases:
+#'  Use Case 1 - Need to re-categorize the modalities for a select_one or select_multiple 
+#'  Use case 2-  Need to re-encode one variable based on a cleaned open text question
+#'  
+#'  To address those situation, the kobo_clean function is building, if not set-up,  a cleaning log 
+#'  for all the variables where the clean cell is not empty within the extended xlsform.
+#'  
+#'  The cleaning log has only 3 columns: variable - old value - new value
+#'  This cleaning log can be then easily be adjusted in excel and used in the cleaning workflow when 
+#'  running the function.
+#'  
+#'  If the cell `clean` for the variables refers to the name of another variable that is also included
+#'  in the cleaning log, then this second variable will be used to clean the first one from the second one. 
+#'  This behavior allow to manage the use case 2.  
+#'  
+#'  Note that this function can also be used to adjust in order to treat the data and reduce data disclosure risk
+#'  See kobo_anonymise
+#'  
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' 
+#' @export
+
+kobo_clean <- function(datalist,
+                       dico, 
+                       indicatoradd = NULL) {
+
+#   1 - load the variables, 
+  var <- as.data.frame(dico[1])  
+#   2 - append the one from inidcatoradd if any,
+  
+#   3 - apply the indicator, i.e. do the calculation,
+#   4 - re-save all the working indicator definition within the extended xlsform  
+#   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
+#   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
+  
+  with_clean <- list( datalist, dico)
+    
+    return(with_clean)
+}
+
+```
+
+
+```{r examples-kobo_clean}
+# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+# 
+# kobo_clean(datalist = datalist,
+#                    dico = dico,
+#                 indicatoradd = indicatoradd   )
+
+
+ 
+```
  
 
 ## Anonymisation
 
  to do....
 
+
+```{r function-kobo_anonymise}
+#' @title Assess Statistical disclosure risk based on an intrusions scenario
+#' 
+#' @description  When personal data is being collected, performing basic de-identification (i.e. removal of direct identifiers) and assessing risk of re-identification (i.e. using indirect identifiers to re-identify individuals) is a key sep to perform in order to be able to share the data with multiple analyst.
+#' 
+#' The initial step consist in defining potential intrusion scenario.
+#'  This suppose to document the anonymise cell for each variable
+#'
+#' \tabular{rrrrrr}{
+#'   \strong{Type}    \tab \strong{Description}  \cr
+#'   ----------------\tab----------- \cr
+#'   \strong{Direct_identifier}     \tab	Can be directly used to identify an individual. E.g. Name, Address, Date of birth, Telephone number, GPS location \cr
+#'   \strong{Quasi_identifier}     \tab	Can be used to identify individuals when it is joined with other information. E.g. Age, Salary, Next of kin, School name, Place of work \cr
+#'   \strong{Sensitive_information}  \tab & Community identifiable information	Might not identify an individual but could put an individual or group at risk. E.g. Gender, Ethnicity, Religious belief 
+#' }
+#'
+#'  Direct identifiers will be automatically removed from the data.
+#'  The function will perform the measurement of various statistical disclosure risk measurement
+#'  for the selected quasi_identifier and sensitive_information.
+#'  
+#' 
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @export
+
+kobo_anonymise <- function(datalist,
+                       dico, 
+                       indicatoradd = NULL) {
+
+#   1 - load the indicators, 
+  indicator <- as.data.frame(dico[4])  
+#   2 - append the one from inidcatoradd if any,
+  
+#   3 - apply the indicator, i.e. do the calculation,
+#   4 - re-save all the working indicator definition within the extended xlsform  
+#   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
+#   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
+  
+  with_anonymise <- list( datalist, dico)
+    
+    return(with_anonymise)
+}
+
+```
+
+
+```{r examples-kobo_anonymise}
+# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+# 
+# kobo_anonymise(datalist = datalist,
+#                    dico = dico,
+#                 indicatoradd = indicatoradd   )
+
+
+ 
+```
+
+
 ## Indicator Calculation
 
- to do....
+Indicator calculation 
 
+
+```{r function-kobo_indicator}
+#' @title Apply existing documented indicators and add new ones
+#' 
+#' @description The function goes through steps:
+#'   1 - load the indicators, 
+#'   2 - append the one from inidcatoradd if any, 
+#'   3 - apply the indicator, i.e. do the calculation,
+#'   4 - re-save all the working indicator definition within the extended xlsform  
+#'   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
+#'   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
+#' 
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @param indicatoradd a list containing all key information to add a calculated indicator within the analysis plan
+#' @export
+
+kobo_indicator <- function(datalist,
+                       dico, 
+                       indicatoradd = NULL) {
+
+#   1 - load the indicators, 
+  indicator <- as.data.frame(dico[4])  
+#   2 - append the one from inidcatoradd if any,
+  
+#   3 - apply the indicator, i.e. do the calculation,
+#   4 - re-save all the working indicator definition within the extended xlsform  
+#   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
+#   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
+  
+  with_indicator <- list( datalist, dico)
+    
+    return(with_indicator)
+}
+
+```
+
+
+```{r examples-kobo_indicator}
+# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+# 
+# indicatoradd <- c(  name =  "has.female.members",
+#               type = "select_one",
+#               label = "Is ",
+#               dataframe = "1",
+#               calculation = "")
+# 
+# kobo_indicator(datalist = datalist,
+#                    dico = dico,
+#                 indicatoradd = indicatoradd   )
+
+
+ 
+```
 
 
 # Labeling functions
@@ -1875,12 +2163,22 @@ plot_correlation(datalist = datalist,
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @export
 
+#' @title Plotting Likert
+#' 
+#' @description Detect if we have more than 3 questions with the same response options within the same questions group
+#' and represent the result using a standard likert plot - build from  https://github.com/jbryer/likert
+#' 
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @export
+
 plot_likert <- function(datalist = datalist,
                         dico = dico) {
 
   require(dplyr)
-    require(ggplot2)
-  require(likert) 
+  require(ggplot2)
+  require(likert)
+  require(cowplot)
   ## Check the frequency of list_name within each group,
   ## Filter the combination of list and group where we have more than 3 occurrences
   # not taking in account when the appearance is not "label"
@@ -1892,6 +2190,7 @@ plot_likert <- function(datalist = datalist,
     dplyr::filter( cnt >= 3)
 
   for (i in 1:nrow(grouplikert)  ) {
+    
     ## getting the group and corresponding label
     scopei <-   as.character(grouplikert[i, c("scope")])
     labelgroup <- as.data.frame(dico[1]) |>
@@ -1905,7 +2204,7 @@ plot_likert <- function(datalist = datalist,
       dplyr::filter( list_name ==   list_namei) |>
       dplyr::select( name, label)  |>
       dplyr::distinct() 
-    labelrecode <- stats::setNames(as.character(nlevel_likert$label), nlevel_likert$name)
+    labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
     
     ##  Subsetting data - checking levels - and applying label
     var <- as.data.frame(dico[1]) |>
@@ -1931,11 +2230,31 @@ plot_likert <- function(datalist = datalist,
     likertframe.obj <- likert::likert(likertframe)
 
     ## Now generate the plot
-    print(plot(likertframe.obj,
-               #center = 2,
-               wrap= 90) +
-            labs(title = labelgroup) 
-    )
+  a <- plot(likertframe.obj,
+            #center = 2,
+            wrap= 62) +
+    labs(title = labelgroup)+
+    # guides(fill=guide_legend(title=NULL),    color=guide_legend(nrow=2, byrow=TRUE))  +
+    unhcrthemes::theme_unhcr(grid="X") +
+    theme(plot.title=element_text(size=32, face="bold", color="black"), 
+          plot.subtitle=element_text(size=19, face="italic", color="black"), 
+          text = element_text(size=22, color = "#333333"), 
+          #legend.position="right",legend.direction="vertical"), legend.margin=margin()
+          legend.position="bottom",
+          legend.box="vertical")
+  
+  ## Extract the legend to put it fully down
+  p1_legend <- cowplot::get_legend(a + 
+                            theme(legend.position="bottom", legend.box="vertical", legend.margin=margin(t = 0, unit='cm')) )
+                            #+guides(fill=guide_legend(title=NULL), color=guide_legend(nrow=2, byrow=TRUE)) )
+  
+  #cowplot::ggdraw(p1_legend)
+  print( cowplot::plot_grid(a +  theme(legend.position = 'none'), 
+                            p1_legend ,
+                            nrow = 2, 
+                            rel_heights = c(1, 0.1)))
+    
+    
   }
 }
 
