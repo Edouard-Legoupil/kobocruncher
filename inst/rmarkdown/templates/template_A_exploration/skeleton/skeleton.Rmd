@@ -42,12 +42,11 @@ knitr::opts_chunk$set(echo = FALSE,
 extrafont::loadfonts(quiet=TRUE)
 options(scipen = 999) # turn-off scientific notation like 1e+48
 
-## If you get the notebook directly you will fist need to install kobocruncher
-# ## Now get kobocruncher
-# install.packages("remotes")
-# remotes::install_github("Edouard-Legoupil/kobocruncher", Ncpus=4) 
-library("kobocruncher")
 
+library("ggplot2")
+library("kobocruncher")
+library("unhcrthemes")
+library("kobocruncher")
 theme_set( unhcrthemes::theme_unhcr(font_size = 14))
 ```
 
@@ -62,8 +61,8 @@ xlsformpath <- here::here(params$datafolder, params$form)
 ## The 2 lines below are for the demo ##
 ########################################
 # Add # to comment them after once you have set up your report parameters..
-# datapath <- system.file("data.xlsx", package = "kobocruncher")
-# xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
+datapath <- system.file("data.xlsx", package = "kobocruncher")
+xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
 
 
 ```
@@ -110,7 +109,7 @@ The report can be regenerated as needed by:
 
 ```{r analysis_plan}
 ## Let's extract the analysis plan from the xlsform - or extend the current one
-kobo_prepare_form(xlsformpath = here::here(params$datafolder, params$form) ,
+kobo_prepare_form(xlsformpath = xlsformpath ,
                  xlsformpathout =  here::here(params$datafolder, params$form)  ,
                  language = "" ) ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
 
