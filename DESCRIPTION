@@ -33,7 +33,6 @@ Imports:
     tidyr,
     tidyselect,
     tm,
-    unhcrthemes,
     utils,
     wordcloud
 Suggests: 
@@ -43,8 +42,8 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes: 
-    vidonne/unhcrdesign
-    vidonne/unhcrthemes
+    vidonne/unhcrdesign,
+    vidonne/unhcrthemes,
     vidonne/unhcrdown
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
