@@ -18,8 +18,6 @@ params:
   datafolder: "data-raw"
   data: "data.xlsx"
   form: "form.xlsx"
-  crosstab: ""
-  datasource: ""
 ---
 
 
@@ -32,18 +30,25 @@ Explanation is provided regarding the purpose of each package (there are over 10
 ```{r setup}
 knitr::opts_chunk$set(echo = FALSE, 
                       message = FALSE, 
-                      warning = FALSE, 
+                      warning = FALSE,
                       collapse = FALSE,
                       comment = "#>",
-                      fig.align = "center")
-knitr::opts_chunk$set(fig.width = 12, fig.height = 9)
+                      # fig.width = 5.5, fig.height = 4,
+                      fig.retina = 2, 
+                      fig.width = 9,
+                      fig.asp = 0.618,
+                      fig.align = "center",
+                      dev = "ragg_png",
+                      out.width = "90%")
+options(scipen = 999) # turn-off scientific notation like 1e+48
 set.seed(1)
 extrafont::loadfonts(quiet=TRUE)
-options(scipen = 999) # turn-off scientific notation like 1e+48
+library("ggplot2")
+library("unhcrthemes")
+ggplot2::theme_set( unhcrthemes::theme_unhcr(font_size = 22))
 
 
 library("kobocruncher")
-library("unhcrthemes")
 
 ```
 

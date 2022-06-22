@@ -16,7 +16,7 @@ remotes::install_github('dickoa/ridl')
 remotes::install_github('vidonne/unhcrdown')
 remotes::install_github('vidonne/unhcrdesign')
 remotes::install_github('vidonne/unhcrtemplate')
-remotes::install_github('vidonne/unhcrtheme')
+remotes::install_github('vidonne/unhcrthemes')
 ## Now get kobocruncher
 remotes::install_github("Edouard-Legoupil/kobocruncher", Ncpus=4) 
 ```  

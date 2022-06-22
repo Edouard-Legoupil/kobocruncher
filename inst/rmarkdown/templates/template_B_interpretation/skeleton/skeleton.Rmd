@@ -9,7 +9,6 @@ params:
   datafolder: "data-raw"
   data: "data.xlsx"
   form: "form.xlsx"
-  crosstab: ""
   datasource: ""
 ---
 
@@ -18,20 +17,25 @@ params:
 knitr::opts_chunk$set(echo = FALSE, 
                       message = FALSE, 
                       warning = FALSE,
+                      collapse = FALSE,
+                      comment = "#>",
                       # fig.width = 5.5, fig.height = 4,
                       fig.retina = 2, 
                       fig.width = 9,
                       fig.asp = 0.618,
-                   #   fig.align = "center",
+                      fig.align = "center",
                       dev = "ragg_png",
                       out.width = "90%")
-library(officedown)
 options(scipen = 999) # turn-off scientific notation like 1e+48
-library("tidyverse")
+set.seed(1)
+extrafont::loadfonts(quiet=TRUE)
 library("ggplot2")
-library("kobocruncher")
 library("unhcrthemes")
-theme_set( unhcrthemes::theme_unhcr(font_size = 22))
+ggplot2::theme_set( unhcrthemes::theme_unhcr(font_size = 22))
+
+library("tidyverse")
+library("kobocruncher")
+library("officedown")
 ```
 
 ```{r  }
