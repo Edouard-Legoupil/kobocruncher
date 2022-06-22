@@ -203,8 +203,8 @@ kobo_prepare_form <- function(xlsformpath,
       dplyr::select(where(function(x) any(!is.na(x))))
     
     ## Clean the label and hint in relation with the selected language
-    names(survey)[tolower(names(survey)) == paste0("label",language )] <- "label"
-    names(survey)[tolower(names(survey)) == paste0("hint",language )] <- "hint"
+    names(survey)[tolower(names(survey)) == tolower(paste0("label",language) )] <- "label"
+    names(survey)[tolower(names(survey)) == tolower(paste0("hint",language) )] <- "hint"
 
     
     ## Adding variable if not present and checking the content of the variable to build up the analysis plan summary... 
@@ -310,7 +310,7 @@ kobo_prepare_form <- function(xlsformpath,
     ## Rename the variable label
     
     ## Rename the variable label based on language
-    names(choices)[tolower(names(choices)) == paste0("label",language )] <- "label"
+    names(choices)[tolower(names(choices)) == tolower(paste0("label",language) )] <- "label"
     
     namesOfCho <- c("list_name", "name", "label")
     if (sum(namesOfCho %in% colnames(choices)) != length(namesOfCho)) {
