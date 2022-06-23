@@ -59,7 +59,8 @@ plot_select_one <- function(datalist  ,
   ## Manage situation if ordinal variable (i.e. order is set in choices)
   if (any(!is.na(dplyr::filter(dico[[2]], list_name == listvar)$order))) {
     cnts <- cnts |>
-      dplyr::mutate(x = forcats::fct_reorder(x, order, as.numeric))
+          dplyr::left_join( dplyr::filter(dico[[2]], list_name == listvar), by = c("x"="name"))|>
+          dplyr::mutate(x = forcats::fct_reorder(x, order, as.numeric))
   } else {
     cnts <- cnts |>
       dplyr::mutate(x = forcats::fct_reorder(x, n))

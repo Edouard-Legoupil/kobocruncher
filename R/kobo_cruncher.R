@@ -61,7 +61,7 @@ kobo_cruncher <- function(datalist = datalist,
                                                           var = name, 
                                                           showcode = TRUE)
       
-      if (type %in% c("numeric", "integer")) plot_integer(datalist = datalist, 
+      if (type %in% c("numeric", "integer", "range")) plot_integer(datalist = datalist, 
                                                           dico = dico,
                                                           var = name, 
                                                           showcode = TRUE)
