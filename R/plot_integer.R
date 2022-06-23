@@ -53,15 +53,12 @@ plot_integer <- function(datalist = datalist,
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
       labs(x = NULL, y = NULL,
-           title = stringr::str_wrap(label_varname(dico = dico, 
-                                         x = var), 60), 
-           subtitle = if (!is.na(label_varhint(dico = dico, 
-                                                         x = var))){ 
-                     stringr::str_wrap(label_varhint(dico = dico, 
-                                                   x = var), 70)} else { ""},
+           title = stringr::str_wrap(label_varname(dico = dico, x = var), 90), 
+           subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
+                     stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
            caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
   
-      theme_minimal( base_size = 13) +
+      theme_minimal( base_size = 16) +
       geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
            panel.grid.major.x  = element_blank(), 

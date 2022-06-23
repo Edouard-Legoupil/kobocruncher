@@ -205,7 +205,7 @@ steps in the data preparation.</p>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left">date</td>
@@ -220,7 +220,7 @@ steps in the data preparation.</p>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left">select_one</td>
@@ -235,7 +235,7 @@ steps in the data preparation.</p>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left">begin_group</td>
@@ -250,7 +250,7 @@ steps in the data preparation.</p>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left">select_one</td>
@@ -265,7 +265,7 @@ steps in the data preparation.</p>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left">text</td>
@@ -280,7 +280,7 @@ steps in the data preparation.</p>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left">select_multiple</td>
@@ -295,7 +295,7 @@ steps in the data preparation.</p>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left">integer</td>
@@ -310,7 +310,7 @@ steps in the data preparation.</p>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left">end_group</td>
@@ -325,7 +325,7 @@ steps in the data preparation.</p>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left">begin_repeat</td>
@@ -340,7 +340,7 @@ steps in the data preparation.</p>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left"></td>
 </tr>
 </tbody>
 </table>
@@ -971,6 +971,43 @@ steps in the data preparation.</p>
 <div class="section level3">
 <h3 id="plotting-likert">Plotting Likert<a class="anchor" aria-label="anchor" href="#plotting-likert"></a>
 </h3>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dicolikert</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"form_likert.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
+<span class="va">datalistlikert</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data_likert.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
+
+<span class="fu"><a href="../reference/plot_likert.html">plot_likert</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalistlikert</span>,
+              dico <span class="op">=</span> <span class="va">dicolikert</span><span class="op">)</span>
+<span class="co">#&gt; Loading required package: dplyr</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'dplyr'</span>
+<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     filter, lag</span>
+<span class="co">#&gt; The following objects are masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
+<span class="co">#&gt; Loading required package: likert</span>
+<span class="co">#&gt; Loading required package: xtable</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'likert'</span>
+<span class="co">#&gt; The following object is masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     recode</span>
+<span class="co">#&gt; Loading required package: cowplot</span>
+<span class="co">#&gt; Warning: `funs()` was deprecated in dplyr 0.8.0.</span>
+<span class="co">#&gt; Please use a list of either functions or lambdas: </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   # Simple named list: </span>
+<span class="co">#&gt;   list(mean = mean, median = median)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   # Auto named with `tibble::lst()`: </span>
+<span class="co">#&gt;   tibble::lst(mean, median)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   # Using lambdas</span>
+<span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span>
+<span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
+<span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span></code></pre></div>
+<p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_likert-1.png" width="700"><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_likert-2.png" width="700"><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_likert-3.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="plotting-clusters">Plotting clusters<a class="anchor" aria-label="anchor" href="#plotting-clusters"></a>
@@ -990,7 +1027,7 @@ steps in the data preparation.</p>
 <div class="section level3">
 <h3 id="plotting-header-variable">Plotting Header variable<a class="anchor" aria-label="anchor" href="#plotting-header-variable"></a>
 </h3>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 
 <span class="fu"><a href="../reference/plot_header.html">plot_header</a></span><span class="op">(</span> dico <span class="op">=</span> <span class="va">dico</span>, 
@@ -1008,7 +1045,7 @@ steps in the data preparation.</p>
 <div class="section level3">
 <h3 id="crunching-variables-based-on-a-plan">Crunching Variables based on a plan<a class="anchor" aria-label="anchor" href="#crunching-variables-based-on-a-plan"></a>
 </h3>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 <span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span>
 
@@ -1082,7 +1119,7 @@ content. During this stage, data cleaning and new variable creation can
 be performed through iterations</p>
 <p>This report also includes each plot syntax so that they can be easily
 pasted for the second report</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#' Initial Template for Automatic Data Exploration</span>
 <span class="co">#' The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.</span>
 <span class="co">#' It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations</span>
@@ -1100,7 +1137,7 @@ pasted for the second report</p>
 <p>The second template is used following the systematic data
 exploration. It will generate a powerpoint presentation</p>
 <p>See a more detailed presentation of that step here: <a href="https://www.youtube.com/watch?v=0jE-Y7g88K4&amp;feature=youtu.be&amp;t=2305" class="external-link uri">https://www.youtube.com/watch?v=0jE-Y7g88K4&amp;feature=youtu.be&amp;t=2305</a></p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#' Second Template to prepare a presentation for the Joint Data Interpretation Session</span>
 <span class="co">#' </span>
 <span class="co"># usethis::use_rmarkdown_template(</span>
@@ -1117,7 +1154,7 @@ Template<a class="anchor" aria-label="anchor" href="#report-template-c-for-disse
 <p>The last template can be used to take note of the data interpretation
 session.</p>
 <p>It will generate a PDF or an paginated HTML page</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#' Report Template 3 for Dissemination and Data Story Telling Template</span>
 <span class="co">#' The last template can be used to take note of the data interpretation session. </span>
 <span class="co">#' It will generate a PDF or an paginated HTML page</span>

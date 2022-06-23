@@ -145,11 +145,16 @@ questions <- as.data.frame(dico[4])
 kobo_cruncher(datalist = datalist,
               dico = dico)
 
-## add cluster analysis if set up
-## add prediction if set up
-## add add score if set up
-
 
 ```
 
 
+```{r cruncherlikert, results='asis' }
+plot_likert(datalist = datalist,
+              dico = dico)
+
+## add cluster analysis if set up
+## add prediction if set up
+## add add score if set up
+
+```

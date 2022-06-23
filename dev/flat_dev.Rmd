@@ -630,7 +630,7 @@ kobo_dico <- function(xlsformpath) {
   
   # Adding the appearance variable that will be used for likert charts
   # to check and check and remove label appearance 
-    if ("appearance" %in% colnames(variables)) {   } else {   variables$appearance <- NA  }
+    if ("appearance" %in% colnames(variables)) {   } else {   variables$appearance <- ""  }
   
 
      choices <- readxl::read_excel(xlsformpath,   sheet = "choices")  
@@ -1234,14 +1234,11 @@ plot_select_one <- function(datalist  ,
                       stringr::str_wrap(40)}) +
       coord_cartesian(clip = "off") +
       labs(x = NULL, y = NULL,
-           title = stringr::str_wrap(label_varname(dico = dico,
-                                                   x = var), 60),
-           subtitle = if (!is.na(label_varhint(dico = dico,
-                                               x= var))){
-             stringr::str_wrap(label_varhint(dico = dico,
-                                             x= var), 70)} else { ""},
+           title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
+           subtitle = if (!is.na(label_varhint(dico = dico, x= var))){
+                      stringr::str_wrap(label_varhint(dico = dico, x= var), 90)} else { ""},
            caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records. \n Source: {datasource}")) +
-      theme_minimal( base_size = 15) +
+      theme_minimal( base_size = 16) +
       geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.x  = element_line(color = "#cbcbcb"),
              panel.grid.major.y  = element_blank(),
@@ -1373,14 +1370,11 @@ plot_select_multiple <- function(datalist = datalist,
           stringr::str_wrap(40)}) +
       coord_cartesian(clip = "off") +
       labs(x = NULL, y = NULL,
-           title = stringr::str_wrap(label_varname(dico = dico,
-                                                         x= var), 60),
-           subtitle = if (!is.na(label_varhint(dico = dico,
-                                                        x = var))){ 
-                     stringr::str_wrap(label_varhint(dico = dico,
-                                                          x = var), 70)} else { ""},
+           title = stringr::str_wrap(label_varname(dico = dico, x= var), 90),
+           subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
+                     stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
            caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-      theme_minimal( base_size = 15) + 
+      theme_minimal( base_size = 16) + 
       geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
              panel.grid.major.y  = element_blank(), 
@@ -1474,15 +1468,12 @@ plot_integer <- function(datalist = datalist,
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
       labs(x = NULL, y = NULL,
-           title = stringr::str_wrap(label_varname(dico = dico, 
-                                         x = var), 60), 
-           subtitle = if (!is.na(label_varhint(dico = dico, 
-                                                         x = var))){ 
-                     stringr::str_wrap(label_varhint(dico = dico, 
-                                                   x = var), 70)} else { ""},
+           title = stringr::str_wrap(label_varname(dico = dico, x = var), 90), 
+           subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
+                     stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
            caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
   
-      theme_minimal( base_size = 13) +
+      theme_minimal( base_size = 16) +
       geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
            panel.grid.major.x  = element_blank(), 
@@ -1602,7 +1593,7 @@ plot_text <- function(datalist = datalist,
                                 rot.per=0.25,   # rot.per : proportion words with 90 degree rotation (vertical text)
                                 colors= RColorBrewer::brewer.pal(8, "Dark2")) # colors : color words from least to most frequent. Use, for example, colors =“black” for single color.
     graphics::title( main = stringr::str_wrap( label_varname(dico = dico, 
-                                                  x= var), 70),
+                                                  x= var), 90),
            sub = glue::glue("Open Text question \n Source: {datasource}" ))  
     
          
@@ -1622,7 +1613,7 @@ plot_text <- function(datalist = datalist,
       #          stringr::str_wrap(label_varhint(var), 70)} else { ""},
       #        caption = glue::glue("Wordcloud displaying an Open Text question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
       #   
-      #       theme_minimal( base_size = 13)  
+      #       theme_minimal( base_size = 16)  
       # print(p1)
       
     
@@ -1755,12 +1746,10 @@ plot_select_one_cross <- function(datalist = datalist,
               stringr::str_wrap(40)}) +
         coord_cartesian(clip = "off") +
         labs(x = NULL, y = NULL,
-               title = stringr::str_wrap(label_varname(dico = dico,
-                                                       x = var), 80),
-               subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
-                                                                                 x = by_var)), 80),
-               caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-        theme_minimal( base_size = 13) +  
+             title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
+             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico, x = by_var)), 90),
+             caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+        theme_minimal( base_size = 16) +  
         geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
         theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
                  panel.grid.major.y  = element_blank(), 
@@ -1921,12 +1910,10 @@ plot_select_multiple_cross <- function(datalist = datalist,
             stringr::str_wrap(40)}) +
         coord_cartesian(clip = "off") +
         labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(dico = dico, 
-                                                         x = var), 80),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
-                                                         x = by_var)), 80),
+             title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
+             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,  x = by_var)), 90),
              caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-        theme_minimal( base_size = 13) +  
+        theme_minimal( base_size = 16) +  
         geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
         theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
                panel.grid.major.y  = element_blank(), 
@@ -2026,17 +2013,15 @@ plot_integer_cross <- function(datalist = datalist,
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
       labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(dico = dico, 
-                                                         x = var), 80),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
-                                                         x = by_var)), 80),
-           caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+          title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
+          subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico, x = by_var)), 90),
+          caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
       
       scale_size_area(max_size = 10) +        
       scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                           x = var)(x) |>
             stringr::str_wrap(40)}) +
-      theme_minimal( base_size = 13) +
+      theme_minimal( base_size = 16) +
       geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
            panel.grid.major.x  = element_blank(), 
@@ -2189,77 +2174,97 @@ plot_likert <- function(datalist = datalist,
     dplyr::filter( appearance !=  "label") |>
     dplyr::group_by( scope, list_name) |>
     dplyr::summarise( cnt= dplyr::n() )|>
-    dplyr::filter( cnt >= 3)
-
-  for (i in 1:nrow(grouplikert)  ) {
-    
-    ## getting the group and corresponding label
-    scopei <-   as.character(grouplikert[i, c("scope")])
-    labelgroup <- as.data.frame(dico[1]) |>
-      dplyr::filter( name  %in%  c(scopei)) |>
-      dplyr::select( label) |>
-      dplyr::pull()
-    
-    ## geting the list_name and corresponding label
-    list_namei <- as.character( grouplikert[i, c("list_name")])
-    nlevel_likert <- as.data.frame(dico[2]) |>
-      dplyr::filter( list_name ==   list_namei) |>
-      dplyr::select( name, label)  |>
-      dplyr::distinct() 
-    labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
-    
-    ##  Subsetting data - checking levels - and applying label
-    var <- as.data.frame(dico[1]) |>
-           dplyr::filter( list_name ==  list_namei &
-                          scope == scopei  &
-                          appearance !="label" )
-    data <-kobo_frame(datalist = datalist, dico = dico, var = var[1, c("name")])
-
-    likertframe <- data |>
-      ## select only likert variable
-      dplyr::select ( tidyselect::any_of( c(var$name)) ) |>
-      ## Ensure they all have the same levels as factor
-      mutate_all(funs(factor(., levels =c(nlevel_likert$name ))))  |>
-      ## Recode variable with the label
-      mutate_all(funs(dplyr::recode(., !!!labelrecode)))  |>
-      #mutate_all(dplyr::recode( !!!labelrecode)) |>
-      ## convert to dataframe to ensure likert() works
-      as.data.frame()
-    ## Replace with label for the variable 
-    names(likertframe) <- var$label
-                                  
-    # Build likert object
-    likertframe.obj <- likert::likert(likertframe)
-
-    ## Now generate the plot
-  a <- plot(likertframe.obj,
-            #center = 2,
-            wrap= 62) +
-    labs(title = labelgroup)+
-    # guides(fill=guide_legend(title=NULL),    color=guide_legend(nrow=2, byrow=TRUE))  +
-    unhcrthemes::theme_unhcr(grid="X") +
-    theme(plot.title=element_text(size=32, face="bold", color="black"), 
-          plot.subtitle=element_text(size=19, face="italic", color="black"), 
-          text = element_text(size=22, color = "#333333"), 
-          #legend.position="right",legend.direction="vertical"), legend.margin=margin()
-          legend.position="bottom",
-          legend.box="vertical")
+    dplyr::filter( cnt >= 2)
   
-  ## Extract the legend to put it fully down
-  p1_legend <- cowplot::get_legend(a + 
-                            theme(legend.position="bottom", legend.box="vertical", legend.margin=margin(t = 0, unit='cm')) )
-                            #+guides(fill=guide_legend(title=NULL), color=guide_legend(nrow=2, byrow=TRUE)) )
+  if(nrow(grouplikert)  == 0) {
+    cat("No potential likert in the form")
+    } else {
   
-  #cowplot::ggdraw(p1_legend)
-  print( cowplot::plot_grid(a +  theme(legend.position = 'none'), 
-                            p1_legend ,
-                            nrow = 2, 
-                            rel_heights = c(1, 0.1)))
-    
-    
-  }
+
+        for (i in 1:nrow(grouplikert)  ) {
+          
+          ## getting the group and corresponding label
+          scopei <-   as.character(grouplikert[i, c("scope")])
+          labelgroup <- as.data.frame(dico[1]) |>
+            dplyr::filter( name  %in%  c(scopei)) |>
+            dplyr::select( label) |>
+            dplyr::pull()
+          
+          ## geting the list_name and corresponding label
+          list_namei <- as.character( grouplikert[i, c("list_name")])
+          nlevel_likert <- as.data.frame(dico[2]) |>
+            dplyr::filter( list_name ==   list_namei) |>
+            dplyr::select( name, label)  |>
+            dplyr::distinct() 
+          labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
+          
+          ##  Subsetting data - checking levels - and applying label
+          var <- as.data.frame(dico[1]) |>
+                 dplyr::filter( list_name ==  list_namei &
+                                scope == scopei  &
+                                appearance !="label" )
+          data <-kobo_frame(datalist = datalist, dico = dico, var = var[1, c("name")])
+      
+          likertframe <- data |>
+            ## select only likert variable
+            dplyr::select ( tidyselect::any_of( c(var$name)) ) |>
+            ## Ensure they all have the same levels as factor
+            mutate_all(funs(factor(., levels =c(nlevel_likert$name ))))  |>
+            ## Recode variable with the label
+            mutate_all(funs(dplyr::recode(., !!!labelrecode)))  |>
+            #mutate_all(dplyr::recode( !!!labelrecode)) |>
+            ## convert to dataframe to ensure likert() works
+            as.data.frame()
+          ## Replace with label for the variable 
+          names(likertframe) <- var$label
+                                        
+          # Build likert object
+          likertframe.obj <- likert::likert(likertframe)
+      
+          ## Now generate the plot
+        a <- plot(likertframe.obj,
+                  #center = 2,
+                  wrap= 70) +
+          labs(title = labelgroup)+
+          # guides(fill=guide_legend(title=NULL),    color=guide_legend(nrow=2, byrow=TRUE))  +
+          #unhcrthemes::theme_unhcr(grid="X") +
+          theme_minimal( base_size = 16) +
+          theme( #plot.title=element_text(size=32, face="bold", color="black"), 
+                 #plot.subtitle=element_text(size=19, face="italic", color="black"), 
+                #text = element_text(size=22, color = "#333333"), 
+                #legend.position="right",legend.direction="vertical"), legend.margin=margin()
+                legend.position="bottom",
+                legend.box="vertical")
+        
+        ## Extract the legend to put it fully belwo the main chart
+        p1_legend <- cowplot::get_legend(a + 
+                                  theme(legend.position="bottom", legend.box="vertical", legend.margin=margin(t = 0, unit='cm')) )
+        
+        #cowplot::ggdraw(p1_legend)
+        print( cowplot::plot_grid(a +  theme(legend.position = 'none'), 
+                                  p1_legend ,
+                                  nrow = 2, 
+                                  rel_heights = c(1, 0.1)))
+          
+          
+        }
+    }
 }
 
+```
+
+```{r examples-plot_likert}
+dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package = "kobocruncher") )
+datalistlikert <- kobo_data(datapath = system.file("data_likert.xlsx", package = "kobocruncher") )
+
+plot_likert(datalist = datalistlikert,
+              dico = dicolikert)
+```
+
+```{r tests-plot_likert}
+# test_that("plot_likert works", {
+# 
+# })
 ```
 
 

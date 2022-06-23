@@ -120,12 +120,10 @@ plot_select_multiple_cross <- function(datalist = datalist,
             stringr::str_wrap(40)}) +
         coord_cartesian(clip = "off") +
         labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(dico = dico, 
-                                                         x = var), 80),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
-                                                         x = by_var)), 80),
+             title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
+             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,  x = by_var)), 90),
              caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-        theme_minimal( base_size = 13) +  
+        theme_minimal( base_size = 16) +  
         geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
         theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
                panel.grid.major.y  = element_blank(), 

@@ -92,7 +92,7 @@ plot_text <- function(datalist = datalist,
                                 rot.per=0.25,   # rot.per : proportion words with 90 degree rotation (vertical text)
                                 colors= RColorBrewer::brewer.pal(8, "Dark2")) # colors : color words from least to most frequent. Use, for example, colors =“black” for single color.
     graphics::title( main = stringr::str_wrap( label_varname(dico = dico, 
-                                                  x= var), 70),
+                                                  x= var), 90),
            sub = glue::glue("Open Text question \n Source: {datasource}" ))  
     
          
@@ -112,7 +112,7 @@ plot_text <- function(datalist = datalist,
       #          stringr::str_wrap(label_varhint(var), 70)} else { ""},
       #        caption = glue::glue("Wordcloud displaying an Open Text question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
       #   
-      #       theme_minimal( base_size = 13)  
+      #       theme_minimal( base_size = 16)  
       # print(p1)
       
     

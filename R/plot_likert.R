@@ -18,6 +18,12 @@
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @export
 
+#' @examples
+#' dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package = "kobocruncher") )
+#' datalistlikert <- kobo_data(datapath = system.file("data_likert.xlsx", package = "kobocruncher") )
+#' 
+#' plot_likert(datalist = datalistlikert,
+#'               dico = dicolikert)
 plot_likert <- function(datalist = datalist,
                         dico = dico) {
 
@@ -33,74 +39,80 @@ plot_likert <- function(datalist = datalist,
     dplyr::filter( appearance !=  "label") |>
     dplyr::group_by( scope, list_name) |>
     dplyr::summarise( cnt= dplyr::n() )|>
-    dplyr::filter( cnt >= 3)
-
-  for (i in 1:nrow(grouplikert)  ) {
-    
-    ## getting the group and corresponding label
-    scopei <-   as.character(grouplikert[i, c("scope")])
-    labelgroup <- as.data.frame(dico[1]) |>
-      dplyr::filter( name  %in%  c(scopei)) |>
-      dplyr::select( label) |>
-      dplyr::pull()
-    
-    ## geting the list_name and corresponding label
-    list_namei <- as.character( grouplikert[i, c("list_name")])
-    nlevel_likert <- as.data.frame(dico[2]) |>
-      dplyr::filter( list_name ==   list_namei) |>
-      dplyr::select( name, label)  |>
-      dplyr::distinct() 
-    labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
-    
-    ##  Subsetting data - checking levels - and applying label
-    var <- as.data.frame(dico[1]) |>
-           dplyr::filter( list_name ==  list_namei &
-                          scope == scopei  &
-                          appearance !="label" )
-    data <-kobo_frame(datalist = datalist, dico = dico, var = var[1, c("name")])
-
-    likertframe <- data |>
-      ## select only likert variable
-      dplyr::select ( tidyselect::any_of( c(var$name)) ) |>
-      ## Ensure they all have the same levels as factor
-      mutate_all(funs(factor(., levels =c(nlevel_likert$name ))))  |>
-      ## Recode variable with the label
-      mutate_all(funs(dplyr::recode(., !!!labelrecode)))  |>
-      #mutate_all(dplyr::recode( !!!labelrecode)) |>
-      ## convert to dataframe to ensure likert() works
-      as.data.frame()
-    ## Replace with label for the variable 
-    names(likertframe) <- var$label
-                                  
-    # Build likert object
-    likertframe.obj <- likert::likert(likertframe)
-
-    ## Now generate the plot
-  a <- plot(likertframe.obj,
-            #center = 2,
-            wrap= 62) +
-    labs(title = labelgroup)+
-    # guides(fill=guide_legend(title=NULL),    color=guide_legend(nrow=2, byrow=TRUE))  +
-    unhcrthemes::theme_unhcr(grid="X") +
-    theme(plot.title=element_text(size=32, face="bold", color="black"), 
-          plot.subtitle=element_text(size=19, face="italic", color="black"), 
-          text = element_text(size=22, color = "#333333"), 
-          #legend.position="right",legend.direction="vertical"), legend.margin=margin()
-          legend.position="bottom",
-          legend.box="vertical")
+    dplyr::filter( cnt >= 2)
   
-  ## Extract the legend to put it fully down
-  p1_legend <- cowplot::get_legend(a + 
-                            theme(legend.position="bottom", legend.box="vertical", legend.margin=margin(t = 0, unit='cm')) )
-                            #+guides(fill=guide_legend(title=NULL), color=guide_legend(nrow=2, byrow=TRUE)) )
+  if(nrow(grouplikert)  == 0) {
+    cat("No potential likert in the form")
+    } else {
   
-  #cowplot::ggdraw(p1_legend)
-  print( cowplot::plot_grid(a +  theme(legend.position = 'none'), 
-                            p1_legend ,
-                            nrow = 2, 
-                            rel_heights = c(1, 0.1)))
-    
-    
-  }
+
+        for (i in 1:nrow(grouplikert)  ) {
+          
+          ## getting the group and corresponding label
+          scopei <-   as.character(grouplikert[i, c("scope")])
+          labelgroup <- as.data.frame(dico[1]) |>
+            dplyr::filter( name  %in%  c(scopei)) |>
+            dplyr::select( label) |>
+            dplyr::pull()
+          
+          ## geting the list_name and corresponding label
+          list_namei <- as.character( grouplikert[i, c("list_name")])
+          nlevel_likert <- as.data.frame(dico[2]) |>
+            dplyr::filter( list_name ==   list_namei) |>
+            dplyr::select( name, label)  |>
+            dplyr::distinct() 
+          labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
+          
+          ##  Subsetting data - checking levels - and applying label
+          var <- as.data.frame(dico[1]) |>
+                 dplyr::filter( list_name ==  list_namei &
+                                scope == scopei  &
+                                appearance !="label" )
+          data <-kobo_frame(datalist = datalist, dico = dico, var = var[1, c("name")])
+      
+          likertframe <- data |>
+            ## select only likert variable
+            dplyr::select ( tidyselect::any_of( c(var$name)) ) |>
+            ## Ensure they all have the same levels as factor
+            mutate_all(funs(factor(., levels =c(nlevel_likert$name ))))  |>
+            ## Recode variable with the label
+            mutate_all(funs(dplyr::recode(., !!!labelrecode)))  |>
+            #mutate_all(dplyr::recode( !!!labelrecode)) |>
+            ## convert to dataframe to ensure likert() works
+            as.data.frame()
+          ## Replace with label for the variable 
+          names(likertframe) <- var$label
+                                        
+          # Build likert object
+          likertframe.obj <- likert::likert(likertframe)
+      
+          ## Now generate the plot
+        a <- plot(likertframe.obj,
+                  #center = 2,
+                  wrap= 70) +
+          labs(title = labelgroup)+
+          # guides(fill=guide_legend(title=NULL),    color=guide_legend(nrow=2, byrow=TRUE))  +
+          #unhcrthemes::theme_unhcr(grid="X") +
+          theme_minimal( base_size = 16) +
+          theme( #plot.title=element_text(size=32, face="bold", color="black"), 
+                 #plot.subtitle=element_text(size=19, face="italic", color="black"), 
+                #text = element_text(size=22, color = "#333333"), 
+                #legend.position="right",legend.direction="vertical"), legend.margin=margin()
+                legend.position="bottom",
+                legend.box="vertical")
+        
+        ## Extract the legend to put it fully belwo the main chart
+        p1_legend <- cowplot::get_legend(a + 
+                                  theme(legend.position="bottom", legend.box="vertical", legend.margin=margin(t = 0, unit='cm')) )
+        
+        #cowplot::ggdraw(p1_legend)
+        print( cowplot::plot_grid(a +  theme(legend.position = 'none'), 
+                                  p1_legend ,
+                                  nrow = 2, 
+                                  rel_heights = c(1, 0.1)))
+          
+          
+        }
+    }
 }
 

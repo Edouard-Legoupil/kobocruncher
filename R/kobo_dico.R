@@ -132,7 +132,7 @@ kobo_dico <- function(xlsformpath) {
   
   # Adding the appearance variable that will be used for likert charts
   # to check and check and remove label appearance 
-    if ("appearance" %in% colnames(variables)) {   } else {   variables$appearance <- NA  }
+    if ("appearance" %in% colnames(variables)) {   } else {   variables$appearance <- ""  }
   
 
      choices <- readxl::read_excel(xlsformpath,   sheet = "choices")  

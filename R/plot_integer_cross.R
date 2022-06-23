@@ -68,17 +68,15 @@ plot_integer_cross <- function(datalist = datalist,
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
       labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(dico = dico, 
-                                                         x = var), 80),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,
-                                                         x = by_var)), 80),
-           caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+          title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
+          subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico, x = by_var)), 90),
+          caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
       
       scale_size_area(max_size = 10) +        
       scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                           x = var)(x) |>
             stringr::str_wrap(40)}) +
-      theme_minimal( base_size = 13) +
+      theme_minimal( base_size = 16) +
       geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
            panel.grid.major.x  = element_blank(), 

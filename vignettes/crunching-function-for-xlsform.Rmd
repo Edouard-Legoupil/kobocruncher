@@ -322,6 +322,14 @@ plot_correlation(datalist = datalist,
 
 ## Plotting Likert
 
+```{r examples-plot_likert}
+dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package = "kobocruncher") )
+datalistlikert <- kobo_data(datapath = system.file("data_likert.xlsx", package = "kobocruncher") )
+
+plot_likert(datalist = datalistlikert,
+              dico = dicolikert)
+```
+
 ## Plotting clusters
 
  to do....
