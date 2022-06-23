@@ -53,11 +53,13 @@ kobo_prepare_form <- function(xlsformpath,
     val = c('A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'I1', 'J1', 'K1', 'L1', 'M1', 'N1', 'O1', 'P1', 'Q1', 'R1', 'S1', 'T1', 'U1', 'V1', 'W1', 'X1', 'Y1', 'Z1', 'AA1', 'AB1', 'AC1', 'AD1', 'AE1', 'AF1', 'AG1', 'AH1', 'AI1', 'AJ1', 'AK1', 'AL1', 'AM1', 'AN1', 'AO1', 'AP1', 'AQ1', 'AR1', 'AS1', 'AT1', 'AU1', 'AV1', 'AW1', 'AX1', 'AY1', 'AZ1', 'BA1', 'BB1', 'BC1', 'BD1', 'BE1', 'BF1', 'BG1', 'BH1', 'BI1', 'BJ1', 'BK1', 'BL1', 'BM1', 'BN1', 'BO1', 'BP1', 'BQ1', 'BR1', 'BS1', 'BT1', 'BU1', 'BV1', 'BW1', 'BX1', 'BY1', 'BZ1', 'CA1', 'CB1', 'CC1', 'CD1', 'CE1', 'CF1', 'CG1', 'CH1', 'CI1', 'CJ1', 'CK1', 'CL1', 'CM1', 'CN1', 'CO1', 'CP1', 'CQ1', 'CR1', 'CS1', 'CT1', 'CU1', 'CV1', 'CW1', 'CX1', 'CY1', 'CZ1', 'DA1', 'DB1', 'DC1', 'DD1', 'DE1', 'DF1', 'DG1', 'DH1', 'DI1', 'DJ1', 'DK1', 'DL1', 'DM1', 'DN1', 'DO1', 'DP1', 'DQ1', 'DR1', 'DS1', 'DT1', 'DU1', 'DV1', 'DW1', 'DX1', 'DY1', 'DZ1', 'EA1', 'EB1', 'EC1', 'ED1', 'EE1', 'EF1', 'EG1', 'EH1', 'EI1', 'EJ1', 'EK1', 'EL1', 'EM1', 'EN1', 'EO1', 'EP1', 'EQ1', 'ER1', 'ES1', 'ET1', 'EU1', 'EV1', 'EW1', 'EX1', 'EY1', 'EZ1', 'FA1', 'FB1', 'FC1', 'FD1', 'FE1', 'FF1', 'FG1', 'FH1', 'FI1', 'FJ1', 'FK1', 'FL1', 'FM1', 'FN1', 'FO1', 'FP1', 'FQ1', 'FR1', 'FS1', 'FT1', 'FU1', 'FV1', 'FW1', 'FX1', 'FY1', 'FZ1', 'GA1', 'GB1', 'GC1', 'GD1', 'GE1', 'GF1', 'GG1', 'GH1', 'GI1', 'GJ1', 'GK1', 'GL1', 'GM1', 'GN1', 'GO1', 'GP1', 'GQ1', 'GR1', 'GS1', 'GT1', 'GU1', 'GV1', 'GW1', 'GX1', 'GY1', 'GZ1', 'HA1', 'HB1', 'HC1', 'HD1', 'HE1', 'HF1', 'HG1', 'HH1', 'HI1', 'HJ1', 'HK1', 'HL1', 'HM1', 'HN1', 'HO1', 'HP1', 'HQ1', 'HR1', 'HS1', 'HT1', 'HU1', 'HV1', 'HW1', 'HX1', 'HY1', 'HZ1', 'IA1', 'IB1', 'IC1', 'ID1', 'IE1', 'IF1', 'IG1', 'IH1', 'II1', 'IJ1', 'IK1', 'IL1', 'IM1', 'IN1', 'IO1', 'IP1', 'IQ1', 'IR1', 'IS1', 'IT1', 'IU1', 'IV1')
   )
   
-  #For better legibility create specific styles for rows that defines header, groups and repeat 
+  #For better legibility create specific styles for rows that defines header
   headerSt <- openxlsx::createStyle( textDecoration = "bold", fontColour = "white", fontSize = 13, fgFill = "grey50",
                                      border = "TopBottom", borderColour = "grey80", borderStyle = "thin")
+  #For better legibility create specific styles for rows that defines groups 
   cs1 <- openxlsx::createStyle( textDecoration = "bold", fontColour = "black", fgFill = "orange",
                                 border = "TopBottom", borderColour = "orange", borderStyle = "thin")
+  #For better legibility create specific styles for rows that defines repeat 
   cs2 <- openxlsx::createStyle( textDecoration = "bold", fontColour = "white", fgFill = "skyblue",
                                 border = "TopBottom", borderColour = "skyblue", borderStyle = "thin")    
   
@@ -67,7 +69,7 @@ kobo_prepare_form <- function(xlsformpath,
     ## Create a blank workbook
     wb <- openxlsx::createWorkbook()
     
-    ### Survey sheet ######################################
+    ### Survey sheet  ----------------------------------->
     survey <- tryCatch({
       suppressMessages(
         as.data.frame(readxl::read_excel(xlsformpath, sheet = "survey"),
@@ -132,26 +134,25 @@ kobo_prepare_form <- function(xlsformpath,
     survey$fullname <- survey |> 
       # capturing repeat
       dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
-                                                    function (repeatvar, type, name) {
-                                                      if (type  == "begin_repeat")  c(repeatvar, name)
-                                                      else if (type  == "end_repeat") utils::head(repeatvar, -1)
-                                                      else repeatvar
-                                                    }, .init = character()) |> utils::tail(-1),
+                                  function (repeatvar, type, name) {
+                                    if (type  == "begin_repeat")  c(repeatvar, name)
+                                   else if (type  == "end_repeat") utils::head(repeatvar, -1)
+                                   else repeatvar
+                                            }, .init = character()) |> utils::tail(-1),
                     ##Apply a function to each element of a list 
                     repeatvar = purrr::map_chr(repeatvar,
-                                               stringr::str_c, 
-                                               collapse = ".") ,
+                                  stringr::str_c, 
+                                             collapse = ".") ,
                     name = dplyr::case_when(repeatvar == "" ~ name,
-                                            type == "begin_repeat"~ repeatvar,
-                                            TRUE ~ stringr::str_c(repeatvar, name, sep = "."))) |>
-      
+                                  type == "begin_repeat"~ repeatvar,
+                                  TRUE ~ stringr::str_c(repeatvar, name, sep = "."))) |>
       
       # capturing Group
       dplyr::mutate(scope = purrr::accumulate2(type, name,
-                                               function (scope, 
-                                                         type, 
-                                                         name) {
-                                                 if (type == "begin_group") 
+                                             function (scope, 
+                                                       type, 
+                                                       name) {
+                                           if (type == "begin_group") 
                                                    c(scope, name)
                                                  else if (type == "end_group") utils::head(scope, -1)
                                                  else scope
@@ -199,7 +200,7 @@ kobo_prepare_form <- function(xlsformpath,
     openxlsx::addStyle(wb, sheetname, cs1, group.rows, all.cols, gridExpand = TRUE)
     openxlsx::addStyle(wb, sheetname, cs2, repeat.rows, all.cols, gridExpand = TRUE)
     
-    ### Choices sheet ######################################
+    ### Choices sheet ----------------------------------->
     choices <- tryCatch({
       as.data.frame(readxl::read_excel(xlsformpath, sheet = "choices"),
                     stringsAsFactors = FALSE) #read survey sheet from the form
@@ -243,7 +244,7 @@ kobo_prepare_form <- function(xlsformpath,
     openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(choices), gridExpand = TRUE)
     
     
-    ### Settings sheet ######################################
+    ### Settings sheet ----------------------------------->
     settings <- tryCatch({
       as.data.frame(readxl::read_excel(xlsformpath, sheet = "settings"),
                     stringsAsFactors = FALSE)
@@ -266,7 +267,7 @@ kobo_prepare_form <- function(xlsformpath,
     openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(settings), widths = "auto")
     openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(settings), gridExpand = TRUE)
     
-    ### RIDL sheets ######################################
+    ### RIDL sheets ----------------------------------->
     ridl_schema <- jsonlite::fromJSON("https://raw.githubusercontent.com/okfn/ckanext-unhcr/master/ckanext/unhcr/schemas/dataset.json")
     ridl_dataset_fields <- ridl_schema$dataset_fields # |> tibble::as_tibble()
     ridl_resource_fields <- ridl_schema$resource_fields # |> tibble::as_tibble()
@@ -312,9 +313,9 @@ kobo_prepare_form <- function(xlsformpath,
     
     
     
-    ###  indicator sheet ######################################
+    ###  indicator sheet  ----------------------------------->
     indicator <- tryCatch({
-      as.data.frame(readxl::read_excel(form_tmp, sheet = "indicator"),stringsAsFactors = FALSE)
+      as.data.frame(readxl::read_excel(xlsformpath, sheet = "indicator"),stringsAsFactors = FALSE)
     }, error = function(err) {
       data.frame(
         type = character(),

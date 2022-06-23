@@ -62,7 +62,6 @@ xlsformpath <- here::here(params$datafolder, params$form)
 datapath <- system.file("data.xlsx", package = "kobocruncher")
 xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
 
-
 ```
 
 # Crunching step
@@ -110,7 +109,10 @@ The report can be regenerated as needed by:
 kobo_prepare_form(xlsformpath = xlsformpath ,
                  xlsformpathout =  here::here(params$datafolder, params$form)  ,
                  language = "" ) ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
+```
 
+
+```{r load_data_get_plan}
 #######
 datalist <- kobo_data(datapath = datapath )
 dico <- kobo_dico(xlsformpath = xlsformpath)
@@ -120,32 +122,24 @@ questions <- as.data.frame(dico[4])
 
 ```{r clean_data}
 ## When iterating during the initial data exploration, you may add here specific cleaning steps 
-
 ```
 
 
 ```{r anonymize_data}
 ## In case it set up in your Below is an initial statistical disclosure risk 
-
 ```
 
 ```{r Indicator_calculation}
 ## When iterating during the initial data exploration, you may create here calculated variables
-# Thi step is also called : Feature engineering, i.e. the process of creating new features from existing ones.
+# This step is also called : Feature engineering, i.e. the process of creating new features from existing ones.
 # Newly engineered features often generate valuable insights.
-
 ```
-
-
-
 
 # Automatic Exploration
 
 ```{r cruncher, results='asis' }
 kobo_cruncher(datalist = datalist,
               dico = dico)
-
-
 ```
 
 

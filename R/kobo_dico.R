@@ -27,7 +27,7 @@ kobo_dico <- function(xlsformpath) {
    survey <- readxl::read_excel(xlsformpath,   
                                 sheet = "survey")
   
-   ## variables ###############
+   ## variables  ----------------------------------->
   variables <-  survey |>
     ## Rename and use what ever label set is coming first 
     dplyr::rename(label = dplyr::first(tidyselect::starts_with("label")),
@@ -200,7 +200,7 @@ kobo_dico <- function(xlsformpath) {
           dplyr::filter( ! type  %in% c("note",  "end_group") )
        }
        
-     ## adding indicators 
+     ## adding indicators  ----------------------------------->
     indicator <- tryCatch({
       as.data.frame(readxl::read_excel(xlsformpath,   
                                 sheet = "indicator"),stringsAsFactors = FALSE)
