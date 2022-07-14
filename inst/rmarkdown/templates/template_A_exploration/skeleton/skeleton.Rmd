@@ -7,7 +7,7 @@ output:
     toc_depth: 2
     toc_float: true 
 params:
-  datafolder: "data-raw"
+  datafolder: ""
   ridl: ""
   data: "data.xlsx"
   form: "form.xlsx"
@@ -59,8 +59,8 @@ xlsformpath <- here::here(params$datafolder, params$form)
 ## The 2 lines below are for the demo ##
 ########################################
 # Add # to comment them after once you have set up your report parameters..
-datapath <- system.file("data.xlsx", package = "kobocruncher")
-xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
+#datapath <- system.file("data.xlsx", package = "kobocruncher")
+#xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
 
 ```
 
@@ -133,6 +133,14 @@ questions <- as.data.frame(dico[4])
 ## When iterating during the initial data exploration, you may create here calculated variables
 # This step is also called : Feature engineering, i.e. the process of creating new features from existing ones.
 # Newly engineered features often generate valuable insights.
+expanded  <- kobo_indicator(datalist = datalist,
+                    dico = dico,
+                 indicatoradd = NULL ,
+                 xlsformpath = xlsformpath,
+                 xlsformpathout = xlsformpathout)
+## Replace existing
+dico <- expanded[[1]]
+datalist <- expanded[[2]]
 ```
 
 # Automatic Exploration
