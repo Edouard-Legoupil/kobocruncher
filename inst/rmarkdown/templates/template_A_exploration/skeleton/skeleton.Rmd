@@ -137,7 +137,7 @@ expanded  <- kobo_indicator(datalist = datalist,
                     dico = dico,
                  indicatoradd = NULL ,
                  xlsformpath = xlsformpath,
-                 xlsformpathout = xlsformpathout)
+                 xlsformpathout = xlsformpath)
 ## Replace existing
 dico <- expanded[[1]]
 datalist <- expanded[[2]]

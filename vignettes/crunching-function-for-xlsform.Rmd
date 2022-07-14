@@ -127,6 +127,14 @@ xlsformpathout <- "sample_xlsform_withindic.xlsx"
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 
+## Check if we add no indicator
+expanded  <- kobo_indicator(datalist = datalist,
+                    dico = dico,
+                 indicatoradd = NULL ,
+                 xlsformpath = xlsformpath,
+                 xlsformpathout = xlsformpathout)
+
+
 ## Example 1: Simple dummy filter
 indicatoradd <- c(  name =  "inColombia",
                     type = "select_one",

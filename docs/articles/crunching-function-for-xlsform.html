@@ -103,7 +103,7 @@ and `system.file()` to read it in your examples.
 <span><span class="co"># MainFrame</span></span>
 <span><span class="va">datalist</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 25</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 26</span></span></span>
 <span><span class="co">#&gt;   today               date                location         profile.country</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 2022-05-03 <span style="color: #949494;">00:00:00</span> 2022-04-21 <span style="color: #949494;">00:00:00</span> private_facility VEN            </span></span>
@@ -111,7 +111,7 @@ and `system.file()` to read it in your examples.
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2022-05-03 <span style="color: #949494;">00:00:00</span> 2022-04-20 <span style="color: #949494;">00:00:00</span> subcenter        SLV            </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 2022-05-03 <span style="color: #949494;">00:00:00</span> 2022-05-02 <span style="color: #949494;">00:00:00</span> subcenter        SLV            </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2022-05-03 <span style="color: #949494;">00:00:00</span> 2022-05-04 <span style="color: #949494;">00:00:00</span> home             COL            </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 21 more variables: profile.occupation &lt;chr&gt;, profile.reason &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 22 more variables: profile.occupation &lt;chr&gt;, profile.reason &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.accomodation &lt;dbl&gt;, profile.reason.employment &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.education &lt;dbl&gt;, profile.reason.community &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.safety &lt;dbl&gt;, profile.reason.movement &lt;dbl&gt;,</span></span></span>
@@ -122,7 +122,7 @@ and `system.file()` to read it in your examples.
 <span><span class="co"># hierarchical data structure, etc... </span></span>
 <span><span class="va">datalist</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>  </span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 13</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 14</span></span></span>
 <span><span class="co">#&gt;    members.age members.sex `_index` `_parent_table_name`      `_parent_index`</span></span>
 <span><span class="co">#&gt;          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>          56 male               1 Sample Dataset KoboloadeR               1</span></span>
@@ -137,11 +137,11 @@ and `system.file()` to read it in your examples.
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>          51 female            10 Sample Dataset KoboloadeR               4</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>          21 male              11 Sample Dataset KoboloadeR               5</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>          25 female            12 Sample Dataset KoboloadeR               5</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 8 more variables: `_submission__id` &lt;dbl&gt;, `_submission__uuid` &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 9 more variables: `_submission__id` &lt;dbl&gt;, `_submission__uuid` &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `_submission__submission_time` &lt;dttm&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `_submission__validation_status` &lt;lgl&gt;, `_submission__notes` &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `_submission__status` &lt;chr&gt;, `_submission__submitted_by` &lt;lgl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   `_submission__tags` &lt;lgl&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `_submission__tags` &lt;lgl&gt;, parent_index &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="extend-the-xlsform-to-add-instructions-for-the-analysis-plan">Extend the xlsform to add instructions for the analysis plan<a class="anchor" aria-label="anchor" href="#extend-the-xlsform-to-add-instructions-for-the-analysis-plan"></a>
@@ -587,6 +587,15 @@ steps in the data preparation.</p>
 <span><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span>
 <span><span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span>
 <span></span>
+<span><span class="co">## Check if we add no indicator</span></span>
+<span><span class="va">expanded</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_indicator.html">kobo_indicator</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,</span>
+<span>                    dico <span class="op">=</span> <span class="va">dico</span>,</span>
+<span>                 indicatoradd <span class="op">=</span> <span class="cn">NULL</span> ,</span>
+<span>                 xlsformpath <span class="op">=</span> <span class="va">xlsformpath</span>,</span>
+<span>                 xlsformpathout <span class="op">=</span> <span class="va">xlsformpathout</span><span class="op">)</span></span>
+<span><span class="co">#&gt; no calculated indicators has been defined...</span></span>
+<span></span>
+<span></span>
 <span><span class="co">## Example 1: Simple dummy filter</span></span>
 <span><span class="va">indicatoradd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>  name <span class="op">=</span>  <span class="st">"inColombia"</span>,</span>
 <span>                    type <span class="op">=</span> <span class="st">"select_one"</span>,</span>
@@ -659,16 +668,17 @@ steps in the data preparation.</p>
 <col width="4%">
 <col width="4%">
 <col width="2%">
-<col width="9%">
+<col width="8%">
 <col width="5%">
-<col width="6%">
-<col width="13%">
+<col width="5%">
+<col width="12%">
 <col width="10%">
-<col width="11%">
-<col width="7%">
+<col width="10%">
+<col width="6%">
 <col width="7%">
 <col width="9%">
 <col width="6%">
+<col width="4%">
 <col width="1%">
 </colgroup>
 <thead><tr class="header">
@@ -685,6 +695,7 @@ steps in the data preparation.</p>
 <th align="left">X_submission__status</th>
 <th align="left">X_submission__submitted_by</th>
 <th align="left">X_submission__tags</th>
+<th align="right">parent_index</th>
 <th align="left">X_id</th>
 </tr></thead>
 <tbody>
@@ -702,6 +713,7 @@ steps in the data preparation.</p>
 <td align="left">submitted_via_web</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
+<td align="right">1</td>
 <td align="left">1</td>
 </tr>
 <tr class="even">
@@ -718,6 +730,7 @@ steps in the data preparation.</p>
 <td align="left">submitted_via_web</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
+<td align="right">2</td>
 <td align="left">2</td>
 </tr>
 <tr class="odd">
@@ -734,6 +747,7 @@ steps in the data preparation.</p>
 <td align="left">submitted_via_web</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
+<td align="right">2</td>
 <td align="left">3</td>
 </tr>
 <tr class="even">
@@ -750,6 +764,7 @@ steps in the data preparation.</p>
 <td align="left">submitted_via_web</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
+<td align="right">2</td>
 <td align="left">4</td>
 </tr>
 <tr class="odd">
@@ -766,6 +781,7 @@ steps in the data preparation.</p>
 <td align="left">submitted_via_web</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
+<td align="right">2</td>
 <td align="left">5</td>
 </tr>
 </tbody>
@@ -1016,6 +1032,7 @@ steps in the data preparation.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dicolikert</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"form_likert.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span>
 <span><span class="va">datalistlikert</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data_likert.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Unknown or uninitialised column: `_index`.</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_likert.html">plot_likert</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalistlikert</span>,</span>
 <span>              dico <span class="op">=</span> <span class="va">dicolikert</span><span class="op">)</span></span>

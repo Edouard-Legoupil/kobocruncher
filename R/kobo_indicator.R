@@ -52,6 +52,14 @@
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 #' 
+#' ## Check if we add no indicator
+#' expanded  <- kobo_indicator(datalist = datalist,
+#'                     dico = dico,
+#'                  indicatoradd = NULL ,
+#'                  xlsformpath = xlsformpath,
+#'                  xlsformpathout = xlsformpathout)
+#' 
+#' 
 #' ## Example 1: Simple dummy filter
 #' indicatoradd <- c(  name =  "inColombia",
 #'                     type = "select_one",
@@ -122,27 +130,29 @@ if(!'score' %in% names(indicator)) indicator <- indicator |> tibble::add_column(
 if(!'mappoint' %in% names(indicator)) indicator <- indicator |> tibble::add_column(mappoint  = NA)
 if(!'mappoly' %in% names(indicator)) indicator <- indicator |> tibble::add_column(mappoly  = NA)
     
-    indicator <- indicator[ ,c("type","name","label", "hint",
+indicator <- indicator[ ,c("type","name","label", "hint",
                                "dataframe", "calculation",
                                "chapter","subchapter", "disaggregation", "correlate",
                                "cluster", "predict", "score", "mappoint", "mappoly")]
     
-#   2 - append the one from inidcatoradd if any---->
- indicatoradd <- as.data.frame(t(indicatoradd))
-  if( nrow(indicatoradd)>0) {
-    indicator <-  dplyr::bind_rows(indicator, indicatoradd )
+  #   2 - append the one from inidicatoradd if any---->
+  if( ! (is.null(indicatoradd) )) {
+  ## todo check the structure of indicatoradd...   
+    indicatoradd <- as.data.frame(t(indicatoradd))
+    if( nrow(indicatoradd)>0) {
+      indicator <-  dplyr::bind_rows(indicator, indicatoradd )
+    }
   }
+  
+    #   3 - apply the indicator, i.e. do the calculation ---->
   if(nrow(indicator) == 0 ){
-      
+    
+     cat("no calculated indicators has been defined... \n") 
     } else {
-## Sanitize indicator name
+     ## Sanitize indicator name
     indicator$name <- gsub( "\\.|/|\\-|\\(|\\)|\"|\\s" , "" , indicator$name )
 
-#   3 - apply the indicator, i.e. do the calculation ---->
-    
-    ## Rename correctly the parent index in nested frames
-    for (m in 2:length(datalist)) {
-datalist[[m]]$parent_index <- datalist[[m]]$'_parent_index'    }
+
     
     for (i in 1:nrow(indicator)) {
       # i <- 1

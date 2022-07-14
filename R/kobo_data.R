@@ -32,6 +32,12 @@ kobo_data <- function(datapath) {
     # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_008", "", colnames(y)); y})
     #names(datalist) <- readxl::excel_sheets(datapath )
     
+   ## Rebuild  a single key var - parent_index between the main frames and nested ones.. assume a single level of nesting
+    datalist[[1]]$parent_index <- datalist[[1]]$'_index'  
+    if (length(datalist) >1 ) {
+        for (m in 2:length(datalist)) {
+        datalist[[m]]$parent_index <- datalist[[m]]$'_parent_index'    }
+    }
     class(datalist) <- "datalist" # assigns a "datalist" class to the list. Helpful for later on.
     return(datalist)
 }
