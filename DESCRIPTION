@@ -11,6 +11,7 @@ License: GPL-3
 URL: https://Edouard-Legoupil.github.io/kobocruncher/docs/
 BugReports: https://github.com/Edouard-Legoupil/kobocruncher/issues
 Imports: 
+    corrplot,
     cowplot,
     dplyr,
     fontawesome,
@@ -28,6 +29,7 @@ Imports:
     scales,
     shiny,
     showtext,
+    stats,
     stringr,
     sysfonts,
     systemfonts,

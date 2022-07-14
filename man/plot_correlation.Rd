@@ -32,5 +32,6 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 
 plot_correlation(datalist = datalist,
               dico = dico, 
-              var = "profile.occupation")
+              var = "profile.occupation",
+              by_var = "profile.country")
 }

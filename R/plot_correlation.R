@@ -17,53 +17,70 @@
 #' 
 #' plot_correlation(datalist = datalist,
 #'               dico = dico, 
-#'               var = "profile.occupation")
+#'               var = "profile.occupation",
+#'               by_var = "profile.country")
 plot_correlation <- function(datalist = datalist, 
-                      dico = dico,
-                      var, 
-                      by_var, 
-                      showcode = FALSE) {
+                             dico = dico,
+                             var, 
+                             by_var, 
+                             showcode = FALSE) {
   
-   # ### Testing number of levels for the 2 variables as 'x' and 'y' must have at least 2 levels
-   # if ( by_var != var &
-   #      (nlevels(as.factor(as.character(formula$target))) > 1 ) &
-   #      (nlevels(as.factor(as.character(formula$tested))) > 1 ) &
-   #                     
-   #      ## If too many levels, the corrogram is not legible...
-   #      (nlevels(as.factor(as.character(formula$target))) < 8 ) &
-   #      (nlevels(as.factor(as.character(formula$tested))) < 8 ) &
-   #      ## May have class with zero value...
-   #      n.class == n.class.notnull
-   #                     
-   #                )
-   #                { p.value  <- round(stats::chisq.test(formula$target,formula$tested)$p.value,4)
-   #                } else {            }
-   #              
-   #              ## Subsetting results on test where p-value is below 0.05
-   #              chiquare.true <- chiquare.resultall[ chiquare.resultall$p.value <= 0.05, ]
-   #              
-   #              ### Case there not any positive test
-   #              if (p.value <= 0.05 ) {
-   #                cat("No significant association found for this question...\n")
-   #              } else {
-   #                ## now generating correlation plot for each of the dependent.
-   # 
-   #                 p <-   corrplot::corrplot(stats::chisq.test(
-   #                   MainDataFrame$monit.FamiliyLeft,
-   #                   MainDataFrame$monit.RouteIncident)$residuals,
-   #                is.cor = FALSE, # use for general matrix to convert to Sq form
-   #                cl.pos = "n", ## Do not display the color legend
-   #                cl.cex = 0.7, # Size of all label
-   #                tl.cex = 0.7, # Size of axis label
-   #                tl.srt = 45, # string rotation in degrees
-   #                tl.col = "black", # color of text label.
-   #                addCoef.col = "grey", # add coeff in the chart
-   #                number.cex = 3/ncol(stats::chisq.test(MainDataFrame$monit.FamiliyLeft,MainDataFrame$monit.RouteIncident)), # size of coeff
-   #                mar = c(0.5,0.5,4, 0.5), ## margin of plots
-   #                title = paste0("Correlation between ", , " & ", )) 
-   #                 
-   #                 print(p)
-   # 
-   #              }
+       ## verify they are in the same frame
+       frame1 <- kobo_frame(datalist = datalist,
+                            dico = dico,
+                            var = var) 
+       frame2 <- kobo_frame(datalist = datalist,
+                            dico = dico,
+                            var = by_var ) 
+       
+     if(by_var != var & !( identical(frame1, frame2)) )
+      { cat("the two variables are identical or not in the same data framee")
+      } else {
+       formula <- frame1 |>
+       dplyr::select(var, by_var) 
+       names(formula)[1] <- "target"
+       names(formula)[2] <- "tested"
+       
+       ## Check that each class is represented
+       check.class <- as.data.frame(table(formula$target,formula$tested))
+       n.class <- nrow(check.class)
+       n.class.notnull <- nrow(check.class[check.class$Freq > 0, ])
+      
+       ### Testing number of levels for the 2 variables as 'x' and 'y' must have at least 2 levels
+       if ( ## We need at least 2 levels
+        ( nlevels(as.factor(as.character(formula$target))) > 1 ) &
+        ( nlevels(as.factor(as.character(formula$tested))) > 1 ) &
+           ## If too many levels - more than 8, the corrogram is not legible...
+        ( nlevels(as.factor(as.character(formula$target))) < 8 ) &
+        ( nlevels(as.factor(as.character(formula$tested))) < 8 ) #&
+          ## May have class with zero value...
+         # n.class == n.class.notnull
+        ) { 
+       
+        p.value  <- round(stats::chisq.test(formula$target,formula$tested)$p.value,4)   ### Case there not any positive test
+        if (p.value <= 0.05 ) {
+                 cat("No significant association found for this question...\n")
+          } else {
+          ## now generating correlation plot 
+          corrplot::corrplot(stats::chisq.test(formula$target,formula$tested)$residuals,
+                 is.cor = FALSE, # use for general matrix to convert to Sq form
+                 cl.pos = "n", ## Do not display the color legend
+                 cl.cex = 0.7, # Size of all label
+                 tl.cex = 0.7, # Size of axis label
+                 tl.srt = 45, # string rotation in degrees
+                 tl.col = "black", # color of text label.
+                 addCoef.col = "grey", # add coeff in the chart
+                 number.cex = 3/ncol(stats::chisq.test(formula$target,formula$tested)), # size of coeff
+                 mar = c(0.5,0.5,4, 0.5), ## margin of plots
+                 title = paste0("Statistical Association between: \n ", 
+                                label_varname(dico = dico,  x = var),
+                                "[row] & ",
+                                label_varname(dico = dico, x = by_var), "[col]" ))
+
+           
+          } }  
+       else { cat("there are either too many or not enough level to perform this analysis.. Clean your data.\n") } 
+     }
+    
 }
 
