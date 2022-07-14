@@ -4,12 +4,22 @@
 \alias{kobo_indicator}
 \title{Apply existing documented indicators and add new ones}
 \usage{
-kobo_indicator(datalist, dico, indicatoradd = NULL)
+kobo_indicator(
+  datalist,
+  dico,
+  xlsformpath,
+  xlsformpathout,
+  indicatoradd = NULL
+)
 }
 \arguments{
 \item{datalist}{An object of the "datalist" class as defined in kobocruncher}
 
 \item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
+
+\item{xlsformpath}{path to the (extended) xlsform file used to collect the data}
+
+\item{xlsformpathout}{path to save the xlsform file with newly added indicators}
 
 \item{indicatoradd}{a list containing all key information to add a calculated indicator within the analysis plan}
 }
@@ -21,21 +31,79 @@ The function goes through steps:
 4 - re-save all the working indicator definition within the extended xlsform
 5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting
 6 - rebuild the plan if indicators are allocated to chapter, subchapter
+
+Example of calculations:
+\enumerate{
+\item Create a filters on specific criteria
+'dplyr::if_else(datalist[\link{1}]$variable =="criteria", "yes","no")'
+\item Ratio between 2 numeric variable
+'datalist[\link{1}]$varnum1 / datalist[\link{1}]$varnum2'
+\item Calculation on date - month between data and now calculated in months
+'lubridate::interval( datalist[\link{1}]$datetocheck, lubridate::today()) \%/\%  months(1)'
+\item Discretization of numeric variable according to quintile
+'Hmisc::cut2(datalist[\link{1}]$varnum, g =5)'
+\item Discretization of numeric variable according to fixed break - for instance case size from integer to categoric
+'cut(datalist[\link{1}]$casesize, breaks = c(0, 1, 2, 3,5,30), labels = c("Case.size.1", "Case.size.2", "Case.size.3", "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
+\item Aggregate variable from nested frame (aka within repeat) to parent table
+'datalist[\link{2}] |>
+dplyr::select( members.sex, parent_index) |>
+tidyr::gather(  parent_index, members.sex) |>
+dplyr::count(parent_index, members.sex) |>
+tidyr::spread(members.sex, n, fill = 0)  |>
+dplyr::select( female)'
+}
 }
 \examples{
-# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-# 
-# indicatoradd <- c(  name =  "has.female.members",
-#               type = "select_one",
-#               label = "Is ",
-#               dataframe = "1",
-#               calculation = "")
-# 
-# kobo_indicator(datalist = datalist,
-#                    dico = dico,
-#                 indicatoradd = indicatoradd   )
+xlsformpath <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
+xlsformpathout <- "sample_xlsform_withindic.xlsx"
+
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+## Example 1: Simple dummy filter
+indicatoradd <- c(  name =  "inColombia",
+                    type = "select_one",
+                    label = "Is from Colombia",
+                    dataframe = "1",
+                    calculation = "dplyr::if_else(datalist[[1]]$profile.country ==\"COL\", \"yes\",\"no\")")
+
+expanded  <- kobo_indicator(datalist = datalist,
+                    dico = dico,
+                 indicatoradd = indicatoradd ,
+                 xlsformpath = xlsformpath,
+                 xlsformpathout = xlsformpathout)
+## Replace existing
+dico <- expanded[[1]]
+datalist <- expanded[[2]]
+
+## Check my new indicator
+table(datalist[[1]]$inColombia, useNA = "ifany")
 
 
+
+## Example 2: calculation on nested elements
+indicatoradd <- c(  name =  "hasfemalemembers",
+              type = "select_one",
+              label = "HH has female members ",
+              dataframe = "1",
+              calculation = "datalist[[2]] |>
+                            dplyr::select( members.sex, parent_index) |>
+                            tidyr::gather(  parent_index, members.sex) |>
+                            dplyr::count(parent_index, members.sex) |>
+                            tidyr::spread(members.sex, n, fill = 0)  |>
+                           dplyr::select( female)")
+
+expanded  <- kobo_indicator(datalist = datalist,
+                    dico = dico,
+                 indicatoradd = indicatoradd ,
+                 xlsformpath = xlsformpath,
+                 xlsformpathout = xlsformpathout)
+## Replace existing
+dico <- expanded[[1]]
+datalist <- expanded[[2]]
+
+
+## Check my new indicator
+table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
  
 }

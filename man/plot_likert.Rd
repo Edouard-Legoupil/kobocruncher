@@ -14,9 +14,6 @@ plot_likert(datalist = datalist, dico = dico)
 \description{
 Detect if we have more than 3 questions with the same response options within the same questions group
 and represent the result using a standard likert plot - build from  https://github.com/jbryer/likert
-
-Detect if we have more than 3 questions with the same response options within the same questions group
-and represent the result using a standard likert plot - build from  https://github.com/jbryer/likert
 }
 \examples{
 dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package = "kobocruncher") )

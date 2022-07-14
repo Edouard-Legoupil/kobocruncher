@@ -9,15 +9,6 @@
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @export
 
-#' @title Plotting Likert
-#' 
-#' @description Detect if we have more than 3 questions with the same response options within the same questions group
-#' and represent the result using a standard likert plot - build from  https://github.com/jbryer/likert
-#' 
-#' @param datalist An object of the "datalist" class as defined in kobocruncher 
-#' @param dico An object of the "kobodico" class format as defined in kobocruncher
-#' @export
-
 #' @examples
 #' dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package = "kobocruncher") )
 #' datalistlikert <- kobo_data(datapath = system.file("data_likert.xlsx", package = "kobocruncher") )

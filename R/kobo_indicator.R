@@ -9,43 +9,239 @@
 #'   4 - re-save all the working indicator definition within the extended xlsform  
 #'   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
 #'   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
+#'   
+#'   Example of calculations:
+#'   
+#'   1. Create a filters on specific criteria
+#'   'dplyr::if_else(datalist[[1]]$variable =="criteria", "yes","no")'
+#'   
+#'   
+#'   2. Ratio between 2 numeric variable
+#'   'datalist[[1]]$varnum1 / datalist[[1]]$varnum2'
+#'   
+#'   
+#'   3. Calculation on date - month between data and now calculated in months
+#'   'lubridate::interval( datalist[[1]]$datetocheck, lubridate::today()) %/%  months(1)'
+#'   
+#'   4. Discretization of numeric variable according to quintile
+#'   'Hmisc::cut2(datalist[[1]]$varnum, g =5)'
+#'   
+#'   5. Discretization of numeric variable according to fixed break - for instance case size from integer to categoric
+#'   'cut(datalist[[1]]$casesize, breaks = c(0, 1, 2, 3,5,30), labels = c("Case.size.1", "Case.size.2", "Case.size.3", "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
+#'   
+#'   6. Aggregate variable from nested frame (aka within repeat) to parent table
+#'   'datalist[[2]] |>
+#'       dplyr::select( members.sex, parent_index) |>
+#'       tidyr::gather(  parent_index, members.sex) |>
+#'       dplyr::count(parent_index, members.sex) |>
+#'       tidyr::spread(members.sex, n, fill = 0)  |>
+#'       dplyr::select( female)'
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param indicatoradd a list containing all key information to add a calculated indicator within the analysis plan
-#' @export
+#' @param xlsformpath path to the (extended) xlsform file used to collect the data
+#' @param xlsformpathout path to save the xlsform file with newly added indicators
+#' 
+#' @export  
 
 #' @examples
-#' # dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-#' # datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-#' # 
-#' # indicatoradd <- c(  name =  "has.female.members",
-#' #               type = "select_one",
-#' #               label = "Is ",
-#' #               dataframe = "1",
-#' #               calculation = "")
-#' # 
-#' # kobo_indicator(datalist = datalist,
-#' #                    dico = dico,
-#' #                 indicatoradd = indicatoradd   )
+#' xlsformpath <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
+#' xlsformpathout <- "sample_xlsform_withindic.xlsx"
+#' 
+#' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+#' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+#' 
+#' ## Example 1: Simple dummy filter
+#' indicatoradd <- c(  name =  "inColombia",
+#'                     type = "select_one",
+#'                     label = "Is from Colombia",
+#'                     dataframe = "1",
+#'                     calculation = "dplyr::if_else(datalist[[1]]$profile.country ==\"COL\", \"yes\",\"no\")")
+#' 
+#' expanded  <- kobo_indicator(datalist = datalist,
+#'                     dico = dico,
+#'                  indicatoradd = indicatoradd ,
+#'                  xlsformpath = xlsformpath,
+#'                  xlsformpathout = xlsformpathout)
+#' ## Replace existing
+#' dico <- expanded[[1]]
+#' datalist <- expanded[[2]]
+#' 
+#' ## Check my new indicator
+#' table(datalist[[1]]$inColombia, useNA = "ifany")
 #' 
 #' 
+#' 
+#' ## Example 2: calculation on nested elements
+#' indicatoradd <- c(  name =  "hasfemalemembers",
+#'               type = "select_one",
+#'               label = "HH has female members ",
+#'               dataframe = "1",
+#'               calculation = "datalist[[2]] |>
+#'                             dplyr::select( members.sex, parent_index) |>
+#'                             tidyr::gather(  parent_index, members.sex) |>
+#'                             dplyr::count(parent_index, members.sex) |>
+#'                             tidyr::spread(members.sex, n, fill = 0)  |>
+#'                            dplyr::select( female)")
+#' 
+#' expanded  <- kobo_indicator(datalist = datalist,
+#'                     dico = dico,
+#'                  indicatoradd = indicatoradd ,
+#'                  xlsformpath = xlsformpath,
+#'                  xlsformpathout = xlsformpathout)
+#' ## Replace existing
+#' dico <- expanded[[1]]
+#' datalist <- expanded[[2]]
+#' 
+#' 
+#' ## Check my new indicator
+#' table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
 #'  
 kobo_indicator <- function(datalist,
                        dico, 
+                       xlsformpath,
+                       xlsformpathout,
                        indicatoradd = NULL) {
 
-#   1 - load the indicators, 
-  indicator <- as.data.frame(dico[4])  
-#   2 - append the one from inidcatoradd if any,
-  
-#   3 - apply the indicator, i.e. do the calculation,
-#   4 - re-save all the working indicator definition within the extended xlsform  
-#   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
-#   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
-  
-  with_indicator <- list( datalist, dico)
+#   1 - load the indicators ---->
+indicator <- as.data.frame(dico[5])  
+if(!'type' %in% names(indicator)) indicator <- indicator |> tibble::add_column(type = NA)
+if(!'name' %in% names(indicator)) indicator <- indicator |> tibble::add_column(name = NA)
+if(!'label' %in% names(indicator)) indicator <- indicator |> tibble::add_column(label = NA)
+if(!'hint' %in% names(indicator)) indicator <- indicator |> tibble::add_column(hint = NA)
+if(!'dataframe' %in% names(indicator)) indicator <- indicator |> tibble::add_column(dataframe = NA)
+if(!'calculation' %in% names(indicator)) indicator <- indicator |> tibble::add_column(calculation = NA)
+if(!'chapter' %in% names(indicator)) indicator <- indicator |> tibble::add_column(chapter = NA)
+if(!'subchapter' %in% names(indicator)) indicator <- indicator |> tibble::add_column(subchapter = NA)
+if(!'correlate' %in% names(indicator)) indicator <- indicator |> tibble::add_column(correlate  = NA)
+if(!'disaggregation' %in% names(indicator)) indicator <- indicator |> tibble::add_column(disaggregation = NA)
+if(!'cluster' %in% names(indicator)) indicator <- indicator |> tibble::add_column(cluster  = NA)
+if(!'predict' %in% names(indicator)) indicator <- indicator |> tibble::add_column(predict = NA)
+if(!'score' %in% names(indicator)) indicator <- indicator |> tibble::add_column(score = NA)
+if(!'mappoint' %in% names(indicator)) indicator <- indicator |> tibble::add_column(mappoint  = NA)
+if(!'mappoly' %in% names(indicator)) indicator <- indicator |> tibble::add_column(mappoly  = NA)
     
-    return(with_indicator)
+    indicator <- indicator[ ,c("type","name","label", "hint",
+                               "dataframe", "calculation",
+                               "chapter","subchapter", "disaggregation", "correlate",
+                               "cluster", "predict", "score", "mappoint", "mappoly")]
+    
+#   2 - append the one from inidcatoradd if any---->
+ indicatoradd <- as.data.frame(t(indicatoradd))
+  if( nrow(indicatoradd)>0) {
+    indicator <-  dplyr::bind_rows(indicator, indicatoradd )
+  }
+  if(nrow(indicator) == 0 ){
+      
+    } else {
+## Sanitize indicator name
+    indicator$name <- gsub( "\\.|/|\\-|\\(|\\)|\"|\\s" , "" , indicator$name )
+
+#   3 - apply the indicator, i.e. do the calculation ---->
+    
+    ## Rename correctly the parent index in nested frames
+    for (m in 2:length(datalist)) {
+datalist[[m]]$parent_index <- datalist[[m]]$'_parent_index'    }
+    
+    for (i in 1:nrow(indicator)) {
+      # i <- 1
+      var_name <- paste0(indicator[i, "name"])
+      frame_name <- paste0(indicator[i, "dataframe"])
+      calc_name <- paste0(indicator[i, "calculation"])
+     # cat( paste0(var_name, " - frame: ", frame_name," - calc: ", calc_name, "\n"))
+      eval(parse(text=paste0("datalist[[",
+                             frame_name, 
+                             "]]$", 
+                             var_name, " <- ",
+                             calc_name, "") ))
+    }
+
+# 4 - re-save all the working indicator definition within the extended xlsform  ---->
+    wb <- openxlsx::loadWorkbook(xlsformpath)
+    sheetname <- "indicator"
+    ## In case the indicator worksheet has not been added, do it now
+    if ( !("indicator" %in% openxlsx::getSheetNames(xlsformpath)) ) {   openxlsx::addWorksheet(wb, sheetname) }
+    openxlsx::writeData(wb, sheetname, indicator, withFilter = TRUE)
+    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(indicator), widths = "auto")
+    
+    #For better legibility create specific styles for rows that defines header
+    headerSt <- openxlsx::createStyle( textDecoration = "bold", fontColour = "white", fontSize = 13, fgFill = "grey50",
+                                       border = "TopBottom", borderColour = "grey80", borderStyle = "thin")
+    
+    hdr.rows <- 1
+    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(indicator), gridExpand = TRUE) 
+    # if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
+    # openxlsx::saveWorkbook(wb, xlsformpathout)
+
+# 5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting ---->
+    indicator$dataframe <- as.numeric(indicator$dataframe)
+    dico <- dico |>
+          purrr::modify_at(1, ~ dplyr::bind_rows(dico[[1]], indicator ))  
+   #View( dico1[[1]])
+    
+    
+# 6 - rebuild the plan if indicators are allocated to chapter, subchapter ---->
+    variables <- as.data.frame(dico[1])
+    if (  nrow(as.data.frame(variables)|> dplyr::filter(! is.na(chapter)))  > 1 ) {
+      
+      
+      ## Reinsert chapter and subchapter as begin_group
+      subchapterorder <- as.data.frame(variables) |>
+        dplyr::distinct(chapter, subchapter) |>
+        dplyr::filter(! is.na(chapter) ) |>
+        dplyr::mutate( subchapternum = dplyr::row_number())
+      
+      plansub  <- as.data.frame(variables) |>
+        dplyr::filter(! is.na(chapter) ) |>
+        dplyr::filter( ! type  %in% c("begin_group", "end_group") )  |>
+        dplyr::group_by( chapter, subchapter) |>
+        dplyr::summarise( type = "begin_group",
+                          name =  "labelsub.chapter" ) |>
+        dplyr::mutate( label = subchapter) |>
+        dplyr::bind_rows(as.data.frame(variables) |>
+                           dplyr::filter(! is.na(chapter) ) |>
+                           dplyr::filter( ! type  %in% c("begin_group", "end_group") ) ) |>
+        dplyr::left_join(subchapterorder, by = c("chapter", "subchapter")) |>
+        #dplyr::mutate_at(vars( ), ~replace(., is.na(.) , '')) %>%
+        dplyr::arrange(subchapternum)  |>
+        dplyr::mutate( labelsub.chapter = paste0("labelsub.chapter" , subchapternum ) ) |>
+        dplyr::mutate(  name= dplyr::case_when(
+          name == "labelsub.chapter" ~ labelsub.chapter ,
+          TRUE ~ name) )
+      
+      chapterorder <- as.data.frame(variables) |>
+        dplyr::distinct(chapter) |>
+        dplyr::filter(! is.na(chapter) ) |>
+        dplyr::mutate( chapternum = dplyr::row_number())
+      
+      dico <- dico |>
+        purrr::modify_at(4, ~ as.data.frame(variables) |>
+        dplyr::filter(! is.na(chapter) ) |>
+        dplyr::filter( ! type  %in% c("begin_group", "end_group") )  |>
+        dplyr::group_by( chapter) |>
+        dplyr::summarise( type = "begin_group",
+                          name = "labelchapter" ) |>
+        dplyr::mutate( label = chapter) |>
+        dplyr::bind_rows(plansub ) |>
+        dplyr::left_join(chapterorder, by = c("chapter" )) |>
+        #dplyr::mutate_at(vars( ), ~replace(., is.na(.) , '')) %>%
+        dplyr::arrange(chapternum) |>
+        dplyr::mutate( labelchapter = paste0("labelchapter" , chapternum ) ) |>
+        dplyr::mutate(  name= dplyr::case_when(
+          name == "labelchapter" ~ labelchapter ,
+          TRUE ~ name) ) |>
+        dplyr::select( type, label,name) )
+      
+    } else { 
+      dico <- dico |>
+        purrr::modify_at(4, ~  as.data.frame(variables) |>
+        dplyr::select(type, label,name)|>
+        dplyr::filter( ! type  %in% c("note",  "end_group") ))
+    }
+    
+    }
+    
+  return(expanded <- list (dico, datalist))
 }
 

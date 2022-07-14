@@ -22,14 +22,14 @@ kobo_data <- function(datapath) {
     datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("/", ".", colnames(y)); y})
     
     ## Recent kobo export append a counter in the export when there's a unique vaiable
-    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_001", "", colnames(y)); y})
-    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_002", "", colnames(y)); y})
-    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_003", "", colnames(y)); y})
-    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_004", "", colnames(y)); y})
-    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_005", "", colnames(y)); y})
-    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_006", "", colnames(y)); y})
-    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_007", "", colnames(y)); y})
-    datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_008", "", colnames(y)); y})
+    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_001", "", colnames(y)); y})
+    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_002", "", colnames(y)); y})
+    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_003", "", colnames(y)); y})
+    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_004", "", colnames(y)); y})
+    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_005", "", colnames(y)); y})
+    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_006", "", colnames(y)); y})
+    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_007", "", colnames(y)); y})
+    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_008", "", colnames(y)); y})
     #names(datalist) <- readxl::excel_sheets(datapath )
     
     class(datalist) <- "datalist" # assigns a "datalist" class to the list. Helpful for later on.

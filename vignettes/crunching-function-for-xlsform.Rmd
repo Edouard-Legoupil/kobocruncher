@@ -121,20 +121,57 @@ Indicator calculation
 
 
 ```{r examples-kobo_indicator}
-# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-# 
-# indicatoradd <- c(  name =  "has.female.members",
-#               type = "select_one",
-#               label = "Is ",
-#               dataframe = "1",
-#               calculation = "")
-# 
-# kobo_indicator(datalist = datalist,
-#                    dico = dico,
-#                 indicatoradd = indicatoradd   )
+xlsformpath <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
+xlsformpathout <- "sample_xlsform_withindic.xlsx"
+
+dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+
+## Example 1: Simple dummy filter
+indicatoradd <- c(  name =  "inColombia",
+                    type = "select_one",
+                    label = "Is from Colombia",
+                    dataframe = "1",
+                    calculation = "dplyr::if_else(datalist[[1]]$profile.country ==\"COL\", \"yes\",\"no\")")
+
+expanded  <- kobo_indicator(datalist = datalist,
+                    dico = dico,
+                 indicatoradd = indicatoradd ,
+                 xlsformpath = xlsformpath,
+                 xlsformpathout = xlsformpathout)
+## Replace existing
+dico <- expanded[[1]]
+datalist <- expanded[[2]]
+
+## Check my new indicator
+table(datalist[[1]]$inColombia, useNA = "ifany")
 
 
+
+## Example 2: calculation on nested elements
+indicatoradd <- c(  name =  "hasfemalemembers",
+              type = "select_one",
+              label = "HH has female members ",
+              dataframe = "1",
+              calculation = "datalist[[2]] |>
+                            dplyr::select( members.sex, parent_index) |>
+                            tidyr::gather(  parent_index, members.sex) |>
+                            dplyr::count(parent_index, members.sex) |>
+                            tidyr::spread(members.sex, n, fill = 0)  |>
+                           dplyr::select( female)")
+
+expanded  <- kobo_indicator(datalist = datalist,
+                    dico = dico,
+                 indicatoradd = indicatoradd ,
+                 xlsformpath = xlsformpath,
+                 xlsformpathout = xlsformpathout)
+## Replace existing
+dico <- expanded[[1]]
+datalist <- expanded[[2]]
+
+
+## Check my new indicator
+table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
  
 ```
 
@@ -400,7 +437,7 @@ This report also includes each plot syntax so that they can be easily pasted for
 ## Report Template B for Joint Data Interpretation Session
 
 The second template is used following the systematic data exploration. 
-It will generate a powerpoint presentation
+It will generate a PowerPoint presentation
 
 See a more detailed presentation of that step here: https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305 
 
@@ -437,5 +474,12 @@ It will generate a PDF or an paginated HTML page
 
 
 
+```
+
+## Shiny App
+
+```{r examples-app_kobocruncher}
+
+# app_kobocruncher(theme="flatly")
 ```
 

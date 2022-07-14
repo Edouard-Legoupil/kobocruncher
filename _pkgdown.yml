@@ -21,6 +21,10 @@ reference:
   desc: Prebuild Report template to explore, interpret & Disseminate
   contents:
   - starts_with("template_")
+- title: Shiny App
+  desc: Graphical User Interface with Shiny
+  contents:
+  - starts_with("app_")
 
 - text: News
   href: news/index.html

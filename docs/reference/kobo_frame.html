@@ -57,7 +57,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">kobo_frame</span><span class="op">(</span><span class="va">datalist</span>, <span class="va">dico</span>, <span class="va">var</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">kobo_frame</span><span class="op">(</span><span class="va">datalist</span>, <span class="va">dico</span>, <span class="va">var</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,13 +77,13 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span>
-<span class="r-in"><span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">kobo_frame</span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,</span>
-<span class="r-in">                   dico <span class="op">=</span> <span class="va">dico</span>,</span>
-<span class="r-in">                   var <span class="op">=</span> <span class="st">"members.sex"</span>   <span class="op">)</span></span>
-<span class="r-in"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dico</span> <span class="op">&lt;-</span> <span class="fu"><a href="kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">kobo_frame</span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,</span></span>
+<span class="r-in"><span>                   dico <span class="op">=</span> <span class="va">dico</span>,</span></span>
+<span class="r-in"><span>                   var <span class="op">=</span> <span class="st">"members.sex"</span>   <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> | members.age|members.sex | X_index|X_parent_table_name       | X_parent_index| X_submission__id|X_submission__uuid                   |X_submission__submission_time |X_submission__validation_status |X_submission__notes |X_submission__status |X_submission__submitted_by |X_submission__tags |X_id |</span>
@@ -93,7 +93,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> |           3|male        |       3|Sample Dataset KoboloadeR |              2|         20756978|f1c3d36c-3c25-4581-9f35-9c8ec405d744 |2022-05-04 20:15:14           |NA                              |NA                  |submitted_via_web    |NA                         |NA                 |3    |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |          10|female      |       4|Sample Dataset KoboloadeR |              2|         20756978|f1c3d36c-3c25-4581-9f35-9c8ec405d744 |2022-05-04 20:15:14           |NA                              |NA                  |submitted_via_web    |NA                         |NA                 |4    |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |          45|male        |       5|Sample Dataset KoboloadeR |              2|         20756978|f1c3d36c-3c25-4581-9f35-9c8ec405d744 |2022-05-04 20:15:14           |NA                              |NA                  |submitted_via_web    |NA                         |NA                 |5    |</span>
-<span class="r-in"> </span>
+<span class="r-in"><span> </span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -105,7 +105,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>
