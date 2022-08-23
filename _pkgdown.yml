@@ -1,8 +1,7 @@
 url: ~
 template:
+  package: unhcrtemplate
   bootstrap: 5
-  params:
-    bootswatch: yeti
 
 reference:
 - title: Chart

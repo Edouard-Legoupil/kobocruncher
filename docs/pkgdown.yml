@@ -1,7 +1,7 @@
 pandoc: 2.17.1.1
-pkgdown: 2.0.5
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   crunching-function-for-xlsform: crunching-function-for-xlsform.html
-last_built: 2022-07-14T14:31Z
+last_built: 2022-08-23T13:12Z
 
