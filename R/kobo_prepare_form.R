@@ -32,7 +32,7 @@
 #'
 #' @param xlsformpath The full path and filename of the xlsform to be accessed (has to be xlsx file)
 #' @param xlsformpathout The full path and filename of the xlsform to be accessed (has to be xlsx file)
-#' @param language Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file -default is  ::english (en)
+#' @param label_language Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file -default is  ::english (en)
 #' @param ridl If available, it will prefill the RIDL info through what was already recorded there
 #'
 #' @export 
@@ -41,7 +41,7 @@
 #' #                   xlsformpathout = "form_with_plan.xlsx")
 kobo_prepare_form <- function(xlsformpath,
                               xlsformpathout,
-                              language = "",
+                              label_language = "",
                               ridl = "") {
   
   # Excel Styling Elements
@@ -68,6 +68,41 @@ kobo_prepare_form <- function(xlsformpath,
     
     ## Create a blank workbook
     wb <- openxlsx::createWorkbook()
+    
+        
+    ### Settings sheet ----------------------------------->
+    settings <- tryCatch({
+      as.data.frame(readxl::read_excel(xlsformpath, sheet = "settings"),
+                    stringsAsFactors = FALSE)
+    }, error = function(err) {
+      data.frame(
+        form_title  = c("study"),
+        form_id  = c("koboID"),
+        default_language  = c("::spanish (es)"),
+        #form_title = character(),
+        #form_id = character(),
+        #default_language = character(),
+        stringsAsFactors = FALSE
+      )
+    }) 
+        
+    settings <- readxl::read_excel(xlsformpath,  sheet = "settings")
+    #form_instance <- as.character(settings$form_title)
+  
+    ## Check if a default language is set up in the settings - and add the correct separator
+    # for test settings$default_language <- NULL
+    label_language <- ifelse( is.null(label_language),
+                              ifelse( is.null(settings$default_language),
+                                      label_language,
+                                      paste0("::",settings$default_language)),
+                              paste0("::",label_language))
+    if (settings$form_title =="" | is.na(settings$form_title)) { } else {settings$form_title <- "Study"}
+    sheetname <- "settings"
+    openxlsx::addWorksheet(wb, sheetname)
+    openxlsx::writeData(wb, sheetname, settings, withFilter = TRUE)
+    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(settings), widths = "auto")
+    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(settings), gridExpand = TRUE)
+    
     
     ### Survey sheet  ----------------------------------->
     survey <- tryCatch({
@@ -107,13 +142,16 @@ kobo_prepare_form <- function(xlsformpath,
       )
     })
     
+
+    
+    
     ## Remove all na column in case...
     survey <- survey |>
       dplyr::select(where(function(x) any(!is.na(x))))
     
     ## Clean the label and hint in relation with the selected language
-    names(survey)[tolower(names(survey)) == tolower(paste0("label",language) )] <- "label"
-    names(survey)[tolower(names(survey)) == tolower(paste0("hint",language) )] <- "hint"
+    names(survey)[tolower(names(survey)) == tolower(paste0("label",label_language) )] <- "label"
+    names(survey)[tolower(names(survey)) == tolower(paste0("hint",label_language) )] <- "hint"
 
     
     ## Adding variable if not present and checking the content of the variable to build up the analysis plan summary... 
@@ -218,7 +256,7 @@ kobo_prepare_form <- function(xlsformpath,
     ## Rename the variable label
     
     ## Rename the variable label based on language
-    names(choices)[tolower(names(choices)) == tolower(paste0("label",language) )] <- "label"
+    names(choices)[tolower(names(choices)) == tolower(paste0("label",label_language) )] <- "label"
     
     namesOfCho <- c("list_name", "name", "label")
     if (sum(namesOfCho %in% colnames(choices)) != length(namesOfCho)) {
@@ -243,29 +281,7 @@ kobo_prepare_form <- function(xlsformpath,
     openxlsx::setColWidths(wb, sheetname, cols = 2:3, widths = 30)
     openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(choices), gridExpand = TRUE)
     
-    
-    ### Settings sheet ----------------------------------->
-    settings <- tryCatch({
-      as.data.frame(readxl::read_excel(xlsformpath, sheet = "settings"),
-                    stringsAsFactors = FALSE)
-    }, error = function(err) {
-      data.frame(
-        form_title  = c("study"),
-        form_id  = c("koboID"),
-        default_language  = c("::spanish (es)"),
-        #form_title = character(),
-        #form_id = character(),
-        #default_language = character(),
-        stringsAsFactors = FALSE
-      )
-    }) 
-    
-    if (settings$form_title =="" | is.na(settings$form_title)) { } else {settings$form_title <- "Study"}
-    sheetname <- "settings"
-    openxlsx::addWorksheet(wb, sheetname)
-    openxlsx::writeData(wb, sheetname, settings, withFilter = TRUE)
-    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(settings), widths = "auto")
-    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(settings), gridExpand = TRUE)
+
     
     ### RIDL sheets ----------------------------------->
     ridl_schema <- jsonlite::fromJSON("https://raw.githubusercontent.com/okfn/ckanext-unhcr/master/ckanext/unhcr/schemas/dataset.json")

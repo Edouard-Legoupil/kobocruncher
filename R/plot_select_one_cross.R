@@ -121,7 +121,7 @@ plot_select_one_cross <- function(datalist = datalist,
              title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
              subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico, x = by_var)), 90),
              caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-        theme_minimal( base_size = 16) +  
+        theme_minimal( base_size = 24) +  
         geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
         theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
                  panel.grid.major.y  = element_blank(), 

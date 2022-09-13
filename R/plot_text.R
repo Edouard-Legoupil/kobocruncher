@@ -112,7 +112,7 @@ plot_text <- function(datalist = datalist,
       #          stringr::str_wrap(label_varhint(var), 70)} else { ""},
       #        caption = glue::glue("Wordcloud displaying an Open Text question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
       #   
-      #       theme_minimal( base_size = 16)  
+      #       theme_minimal( base_size = 24)  
       # print(p1)
       
     

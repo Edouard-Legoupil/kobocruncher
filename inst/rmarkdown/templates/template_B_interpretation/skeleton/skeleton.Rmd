@@ -1,5 +1,5 @@
 ---
-title: "Data Interperation Session"
+title: "Data Interpretation Session"
 subtitle: "Based on Key Research Questions"
 author: "Your name"
 date: "`r format(Sys.Date(),  '%d %B %Y')`"

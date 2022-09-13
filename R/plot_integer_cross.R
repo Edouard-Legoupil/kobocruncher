@@ -76,7 +76,7 @@ plot_integer_cross <- function(datalist = datalist,
       scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                           x = var)(x) |>
             stringr::str_wrap(40)}) +
-      theme_minimal( base_size = 16) +
+      theme_minimal( base_size = 24) +
       geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
            panel.grid.major.x  = element_blank(), 

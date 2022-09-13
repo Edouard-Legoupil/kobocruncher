@@ -58,7 +58,7 @@ plot_integer <- function(datalist = datalist,
                      stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
            caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
   
-      theme_minimal( base_size = 16) +
+      theme_minimal( base_size = 24) +
       geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
            panel.grid.major.x  = element_blank(), 

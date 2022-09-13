@@ -151,6 +151,8 @@ kobo_cruncher(datalist = datalist,
 ```
 
 
+# Summary Likert Charts
+
 ```{r cruncherlikert, results='asis' }
 plot_likert(datalist = datalist,
               dico = dico)

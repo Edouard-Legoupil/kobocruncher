@@ -112,7 +112,7 @@ plot_select_multiple <- function(datalist = datalist,
            subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
                      stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
            caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-      theme_minimal( base_size = 16) + 
+      theme_minimal( base_size = 24) + 
       geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
              panel.grid.major.y  = element_blank(), 

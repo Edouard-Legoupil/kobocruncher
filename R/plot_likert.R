@@ -87,7 +87,7 @@ plot_likert <- function(datalist = datalist,
           labs(title = labelgroup)+
           # guides(fill=guide_legend(title=NULL),    color=guide_legend(nrow=2, byrow=TRUE))  +
           #unhcrthemes::theme_unhcr(grid="X") +
-          theme_minimal( base_size = 16) +
+          theme_minimal( base_size = 24) +
           theme( #plot.title=element_text(size=32, face="bold", color="black"), 
                  #plot.subtitle=element_text(size=19, face="italic", color="black"), 
                 #text = element_text(size=22, color = "#333333"), 

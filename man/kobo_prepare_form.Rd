@@ -4,14 +4,14 @@
 \alias{kobo_prepare_form}
 \title{Prepare XLSform and review Analysis}
 \usage{
-kobo_prepare_form(xlsformpath, xlsformpathout, language = "", ridl = "")
+kobo_prepare_form(xlsformpath, xlsformpathout, label_language = "", ridl = "")
 }
 \arguments{
 \item{xlsformpath}{The full path and filename of the xlsform to be accessed (has to be xlsx file)}
 
 \item{xlsformpathout}{The full path and filename of the xlsform to be accessed (has to be xlsx file)}
 
-\item{language}{Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file -default is  ::english (en)}
+\item{label_language}{Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file -default is  ::english (en)}
 
 \item{ridl}{If available, it will prefill the RIDL info through what was already recorded there}
 }
