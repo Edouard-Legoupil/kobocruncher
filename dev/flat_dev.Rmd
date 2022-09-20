@@ -196,11 +196,8 @@ kobo_prepare_form <- function(xlsformpath,
                                       paste0("::",settings$default_language)),
                               paste0("::",label_language))
     if (settings$form_title =="" | is.na(settings$form_title)) { } else {settings$form_title <- "Study"}
-    sheetname <- "settings"
-    openxlsx::addWorksheet(wb, sheetname)
-    openxlsx::writeData(wb, sheetname, settings, withFilter = TRUE)
-    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(settings), widths = "auto")
-    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(settings), gridExpand = TRUE)
+   
+
     
     
     ### Survey sheet  ----------------------------------->
@@ -380,7 +377,14 @@ kobo_prepare_form <- function(xlsformpath,
     openxlsx::setColWidths(wb, sheetname, cols = 2:3, widths = 30)
     openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(choices), gridExpand = TRUE)
     
-
+     ### settings sheets ----------------------------------->
+    sheetname <- "settings"
+    all.cols <- 1:ncol(settings)
+    hdr.rows <- 1
+    openxlsx::addWorksheet(wb, sheetname)
+    openxlsx::writeData(wb, sheetname, settings, withFilter = TRUE)
+    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(settings), widths = "auto")
+    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(settings), gridExpand = TRUE)
     
     ### RIDL sheets ----------------------------------->
     ridl_schema <- jsonlite::fromJSON("https://raw.githubusercontent.com/okfn/ckanext-unhcr/master/ckanext/unhcr/schemas/dataset.json")
@@ -525,7 +529,8 @@ kobo_prepare_form <- function(xlsformpath,
 
 ```{r examples-kobo_prepare_form}
 # kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
-#                   xlsformpathout = "form_with_plan.xlsx")
+#                   xlsformpathout = "form_with_plan.xlsx",
+#                   label_language = "")
 ```
 
 ```{r tests-kobo_prepare_form}
@@ -1337,7 +1342,8 @@ label_choiceset <- function(dico,
     (\(x) purrr::set_names(x$label, x$name))()
   
 #  function(y) { dict[y] |> tidyr::replace_na("Other") }
-  function(y) { dplyr::if_else(is.na(dict[y]), y, dict[y]) }
+ # function(y) { dplyr::if_else(is.na(dict[y]), y, dict[y]) }
+  function(y) { ifelse(is.na(dict[y]), y, dict[y]) }
 
 }
 
@@ -1378,18 +1384,21 @@ label_choiceset(dico = dico,
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
 plot_select_one <- function(datalist  ,
                             dico  ,
                             var,
+                            datasource = NULL,
                             showcode = FALSE) {
 
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
   ## Get default data source name 
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
  
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -1474,9 +1483,9 @@ plot_select_one <- function(datalist  ,
              panel.grid.minor = element_blank()    ) +
       theme(plot.title.position = "plot")
     
-    print(p)
+   return(p) #  print(p)
     
-  } else { cat("<strong style=\"color:#0072BC;\"> No recorded answers for this specific question!</strong>\n\n")}
+  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
   # cat("\n\n")
   }
 }  
@@ -1514,17 +1523,22 @@ plot_select_one(datalist = datalist,
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
 plot_select_multiple <- function(datalist = datalist, 
                                  dico = dico,
                                  var, 
+                                 datasource = NULL,
                                  showcode = FALSE) {
   
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
                    var = var  )
@@ -1611,11 +1625,11 @@ plot_select_multiple <- function(datalist = datalist,
       theme(plot.title.position = "plot")
      
      
-    print(p)
+   return(p) #  print(p)
     
     #plot_select_multiple_cross(var,   by_var)
     
-  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong> \n\n")}
+  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
   # cat("\n\n")
     
   }  
@@ -1656,17 +1670,21 @@ plot_select_multiple(datalist = datalist,
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
 plot_integer <- function(datalist = datalist, 
                          dico = dico,
                          var, 
+                         datasource = NULL,
                          showcode = FALSE) {
   
   requireNamespace("ggplot2") 
   requireNamespace("dplyr")
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+   
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
                    var = var  )
@@ -1709,9 +1727,9 @@ plot_integer <- function(datalist = datalist,
            panel.grid.minor = element_blank()    ) +
            theme(plot.title.position = "plot")
     
-    print(p)
+   return(p) #  print(p)
     
-    } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
+    } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
   # cat("\n\n")
   }
 }
@@ -1742,16 +1760,20 @@ plot_integer(datalist = datalist,
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
 plot_text <- function(datalist = datalist, 
                       dico = dico,
                       var, 
+                      datasource = NULL,
                       showcode = FALSE) {
   
   requireNamespace("dplyr")
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
                    var = var  )
@@ -1814,7 +1836,7 @@ plot_text <- function(datalist = datalist,
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :
       set.seed(1234)
-      wordcloud::wordcloud(words = d$word, # words : the words to be plotted
+     p <-  wordcloud::wordcloud(words = d$word, # words : the words to be plotted
                                 freq = d$freq,  # freq : their frequencies
                                 min.freq = 1,  # min.freq : words with frequency below min.freq will not be plotted
                                 max.words=200, # max.words : maximum number of words to be plotted
@@ -1825,7 +1847,7 @@ plot_text <- function(datalist = datalist,
                                                   x= var), 90),
            sub = glue::glue("Open Text question \n Source: {datasource}" ))  
     
-         
+       return(p)  
       # p1 <- ggplot2::ggplot(d, 
       #              aes(label = word,
       #                  size = freq,
@@ -1882,6 +1904,7 @@ plot_text(datalist = datalist,
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
@@ -1889,11 +1912,14 @@ plot_select_one_cross <- function(datalist = datalist,
                             dico = dico,
                             var, 
                             by_var , 
+                            datasource = NULL,
                             showcode = FALSE) {
   
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
                    var = var  )
@@ -1985,11 +2011,11 @@ plot_select_one_cross <- function(datalist = datalist,
                  panel.grid.minor = element_blank()    ) +
         theme(plot.title.position = "plot")
 
-        print(p)
+       return(p) #  print(p)
     
       }
     } else { }
-  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong> \n\n")}
+  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
   # cat("\n\n")
   }
 }
@@ -2035,6 +2061,7 @@ plot_select_one_cross(datalist = datalist,
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
@@ -2042,12 +2069,15 @@ plot_select_multiple_cross <- function(datalist = datalist,
                                        dico = dico,
                                        var, 
                                        by_var , 
+                                       datasource = NULL,
                                        showcode = FALSE) {
   
   
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
                    var = var  )
@@ -2149,10 +2179,10 @@ plot_select_multiple_cross <- function(datalist = datalist,
                panel.grid.minor = element_blank()    ) +
         theme(plot.title.position = "plot")
       
-       print(p)
+      return(p) #  print(p)
     }   
     } else { }
-  } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
+  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
   # cat("\n\n")
     
   }
@@ -2188,6 +2218,7 @@ plot_select_multiple_cross(datalist = datalist,
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
@@ -2195,11 +2226,14 @@ plot_integer_cross <- function(datalist = datalist,
                          dico = dico,
                          var, 
                          by_var ,
+                         datasource = NULL,
                          showcode = FALSE) {
   
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
                    var = var  )
@@ -2257,9 +2291,9 @@ plot_integer_cross <- function(datalist = datalist,
            panel.grid.minor = element_blank()    ) +
            theme(plot.title.position = "plot")
     
-    print(p)
+   return(p) #  print(p)
     
-    } else { cat("<strong style=\"color:#0072BC;\">No recorded answers for this specific question!</strong>\n\n")}
+    } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
   # cat("\n\n")
   }
 }
@@ -2289,12 +2323,13 @@ plot_integer_cross(datalist = datalist,
 ```{r function-plot_correlation}
 #' @title Plotting Correlation
 #' 
-#' @description blbla
+#' @description  Perform chisquare test and display results if significant
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
@@ -2302,66 +2337,166 @@ plot_correlation <- function(datalist = datalist,
                              dico = dico,
                              var, 
                              by_var, 
+                             datasource = NULL,
                              showcode = FALSE) {
   
-       ## verify they are in the same frame
-       frame1 <- kobo_frame(datalist = datalist,
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
+  ## verify they are in the same frame
+  frame1 <- kobo_frame(datalist = datalist,
                             dico = dico,
                             var = var) 
-       frame2 <- kobo_frame(datalist = datalist,
+  frame2 <- kobo_frame(datalist = datalist,
                             dico = dico,
                             var = by_var ) 
        
-     if(by_var != var & !( identical(frame1, frame2)) )
-      { cat("the two variables are identical or not in the same data framee")
-      } else {
-       formula <- frame1 |>
-       dplyr::select(var, by_var) 
-       names(formula)[1] <- "target"
-       names(formula)[2] <- "tested"
-       
-       ## Check that each class is represented
-       check.class <- as.data.frame(table(formula$target,formula$tested))
-       n.class <- nrow(check.class)
-       n.class.notnull <- nrow(check.class[check.class$Freq > 0, ])
-      
-       ### Testing number of levels for the 2 variables as 'x' and 'y' must have at least 2 levels
-       if ( ## We need at least 2 levels
-        ( nlevels(as.factor(as.character(formula$target))) > 1 ) &
-        ( nlevels(as.factor(as.character(formula$tested))) > 1 ) &
-           ## If too many levels - more than 8, the corrogram is not legible...
-        ( nlevels(as.factor(as.character(formula$target))) < 8 ) &
-        ( nlevels(as.factor(as.character(formula$tested))) < 8 ) #&
-          ## May have class with zero value...
-         # n.class == n.class.notnull
-        ) { 
-       
-        p.value  <- round(stats::chisq.test(formula$target,formula$tested)$p.value,4)   ### Case there not any positive test
-        if (p.value <= 0.05 ) {
-                 cat("No significant association found for this question...\n")
-          } else {
-          ## now generating correlation plot 
-          corrplot::corrplot(stats::chisq.test(formula$target,formula$tested)$residuals,
-                 is.cor = FALSE, # use for general matrix to convert to Sq form
-                 cl.pos = "n", ## Do not display the color legend
-                 cl.cex = 0.7, # Size of all label
-                 tl.cex = 0.7, # Size of axis label
-                 tl.srt = 45, # string rotation in degrees
-                 tl.col = "black", # color of text label.
-                 addCoef.col = "grey", # add coeff in the chart
-                 number.cex = 3/ncol(stats::chisq.test(formula$target,formula$tested)), # size of coeff
-                 mar = c(0.5,0.5,4, 0.5), ## margin of plots
-                 title = paste0("Statistical Association between: \n ", 
-                                label_varname(dico = dico,  x = var),
-                                "[row] & ",
-                                label_varname(dico = dico, x = by_var), "[col]" ))
-
-           
-          } }  
-       else { cat("there are either too many or not enough level to perform this analysis.. Clean your data.\n") } 
-     }
+  if(by_var == var  ) {
+       #  cat(paste0("The two variables ",var , " &  ", by_var ,"are identical \n"))
+    } else if( !( identical(frame1, frame2)) ) {
+       #  cat(paste0("The two variables: ",var , " &  ", by_var ," are not in the same data frame \n"))
+    } else  {
+         formula <- frame1 |>
+                  dplyr::select( all_of(var), all_of(by_var)) 
+         names(formula)[1] <- "target"
+         names(formula)[2] <- "tested"
     
-}
+         ## Apply the labels  
+         formula[,1] <- label_choiceset(dico = dico, x = var)(formula[,1])
+         formula[,2] <- label_choiceset(dico = dico, x = by_var)(formula[,2])
+    
+         ## Check that each class is represented
+         check.class <- as.data.frame(table(formula$target,formula$tested))
+         n.class <- nrow(check.class)
+         n.class.notnull <- nrow(check.class[check.class$Freq > 0, ])
+        
+        ### Testing necessary condition to perform the correlation test
+        if(n.class == 0) {
+          cat(paste0("There is no data recorded. \n")) 
+          } else if ( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var1) |> dplyr::pull() )))  < 2) {
+            # cat(paste0("There is only one single response option recorded on ",var , " to assess correlation. \n"))
+          } else if( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var2) |> dplyr::pull()  )))  < 2) {
+            # cat(paste0("There is only one single response option recorded on ",by_var , " to assess correlation. \n")) 
+          } else if( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var1)  |> dplyr::pull() )))  > 7) {
+             cat(paste0("There are too many response options recorded on ", var , " to assess correlation. You may consider some data cleaning. \n"))
+          } else if ( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var2) |> dplyr::pull()  )))  > 7) {
+            cat(paste0("There  are too many response options recorded on ", by_var , " to assess correlation. You may consider some data cleaning. \n")) 
+          } else if ( nrow(check.class[check.class$Freq > 0, ]) == 0 ) {
+            cat(paste0("There is no sufficient cross records  to assess correlation between ",var , " &  ", by_var ,". \n")) 
+          } else {
+          
+          p.value  <- round(stats::chisq.test(formula$target,formula$tested)$p.value,4)   ### Case there not any positive test
+          if (p.value > 0.05 ) {
+            cat(paste0("No significant association found between ",var , " &  ", by_var ," (p.value :",p.value  , ").\n")) } 
+          else {
+            
+            ## Writing code instruction in report
+            if( showcode == TRUE) {
+              cat(paste0(label_varname(dico = dico, x = var), "\n", fontawesome::fa("far fa-copy", fill ="grey"),
+                         " `plot_correlation(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))} else {}
+              
+
+
+                 ## plotting the residuals... 
+                 cormat <- as.data.frame(stats::chisq.test(formula$target,
+                                                          formula$tested)$residuals) |>
+                                dplyr::mutate(direction =   ifelse(Freq < 0, "negative","positive"))|>
+                                dplyr::mutate(intense =  abs(Freq))
+                 maxcor <- max( abs(cormat$Freq)) + 40
+                 mincor <- min( abs(cormat$Freq))
+                 p <- ggplot2::ggplot(
+                      data = cormat,
+                      mapping = ggplot2::aes_string(x = "formula.target",
+                                                    y = "formula.tested",
+                                                    fill = "direction")) +
+                    ggplot2::geom_point(
+                     # color = outline.color,
+                      alpha=0.7,
+                      shape = 21,
+                      ggplot2::aes_string(size = "intense")
+                    ) +
+                
+                    ggplot2::geom_text(aes(label = round(Freq),3), 
+                              colour = "white", 
+                              size = 3)    +
+                    #ggplot2::scale_size(range = c(mincor, maxcor)) +
+                    ggplot2::scale_size_area(max_size = maxcor) +
+                    #ggplot2::guides(size = FALSE)+
+                    ggplot2::scale_fill_manual(values=c(positive="steelblue",
+                                                        negative="firebrick1")) +
+                    ggplot2::labs(x = NULL, y = NULL,
+                      title = stringr::str_wrap(paste0("A Significant Statistical Association was identified between: \n ",
+                                                       label_varname(dico = dico,  x = var),
+                                                       "[row] & ",
+                                                       label_varname(dico = dico, x = by_var), "[col]" ), 100),
+                      subtitle = stringr::str_wrap(paste0("(p:",p.value,"). Correlogram Interpretation hint: the size of the dots indicates the strenght of association, the color indicates its type (positive/attraction=blue, negative/repulsion= red) "), 110),
+                      caption = glue::glue("Source: {datasource}")) +
+                    theme_minimal( base_size = 24) +
+                    theme( panel.grid.major.x  = element_line(color = "#cbcbcb", alpha=0.5, size =0.3, linetype = "dotted"), #element_blank(),
+                           panel.grid.major.y  = element_line(color = "#cbcbcb", alpha=0.5, size =0.3, linetype = "dotted"), #element_blank(),
+                           panel.grid.minor = element_blank() ,
+                           legend.position = 'none',
+                           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+                    theme(plot.title.position = "plot")
+                 
+                return(p) #  print(p)
+              } 
+         }  
+    }     
+} # end function
+  
+  
+                ## now generating correlation plot 
+                # corrplot::corrplot(stats::chisq.test(formula$target,formula$tested)$residuals,
+                #                    is.cor = FALSE, # use for general matrix to convert to Sq form
+                #                    cl.pos = "n", ## Do not display the color legend
+                #                    cl.cex = 0.7, # Size of all label
+                #                    tl.cex = 0.7, # Size of axis label
+                #                    tl.srt = 45, # string rotation in degrees
+                #                    tl.col = "black", # color of text label.
+                #                    addCoef.col = "grey", # add coeff in the chart
+                #                    number.cex = 3/ncol(stats::chisq.test(formula$target,formula$tested)), # size of coeff
+                #                    mar = c(0.5,0.5,4, 0.5), ## margin of plots
+                #                    title = stringr::str_wrap(paste0("A Significant Statistical Association (p:",p.value,") was identified between: \n ", 
+                #                                   label_varname(dico = dico,  x = var),
+                #                                   "[row] & ",
+                #                                   label_varname(dico = dico, x = by_var), "[col]" ), 100))       
+           
+
+         
+        # check.class2 <- check.class |> dplyr::filter(Freq > 1)
+        # #|> dplyr::select(Var1)
+        # ### Testing number of levels for the 2 variables as 'x' and 'y' must have at least 2 levels
+        # if ( ## We need at least 2 levels
+        #   ## We need at least 2 levels
+        #   ( nlevels(as.factor(as.character(check.class2$Var1))) > 1 ) &
+        #   ( nlevels(as.factor(as.character(check.class2$Var2))) > 1 ) &
+        #   ## If too many levels - more than 8, the corrogram is not legible...
+        #   ( nlevels(as.factor(as.character(check.class2$Var1))) < 8 ) &
+        #   ( nlevels(as.factor(as.character(check.class2$Var2))) < 8 )  &
+        #   
+        #   # ( nlevels(as.factor(as.character(formula$target))) > 1 ) &
+        #   # ( nlevels(as.factor(as.character(formula$tested))) > 1 ) &
+        #   #    ## If too many levels - more than 8, the corrogram is not legible...
+        #   # ( nlevels(as.factor(as.character(formula$target))) < 8 ) &
+        #   # ( nlevels(as.factor(as.character(formula$tested))) < 8 )  &
+        #   ## May have class with zero value...
+        #   # n.class == n.class.notnull
+        #   ## Stop if there's no crossing of values because too many NA
+        #   n.class.notnull > 2
+        # ) { 
+          
+    
+        #     
+        #     
+        #   } }  
+        # else { #cat("There are either too many or not enough level to perform this analysis.. Clean your data.\n")
+        #   
+        #  cat(paste0("There are either too many or not enough level to assess correlation between ",var , " &  ", by_var ,". You may consider some data cleaning.\n"))
+        # } 
+   #    }
+   #  
+   # }
 
 ```
 
@@ -2372,7 +2507,8 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 plot_correlation(datalist = datalist,
               dico = dico, 
               var = "profile.occupation",
-              by_var = "profile.country")
+              by_var = "profile.country",
+              datasource = NULL)
 ```
 
 ```{r tests-plot_correlation}
@@ -2394,43 +2530,41 @@ plot_correlation(datalist = datalist,
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @param scopei group in which the likert frame are
+#' @param list_namei name of the likert option list
+#' @param dataframei name of the frame within the dataset where to look for the data
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param showcode display the code
 #' @export
 
 plot_likert <- function(datalist = datalist,
-                        dico = dico) {
-
+                        dico = dico,
+                        scopei,
+                        list_namei,
+                        dataframei,
+                        datasource = NULL,
+                        showcode = FALSE) {
+ 
+   ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
   require(dplyr)
   require(ggplot2)
   require(likert)
   require(cowplot)
-  ## Check the frequency of list_name within each group,
-  ## Filter the combination of list and group where we have more than 3 occurrences
-  # not taking in account when the appearance is not "label"
-  grouplikert <- as.data.frame(dico[1]) |>
-    dplyr::filter( type ==  "select_one") |>
-    dplyr::filter( appearance !=  "label") |>
-    dplyr::group_by( scope, list_name, dataframe) |>
-    dplyr::summarise( cnt= dplyr::n() )|>
-    dplyr::filter( cnt >= 2)
   
-  if(nrow(grouplikert)  == 0) {
-    cat("No potential likert in the form")
-    } else {
+   ## Writing code instruction in report
+            if( showcode == TRUE) {
+              cat(paste0( fontawesome::fa("far fa-copy", fill ="grey"),
+                         " `plot_likert(datalist = datalist, dico = dico,  scopei =  \"", scopei, "\",   list_namei =  \"", list_namei, "\",  dataframei =  \"", dataframei, "\")` \n\n "))} else {}
+             
   
 
-        for (i in 1:nrow(grouplikert)  ) {
-          
-          ## getting the group and corresponding label
-          scopei <-   as.character(grouplikert[i, c("scope")])
-          dataframei <-   as.character(grouplikert[i, c("dataframe")])
-          
           labelgroup <- as.data.frame(dico[1]) |>
             dplyr::filter( name  %in%  c(scopei)) |>
             dplyr::select( label) |>
             dplyr::pull()
           
-          ## geting the list_name and corresponding label
-          list_namei <- as.character( grouplikert[i, c("list_name")])
           nlevel_likert <- as.data.frame(dico[2]) |>
             dplyr::filter( list_name ==   list_namei) |>
             dplyr::select( name, label)  |>
@@ -2481,14 +2615,14 @@ plot_likert <- function(datalist = datalist,
                                   theme(legend.position="bottom", legend.box="vertical", legend.margin=margin(t = 0, unit='cm')) )
         
         #cowplot::ggdraw(p1_legend)
-        print( cowplot::plot_grid(a +  theme(legend.position = 'none'), 
+        p <-  cowplot::plot_grid(a +  theme(legend.position = 'none'), 
                                   p1_legend ,
                                   nrow = 2, 
-                                  rel_heights = c(1, 0.1)))
+                                  rel_heights = c(1, 0.1))
           
-          
-        }
-    }
+    return(p)      
+        
+    
 }
 
 ```
@@ -2498,7 +2632,13 @@ dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package =
 datalistlikert <- kobo_data(datapath = system.file("data_likert.xlsx", package = "kobocruncher") )
 
 plot_likert(datalist = datalistlikert,
-              dico = dicolikert)
+            dico = dicolikert,
+            datasource = NULL,
+            scopei =  "group_ei8jz33",
+            dataframei =   "1",
+            ## getting the list_name and corresponding label
+            list_namei = "yk0td68" 
+          )
 ```
 
 ```{r tests-plot_likert}
@@ -2591,11 +2731,15 @@ plot_header( dico = dico,
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico path to the xlsform file used to colllect the data
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @export
  
 kobo_cruncher <- function(datalist = datalist, 
+                          datasource = NULL,
                           dico = dico) {
   
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
   
   questions <- as.data.frame(dico[4])
   disaggregation <-  c(as.data.frame(dico[1]) |> 
@@ -2632,22 +2776,26 @@ kobo_cruncher <- function(datalist = datalist,
       
       if (type == "select_one") plot_select_one(datalist = datalist, 
                                                 dico = dico,
-                                                var = name, 
+                                                var = name,  
+                                                datasource = datasource,
                                                 showcode = TRUE)
       
       if (type == "select_multiple") plot_select_multiple(datalist = datalist,
                                                           dico = dico, 
-                                                          var = name, 
+                                                          var = name,  
+                                                          datasource = datasource,
                                                           showcode = TRUE)
       
       if (type %in% c("numeric", "integer", "range")) plot_integer(datalist = datalist, 
                                                           dico = dico,
-                                                          var = name, 
+                                                          var = name,  
+                                                          datasource = datasource,
                                                           showcode = TRUE)
       
       if (type == "text") plot_text(datalist = datalist, 
                                     dico = dico, 
-                                    var = name, 
+                                    var = name,  
+                                    datasource = datasource,
                                     showcode = TRUE)
       
     
@@ -2658,7 +2806,8 @@ kobo_cruncher <- function(datalist = datalist,
             plot_select_one_cross(datalist = datalist, 
                                   dico = dico,
                                   var = name, 
-                                  by_var = disag,
+                                  by_var = disag, 
+                                  datasource = datasource,
                                   showcode = TRUE) }
       }
       if (type == "select_multiple" &  length(disaggregation)>=1 ) {
@@ -2668,6 +2817,7 @@ kobo_cruncher <- function(datalist = datalist,
                                   dico = dico,
                                   var = name, 
                                   by_var = disag,
+                                  datasource = datasource,
                                   showcode = TRUE) }
       }
       if (type %in% c("numeric", "integer") &  length(disaggregation)>=1 ) {
@@ -2677,7 +2827,8 @@ kobo_cruncher <- function(datalist = datalist,
             plot_integer_cross(datalist = datalist, 
                                dico = dico,
                                var = name, 
-                               by_var = disag,
+                               by_var = disag, 
+                               datasource = datasource,
                                showcode = TRUE) }
       }
     
@@ -2690,6 +2841,7 @@ kobo_cruncher <- function(datalist = datalist,
                              dico = dico,
                              var = name, 
                              by_var = correl,
+                             datasource = datasource,
                              showcode = TRUE) }
       }
   
@@ -2703,12 +2855,83 @@ dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "k
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 
 kobo_cruncher(datalist = datalist,
-              dico = dico)
+              dico = dico,
+              datasource = "a great survey!")
 
 
 ```
 
 ```{r tests-kobo_cruncher}
+# test_that("survey_label works", {
+# 
+# })
+```
+
+## Crunching Likert componnents
+
+```{r function-kobo_likert}
+#' @title Crunch all variables according to the analysis plan 
+#' 
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico path to the xlsform file used to colllect the data
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @export
+ 
+kobo_likert <- function(datalist = datalist, 
+                          datasource = NULL,
+                          dico = dico) {
+  
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
+  require(dplyr)
+  ## Check the frequency of list_name within each group,
+  ## Filter the combination of list and group where we have more than 3 occurrences
+  # not taking in account when the appearance is not "label"
+  grouplikert <- as.data.frame(dico[1]) |>
+    dplyr::filter( type ==  "select_one") |>
+    dplyr::filter( appearance !=  "label") |>
+    dplyr::group_by( scope, list_name, dataframe) |>
+    dplyr::summarise( cnt= dplyr::n() )|>
+    dplyr::filter( cnt >= 2)
+  
+  if(nrow(grouplikert)  == 0) {
+    cat("No potential likert in the form")
+    } else {
+          for (i in 1:nrow(grouplikert)  ) {
+          ## getting the group and corresponding label
+          scopei <-   as.character(grouplikert[i, c("scope")])
+          dataframei <-   as.character(grouplikert[i, c("dataframe")])
+          ## geting the list_name and corresponding label
+          list_namei <- as.character( grouplikert[i, c("list_name")])
+          
+          p <- plot_likert(datalist = datalist, 
+                      datasource = datasource,
+                      dico = dico,
+                      scopei =  scopei,
+                      dataframei =  dataframei,
+                      list_namei = list_namei,
+                      showcode = TRUE)
+          return(p)
+  
+        }
+    }
+}
+
+```
+
+```{r examples-kobo_likert}
+dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package = "kobocruncher") )
+datalistlikert <- kobo_data(datapath = system.file("data_likert.xlsx", package = "kobocruncher") )
+
+kobo_likert(datalist = datalistlikert,
+              dico = dicolikert,
+              datasource = "a great survey!")
+
+
+```
+
+```{r tests-kobo_likert}
 # test_that("survey_label works", {
 # 
 # })

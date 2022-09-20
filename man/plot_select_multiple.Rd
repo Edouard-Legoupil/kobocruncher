@@ -4,7 +4,13 @@
 \alias{plot_select_multiple}
 \title{Plotting Select multiple variable}
 \usage{
-plot_select_multiple(datalist = datalist, dico = dico, var, showcode = FALSE)
+plot_select_multiple(
+  datalist = datalist,
+  dico = dico,
+  var,
+  datasource = NULL,
+  showcode = FALSE
+)
 }
 \arguments{
 \item{datalist}{An object of the "datalist" class as defined in kobocruncher}
@@ -12,6 +18,8 @@ plot_select_multiple(datalist = datalist, dico = dico, var, showcode = FALSE)
 \item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
 
 \item{var}{name of the variable to display}
+
+\item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform}
 
 \item{showcode}{display the code}
 }

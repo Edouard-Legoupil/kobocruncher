@@ -2,12 +2,13 @@
 
 #' @title Plotting Correlation
 #' 
-#' @description blbla
+#' @description  Perform chisquare test and display results if significant
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
@@ -18,69 +19,170 @@
 #' plot_correlation(datalist = datalist,
 #'               dico = dico, 
 #'               var = "profile.occupation",
-#'               by_var = "profile.country")
+#'               by_var = "profile.country",
+#'               datasource = NULL)
 plot_correlation <- function(datalist = datalist, 
                              dico = dico,
                              var, 
                              by_var, 
+                             datasource = NULL,
                              showcode = FALSE) {
   
-       ## verify they are in the same frame
-       frame1 <- kobo_frame(datalist = datalist,
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
+  ## verify they are in the same frame
+  frame1 <- kobo_frame(datalist = datalist,
                             dico = dico,
                             var = var) 
-       frame2 <- kobo_frame(datalist = datalist,
+  frame2 <- kobo_frame(datalist = datalist,
                             dico = dico,
                             var = by_var ) 
        
-     if(by_var != var & !( identical(frame1, frame2)) )
-      { cat("the two variables are identical or not in the same data framee")
-      } else {
-       formula <- frame1 |>
-       dplyr::select(var, by_var) 
-       names(formula)[1] <- "target"
-       names(formula)[2] <- "tested"
-       
-       ## Check that each class is represented
-       check.class <- as.data.frame(table(formula$target,formula$tested))
-       n.class <- nrow(check.class)
-       n.class.notnull <- nrow(check.class[check.class$Freq > 0, ])
-      
-       ### Testing number of levels for the 2 variables as 'x' and 'y' must have at least 2 levels
-       if ( ## We need at least 2 levels
-        ( nlevels(as.factor(as.character(formula$target))) > 1 ) &
-        ( nlevels(as.factor(as.character(formula$tested))) > 1 ) &
-           ## If too many levels - more than 8, the corrogram is not legible...
-        ( nlevels(as.factor(as.character(formula$target))) < 8 ) &
-        ( nlevels(as.factor(as.character(formula$tested))) < 8 ) #&
-          ## May have class with zero value...
-         # n.class == n.class.notnull
-        ) { 
-       
-        p.value  <- round(stats::chisq.test(formula$target,formula$tested)$p.value,4)   ### Case there not any positive test
-        if (p.value <= 0.05 ) {
-                 cat("No significant association found for this question...\n")
-          } else {
-          ## now generating correlation plot 
-          corrplot::corrplot(stats::chisq.test(formula$target,formula$tested)$residuals,
-                 is.cor = FALSE, # use for general matrix to convert to Sq form
-                 cl.pos = "n", ## Do not display the color legend
-                 cl.cex = 0.7, # Size of all label
-                 tl.cex = 0.7, # Size of axis label
-                 tl.srt = 45, # string rotation in degrees
-                 tl.col = "black", # color of text label.
-                 addCoef.col = "grey", # add coeff in the chart
-                 number.cex = 3/ncol(stats::chisq.test(formula$target,formula$tested)), # size of coeff
-                 mar = c(0.5,0.5,4, 0.5), ## margin of plots
-                 title = paste0("Statistical Association between: \n ", 
-                                label_varname(dico = dico,  x = var),
-                                "[row] & ",
-                                label_varname(dico = dico, x = by_var), "[col]" ))
-
-           
-          } }  
-       else { cat("there are either too many or not enough level to perform this analysis.. Clean your data.\n") } 
-     }
+  if(by_var == var  ) {
+       #  cat(paste0("The two variables ",var , " &  ", by_var ,"are identical \n"))
+    } else if( !( identical(frame1, frame2)) ) {
+       #  cat(paste0("The two variables: ",var , " &  ", by_var ," are not in the same data frame \n"))
+    } else  {
+         formula <- frame1 |>
+                  dplyr::select( all_of(var), all_of(by_var)) 
+         names(formula)[1] <- "target"
+         names(formula)[2] <- "tested"
     
-}
+         ## Apply the labels  
+         formula[,1] <- label_choiceset(dico = dico, x = var)(formula[,1])
+         formula[,2] <- label_choiceset(dico = dico, x = by_var)(formula[,2])
+    
+         ## Check that each class is represented
+         check.class <- as.data.frame(table(formula$target,formula$tested))
+         n.class <- nrow(check.class)
+         n.class.notnull <- nrow(check.class[check.class$Freq > 0, ])
+        
+        ### Testing necessary condition to perform the correlation test
+        if(n.class == 0) {
+          cat(paste0("There is no data recorded. \n")) 
+          } else if ( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var1) |> dplyr::pull() )))  < 2) {
+            # cat(paste0("There is only one single response option recorded on ",var , " to assess correlation. \n"))
+          } else if( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var2) |> dplyr::pull()  )))  < 2) {
+            # cat(paste0("There is only one single response option recorded on ",by_var , " to assess correlation. \n")) 
+          } else if( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var1)  |> dplyr::pull() )))  > 7) {
+             cat(paste0("There are too many response options recorded on ", var , " to assess correlation. You may consider some data cleaning. \n"))
+          } else if ( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var2) |> dplyr::pull()  )))  > 7) {
+            cat(paste0("There  are too many response options recorded on ", by_var , " to assess correlation. You may consider some data cleaning. \n")) 
+          } else if ( nrow(check.class[check.class$Freq > 0, ]) == 0 ) {
+            cat(paste0("There is no sufficient cross records  to assess correlation between ",var , " &  ", by_var ,". \n")) 
+          } else {
+          
+          p.value  <- round(stats::chisq.test(formula$target,formula$tested)$p.value,4)   ### Case there not any positive test
+          if (p.value > 0.05 ) {
+            cat(paste0("No significant association found between ",var , " &  ", by_var ," (p.value :",p.value  , ").\n")) } 
+          else {
+            
+            ## Writing code instruction in report
+            if( showcode == TRUE) {
+              cat(paste0(label_varname(dico = dico, x = var), "\n", fontawesome::fa("far fa-copy", fill ="grey"),
+                         " `plot_correlation(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))} else {}
+              
+
+
+                 ## plotting the residuals... 
+                 cormat <- as.data.frame(stats::chisq.test(formula$target,
+                                                          formula$tested)$residuals) |>
+                                dplyr::mutate(direction =   ifelse(Freq < 0, "negative","positive"))|>
+                                dplyr::mutate(intense =  abs(Freq))
+                 maxcor <- max( abs(cormat$Freq)) + 40
+                 mincor <- min( abs(cormat$Freq))
+                 p <- ggplot2::ggplot(
+                      data = cormat,
+                      mapping = ggplot2::aes_string(x = "formula.target",
+                                                    y = "formula.tested",
+                                                    fill = "direction")) +
+                    ggplot2::geom_point(
+                     # color = outline.color,
+                      alpha=0.7,
+                      shape = 21,
+                      ggplot2::aes_string(size = "intense")
+                    ) +
+                
+                    ggplot2::geom_text(aes(label = round(Freq),3), 
+                              colour = "white", 
+                              size = 3)    +
+                    #ggplot2::scale_size(range = c(mincor, maxcor)) +
+                    ggplot2::scale_size_area(max_size = maxcor) +
+                    #ggplot2::guides(size = FALSE)+
+                    ggplot2::scale_fill_manual(values=c(positive="steelblue",
+                                                        negative="firebrick1")) +
+                    ggplot2::labs(x = NULL, y = NULL,
+                      title = stringr::str_wrap(paste0("A Significant Statistical Association was identified between: \n ",
+                                                       label_varname(dico = dico,  x = var),
+                                                       "[row] & ",
+                                                       label_varname(dico = dico, x = by_var), "[col]" ), 100),
+                      subtitle = stringr::str_wrap(paste0("(p:",p.value,"). Correlogram Interpretation hint: the size of the dots indicates the strenght of association, the color indicates its type (positive/attraction=blue, negative/repulsion= red) "), 110),
+                      caption = glue::glue("Source: {datasource}")) +
+                    theme_minimal( base_size = 24) +
+                    theme( panel.grid.major.x  = element_line(color = "#cbcbcb", alpha=0.5, size =0.3, linetype = "dotted"), #element_blank(),
+                           panel.grid.major.y  = element_line(color = "#cbcbcb", alpha=0.5, size =0.3, linetype = "dotted"), #element_blank(),
+                           panel.grid.minor = element_blank() ,
+                           legend.position = 'none',
+                           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+                    theme(plot.title.position = "plot")
+                 
+                return(p) #  print(p)
+              } 
+         }  
+    }     
+} # end function
+  
+  
+                ## now generating correlation plot 
+                # corrplot::corrplot(stats::chisq.test(formula$target,formula$tested)$residuals,
+                #                    is.cor = FALSE, # use for general matrix to convert to Sq form
+                #                    cl.pos = "n", ## Do not display the color legend
+                #                    cl.cex = 0.7, # Size of all label
+                #                    tl.cex = 0.7, # Size of axis label
+                #                    tl.srt = 45, # string rotation in degrees
+                #                    tl.col = "black", # color of text label.
+                #                    addCoef.col = "grey", # add coeff in the chart
+                #                    number.cex = 3/ncol(stats::chisq.test(formula$target,formula$tested)), # size of coeff
+                #                    mar = c(0.5,0.5,4, 0.5), ## margin of plots
+                #                    title = stringr::str_wrap(paste0("A Significant Statistical Association (p:",p.value,") was identified between: \n ", 
+                #                                   label_varname(dico = dico,  x = var),
+                #                                   "[row] & ",
+                #                                   label_varname(dico = dico, x = by_var), "[col]" ), 100))       
+           
+
+         
+        # check.class2 <- check.class |> dplyr::filter(Freq > 1)
+        # #|> dplyr::select(Var1)
+        # ### Testing number of levels for the 2 variables as 'x' and 'y' must have at least 2 levels
+        # if ( ## We need at least 2 levels
+        #   ## We need at least 2 levels
+        #   ( nlevels(as.factor(as.character(check.class2$Var1))) > 1 ) &
+        #   ( nlevels(as.factor(as.character(check.class2$Var2))) > 1 ) &
+        #   ## If too many levels - more than 8, the corrogram is not legible...
+        #   ( nlevels(as.factor(as.character(check.class2$Var1))) < 8 ) &
+        #   ( nlevels(as.factor(as.character(check.class2$Var2))) < 8 )  &
+        #   
+        #   # ( nlevels(as.factor(as.character(formula$target))) > 1 ) &
+        #   # ( nlevels(as.factor(as.character(formula$tested))) > 1 ) &
+        #   #    ## If too many levels - more than 8, the corrogram is not legible...
+        #   # ( nlevels(as.factor(as.character(formula$target))) < 8 ) &
+        #   # ( nlevels(as.factor(as.character(formula$tested))) < 8 )  &
+        #   ## May have class with zero value...
+        #   # n.class == n.class.notnull
+        #   ## Stop if there's no crossing of values because too many NA
+        #   n.class.notnull > 2
+        # ) { 
+          
+    
+        #     
+        #     
+        #   } }  
+        # else { #cat("There are either too many or not enough level to perform this analysis.. Clean your data.\n")
+        #   
+        #  cat(paste0("There are either too many or not enough level to assess correlation between ",var , " &  ", by_var ,". You may consider some data cleaning.\n"))
+        # } 
+   #    }
+   #  
+   # }
 

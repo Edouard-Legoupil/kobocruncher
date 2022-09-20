@@ -5,6 +5,7 @@
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
@@ -24,12 +25,14 @@
 plot_select_one <- function(datalist  ,
                             dico  ,
                             var,
+                            datasource = NULL,
                             showcode = FALSE) {
 
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
   ## Get default data source name 
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
  
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -114,9 +117,9 @@ plot_select_one <- function(datalist  ,
              panel.grid.minor = element_blank()    ) +
       theme(plot.title.position = "plot")
     
-    print(p)
+   return(p) #  print(p)
     
-  } else { cat("<strong style=\"color:#0072BC;\"> No recorded answers for this specific question!</strong>\n\n")}
+  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
   # cat("\n\n")
   }
 }  

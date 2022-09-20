@@ -29,13 +29,19 @@ knitr::opts_chunk$set(echo = FALSE,
 options(scipen = 999) # turn-off scientific notation like 1e+48
 set.seed(1)
 extrafont::loadfonts(quiet=TRUE)
-library("ggplot2")
-library("unhcrthemes")
-ggplot2::theme_set( unhcrthemes::theme_unhcr(font_size = 22))
 
 library("tidyverse")
 library("kobocruncher")
 library("officedown")
+library(unhcrthemes)
+library(ggplot2)
+library(rvg)
+library(tidyverse)
+library(scales)
+library(lubridate)
+
+# turn off the automatic use of showtext functionality, so that the dml function can works properly
+showtext::showtext_auto(FALSE) 
 ```
 
 ```{r  }
@@ -57,21 +63,30 @@ The Joint Data Interpretation allows to make sense of the data.
 
 The interpretation can make use of the "__Protection Risk Equation__" Analysis (See [Protection Gap Framework for Analysis](https://www.unhcr.org/50aa57ad9.pdf)) to look at 1) Harmful, discriminatory and/or protective contextual factors, 2) Current threats to the population, 3) Rights violations and abuses, 4) Threat effect on the population and 5) Existing capacities to address protection threats .
 
+ 
+
 ---
 
-```{r}
+```{r ph=officer::ph_location_fullsize()}
 ## here you can paste selected charts from the intial exploration phase...
-plot_select_one(datalist = datalist, dico = dico, "location")
+plot_select_one(datalist = datalist, dico = dico, "location")-> p
+dml(ggobj = p, fonts = list(serif = 'Lato'))
 ```
 
+
+
 ---
 
-```{r}
+```{r ph=officer::ph_location_fullsize()}
 ## here you can paste selected charts from the intial exploration phase...
- plot_integer(datalist = datalist, dico = dico, "members.age")
+ plot_integer(datalist = datalist, dico = dico, "members.age") -> p
+dml(ggobj = p, fonts = list(serif = 'Lato'))
 ```
 
+
+
 ---
+ 
 
 ## Columns & Images
 

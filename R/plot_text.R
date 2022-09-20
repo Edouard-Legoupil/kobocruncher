@@ -4,6 +4,7 @@
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' @export
 
@@ -18,10 +19,13 @@
 plot_text <- function(datalist = datalist, 
                       dico = dico,
                       var, 
+                      datasource = NULL,
                       showcode = FALSE) {
   
   requireNamespace("dplyr")
-  datasource <- as.character(  dico[3][[1]]$form_title ) 
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
                    var = var  )
@@ -84,7 +88,7 @@ plot_text <- function(datalist = datalist,
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :
       set.seed(1234)
-      wordcloud::wordcloud(words = d$word, # words : the words to be plotted
+     p <-  wordcloud::wordcloud(words = d$word, # words : the words to be plotted
                                 freq = d$freq,  # freq : their frequencies
                                 min.freq = 1,  # min.freq : words with frequency below min.freq will not be plotted
                                 max.words=200, # max.words : maximum number of words to be plotted
@@ -95,7 +99,7 @@ plot_text <- function(datalist = datalist,
                                                   x= var), 90),
            sub = glue::glue("Open Text question \n Source: {datasource}" ))  
     
-         
+       return(p)  
       # p1 <- ggplot2::ggplot(d, 
       #              aes(label = word,
       #                  size = freq,

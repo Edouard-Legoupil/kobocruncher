@@ -7,11 +7,11 @@ output:
     toc_depth: 2
     toc_float: true 
 params:
-  datafolder: ""
-  ridl: ""
+  datafolder: "data-raw"
+  ridl: "ridlproject"
   data: "data.xlsx"
   form: "form.xlsx"
-  datasource: ""
+  datasource: "Study name reference"
 ---
 
 <!--
@@ -108,7 +108,7 @@ The report can be regenerated as needed by:
 ## Let's extract the analysis plan from the xlsform - or extend the current one
 kobo_prepare_form(xlsformpath = xlsformpath ,
                  xlsformpathout =  here::here(params$datafolder, params$form)  ,
-                 language = "" ) ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
+                 label_language = "" ) ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
 ```
 
 
@@ -147,15 +147,17 @@ datalist <- expanded[[2]]
 
 ```{r cruncher, results='asis' }
 kobo_cruncher(datalist = datalist,
-              dico = dico)
+              dico = dico,
+              datasource = params$datasource)
 ```
 
 
 # Summary Likert Charts
 
 ```{r cruncherlikert, results='asis' }
-plot_likert(datalist = datalist,
-              dico = dico)
+kobo_likert(datalist = datalist,
+              dico = dico,
+              datasource = params$datasource)
 
 ## add cluster analysis if set up
 ## add prediction if set up

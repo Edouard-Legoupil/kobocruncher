@@ -35,7 +35,8 @@ label_choiceset <- function(dico,
     (\(x) purrr::set_names(x$label, x$name))()
   
 #  function(y) { dict[y] |> tidyr::replace_na("Other") }
-  function(y) { dplyr::if_else(is.na(dict[y]), y, dict[y]) }
+ # function(y) { dplyr::if_else(is.na(dict[y]), y, dict[y]) }
+  function(y) { ifelse(is.na(dict[y]), y, dict[y]) }
 
 }
 

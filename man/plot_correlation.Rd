@@ -9,6 +9,7 @@ plot_correlation(
   dico = dico,
   var,
   by_var,
+  datasource = NULL,
   showcode = FALSE
 )
 }
@@ -21,10 +22,12 @@ plot_correlation(
 
 \item{by_var}{variable to use for cross tabulation}
 
+\item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform}
+
 \item{showcode}{display the code}
 }
 \description{
-blbla
+Perform chisquare test and display results if significant
 }
 \examples{
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -33,5 +36,6 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 plot_correlation(datalist = datalist,
               dico = dico, 
               var = "profile.occupation",
-              by_var = "profile.country")
+              by_var = "profile.country",
+              datasource = NULL)
 }

@@ -7,6 +7,11 @@
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @param scopei group in which the likert frame are
+#' @param list_namei name of the likert option list
+#' @param dataframei name of the frame within the dataset where to look for the data
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param showcode display the code
 #' @export
 
 #' @examples
@@ -14,42 +19,41 @@
 #' datalistlikert <- kobo_data(datapath = system.file("data_likert.xlsx", package = "kobocruncher") )
 #' 
 #' plot_likert(datalist = datalistlikert,
-#'               dico = dicolikert)
+#'             dico = dicolikert,
+#'             datasource = NULL,
+#'             scopei =  "group_ei8jz33",
+#'             dataframei =   "1",
+#'             ## getting the list_name and corresponding label
+#'             list_namei = "yk0td68" 
+#'           )
 plot_likert <- function(datalist = datalist,
-                        dico = dico) {
-
+                        dico = dico,
+                        scopei,
+                        list_namei,
+                        dataframei,
+                        datasource = NULL,
+                        showcode = FALSE) {
+ 
+   ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  
   require(dplyr)
   require(ggplot2)
   require(likert)
   require(cowplot)
-  ## Check the frequency of list_name within each group,
-  ## Filter the combination of list and group where we have more than 3 occurrences
-  # not taking in account when the appearance is not "label"
-  grouplikert <- as.data.frame(dico[1]) |>
-    dplyr::filter( type ==  "select_one") |>
-    dplyr::filter( appearance !=  "label") |>
-    dplyr::group_by( scope, list_name, dataframe) |>
-    dplyr::summarise( cnt= dplyr::n() )|>
-    dplyr::filter( cnt >= 2)
   
-  if(nrow(grouplikert)  == 0) {
-    cat("No potential likert in the form")
-    } else {
+   ## Writing code instruction in report
+            if( showcode == TRUE) {
+              cat(paste0( fontawesome::fa("far fa-copy", fill ="grey"),
+                         " `plot_likert(datalist = datalist, dico = dico,  scopei =  \"", scopei, "\",   list_namei =  \"", list_namei, "\",  dataframei =  \"", dataframei, "\")` \n\n "))} else {}
+             
   
 
-        for (i in 1:nrow(grouplikert)  ) {
-          
-          ## getting the group and corresponding label
-          scopei <-   as.character(grouplikert[i, c("scope")])
-          dataframei <-   as.character(grouplikert[i, c("dataframe")])
-          
           labelgroup <- as.data.frame(dico[1]) |>
             dplyr::filter( name  %in%  c(scopei)) |>
             dplyr::select( label) |>
             dplyr::pull()
           
-          ## geting the list_name and corresponding label
-          list_namei <- as.character( grouplikert[i, c("list_name")])
           nlevel_likert <- as.data.frame(dico[2]) |>
             dplyr::filter( list_name ==   list_namei) |>
             dplyr::select( name, label)  |>
@@ -100,13 +104,13 @@ plot_likert <- function(datalist = datalist,
                                   theme(legend.position="bottom", legend.box="vertical", legend.margin=margin(t = 0, unit='cm')) )
         
         #cowplot::ggdraw(p1_legend)
-        print( cowplot::plot_grid(a +  theme(legend.position = 'none'), 
+        p <-  cowplot::plot_grid(a +  theme(legend.position = 'none'), 
                                   p1_legend ,
                                   nrow = 2, 
-                                  rel_heights = c(1, 0.1)))
+                                  rel_heights = c(1, 0.1))
           
-          
-        }
-    }
+    return(p)      
+        
+    
 }
 

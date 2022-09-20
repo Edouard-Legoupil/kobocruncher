@@ -4,6 +4,7 @@
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico path to the xlsform file used to colllect the data
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @export
  
 #' @examples
@@ -11,12 +12,16 @@
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 #' 
 #' kobo_cruncher(datalist = datalist,
-#'               dico = dico)
+#'               dico = dico,
+#'               datasource = "a great survey!")
 #' 
 #' 
 kobo_cruncher <- function(datalist = datalist, 
+                          datasource = NULL,
                           dico = dico) {
   
+  ## Get default data source name 
+  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
   
   questions <- as.data.frame(dico[4])
   disaggregation <-  c(as.data.frame(dico[1]) |> 
@@ -53,22 +58,26 @@ kobo_cruncher <- function(datalist = datalist,
       
       if (type == "select_one") plot_select_one(datalist = datalist, 
                                                 dico = dico,
-                                                var = name, 
+                                                var = name,  
+                                                datasource = datasource,
                                                 showcode = TRUE)
       
       if (type == "select_multiple") plot_select_multiple(datalist = datalist,
                                                           dico = dico, 
-                                                          var = name, 
+                                                          var = name,  
+                                                          datasource = datasource,
                                                           showcode = TRUE)
       
       if (type %in% c("numeric", "integer", "range")) plot_integer(datalist = datalist, 
                                                           dico = dico,
-                                                          var = name, 
+                                                          var = name,  
+                                                          datasource = datasource,
                                                           showcode = TRUE)
       
       if (type == "text") plot_text(datalist = datalist, 
                                     dico = dico, 
-                                    var = name, 
+                                    var = name,  
+                                    datasource = datasource,
                                     showcode = TRUE)
       
     
@@ -79,7 +88,8 @@ kobo_cruncher <- function(datalist = datalist,
             plot_select_one_cross(datalist = datalist, 
                                   dico = dico,
                                   var = name, 
-                                  by_var = disag,
+                                  by_var = disag, 
+                                  datasource = datasource,
                                   showcode = TRUE) }
       }
       if (type == "select_multiple" &  length(disaggregation)>=1 ) {
@@ -89,6 +99,7 @@ kobo_cruncher <- function(datalist = datalist,
                                   dico = dico,
                                   var = name, 
                                   by_var = disag,
+                                  datasource = datasource,
                                   showcode = TRUE) }
       }
       if (type %in% c("numeric", "integer") &  length(disaggregation)>=1 ) {
@@ -98,7 +109,8 @@ kobo_cruncher <- function(datalist = datalist,
             plot_integer_cross(datalist = datalist, 
                                dico = dico,
                                var = name, 
-                               by_var = disag,
+                               by_var = disag, 
+                               datasource = datasource,
                                showcode = TRUE) }
       }
     
@@ -111,6 +123,7 @@ kobo_cruncher <- function(datalist = datalist,
                              dico = dico,
                              var = name, 
                              by_var = correl,
+                             datasource = datasource,
                              showcode = TRUE) }
       }
   

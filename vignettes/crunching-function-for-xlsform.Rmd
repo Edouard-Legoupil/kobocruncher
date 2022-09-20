@@ -49,7 +49,8 @@ Now we can extend the xlsform that was used to document key next steps in the da
 
 ```{r examples-kobo_prepare_form}
 # kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
-#                   xlsformpathout = "form_with_plan.xlsx")
+#                   xlsformpathout = "form_with_plan.xlsx",
+#                   label_language = "")
 ```
 
 ## Prepare data dictionnary
@@ -361,7 +362,8 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 plot_correlation(datalist = datalist,
               dico = dico, 
               var = "profile.occupation",
-              by_var = "profile.country")
+              by_var = "profile.country",
+              datasource = NULL)
 ```
 
 ## Multivariate
@@ -373,7 +375,13 @@ dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package =
 datalistlikert <- kobo_data(datapath = system.file("data_likert.xlsx", package = "kobocruncher") )
 
 plot_likert(datalist = datalistlikert,
-              dico = dicolikert)
+            dico = dicolikert,
+            datasource = NULL,
+            scopei =  "group_ei8jz33",
+            dataframei =   "1",
+            ## getting the list_name and corresponding label
+            list_namei = "yk0td68" 
+          )
 ```
 
 ## Plotting clusters
@@ -410,7 +418,21 @@ dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "k
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 
 kobo_cruncher(datalist = datalist,
-              dico = dico)
+              dico = dico,
+              datasource = "a great survey!")
+
+
+```
+
+## Crunching Likert componnents
+
+```{r examples-kobo_likert}
+dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package = "kobocruncher") )
+datalistlikert <- kobo_data(datapath = system.file("data_likert.xlsx", package = "kobocruncher") )
+
+kobo_likert(datalist = datalistlikert,
+              dico = dicolikert,
+              datasource = "a great survey!")
 
 
 ```

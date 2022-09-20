@@ -9,6 +9,7 @@ plot_select_multiple_cross(
   dico = dico,
   var,
   by_var,
+  datasource = NULL,
   showcode = FALSE
 )
 }
@@ -20,6 +21,8 @@ plot_select_multiple_cross(
 \item{var}{name of the variable to display}
 
 \item{by_var}{variable to use for cross tabulation}
+
+\item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform}
 
 \item{showcode}{display the code}
 }

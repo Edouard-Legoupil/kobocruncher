@@ -4,12 +4,30 @@
 \alias{plot_likert}
 \title{Plotting Likert}
 \usage{
-plot_likert(datalist = datalist, dico = dico)
+plot_likert(
+  datalist = datalist,
+  dico = dico,
+  scopei,
+  list_namei,
+  dataframei,
+  datasource = NULL,
+  showcode = FALSE
+)
 }
 \arguments{
 \item{datalist}{An object of the "datalist" class as defined in kobocruncher}
 
 \item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
+
+\item{scopei}{group in which the likert frame are}
+
+\item{list_namei}{name of the likert option list}
+
+\item{dataframei}{name of the frame within the dataset where to look for the data}
+
+\item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform}
+
+\item{showcode}{display the code}
 }
 \description{
 Detect if we have more than 3 questions with the same response options within the same questions group
@@ -20,5 +38,11 @@ dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package =
 datalistlikert <- kobo_data(datapath = system.file("data_likert.xlsx", package = "kobocruncher") )
 
 plot_likert(datalist = datalistlikert,
-              dico = dicolikert)
+            dico = dicolikert,
+            datasource = NULL,
+            scopei =  "group_ei8jz33",
+            dataframei =   "1",
+            ## getting the list_name and corresponding label
+            list_namei = "yk0td68" 
+          )
 }

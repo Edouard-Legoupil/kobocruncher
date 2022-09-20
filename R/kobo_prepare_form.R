@@ -38,7 +38,8 @@
 #' @export 
 #' @examples
 #' # kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
-#' #                   xlsformpathout = "form_with_plan.xlsx")
+#' #                   xlsformpathout = "form_with_plan.xlsx",
+#' #                   label_language = "")
 kobo_prepare_form <- function(xlsformpath,
                               xlsformpathout,
                               label_language = "",
@@ -97,11 +98,8 @@ kobo_prepare_form <- function(xlsformpath,
                                       paste0("::",settings$default_language)),
                               paste0("::",label_language))
     if (settings$form_title =="" | is.na(settings$form_title)) { } else {settings$form_title <- "Study"}
-    sheetname <- "settings"
-    openxlsx::addWorksheet(wb, sheetname)
-    openxlsx::writeData(wb, sheetname, settings, withFilter = TRUE)
-    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(settings), widths = "auto")
-    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(settings), gridExpand = TRUE)
+   
+
     
     
     ### Survey sheet  ----------------------------------->
@@ -281,7 +279,14 @@ kobo_prepare_form <- function(xlsformpath,
     openxlsx::setColWidths(wb, sheetname, cols = 2:3, widths = 30)
     openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(choices), gridExpand = TRUE)
     
-
+     ### settings sheets ----------------------------------->
+    sheetname <- "settings"
+    all.cols <- 1:ncol(settings)
+    hdr.rows <- 1
+    openxlsx::addWorksheet(wb, sheetname)
+    openxlsx::writeData(wb, sheetname, settings, withFilter = TRUE)
+    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(settings), widths = "auto")
+    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(settings), gridExpand = TRUE)
     
     ### RIDL sheets ----------------------------------->
     ridl_schema <- jsonlite::fromJSON("https://raw.githubusercontent.com/okfn/ckanext-unhcr/master/ckanext/unhcr/schemas/dataset.json")

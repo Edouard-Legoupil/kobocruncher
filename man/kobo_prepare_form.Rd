@@ -49,5 +49,6 @@ Also, coloring all rows that have type equal to "begin group", "end group", "beg
 }
 \examples{
 # kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
-#                   xlsformpathout = "form_with_plan.xlsx")
+#                   xlsformpathout = "form_with_plan.xlsx",
+#                   label_language = "")
 }
