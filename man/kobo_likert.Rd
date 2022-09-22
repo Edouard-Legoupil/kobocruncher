@@ -2,7 +2,7 @@
 % Please edit documentation in R/kobo_likert.R
 \name{kobo_likert}
 \alias{kobo_likert}
-\title{Crunch all variables according to the analysis plan}
+\title{Crunch all likert variables according to the analysis plan}
 \usage{
 kobo_likert(datalist = datalist, datasource = NULL, dico = dico)
 }
@@ -14,7 +14,7 @@ kobo_likert(datalist = datalist, datasource = NULL, dico = dico)
 \item{dico}{path to the xlsform file used to colllect the data}
 }
 \description{
-Crunch all variables according to the analysis plan
+Crunch all likert variables according to the analysis plan
 }
 \examples{
 dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package = "kobocruncher") )

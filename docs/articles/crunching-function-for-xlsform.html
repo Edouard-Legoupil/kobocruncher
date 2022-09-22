@@ -153,7 +153,8 @@ and `system.file()` to read it in your examples.
 steps in the data preparation.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),</span></span>
-<span><span class="co">#                   xlsformpathout = "form_with_plan.xlsx")</span></span></code></pre></div>
+<span><span class="co">#                   xlsformpathout = "form_with_plan.xlsx",</span></span>
+<span><span class="co">#                   label_language = "")</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="prepare-data-dictionnary">Prepare data dictionnary<a class="anchor" aria-label="anchor" href="#prepare-data-dictionnary"></a>
@@ -823,14 +824,16 @@ steps in the data preparation.</p>
 <span></span>
 <span><span class="fu"><a href="../reference/label_choiceset.html">label_choiceset</a></span><span class="op">(</span>dico <span class="op">=</span> <span class="va">dico</span>, </span>
 <span>                x<span class="op">=</span><span class="st">"profile.country"</span><span class="op">)</span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">profile.country</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Venezuela"   "Honduras"    "El Salvador" "El Salvador" "Colombia"</span></span>
+<span><span class="co">#&gt;           VEN           HND           SLV           SLV           COL </span></span>
+<span><span class="co">#&gt;   "Venezuela"    "Honduras" "El Salvador" "El Salvador"    "Colombia"</span></span>
 <span></span>
 <span><span class="co">## Test when there's no dictionnary</span></span>
 <span><span class="va">data</span><span class="op">$</span><span class="va">profile.occupation</span></span>
 <span><span class="co">#&gt; [1] "Consultant" "farmer"     "vendor"     "teacher"    "farmer"</span></span>
 <span><span class="fu"><a href="../reference/label_choiceset.html">label_choiceset</a></span><span class="op">(</span>dico <span class="op">=</span> <span class="va">dico</span>, </span>
 <span>                x<span class="op">=</span><span class="st">"profile.occupation"</span><span class="op">)</span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">profile.occupation</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Consultant" "farmer"     "vendor"     "teacher"    "farmer"</span></span></code></pre></div>
+<span><span class="co">#&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt; </span></span>
+<span><span class="co">#&gt; "Consultant"     "farmer"     "vendor"    "teacher"     "farmer"</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -864,7 +867,7 @@ steps in the data preparation.</p>
 <span>              dico <span class="op">=</span> <span class="va">dico</span>, </span>
 <span>              var <span class="op">=</span> <span class="st">"profile.countryerror"</span>,</span>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;strong style="color:#0072BC;"&gt;This variable could not be identified in the dataset&lt;/strong&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;strong style="color:#0072BC;"&gt;The variable from the form called: profile.countryerror could not be identified in the dataset&lt;/strong&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plotting-select-multiple-variable">Plotting Select multiple variable<a class="anchor" aria-label="anchor" href="#plotting-select-multiple-variable"></a>
@@ -891,7 +894,7 @@ steps in the data preparation.</p>
 <span>              var <span class="op">=</span> <span class="st">"profile.reason1"</span>,</span>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>            <span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;strong style="color:#0072BC;"&gt;This variable could not be identified in the dataset&lt;/strong&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;strong style="color:#0072BC;"&gt;The variable from the form called: profile.reason1 could not be identified in the dataset&lt;/strong&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plotting-numeric-variable">Plotting Numeric variable<a class="anchor" aria-label="anchor" href="#plotting-numeric-variable"></a>
@@ -1023,16 +1026,11 @@ steps in the data preparation.</p>
 <span><span class="fu"><a href="../reference/plot_correlation.html">plot_correlation</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,</span>
 <span>              dico <span class="op">=</span> <span class="va">dico</span>, </span>
 <span>              var <span class="op">=</span> <span class="st">"profile.occupation"</span>,</span>
-<span>              by_var <span class="op">=</span> <span class="st">"profile.country"</span><span class="op">)</span></span>
+<span>              by_var <span class="op">=</span> <span class="st">"profile.country"</span>,</span>
+<span>              datasource <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in stats::chisq.test(formula$target, formula$tested): Chi-squared</span></span>
 <span><span class="co">#&gt; approximation may be incorrect</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in stats::chisq.test(formula$target, formula$tested): Chi-squared</span></span>
-<span><span class="co">#&gt; approximation may be incorrect</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in stats::chisq.test(formula$target, formula$tested): Chi-squared</span></span>
-<span><span class="co">#&gt; approximation may be incorrect</span></span></code></pre></div>
-<p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_correlation-1.png" width="700"></p>
+<span><span class="co">#&gt; No significant association found between profile.occupation &amp;  profile.country (p.value :0.3505).</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="multivariate">Multivariate<a class="anchor" aria-label="anchor" href="#multivariate"></a>
@@ -1047,7 +1045,13 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; Warning: Unknown or uninitialised column: `_index`.</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_likert.html">plot_likert</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalistlikert</span>,</span>
-<span>              dico <span class="op">=</span> <span class="va">dicolikert</span><span class="op">)</span></span>
+<span>            dico <span class="op">=</span> <span class="va">dicolikert</span>,</span>
+<span>            datasource <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>            scopei <span class="op">=</span>  <span class="st">"group_ei8jz33"</span>,</span>
+<span>            dataframei <span class="op">=</span>   <span class="st">"1"</span>,</span>
+<span>            <span class="co">## getting the list_name and corresponding label</span></span>
+<span>            list_namei <span class="op">=</span> <span class="st">"yk0td68"</span> </span>
+<span>          <span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: dplyr</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
@@ -1075,10 +1079,8 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt;   tibble::lst(mean, median)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   # Using lambdas</span></span>
-<span><span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span></span></code></pre></div>
-<p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_likert-1.png" width="700"><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_likert-2.png" width="700"><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_likert-3.png" width="700"></p>
+<span><span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span></code></pre></div>
+<p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_likert-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="plotting-clusters">Plotting clusters<a class="anchor" aria-label="anchor" href="#plotting-clusters"></a>
@@ -1121,7 +1123,8 @@ steps in the data preparation.</p>
 <span><span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/kobo_cruncher.html">kobo_cruncher</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,</span>
-<span>              dico <span class="op">=</span> <span class="va">dico</span><span class="op">)</span></span>
+<span>              dico <span class="op">=</span> <span class="va">dico</span>,</span>
+<span>              datasource <span class="op">=</span> <span class="st">"a great survey!"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Where is the interview taking place</span></span>
 <span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt;`plot_select_one(datalist = datalist, dico = dico, "location")` </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1133,6 +1136,7 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; # Respondant profile</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; NULL</span></span>
 <span><span class="co">#&gt; What is your country of Origin?</span></span>
 <span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt;`plot_select_one(datalist = datalist, dico = dico, "profile.country")` </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1181,6 +1185,30 @@ steps in the data preparation.</p>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-7.png" width="700"></p>
 </div>
 <div class="section level3">
+<h3 id="crunching-likert-componnents">Crunching Likert componnents<a class="anchor" aria-label="anchor" href="#crunching-likert-componnents"></a>
+</h3>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dicolikert</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_dico.html">kobo_dico</a></span><span class="op">(</span> xlsformpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"form_likert.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span>
+<span><span class="va">datalistlikert</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kobo_data.html">kobo_data</a></span><span class="op">(</span>datapath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data_likert.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span> <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Unknown or uninitialised column: `_index`.</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/kobo_likert.html">kobo_likert</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalistlikert</span>,</span>
+<span>              dico <span class="op">=</span> <span class="va">dicolikert</span>,</span>
+<span>              datasource <span class="op">=</span> <span class="st">"a great survey!"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 3 groups of likert questions in the form&lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt; `plot_likert(datalist = datalist, dico = dico,  scopei =  "group_ei8jz33",   list_namei =  "yk0td68",  dataframei =  "1")` </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span></code></pre></div>
+<p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_likert-1.png" width="700"></p>
+<pre><code><span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt; `plot_likert(datalist = datalist, dico = dico,  scopei =  "group_pm0cj55",   list_namei =  "yk0td68",  dataframei =  "1")` </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span></code></pre>
+<p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_likert-2.png" width="700"></p>
+<pre><code><span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt; `plot_likert(datalist = datalist, dico = dico,  scopei =  "group_wc0ig44",   list_namei =  "yk0td68",  dataframei =  "1")` </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span></code></pre>
+<p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_likert-3.png" width="700"></p>
+</div>
+<div class="section level3">
 <h3 id="report-template-a-for-automatic-data-exploration">Report Template A for Automatic Data Exploration<a class="anchor" aria-label="anchor" href="#report-template-a-for-automatic-data-exploration"></a>
 </h3>
 <p>The first RMD template gives an output in HTML for easy navigation -
@@ -1190,7 +1218,7 @@ content. During this stage, data cleaning and new variable creation can
 be performed through iterations</p>
 <p>This report also includes each plot syntax so that they can be easily
 pasted for the second report</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Initial Template for Automatic Data Exploration</span></span>
 <span><span class="co">#' The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.</span></span>
 <span><span class="co">#' It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations</span></span>
@@ -1208,7 +1236,7 @@ pasted for the second report</p>
 <p>The second template is used following the systematic data
 exploration. It will generate a PowerPoint presentation</p>
 <p>See a more detailed presentation of that step here: <a href="https://www.youtube.com/watch?v=0jE-Y7g88K4&amp;feature=youtu.be&amp;t=2305" class="external-link uri">https://www.youtube.com/watch?v=0jE-Y7g88K4&amp;feature=youtu.be&amp;t=2305</a></p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Second Template to prepare a presentation for the Joint Data Interpretation Session</span></span>
 <span><span class="co">#' </span></span>
 <span><span class="co"># usethis::use_rmarkdown_template(</span></span>
@@ -1225,7 +1253,7 @@ Template<a class="anchor" aria-label="anchor" href="#report-template-c-for-disse
 <p>The last template can be used to take note of the data interpretation
 session.</p>
 <p>It will generate a PDF or an paginated HTML page</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Report Template 3 for Dissemination and Data Story Telling Template</span></span>
 <span><span class="co">#' The last template can be used to take note of the data interpretation session. </span></span>
 <span><span class="co">#' It will generate a PDF or an paginated HTML page</span></span>
@@ -1239,7 +1267,7 @@ session.</p>
 <div class="section level3">
 <h3 id="shiny-app">Shiny App<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
 </h3>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># app_kobocruncher(theme="flatly")</span></span></code></pre></div>
 </div>

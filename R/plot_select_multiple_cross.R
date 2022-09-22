@@ -53,7 +53,7 @@ plot_select_multiple_cross <- function(datalist = datalist,
   #cat(paste("#### Variable: ", var))
   
   if ( is.nan(rr) | is.nan(rr2) ) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variables from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
   } else if (  ! (identical(data,data2))  ) {
     # nothing to do - the variable are not in the same frame
     } else {
@@ -71,9 +71,17 @@ plot_select_multiple_cross <- function(datalist = datalist,
                                       fontawesome::fa("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}   else {}
 
         
-      cntscross <- data |>
+      cntscross1 <- data |>
         ## keep only the variable we need 
-        tidyr::drop_na( tidyselect::all_of(c(var,by_var))) |>
+        tidyr::drop_na( tidyselect::all_of(c(var,by_var)))
+      
+      ## Need to check that there's actually a proper intersection in the response... 
+      if(nrow(cntscross1) == 0) {
+        
+         cat(paste0("<strong style=\"color:#0072BC;\">There is not intersection between the answers from the variables from the form called: ",var," or ", by_var, " in the dataset</strong>\n\n"))
+      } else {
+      
+      cntscross <- cntscross1 |>
         ## Separate the var with select_multiple 
         tidyr::separate_rows(.data[[var]], sep = " ") |>
         # Lump together factor levels into "other"
@@ -135,6 +143,8 @@ plot_select_multiple_cross <- function(datalist = datalist,
         theme(plot.title.position = "plot")
       
       return(p) #  print(p)
+      }
+       
     }   
     } else { }
   } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }

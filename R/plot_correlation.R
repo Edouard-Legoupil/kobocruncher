@@ -120,8 +120,8 @@ plot_correlation <- function(datalist = datalist,
                       subtitle = stringr::str_wrap(paste0("(p:",p.value,"). Correlogram Interpretation hint: the size of the dots indicates the strenght of association, the color indicates its type (positive/attraction=blue, negative/repulsion= red) "), 110),
                       caption = glue::glue("Source: {datasource}")) +
                     theme_minimal( base_size = 24) +
-                    theme( panel.grid.major.x  = element_line(color = "#cbcbcb", alpha=0.5, size =0.3, linetype = "dotted"), #element_blank(),
-                           panel.grid.major.y  = element_line(color = "#cbcbcb", alpha=0.5, size =0.3, linetype = "dotted"), #element_blank(),
+                    theme( panel.grid.major.x  = element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
+                           panel.grid.major.y  = element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
                            panel.grid.minor = element_blank() ,
                            legend.position = 'none',
                            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +

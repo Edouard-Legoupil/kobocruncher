@@ -120,6 +120,7 @@ kobo_prepare_form <- function(xlsformpath,
         relevant = character(),
         required = character(),
         constraint = character(),
+        appareance = character(),
         repeat_count = character(),
         calculation = character(),
         choice_filter = character(),
@@ -154,6 +155,7 @@ kobo_prepare_form <- function(xlsformpath,
     
     ## Adding variable if not present and checking the content of the variable to build up the analysis plan summary... 
     if ("hint" %in% colnames(survey)) {   } else {    survey$hint <- ""   }
+    if ("appareance" %in% colnames(survey)) {   } else {    survey$appareance <- ""   }
     if ("chapter" %in% colnames(survey)) { } else { survey$chapter <- ""   }
     if ("subchapter" %in% colnames(survey)) { } else { survey$subchapter <- ""   }
     if ("correlate" %in% colnames(survey)) {    } else {  survey$correlate <- ""}
@@ -215,7 +217,7 @@ kobo_prepare_form <- function(xlsformpath,
                      "label.lenght", "fullname",
                      "labelQ", "hintQ",
                      "required", "relevant",
-                     "constraint", "calculation" )
+                     "constraint", "calculation","appareance" )
     namesOfSur <- as.data.frame(namesOfSur) |>
       dplyr::filter(namesOfSur %in% colnames(survey)) |>
       dplyr::pull() 

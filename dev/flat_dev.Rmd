@@ -218,6 +218,7 @@ kobo_prepare_form <- function(xlsformpath,
         relevant = character(),
         required = character(),
         constraint = character(),
+        appareance = character(),
         repeat_count = character(),
         calculation = character(),
         choice_filter = character(),
@@ -252,6 +253,7 @@ kobo_prepare_form <- function(xlsformpath,
     
     ## Adding variable if not present and checking the content of the variable to build up the analysis plan summary... 
     if ("hint" %in% colnames(survey)) {   } else {    survey$hint <- ""   }
+    if ("appareance" %in% colnames(survey)) {   } else {    survey$appareance <- ""   }
     if ("chapter" %in% colnames(survey)) { } else { survey$chapter <- ""   }
     if ("subchapter" %in% colnames(survey)) { } else { survey$subchapter <- ""   }
     if ("correlate" %in% colnames(survey)) {    } else {  survey$correlate <- ""}
@@ -313,7 +315,7 @@ kobo_prepare_form <- function(xlsformpath,
                      "label.lenght", "fullname",
                      "labelQ", "hintQ",
                      "required", "relevant",
-                     "constraint", "calculation" )
+                     "constraint", "calculation","appareance" )
     namesOfSur <- as.data.frame(namesOfSur) |>
       dplyr::filter(namesOfSur %in% colnames(survey)) |>
       dplyr::pull() 
@@ -1408,7 +1410,7 @@ plot_select_one <- function(datalist  ,
   rr <- mean(!is.na(data[[var]]))
   
   if ( is.nan(rr)) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
   } else {
   
   ## Put a condition in case there's no record
@@ -1549,7 +1551,7 @@ plot_select_multiple <- function(datalist = datalist,
 
   
   if ( is.nan(rr)) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
   } else {
   
   ## If not empty
@@ -1695,7 +1697,7 @@ plot_integer <- function(datalist = datalist,
   # cat("---\n")
   # cat("\n\n")
  if ( is.nan(rr)) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
   } else {
   
   ## Writing report
@@ -1771,6 +1773,8 @@ plot_text <- function(datalist = datalist,
                       showcode = FALSE) {
   
   requireNamespace("dplyr")
+  requireNamespace("ggplot2")
+  require("ggplot2")
   ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
   
@@ -1786,7 +1790,7 @@ plot_text <- function(datalist = datalist,
   
   rr <- mean(!is.na(data[[var]]))
    if ( is.nan(rr)) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
   } else { 
       
   require("tm")
@@ -1835,37 +1839,41 @@ plot_text <- function(datalist = datalist,
       
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :
-      set.seed(1234)
-     p <-  wordcloud::wordcloud(words = d$word, # words : the words to be plotted
-                                freq = d$freq,  # freq : their frequencies
-                                min.freq = 1,  # min.freq : words with frequency below min.freq will not be plotted
-                                max.words=200, # max.words : maximum number of words to be plotted
-                                random.order=FALSE, # random.order : plot words in random order. If false, they will be plotted in decreasing frequency
-                                rot.per=0.25,   # rot.per : proportion words with 90 degree rotation (vertical text)
-                                colors= RColorBrewer::brewer.pal(8, "Dark2")) # colors : color words from least to most frequent. Use, for example, colors =“black” for single color.
-    graphics::title( main = stringr::str_wrap( label_varname(dico = dico, 
-                                                  x= var), 90),
-           sub = glue::glue("Open Text question \n Source: {datasource}" ))  
-    
-       return(p)  
-      # p1 <- ggplot2::ggplot(d, 
-      #              aes(label = word,
-      #                  size = freq,
-      #                  color = freq )) +
-      #       ggwordcloud::geom_text_wordcloud(area_corr = TRUE,
-      #                                        rm_outside = TRUE,
-      #                                        eccentricity = 1) +
-      #       scale_size_area(max_size = 50) +
-      #       # scale_radius(range = c(0, 10),  limits = c(0, NA)) +
-      #       scale_color_gradient(low = "darkred", high = "red") +
-      #       labs(x = NULL, y = NULL,
-      #        title = str_wrap(survey_label(var), 60), 
-      #        subtitle = if (!is.na(label_varhint(var))){ 
-      #          stringr::str_wrap(label_varhint(var), 70)} else { ""},
-      #        caption = glue::glue("Wordcloud displaying an Open Text question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
-      #   
-      #       theme_minimal( base_size = 24)  
-      # print(p1)
+      #set.seed(1234)
+      
+      ## Chart option 1
+     # p <-  wordcloud::wordcloud(words = d$word, # words : the words to be plotted
+     #            freq = d$freq,  # freq : their frequencies
+     #            min.freq = 1,  # min.freq : words with frequency below min.freq will not be plotted
+     #            max.words=200, # max.words : maximum number of words to be plotted
+     #            random.order=FALSE, # random.order : plot words in random order. If false, they will be plotted in decreasing frequency
+     #            rot.per=0.25,   # rot.per : proportion words with 90 degree rotation (vertical text)
+     #            colors= RColorBrewer::brewer.pal(8, "Dark2")) # colors : color words from least to most frequent. Use, for example, colors =“black” for single color.
+     #      graphics::title( main = stringr::str_wrap( label_varname(dico = dico, x= var), 90),
+     #                 sub = glue::glue("Open Text question \n Source: {datasource}" ))  
+     # 
+     # return(p)  
+      
+      
+      ## Chart option 2        
+      p1 <- ggplot2::ggplot(d,
+                   ggplot2::aes(label = word,
+                       size = freq,
+                       color = freq )) +
+            ggwordcloud::geom_text_wordcloud(area_corr = TRUE,
+                                             rm_outside = TRUE,
+                                             eccentricity = 1) +
+            ggplot2::scale_size_area(max_size = 50) +
+            # scale_radius(range = c(0, 10),  limits = c(0, NA)) +
+            ggplot2::scale_color_gradient(low = "darkred", high = "red") +
+            labs(x = NULL, y = NULL,
+                 title = stringr::str_wrap(label_varname(dico = dico, x = var), 90), 
+                 subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
+                     stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
+                 caption = glue::glue("Wordcloud displaying an Open Text question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
+
+            theme_minimal( base_size = 24)
+      return(p1)
       
     
   } else { cat("<strong style=\"color:#0072BC;\">No significant text for this specific question!</strong>\n\n")}
@@ -1937,7 +1945,7 @@ plot_select_one_cross <- function(datalist = datalist,
   #cat(paste("#### Variable: ", var))
   
   if ( is.nan(rr) | is.nan(rr2) ) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
   } else if (  ! (identical(data,data2))  ) {
     # nothing to do - the variable are not in the same frame
     } else {
@@ -1953,9 +1961,17 @@ plot_select_one_cross <- function(datalist = datalist,
                                                    x = var), "\n",
                                       fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}     else {}
 
-      cnts <- data |>
+      cnts1 <- data |>
         ## keep only the variable we need
-        tidyr::drop_na(tidyselect::all_of(c(var,by_var))) |>
+        tidyr::drop_na(tidyselect::all_of(c(var,by_var))) 
+      
+      ## Need to check that there's actually a proper intersection in the response... 
+      if(nrow(cnts1) == 0) {
+        
+         cat(paste0("<strong style=\"color:#0072BC;\">There is not intersection between the answers from the variables from the form called: ",var," or ", by_var, " in the dataset</strong>\n\n"))
+      } else {
+      
+      cnts <- cnts1 |>  
         # Lump together factor levels into "other"
         dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
                      y := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
@@ -2012,7 +2028,7 @@ plot_select_one_cross <- function(datalist = datalist,
         theme(plot.title.position = "plot")
 
        return(p) #  print(p)
-    
+      }
       }
     } else { }
   } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
@@ -2098,7 +2114,7 @@ plot_select_multiple_cross <- function(datalist = datalist,
   #cat(paste("#### Variable: ", var))
   
   if ( is.nan(rr) | is.nan(rr2) ) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variables from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
   } else if (  ! (identical(data,data2))  ) {
     # nothing to do - the variable are not in the same frame
     } else {
@@ -2116,9 +2132,17 @@ plot_select_multiple_cross <- function(datalist = datalist,
                                       fontawesome::fa("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}   else {}
 
         
-      cntscross <- data |>
+      cntscross1 <- data |>
         ## keep only the variable we need 
-        tidyr::drop_na( tidyselect::all_of(c(var,by_var))) |>
+        tidyr::drop_na( tidyselect::all_of(c(var,by_var)))
+      
+      ## Need to check that there's actually a proper intersection in the response... 
+      if(nrow(cntscross1) == 0) {
+        
+         cat(paste0("<strong style=\"color:#0072BC;\">There is not intersection between the answers from the variables from the form called: ",var," or ", by_var, " in the dataset</strong>\n\n"))
+      } else {
+      
+      cntscross <- cntscross1 |>
         ## Separate the var with select_multiple 
         tidyr::separate_rows(.data[[var]], sep = " ") |>
         # Lump together factor levels into "other"
@@ -2180,6 +2204,8 @@ plot_select_multiple_cross <- function(datalist = datalist,
         theme(plot.title.position = "plot")
       
       return(p) #  print(p)
+      }
+       
     }   
     } else { }
   } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
@@ -2255,7 +2281,7 @@ plot_integer_cross <- function(datalist = datalist,
   #cat(paste("#### Variable: ", var))
   
   if ( is.nan(rr) | is.nan(rr2) ) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
   } else if (  ! (identical(data,data2))  ) {
     # nothing to do - the variable are not in the same frame
     } else {
@@ -2432,8 +2458,8 @@ plot_correlation <- function(datalist = datalist,
                       subtitle = stringr::str_wrap(paste0("(p:",p.value,"). Correlogram Interpretation hint: the size of the dots indicates the strenght of association, the color indicates its type (positive/attraction=blue, negative/repulsion= red) "), 110),
                       caption = glue::glue("Source: {datasource}")) +
                     theme_minimal( base_size = 24) +
-                    theme( panel.grid.major.x  = element_line(color = "#cbcbcb", alpha=0.5, size =0.3, linetype = "dotted"), #element_blank(),
-                           panel.grid.major.y  = element_line(color = "#cbcbcb", alpha=0.5, size =0.3, linetype = "dotted"), #element_blank(),
+                    theme( panel.grid.major.x  = element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
+                           panel.grid.major.y  = element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
                            panel.grid.minor = element_blank() ,
                            legend.position = 'none',
                            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
@@ -2547,39 +2573,40 @@ plot_likert <- function(datalist = datalist,
  
    ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
-  
   require(dplyr)
   require(ggplot2)
   require(likert)
   require(cowplot)
   
    ## Writing code instruction in report
-            if( showcode == TRUE) {
-              cat(paste0( fontawesome::fa("far fa-copy", fill ="grey"),
-                         " `plot_likert(datalist = datalist, dico = dico,  scopei =  \"", scopei, "\",   list_namei =  \"", list_namei, "\",  dataframei =  \"", dataframei, "\")` \n\n "))} else {}
+    if( showcode == TRUE) {
+      cat(paste0( fontawesome::fa("far fa-copy", fill ="grey"),
+         " `plot_likert(datalist = datalist, dico = dico,  scopei =  \"", 
+         scopei, "\",   list_namei =  \"", 
+         list_namei, "\",  dataframei =  \"", 
+         dataframei, "\")` \n\n "))} else {}
              
-  
-
-          labelgroup <- as.data.frame(dico[1]) |>
+   labelgroup <- as.data.frame(dico[1]) |>
             dplyr::filter( name  %in%  c(scopei)) |>
             dplyr::select( label) |>
             dplyr::pull()
           
-          nlevel_likert <- as.data.frame(dico[2]) |>
+    nlevel_likert <- as.data.frame(dico[2]) |>
             dplyr::filter( list_name ==   list_namei) |>
             dplyr::select( name, label)  |>
             dplyr::distinct() 
-          labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
+    labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
           
-          ##  Subsetting data - checking levels - and applying label
-          var <- as.data.frame(dico[1]) |>
+    ##  Subsetting data - checking levels - and applying label
+    var <- as.data.frame(dico[1]) |>
                  dplyr::filter( list_name ==  list_namei &
                                 scope == scopei  &
                                 dataframe == dataframei  &
                                 appearance !="label" )
-          data <-kobo_frame(datalist = datalist, dico = dico, var = var[1, c("name")])
+    ## Just in case with have the first one being appearance label
+    data <-kobo_frame(datalist = datalist, dico = dico, var = var[2, c("name")])
       
-          likertframe <- data |>
+    likertframe <- data |>
             ## select only likert variable
             dplyr::select ( tidyselect::any_of( c(var$name)) ) |>
             ## Ensure they all have the same levels as factor
@@ -2771,65 +2798,65 @@ kobo_cruncher <- function(datalist = datalist,
       name <- questions[ i, c("name")]
       
       ## Univariate analysis ######
-      if (type == "begin_group") plot_header(dico = dico, 
-                                               var = name)
+      if (type == "begin_group") print(plot_header(dico = dico, 
+                                               var = name))
       
-      if (type == "select_one") plot_select_one(datalist = datalist, 
+      if (type == "select_one") print(plot_select_one(datalist = datalist, 
                                                 dico = dico,
                                                 var = name,  
                                                 datasource = datasource,
-                                                showcode = TRUE)
+                                                showcode = TRUE))
       
-      if (type == "select_multiple") plot_select_multiple(datalist = datalist,
+      if (type == "select_multiple") print(plot_select_multiple(datalist = datalist,
                                                           dico = dico, 
                                                           var = name,  
                                                           datasource = datasource,
-                                                          showcode = TRUE)
+                                                          showcode = TRUE))
       
-      if (type %in% c("numeric", "integer", "range")) plot_integer(datalist = datalist, 
+      if (type %in% c("numeric", "integer", "range")) print(plot_integer(datalist = datalist, 
                                                           dico = dico,
                                                           var = name,  
                                                           datasource = datasource,
-                                                          showcode = TRUE)
+                                                          showcode = TRUE))
       
-      if (type == "text") plot_text(datalist = datalist, 
+      if (type == "text") print(plot_text(datalist = datalist, 
                                     dico = dico, 
                                     var = name,  
                                     datasource = datasource,
-                                    showcode = TRUE)
+                                    showcode = TRUE))
       
     
        ## Bivariate analysis #####
       if (type == "select_one" &  length(disaggregation)>=1 ) {
         for (disag in disaggregation  ){
           if(disag  != "")
-            plot_select_one_cross(datalist = datalist, 
+            print(plot_select_one_cross(datalist = datalist, 
                                   dico = dico,
                                   var = name, 
                                   by_var = disag, 
                                   datasource = datasource,
-                                  showcode = TRUE) }
+                                  showcode = TRUE)) }
       }
       if (type == "select_multiple" &  length(disaggregation)>=1 ) {
         for (disag in disaggregation  ){
           if(disag  != "")
-            plot_select_multiple_cross(datalist = datalist, 
+            print(plot_select_multiple_cross(datalist = datalist, 
                                   dico = dico,
                                   var = name, 
                                   by_var = disag,
                                   datasource = datasource,
-                                  showcode = TRUE) }
+                                  showcode = TRUE)) }
       }
       if (type %in% c("numeric", "integer") &  length(disaggregation)>=1 ) {
         for (disag in disaggregation  ){
           
           if(disag  != "")
-            plot_integer_cross(datalist = datalist, 
+            print(plot_integer_cross(datalist = datalist, 
                                dico = dico,
                                var = name, 
                                by_var = disag, 
                                datasource = datasource,
-                               showcode = TRUE) }
+                               showcode = TRUE)) }
       }
     
     ## Statistical Association  #
@@ -2837,12 +2864,12 @@ kobo_cruncher <- function(datalist = datalist,
         for (correl in correlate  ){
           
           if(correl  != "")
-            plot_correlation(datalist = datalist, 
+            print(plot_correlation(datalist = datalist, 
                              dico = dico,
                              var = name, 
                              by_var = correl,
                              datasource = datasource,
-                             showcode = TRUE) }
+                             showcode = TRUE)) }
       }
   
   }
@@ -2870,7 +2897,7 @@ kobo_cruncher(datalist = datalist,
 ## Crunching Likert componnents
 
 ```{r function-kobo_likert}
-#' @title Crunch all variables according to the analysis plan 
+#' @title Crunch all likert variables according to the analysis plan 
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico path to the xlsform file used to colllect the data
@@ -2898,21 +2925,21 @@ kobo_likert <- function(datalist = datalist,
   if(nrow(grouplikert)  == 0) {
     cat("No potential likert in the form")
     } else {
-          for (i in 1:nrow(grouplikert)  ) {
+    cat(paste0(nrow(grouplikert), " groups of likert questions in the form"))
+       for (i in 1:nrow(grouplikert)  ) {
           ## getting the group and corresponding label
           scopei <-   as.character(grouplikert[i, c("scope")])
           dataframei <-   as.character(grouplikert[i, c("dataframe")])
           ## geting the list_name and corresponding label
           list_namei <- as.character( grouplikert[i, c("list_name")])
           
-          p <- plot_likert(datalist = datalist, 
+          print(plot_likert(datalist = datalist, 
                       datasource = datasource,
                       dico = dico,
                       scopei =  scopei,
                       dataframei =  dataframei,
                       list_namei = list_namei,
-                      showcode = TRUE)
-          return(p)
+                      showcode = TRUE)) 
   
         }
     }
@@ -3039,13 +3066,17 @@ app_kobocruncher <- function(maxRequestSize=50,
   if (!is.numeric(maxRequestSize)) {
     stop("argument 'maxRequestSize' must be numeric!\n")
   }
+  
   if (maxRequestSize < 1) {
     maxRequestSize <- 10
   }
+  
   appDir <- system.file("shiny", "kobocruncherApp", package="kobocruncher")
+  
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `kobocruncher`.", call.=FALSE)
   }
+  
   options(shiny.maxRequestSize=ceiling(maxRequestSize)*1024^2)
   options(shiny.fullstacktrace=debug)
   options(shiny.trace=debug)

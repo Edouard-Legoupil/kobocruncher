@@ -57,7 +57,13 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_integer</span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>, dico <span class="op">=</span> <span class="va">dico</span>, <span class="va">var</span>, showcode <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_integer</span><span class="op">(</span></span>
+<span>  datalist <span class="op">=</span> <span class="va">datalist</span>,</span>
+<span>  dico <span class="op">=</span> <span class="va">dico</span>,</span>
+<span>  <span class="va">var</span>,</span>
+<span>  datasource <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  showcode <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -72,6 +78,10 @@
 
 <dt>var</dt>
 <dd><p>name of the variable to display</p></dd>
+
+
+<dt>datasource</dt>
+<dd><p>name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform</p></dd>
 
 
 <dt>showcode</dt>

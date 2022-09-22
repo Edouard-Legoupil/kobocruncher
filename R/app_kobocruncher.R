@@ -37,13 +37,17 @@ app_kobocruncher <- function(maxRequestSize=50,
   if (!is.numeric(maxRequestSize)) {
     stop("argument 'maxRequestSize' must be numeric!\n")
   }
+  
   if (maxRequestSize < 1) {
     maxRequestSize <- 10
   }
+  
   appDir <- system.file("shiny", "kobocruncherApp", package="kobocruncher")
+  
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `kobocruncher`.", call.=FALSE)
   }
+  
   options(shiny.maxRequestSize=ceiling(maxRequestSize)*1024^2)
   options(shiny.fullstacktrace=debug)
   options(shiny.trace=debug)

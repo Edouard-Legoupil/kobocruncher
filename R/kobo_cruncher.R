@@ -53,65 +53,65 @@ kobo_cruncher <- function(datalist = datalist,
       name <- questions[ i, c("name")]
       
       ## Univariate analysis ######
-      if (type == "begin_group") plot_header(dico = dico, 
-                                               var = name)
+      if (type == "begin_group") print(plot_header(dico = dico, 
+                                               var = name))
       
-      if (type == "select_one") plot_select_one(datalist = datalist, 
+      if (type == "select_one") print(plot_select_one(datalist = datalist, 
                                                 dico = dico,
                                                 var = name,  
                                                 datasource = datasource,
-                                                showcode = TRUE)
+                                                showcode = TRUE))
       
-      if (type == "select_multiple") plot_select_multiple(datalist = datalist,
+      if (type == "select_multiple") print(plot_select_multiple(datalist = datalist,
                                                           dico = dico, 
                                                           var = name,  
                                                           datasource = datasource,
-                                                          showcode = TRUE)
+                                                          showcode = TRUE))
       
-      if (type %in% c("numeric", "integer", "range")) plot_integer(datalist = datalist, 
+      if (type %in% c("numeric", "integer", "range")) print(plot_integer(datalist = datalist, 
                                                           dico = dico,
                                                           var = name,  
                                                           datasource = datasource,
-                                                          showcode = TRUE)
+                                                          showcode = TRUE))
       
-      if (type == "text") plot_text(datalist = datalist, 
+      if (type == "text") print(plot_text(datalist = datalist, 
                                     dico = dico, 
                                     var = name,  
                                     datasource = datasource,
-                                    showcode = TRUE)
+                                    showcode = TRUE))
       
     
        ## Bivariate analysis #####
       if (type == "select_one" &  length(disaggregation)>=1 ) {
         for (disag in disaggregation  ){
           if(disag  != "")
-            plot_select_one_cross(datalist = datalist, 
+            print(plot_select_one_cross(datalist = datalist, 
                                   dico = dico,
                                   var = name, 
                                   by_var = disag, 
                                   datasource = datasource,
-                                  showcode = TRUE) }
+                                  showcode = TRUE)) }
       }
       if (type == "select_multiple" &  length(disaggregation)>=1 ) {
         for (disag in disaggregation  ){
           if(disag  != "")
-            plot_select_multiple_cross(datalist = datalist, 
+            print(plot_select_multiple_cross(datalist = datalist, 
                                   dico = dico,
                                   var = name, 
                                   by_var = disag,
                                   datasource = datasource,
-                                  showcode = TRUE) }
+                                  showcode = TRUE)) }
       }
       if (type %in% c("numeric", "integer") &  length(disaggregation)>=1 ) {
         for (disag in disaggregation  ){
           
           if(disag  != "")
-            plot_integer_cross(datalist = datalist, 
+            print(plot_integer_cross(datalist = datalist, 
                                dico = dico,
                                var = name, 
                                by_var = disag, 
                                datasource = datasource,
-                               showcode = TRUE) }
+                               showcode = TRUE)) }
       }
     
     ## Statistical Association  #
@@ -119,12 +119,12 @@ kobo_cruncher <- function(datalist = datalist,
         for (correl in correlate  ){
           
           if(correl  != "")
-            plot_correlation(datalist = datalist, 
+            print(plot_correlation(datalist = datalist, 
                              dico = dico,
                              var = name, 
                              by_var = correl,
                              datasource = datasource,
-                             showcode = TRUE) }
+                             showcode = TRUE)) }
       }
   
   }

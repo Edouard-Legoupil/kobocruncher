@@ -51,7 +51,7 @@ plot_integer_cross <- function(datalist = datalist,
   #cat(paste("#### Variable: ", var))
   
   if ( is.nan(rr) | is.nan(rr2) ) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
   } else if (  ! (identical(data,data2))  ) {
     # nothing to do - the variable are not in the same frame
     } else {

@@ -60,7 +60,15 @@ and represent the result using a standard likert plot - build from  https://gith
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_likert</span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>, dico <span class="op">=</span> <span class="va">dico</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_likert</span><span class="op">(</span></span>
+<span>  datalist <span class="op">=</span> <span class="va">datalist</span>,</span>
+<span>  dico <span class="op">=</span> <span class="va">dico</span>,</span>
+<span>  <span class="va">scopei</span>,</span>
+<span>  <span class="va">list_namei</span>,</span>
+<span>  <span class="va">dataframei</span>,</span>
+<span>  datasource <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  showcode <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -72,6 +80,26 @@ and represent the result using a standard likert plot - build from  https://gith
 <dt>dico</dt>
 <dd><p>An object of the "kobodico" class format as defined in kobocruncher</p></dd>
 
+
+<dt>scopei</dt>
+<dd><p>group in which the likert frame are</p></dd>
+
+
+<dt>list_namei</dt>
+<dd><p>name of the likert option list</p></dd>
+
+
+<dt>dataframei</dt>
+<dd><p>name of the frame within the dataset where to look for the data</p></dd>
+
+
+<dt>datasource</dt>
+<dd><p>name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform</p></dd>
+
+
+<dt>showcode</dt>
+<dd><p>display the code</p></dd>
+
 </dl></div>
 
     <div class="section level2">
@@ -81,40 +109,14 @@ and represent the result using a standard likert plot - build from  https://gith
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `_index`.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">plot_likert</span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalistlikert</span>,</span></span>
-<span class="r-in"><span>              dico <span class="op">=</span> <span class="va">dicolikert</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: dplyr</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: likert</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: xtable</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘likert’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:dplyr’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     recode</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: cowplot</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`funs()` was deprecated in dplyr 0.8.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Please use a list of either functions or lambdas: </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   # Simple named list: </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   list(mean = mean, median = median)</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   # Auto named with `tibble::lst()`: </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   tibble::lst(mean, median)</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   # Using lambdas</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span>
+<span class="r-in"><span>            dico <span class="op">=</span> <span class="va">dicolikert</span>,</span></span>
+<span class="r-in"><span>            datasource <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>            scopei <span class="op">=</span>  <span class="st">"group_ei8jz33"</span>,</span></span>
+<span class="r-in"><span>            dataframei <span class="op">=</span>   <span class="st">"1"</span>,</span></span>
+<span class="r-in"><span>            <span class="co">## getting the list_name and corresponding label</span></span></span>
+<span class="r-in"><span>            list_namei <span class="op">=</span> <span class="st">"yk0td68"</span> </span></span>
+<span class="r-in"><span>          <span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_likert-1.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="plot_likert-2.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="plot_likert-3.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

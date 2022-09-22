@@ -37,7 +37,7 @@ plot_integer <- function(datalist = datalist,
   # cat("---\n")
   # cat("\n\n")
  if ( is.nan(rr)) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
   } else {
   
   ## Writing report

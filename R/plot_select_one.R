@@ -42,7 +42,7 @@ plot_select_one <- function(datalist  ,
   rr <- mean(!is.na(data[[var]]))
   
   if ( is.nan(rr)) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
   } else {
   
   ## Put a condition in case there's no record

@@ -58,7 +58,7 @@ plot_select_one_cross <- function(datalist = datalist,
   #cat(paste("#### Variable: ", var))
   
   if ( is.nan(rr) | is.nan(rr2) ) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
   } else if (  ! (identical(data,data2))  ) {
     # nothing to do - the variable are not in the same frame
     } else {
@@ -74,9 +74,17 @@ plot_select_one_cross <- function(datalist = datalist,
                                                    x = var), "\n",
                                       fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}     else {}
 
-      cnts <- data |>
+      cnts1 <- data |>
         ## keep only the variable we need
-        tidyr::drop_na(tidyselect::all_of(c(var,by_var))) |>
+        tidyr::drop_na(tidyselect::all_of(c(var,by_var))) 
+      
+      ## Need to check that there's actually a proper intersection in the response... 
+      if(nrow(cnts1) == 0) {
+        
+         cat(paste0("<strong style=\"color:#0072BC;\">There is not intersection between the answers from the variables from the form called: ",var," or ", by_var, " in the dataset</strong>\n\n"))
+      } else {
+      
+      cnts <- cnts1 |>  
         # Lump together factor levels into "other"
         dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
                      y := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
@@ -133,7 +141,7 @@ plot_select_one_cross <- function(datalist = datalist,
         theme(plot.title.position = "plot")
 
        return(p) #  print(p)
-    
+      }
       }
     } else { }
   } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }

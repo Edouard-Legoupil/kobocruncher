@@ -23,6 +23,8 @@ plot_text <- function(datalist = datalist,
                       showcode = FALSE) {
   
   requireNamespace("dplyr")
+  requireNamespace("ggplot2")
+  require("ggplot2")
   ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
   
@@ -38,7 +40,7 @@ plot_text <- function(datalist = datalist,
   
   rr <- mean(!is.na(data[[var]]))
    if ( is.nan(rr)) {
-    cat("<strong style=\"color:#0072BC;\">This variable could not be identified in the dataset</strong>\n\n")
+    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
   } else { 
       
   require("tm")
@@ -87,37 +89,41 @@ plot_text <- function(datalist = datalist,
       
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :
-      set.seed(1234)
-     p <-  wordcloud::wordcloud(words = d$word, # words : the words to be plotted
-                                freq = d$freq,  # freq : their frequencies
-                                min.freq = 1,  # min.freq : words with frequency below min.freq will not be plotted
-                                max.words=200, # max.words : maximum number of words to be plotted
-                                random.order=FALSE, # random.order : plot words in random order. If false, they will be plotted in decreasing frequency
-                                rot.per=0.25,   # rot.per : proportion words with 90 degree rotation (vertical text)
-                                colors= RColorBrewer::brewer.pal(8, "Dark2")) # colors : color words from least to most frequent. Use, for example, colors =“black” for single color.
-    graphics::title( main = stringr::str_wrap( label_varname(dico = dico, 
-                                                  x= var), 90),
-           sub = glue::glue("Open Text question \n Source: {datasource}" ))  
-    
-       return(p)  
-      # p1 <- ggplot2::ggplot(d, 
-      #              aes(label = word,
-      #                  size = freq,
-      #                  color = freq )) +
-      #       ggwordcloud::geom_text_wordcloud(area_corr = TRUE,
-      #                                        rm_outside = TRUE,
-      #                                        eccentricity = 1) +
-      #       scale_size_area(max_size = 50) +
-      #       # scale_radius(range = c(0, 10),  limits = c(0, NA)) +
-      #       scale_color_gradient(low = "darkred", high = "red") +
-      #       labs(x = NULL, y = NULL,
-      #        title = str_wrap(survey_label(var), 60), 
-      #        subtitle = if (!is.na(label_varhint(var))){ 
-      #          stringr::str_wrap(label_varhint(var), 70)} else { ""},
-      #        caption = glue::glue("Wordcloud displaying an Open Text question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
-      #   
-      #       theme_minimal( base_size = 24)  
-      # print(p1)
+      #set.seed(1234)
+      
+      ## Chart option 1
+     # p <-  wordcloud::wordcloud(words = d$word, # words : the words to be plotted
+     #            freq = d$freq,  # freq : their frequencies
+     #            min.freq = 1,  # min.freq : words with frequency below min.freq will not be plotted
+     #            max.words=200, # max.words : maximum number of words to be plotted
+     #            random.order=FALSE, # random.order : plot words in random order. If false, they will be plotted in decreasing frequency
+     #            rot.per=0.25,   # rot.per : proportion words with 90 degree rotation (vertical text)
+     #            colors= RColorBrewer::brewer.pal(8, "Dark2")) # colors : color words from least to most frequent. Use, for example, colors =“black” for single color.
+     #      graphics::title( main = stringr::str_wrap( label_varname(dico = dico, x= var), 90),
+     #                 sub = glue::glue("Open Text question \n Source: {datasource}" ))  
+     # 
+     # return(p)  
+      
+      
+      ## Chart option 2        
+      p1 <- ggplot2::ggplot(d,
+                   ggplot2::aes(label = word,
+                       size = freq,
+                       color = freq )) +
+            ggwordcloud::geom_text_wordcloud(area_corr = TRUE,
+                                             rm_outside = TRUE,
+                                             eccentricity = 1) +
+            ggplot2::scale_size_area(max_size = 50) +
+            # scale_radius(range = c(0, 10),  limits = c(0, NA)) +
+            ggplot2::scale_color_gradient(low = "darkred", high = "red") +
+            labs(x = NULL, y = NULL,
+                 title = stringr::str_wrap(label_varname(dico = dico, x = var), 90), 
+                 subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
+                     stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
+                 caption = glue::glue("Wordcloud displaying an Open Text question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
+
+            theme_minimal( base_size = 24)
+      return(p1)
       
     
   } else { cat("<strong style=\"color:#0072BC;\">No significant text for this specific question!</strong>\n\n")}
