@@ -192,7 +192,9 @@ kobo_dico <- function(xlsformpath) {
           dplyr::mutate(  name= dplyr::case_when(
               name == "labelchapter" ~ labelchapter ,
               TRUE ~ name) ) |>
-          dplyr::select( type, label,name)
+          dplyr::select( type, label,name) |>
+          ## Remove all componnnents without label in case subchapter are not defined
+          dplyr::filter( ! (is.na(label)))
         
         } else { 
         plan <- as.data.frame(variables) |>

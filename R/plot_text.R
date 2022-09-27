@@ -40,7 +40,7 @@ plot_text <- function(datalist = datalist,
   
   rr <- mean(!is.na(data[[var]]))
    if ( is.nan(rr)) {
-    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
+    cat(paste0("\n <strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
   } else { 
       
   require("tm")
@@ -83,7 +83,7 @@ plot_text <- function(datalist = datalist,
       
         ## Writing code instruction in report
         if( showcode == TRUE) {
-          cat(paste0(label_varname(dico = dico,
+          cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
                                       fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_text(datalist = datalist, dico = dico, \"", var, "\")`  \n\n"))}   else {}
       

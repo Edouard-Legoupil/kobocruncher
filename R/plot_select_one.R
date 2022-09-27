@@ -42,7 +42,7 @@ plot_select_one <- function(datalist  ,
   rr <- mean(!is.na(data[[var]]))
   
   if ( is.nan(rr)) {
-    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
+    cat(paste0("\n <strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
   } else {
   
   ## Put a condition in case there's no record
@@ -61,8 +61,15 @@ plot_select_one <- function(datalist  ,
   
   ## Manage situation if ordinal variable (i.e. order is set in choices)
   if (any(!is.na(dplyr::filter(dico[[2]], list_name == listvar)$order))) {
+    
+    
+    ## case there are duplicated answers options - for instance if allow_choice_duplicates = yes
+    ll <- dplyr::filter(dico[[2]], list_name == listvar) |>
+          dplyr::group_by(name) |> 
+          dplyr::slice_head(n = 1)
+    
     cnts <- cnts |>
-          dplyr::left_join( dplyr::filter(dico[[2]], list_name == listvar), by = c("x"="name"))|>
+          dplyr::left_join( ll, by = c("x"="name"))|>
           dplyr::mutate(x = forcats::fct_reorder(x, order, as.numeric))
   } else {
     cnts <- cnts |>
@@ -70,7 +77,7 @@ plot_select_one <- function(datalist  ,
   }
   
   ## Writing code instruction in report
-  if( showcode == TRUE) { cat(paste0( label_varname(dico = dico,
+  if( showcode == TRUE) { cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
                                       fontawesome::fa("far fa-copy", fill ="grey"),
                                       "`plot_select_one(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}  else {}

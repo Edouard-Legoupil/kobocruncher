@@ -60,27 +60,27 @@ plot_correlation <- function(datalist = datalist,
         
         ### Testing necessary condition to perform the correlation test
         if(n.class == 0) {
-          cat(paste0("There is no data recorded. \n")) 
+          cat(paste0("\n There is no data recorded. \n")) 
           } else if ( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var1) |> dplyr::pull() )))  < 2) {
             # cat(paste0("There is only one single response option recorded on ",var , " to assess correlation. \n"))
           } else if( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var2) |> dplyr::pull()  )))  < 2) {
             # cat(paste0("There is only one single response option recorded on ",by_var , " to assess correlation. \n")) 
           } else if( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var1)  |> dplyr::pull() )))  > 7) {
-             cat(paste0("There are too many response options recorded on ", var , " to assess correlation. You may consider some data cleaning. \n"))
+             cat(paste0("\n There are too many response options recorded on ", var , " to assess correlation. You may consider some data cleaning. \n"))
           } else if ( nlevels(as.factor(as.character(check.class |> dplyr::filter(Freq >= 1) |> dplyr::select(Var2) |> dplyr::pull()  )))  > 7) {
-            cat(paste0("There  are too many response options recorded on ", by_var , " to assess correlation. You may consider some data cleaning. \n")) 
+            cat(paste0("\n There  are too many response options recorded on ", by_var , " to assess correlation. You may consider some data cleaning. \n")) 
           } else if ( nrow(check.class[check.class$Freq > 0, ]) == 0 ) {
-            cat(paste0("There is no sufficient cross records  to assess correlation between ",var , " &  ", by_var ,". \n")) 
+            cat(paste0("\n There is no sufficient cross records  to assess correlation between ",var , " &  ", by_var ,". \n")) 
           } else {
           
           p.value  <- round(stats::chisq.test(formula$target,formula$tested)$p.value,4)   ### Case there not any positive test
           if (p.value > 0.05 ) {
-            cat(paste0("No significant association found between ",var , " &  ", by_var ," (p.value :",p.value  , ").\n")) } 
+            cat(paste0("\n No significant association found between ",var , " &  ", by_var ," (p.value :",p.value  , ").\n")) } 
           else {
             
             ## Writing code instruction in report
             if( showcode == TRUE) {
-              cat(paste0(label_varname(dico = dico, x = var), "\n", fontawesome::fa("far fa-copy", fill ="grey"),
+              cat(paste0("\n ", label_varname(dico = dico, x = var), "\n", fontawesome::fa("far fa-copy", fill ="grey"),
                          " `plot_correlation(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))} else {}
               
 

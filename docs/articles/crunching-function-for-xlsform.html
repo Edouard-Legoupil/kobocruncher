@@ -855,6 +855,7 @@ steps in the data preparation.</p>
 <span>              var <span class="op">=</span> <span class="st">"profile.country"</span>,</span>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required namespace: ggplot2</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; What is your country of Origin?</span></span>
 <span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt;`plot_select_one(datalist = datalist, dico = dico, "profile.country")` </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -867,7 +868,8 @@ steps in the data preparation.</p>
 <span>              dico <span class="op">=</span> <span class="va">dico</span>, </span>
 <span>              var <span class="op">=</span> <span class="st">"profile.countryerror"</span>,</span>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;strong style="color:#0072BC;"&gt;The variable from the form called: profile.countryerror could not be identified in the dataset&lt;/strong&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  &lt;strong style="color:#0072BC;"&gt;The variable from the form called: profile.countryerror could not be identified in the dataset&lt;/strong&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plotting-select-multiple-variable">Plotting Select multiple variable<a class="anchor" aria-label="anchor" href="#plotting-select-multiple-variable"></a>
@@ -948,6 +950,7 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; transformation drops documents</span></span>
 <span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., removeWords, c("blabla1", "blabla2")):</span></span>
 <span><span class="co">#&gt; transformation drops documents</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; What's you occupation?</span></span>
 <span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt;  `plot_text(datalist = datalist, dico = dico, "profile.occupation")`</span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_text-1.png" width="700"></p>
@@ -1030,7 +1033,8 @@ steps in the data preparation.</p>
 <span>              datasource <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in stats::chisq.test(formula$target, formula$tested): Chi-squared</span></span>
 <span><span class="co">#&gt; approximation may be incorrect</span></span>
-<span><span class="co">#&gt; No significant association found between profile.occupation &amp;  profile.country (p.value :0.3505).</span></span></code></pre></div>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  No significant association found between profile.occupation &amp;  profile.country (p.value :0.3505).</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="multivariate">Multivariate<a class="anchor" aria-label="anchor" href="#multivariate"></a>
@@ -1125,6 +1129,7 @@ steps in the data preparation.</p>
 <span><span class="fu"><a href="../reference/kobo_cruncher.html">kobo_cruncher</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalist</span>,</span>
 <span>              dico <span class="op">=</span> <span class="va">dico</span>,</span>
 <span>              datasource <span class="op">=</span> <span class="st">"a great survey!"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Where is the interview taking place</span></span>
 <span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt;`plot_select_one(datalist = datalist, dico = dico, "location")` </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1137,6 +1142,7 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; # Respondant profile</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; What is your country of Origin?</span></span>
 <span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt;`plot_select_one(datalist = datalist, dico = dico, "profile.country")` </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1158,7 +1164,8 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., removeWords, c("blabla1", "blabla2")):</span></span>
 <span><span class="co">#&gt; transformation drops documents</span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-2.png" width="700"></p>
-<pre><code><span><span class="co">#&gt; What's you occupation?</span></span>
+<pre><code><span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; What's you occupation?</span></span>
 <span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt;  `plot_text(datalist = datalist, dico = dico, "profile.occupation")`</span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-3.png" width="700"></p>
 <pre><code><span><span class="co">#&gt; Why did you left?</span></span>
@@ -1178,7 +1185,8 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-6.png" width="700"></p>
-<pre><code><span><span class="co">#&gt; Sex</span></span>
+<pre><code><span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Sex</span></span>
 <span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt;`plot_select_one(datalist = datalist, dico = dico, "members.sex")` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre>
