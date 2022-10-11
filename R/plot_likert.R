@@ -78,21 +78,40 @@ plot_likert <- function(datalist = datalist,
             mutate_all(funs(dplyr::recode(., !!!labelrecode)))  |>
             #mutate_all(dplyr::recode( !!!labelrecode)) |>
             ## convert to dataframe to ensure likert() works
-            as.data.frame()
-          ## Replace with label for the variable 
-          names(likertframe) <- var$label
+            as.data.frame() |> 
+            ## remove potential var used for appearance 'label'
+            dplyr::select_if(~!all(is.na(.))) |>
+            ## Remove records where all na
+            dplyr::filter(if_any(everything(), ~ !is.na(.)))
+    
+    
+     
+    if( nrow(likertframe) == 0 ) {
+      cat("Chart could not be generated")
+    } else {
+      
+     ## Replace with label for the variable 
+     for ( j in 1:ncol(likertframe)){
+       # j <- 1
+       newname <- as.character(var[ var$name == names(likertframe)[j] , c("label")  ])
+       names(likertframe)[j] <- newname
+     }  
                                         
           # Build likert object
           likertframe.obj <- likert::likert(likertframe)
       
+          ## get response rate
+          rr <- nrow(likertframe)/ nrow(data)
+          
           ## Now generate the plot
         a <- plot(likertframe.obj,
                   #center = 2,
                   wrap= 70) +
-          labs(title = labelgroup)+
+          labs(title = labelgroup, 
+               caption = glue::glue("Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records. \n Source: {datasource}"))+
           # guides(fill=guide_legend(title=NULL),    color=guide_legend(nrow=2, byrow=TRUE))  +
           #unhcrthemes::theme_unhcr(grid="X") +
-          theme_minimal( base_size = 24) +
+          theme_minimal( base_size = 22) +
           theme( #plot.title=element_text(size=32, face="bold", color="black"), 
                  #plot.subtitle=element_text(size=19, face="italic", color="black"), 
                 #text = element_text(size=22, color = "#333333"), 
@@ -111,6 +130,8 @@ plot_likert <- function(datalist = datalist,
                                   rel_heights = c(1, 0.1))
           
     return(p)      
+        
+    } 
         
     
 }
