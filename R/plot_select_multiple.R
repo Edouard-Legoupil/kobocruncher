@@ -101,17 +101,15 @@ plot_select_multiple <- function(datalist = datalist,
                     colour = "black", 
                     fill = NA, 
                     label.size = NA, 
-                     
-                    size = 4   ) +  
+                    size = 6   ) +  
       geom_label( data =   function(x) subset(x, p >= max(p) / 1.5),
                     aes(label = scales::label_percent(accuracy = .01)(p)),
                     hjust = 1.1 ,
                     vjust = 0.5, 
                     colour = "white", 
                     fill = NA, 
-                    label.size = NA, 
-                     
-                    size = 4   ) +   
+                    label.size = NA,
+                    size = 6   ) +   
       
       scale_x_continuous(labels = scales::label_percent()) +
       scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,

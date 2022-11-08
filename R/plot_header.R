@@ -24,6 +24,8 @@ plot_header <- function(dico = dico,
   
   label <- as.data.frame(dico[1]) |>
            dplyr::filter(name == var) |>
+          ## Filter down in case the same var name was given to end group or repat... 
+           dplyr::filter(! (type %in% c("end_group", "end_repeat")) ) |>
            dplyr::pull(label)
 
   ## In case the header comes from chapter   

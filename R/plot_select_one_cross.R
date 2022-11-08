@@ -107,9 +107,8 @@ plot_select_one_cross <- function(datalist = datalist,
                     vjust = 0.5, 
                     colour = "black", 
                     fill = NA, 
-                    label.size = NA, 
-                     
-                    size = 3   ) +  
+                    label.size = NA,
+                    size = 5   ) +  
         geom_label( data =   function(x) subset(x, pcum >= max(pcum) / 1.5),
                     aes(label = scales::label_percent(accuracy = .01)(pcum)),
                     hjust = 1.1 ,
@@ -117,10 +116,8 @@ plot_select_one_cross <- function(datalist = datalist,
                     colour = "white", 
                     fill = NA, 
                     label.size = NA, 
-                     
-                    size = 3   ) +   
+                    size = 5   ) +   
         scale_x_continuous(labels = scales::label_percent()) +
-         
         facet_wrap( ~ y ,  nrow = 3  ,
                       labeller = as_labeller(function(x) label_choiceset(dico = dico,
                                                                       x = by_var)(x))
