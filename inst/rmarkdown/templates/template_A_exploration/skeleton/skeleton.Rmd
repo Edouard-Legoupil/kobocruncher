@@ -189,7 +189,7 @@ kobo_likert(datalist = datalist,
 #                                         ## Revise here based on the name from your crunching report
 #                                         upload = here::here(paste0(name_of_this_file,".html")) 
 #                                       )
-# riddle::resource_create(params$datasource, metadatareport)
+# riddle::resource_create(params$ridl, metadatareport)
 # 
 # metadataanalysisplan <- riddle::resource_metadata(type = "attachment",
 #                                         url = paste0(params$datasource,"_analysisPlan.xlsx"),
@@ -201,7 +201,7 @@ kobo_likert(datalist = datalist,
 #                                         ## Revise here based on the name from your crunching report
 #                                         upload =  here::here(params$datafolder, params$form) 
 #                                       )
-# riddle::resource_create(params$datasource, metadataanalysisplan)
+# riddle::resource_create(params$ridl, metadataanalysisplan)
 # 
 # metadataanalysisscript <- riddle::resource_metadata(type = "attachment",
 #                                         url = paste0(params$datasource,"_notebook.Rmd"),
@@ -213,7 +213,7 @@ kobo_likert(datalist = datalist,
 #                                         ## Revise here based on the name from your crunching report
 #                                         upload = here::here(paste0(name_of_this_file,".Rmd")) 
 #                                       )
-# riddle::resource_create(params$datasource, metadataanalysisscript)
+# riddle::resource_create(params$ridl, metadataanalysisscript)
 
 
 ```
