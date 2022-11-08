@@ -109,7 +109,7 @@ The report can be regenerated as needed by:
 ## Let's extract the analysis plan from the xlsform - or extend the current one
 kobo_prepare_form(xlsformpath = xlsformpath ,
                  xlsformpathout =  here::here(params$datafolder, params$form)  ,
-                 label_language = paramslanguage ) 
+                 label_language = params$language ) 
 ```
 
 
