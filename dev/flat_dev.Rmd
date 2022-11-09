@@ -3046,9 +3046,24 @@ kobo_ridl <- function(ridl,
 # https://galalh.github.io/riddle/reference/resource.html
 # remotes::install_github("galalH/riddle") 
 time <- format(Sys.Date(),  '%d%b%y')
-metadatareport <- riddle::resource_metadata(type = "attachment",
+
+if(stage == "interpretation_prez") {
+  metadatareport <- riddle::resource_metadata(type = "attachment",
                                         url = paste0(stage, name, ridl, time,".html"),
                                         name = paste0(stage, name, ridl, time),
+                                        description = paste0("Generated Report: ", 
+                                                             stage,", ", name, " built on ", time,
+                                                             " using kobocruncher "),
+                                        format = "pptx",
+                                        visibility =  visibility,
+                                        file_type = "report",
+                                        ## Revise here based on the name from your crunching report
+                                        upload = here::here(paste0(name_of_this_file,".pptx"))
+                                      )
+} else{
+  metadatareport <- riddle::resource_metadata(type = "attachment",
+                                        url = paste0(stage,"_", name,"_", ridl,"_", time,".html"),
+                                        name = paste0(stage,"_", name,"_", ridl,"_", time),
                                         description = paste0("Generated Report: ", 
                                                              stage,", ", name, " built on ", time,
                                                              " using kobocruncher "),
@@ -3058,6 +3073,8 @@ metadatareport <- riddle::resource_metadata(type = "attachment",
                                         ## Revise here based on the name from your crunching report
                                         upload = here::here(paste0(name_of_this_file,".html"))
                                       )
+}
+
 if(republish == "yes") {
 riddle::resource_update(ridl, metadatareport)
 } else {
@@ -3065,11 +3082,13 @@ riddle::resource_create(ridl, metadatareport)
 }
 
 metadataanalysisplan <- riddle::resource_metadata(type = "attachment",
-                                        url = paste0(stage, name, ridl, time, "_analysisPlan.xlsx"),
-                                        name = paste0(stage, name, ridl, time, "_analysisPlan"),
-                                        description = paste0("Analysis Plan to use with", 
-                                                             stage, name, ridl, time,
-                                                             ".html. Built using kobocruncher "),
+                                        url = paste0("analysisPlan_", stage,"_", name,
+                                                     "_", ridl,"_", time, ".xlsx"),
+                                        name = paste0("analysisPlan_", stage,"_", name,
+                                                      "_", ridl,"_", time ),
+                                        description = paste0("Analysis Plan to use with: ", 
+                                                             stage,"_", name,"_", ridl,"_", time,
+                                                             ". Built using kobocruncher "),
                                         format = "xlsx",
                                         visibility =  visibility,
                                         file_type = "other",
@@ -3083,11 +3102,11 @@ riddle::resource_create(ridl, metadataanalysisplan)
 }
 
 metadataanalysisscript <- riddle::resource_metadata(type = "attachment",
-                                        url = paste0(stage, name, ridl, time, "_notebook.Rmd"),
-                                        name = paste0(stage, name, ridl, time, "_analysisPlan"),
-                                        description = paste0("Notebook ", 
-                                                             stage, name, ridl, time,
-                                                             ".html. Built using kobocruncher "),
+                                        url = paste0("notebook_", stage, name, ridl, time, ".Rmd"),
+                                        name = paste0("notebook_", stage, name, ridl, time),
+                                        description = paste0("Notebook for ", 
+                                                             stage,"_", name,"_", ridl,"_", time,
+                                                             " report. Built using kobocruncher "),
                                         description = "Notebook using kobocruncher",
                                         format = "Rmd",
                                         visibility =  visibility,

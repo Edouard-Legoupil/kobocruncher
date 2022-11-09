@@ -15,7 +15,7 @@ params:
   publish: "no"
   republish: "no"
   visibility: "public"
-  stage: "exploration_initial"
+  stage: "exploration_initial" 
   language: "" ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
 ---
 

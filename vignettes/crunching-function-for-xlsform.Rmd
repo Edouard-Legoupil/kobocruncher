@@ -439,6 +439,56 @@ kobo_likert(datalist = datalistlikert,
 
  
 
+## Archive files in RIDL
+
+    
+
+  
+
+```{r example-kobo_ridl}
+
+### Example used for each template 
+# namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
+### template_1_exploration
+# if( params$publish == "yes"){
+#   kobo_ridl(ridl = params$datafolder, 
+#                       datafolder = params$datafolder, 
+#                       form = params$dataform,
+#                       name =  namethisfile,
+#                       republish = params$republish, 
+#                       visibility =  params$visibility,
+#                       stage = params$stage) }
+
+### template_2_interpretation 
+
+# if( params$publish == "yes"){
+#   kobo_ridl(ridl = params$datafolder, 
+#                       datafolder = params$datafolder, 
+#                       form = params$dataform,
+#                       name =  namethisfile,
+#                       republish = params$republish,
+#                       visibility =  params$visibility,
+#                       stage = "interpretation_prez") }
+
+### template_3_dissemination 
+
+# if( params$publish == "yes"){
+#  kobo_ridl(ridl = params$datafolder, 
+#                       datafolder = params$datafolder, 
+#                       form = params$dataform,
+#                       name =  namethisfile,
+#                       republish = params$republish,
+#                       visibility =  params$visibility,
+#                       stage = "dissemination_story") }
+
+ 
+```
+
+  
+
+  
+
+
 
 ## Report Template A for Automatic Data Exploration
 
