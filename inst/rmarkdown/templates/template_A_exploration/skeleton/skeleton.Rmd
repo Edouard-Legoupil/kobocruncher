@@ -12,6 +12,10 @@ params:
   data: "data.xlsx"
   form: "form.xlsx"
   datasource: "Study name reference"
+  publish: "no"
+  republish: "no"
+  visibility: "public"
+  stage: "exploration_initial"
   language: "" ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
 ---
 
@@ -171,49 +175,14 @@ kobo_likert(datalist = datalist,
 
 
 ```{r}
-### Time to archive your work once done!! 
-### Uncomment and Run this only once you have knitted your file in order to quickly upload this to RIDL -
-# https://galalh.github.io/riddle/reference/resource.html
-# remotes::install_github("galalH/riddle")
-
-## Enter below the name you used to save this file - without extension
-# name_of_this_file <- "exploration"
-# 
-# metadatareport <- riddle::resource_metadata(type = "attachment",
-#                                         url = paste0(params$datasource,"_Exploration.html"),
-#                                         name = paste0(params$datasource,"_Exploration"),
-#                                         description = "Exploration Report Generated with kobocruncher",
-#                                         format = "html",
-#                                         visibility =  "public",
-#                                         file_type = "report",
-#                                         ## Revise here based on the name from your crunching report
-#                                         upload = here::here(paste0(name_of_this_file,".html")) 
-#                                       )
-# riddle::resource_create(params$ridl, metadatareport)
-# 
-# metadataanalysisplan <- riddle::resource_metadata(type = "attachment",
-#                                         url = paste0(params$datasource,"_analysisPlan.xlsx"),
-#                                         name = paste0(params$datasource,"_analysisPlan"),
-#                                         description = "Analysis Plan to use with kobocruncher",
-#                                         format = "xlsx",
-#                                         visibility =  "public",
-#                                         file_type = "other",
-#                                         ## Revise here based on the name from your crunching report
-#                                         upload =  here::here(params$datafolder, params$form) 
-#                                       )
-# riddle::resource_create(params$ridl, metadataanalysisplan)
-# 
-# metadataanalysisscript <- riddle::resource_metadata(type = "attachment",
-#                                         url = paste0(params$datasource,"_notebook.Rmd"),
-#                                         name = paste0(params$datasource,"_analysisPlan"),
-#                                         description = "Notebook using kobocruncher",
-#                                         format = "Rmd",
-#                                         visibility =  "public",
-#                                         file_type = "script",
-#                                         ## Revise here based on the name from your crunching report
-#                                         upload = here::here(paste0(name_of_this_file,".Rmd")) 
-#                                       )
-# riddle::resource_create(params$ridl, metadataanalysisscript)
-
-
+## Time to archive your work once done!!
+namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
+if( params$publish == "yes"){
+  kobo_ridl(ridl = params$datafolder,
+                      datafolder = params$datafolder,
+                      form = params$dataform,
+                      name =  namethisfile ,
+                      republish = params$republish,
+                      visibility =  params$visibility,
+                      stage = params$stage) }
 ```

@@ -16,8 +16,13 @@ links-to-footnotes: true
 # Below are the Report parameters that you will need to adjust
 params:
   datafolder: "data-raw"
+  ridl: "ridlproject"
   data: "data.xlsx"
   form: "form.xlsx"
+  datasource: "Study name reference"
+  publish: "no"
+  republish: "no"
+  visibility: "public"
 ---
 
 
@@ -74,28 +79,252 @@ Provide summary information about the variables of concern in your cleaned data 
 
 ```
 
-
-# Introduction {-}
+ 
 <!-- 
-Provide an introduction that explains the problem statement you are addressing. Why should I be interested in this? 
-Provide a short explanation of how you plan to address this problem statement (the data used and the methodology employed) 
-Discuss your current proposed approach/analytic technique you think will address (fully or partially) this problem. 
-Explain how your analysis will help the consumer of your analysis.
+**TIPS: Inclusion of pictures:**
+1. Include at minimum one picture for your cover page – you may include pictures for each key protection risk in your report as available/appropriate
+2. Check appropriateness of images
+3. Avoid individual or close-up pictures of people who can be identified.
+4. Avoid pictures of protection actors having a conversation with a group.
+5. Select pictures of a whole areas (e.g., a whole camp or settlement, or pictures where people cannot be identified
+6. Select pictures of protection actors in action to show the work done – include a caption that explains the work being done, to achieve better protection or reduce risks.
+ Pictures can be sourced through [http://media.unhcr.org](http://media.unhcr.org/)_"Aid communication still needs to move away from presenting the single story: Why not try to create a sense of hope or provide inspiration to the viewer, instead of primarily provoking feelings of despair?"_ - [Aid recipients call for more dignity and diversity in INGO campaigns](https://www.radiaid.com/aid-recipients-call-for-more-dignity-and-diversity)
 -->
 
 
-<!--
-Discuss how you plan to uncover new information in the data that is not self-evident. What are different ways you could look at this data to answer the questions you want to answer? Do you plan to slice and dice the data in different ways, create new variables, or join separate data frames to create new summary information? How could you summarize your data to answer key questions? 
-What types of plots and tables will help you to illustrate the findings to your questions? 
-What do you not know how to do right now that you need to learn to answer your questions? 
-Do you plan on incorporating any machine learning techniques (i.e. linear regression, discriminant analysis, cluster analysis) to answer your questions? 
+<!-- 
+**TIPS:**  **Enable**  **Feedback loop**
+- Have a report beta-release circulated to selected audience (partners, donors) before the official release
+- Make sure that any feedback on the beta-report is addressed in the final release.
 -->
 
 
 
-<!--
-4.1 Discuss how you plan to uncover new information in the data that is not self-evident. What are different ways you could look at this data to answer the questions you want to answer? Do you plan to slice and dice the data in different ways, create new variables, or join separate data frames to create new summary information? How could you summarize your data to answer key questions? 
-4.2 What types of plots and tables will help you to illustrate the findings to your questions? 
-4.3 What do you not know how to do right now that you need to learn to answer your questions? 
-4.4 Do you plan on incorporating any machine learning techniques (i.e. linear regression, discriminant analysis, cluster analysis) to answer your questions? 
+# Your Call to Action {-}
+<!-- 
+[Main pitch – call to action tailored to be tweetable]
 -->
+
+ 
+<!-- 
+Include here the key advocacy messages: The analysis in this report is expected to guide humanitarian and development program design and advocacy at both strategic and operational levels, including adjustments to UNHCR response.
+
+Provide a short overview of the main findings from the analysis including information on the protection environment, trends on the profile of the target population, top protection violations and/or risks identified, groups most affected and in which geographical areas, key rights affected by the protection incidents, onward movements, and other risks.
+
+The report summary should not say anything additional to what follows in the rest of the report.
+-->
+
+<!--  
+
+**TIPS:** **How can [protection officers]**  **communicate like journalists****?**
+
+_By writing their stories the way journalists do. Readers should be able to quickly see the main message of the report. Journalists use the "inverted pyramid" style. Simply, you write about your conclusions at the top of the news story and follow with more detailed points to explain the conclusion._
+
+_Think of a typical analytical article as a right-side-up pyramid. In the opening section, you introduce the thesis you want to prove. In following sections, you introduce the dataset, you do your analysis, and you wrap things up with a set of conclusions. Journalists_ _ **invert this style** __. They want the main findings from those conclusions right up top in your news story. They don't want to have to dig for the story. You build on your story line throughout the rest of the text. If the text is long, use subheadings to strengthen the organization and break it into manageable, meaningful sections. Use a verb in subheadings, such as: "Gender gap narrows slightly."_
+
+[https://unece.org/DAM/stats/documents/writing/MDM\_Part1\_English.pdf#page=10](https://unece.org/DAM/stats/documents/writing/MDM_Part1_English.pdf#page=10)
+-->
+
+# Context {-} 
+<!-- 
+Explain the scope of the analysis by specifying the geographic areas of focus and highlight specific thematic areas to be covered (if relevant). Provide a brief rationale for geographic areas of focus and selected thematic issues (e.g., recent contextual developments, change in response since last Analysis Update, arrivals, or outflows through international borders). Provide a summary of the protection context and specifically highlight developments over the reporting period that shape the dynamics, either positively or negatively, including any shifts in the operating environment.
+
+Throughout context analysis pay particular attention to how contextual dynamics may impact upon women, girls, boys and men in different age groups, and other groups at heightened risk of right violations, such as persons with disabilities, older persons, among other profiles.
+
+Analysis of the context should be used to inform the conclusions of the full protection analysis including which population groups are most affected and where they are.
+
+Political and socio-economic landscape, including political enablers or drivers of protection threats such as current political fragility and other political enablers and barriers to humanitarian, developmental, institutional, or peace-related actions.
+
+Institutional, legal, and normative landscape, highlighting any relevant development, amendment or proposal related to the legal and administrative frameworks for the protection and assistance of refugee, stateless and internally displaced persons, and/or migration-border management.
+
+Last, introduce the Protection Risks that have been selected to be highlighted in this report (ideally 3 to keep your report digestible): how and why were they selected? Mention other existing protection risks that were selected to be highlighted in this report. You may decide to have each your Protection Monitoring Report release focusing on different topics. In case, there's a protection cluster publishing PAF(Protection Analysis Framework) report, you may strategically select to focus on different risks than the one selected for the PAF
+-->
+
+<!--  
+
+**TIPS:**  **The analysis of the context should help support your**  **selection of the most concerning protection risks**  **and support your identification of most affected geographic areas and population groups.**
+
+Identification of priority protection risks is based on an analysis of the following Information:
+
+- Harmful, discriminatory and/or protective contextual factors
+- Current threats to the population
+- Rights violations and abuses
+- Threat effect on the population
+- Existing capacities to address protection threats
+
+See "Protection Gap Framework for Analysis" - [https://www.unhcr.org/50aa57ad9.pdf](https://www.unhcr.org/50aa57ad9.pdf)
+
+-->
+
+
+<!-- 
+**TIPS:**  **Write**  **Concisely**  **-**
+
+_Write each of your protection risk chapters as if it could be an independent article_
+
+_The_ [ideal length of a chapter](https://torquemag.io/2018/04/optimal-content-length/)_ should be between 1500 and 2500 characters, taking an average 7 minutes to read._-->
+
+<!-- 
+-->
+# Protection Risk #1  {-}
+<!-- 
+
+Provide an initial short narrative that tells the story behind your identified protection risks and highlight potential solutions. Use Situation-Challenge-Action-Responsibility. [think of shareable content for social media]
+-->
+
+## Threat's effects on the population  {-}
+<!-- 
+Specify the type of threat and the rights that are affected. Identify the perpetrator?
+
+Explain if there have been any changes in the nature of the threat since the last update.
+
+Then, specify:
+- Which population groups are most severely impacted and why? (If feasible, provide a summary of all your identified protection risks (in a heatmap) to emphasize key message that shows population groups most severely affected per risk.
+- Which geographic areas are most affected and why?
+- Consequences of the threat
+- Affected population coping strategies
+-->
+
+## Existing capacities to address protection threats  {-}
+<!-- 
+Specify how the combination of individual/household capacity, local/community mechanisms, and national institutional capacity, as well as ongoing humanitarian response activity, is able to mitigate the impact of the protection threats identified.
+
+Highlight how the main aspects of capacity/lack of capacity contribute to the overall risk severity.
+
+Make note of any changes in capacity that may influence the response strategy needed to address a particular gap.
+-->
+
+## Recommended Actions {-}
+<!-- 
+The above analysis is to inform the selection of recommended actions. A thorough protection analysis should have identified both the immediate humanitarian need based, as well as the root causes or factors that drive a particular threat.
+-->
+
+<!-- 
+**TIPS:**  **use the**  **Risk Equation**  **approach**
+
+"_The results of the_ _ **risk analysis** _ _will serve as entry-points in order to design interventions: risks are mitigated by reducing threats and vulnerabilities and increasing capacities, or a combination of these. Threats can be reduced by either achieving changes in the behavior of the perpetrators or improving the compliance of duty-bearers, while vulnerabilities are reduced, and capacities increased through direct changes in the lives of the beneficiaries"_
+
+[https://ec.europa.eu/echo/files/policies/sectoral/policy\_guidelines\_humanitarian\_protection\_en.pdf#page=11](https://ec.europa.eu/echo/files/policies/sectoral/policy_guidelines_humanitarian_protection_en.pdf)
+-->
+
+# Protection Risk #2  {-}
+<!-- 
+**TIPS:**  **Leverage**  **Story Telling**
+
+_First and foremost, you need a story to tell. You should think in terms of issues or themes, rather than a description of data. Specifically, you need to find meaning in the statistics. A technical report is not a story, nor is there a story in conducting a survey. A story tells the reader briefly what you found and why it is important to the reader. Focus on how the findings affect people. If readers are able to relate the information to important events in their life, your article becomes a lot more interesting_
+
+[https://unece.org/statistics/making-data-meaningful](https://eur02.safelinks.protection.outlook.com/?url=https%3A%2F%2Funece.org%2Fstatistics%2Fmaking-data-meaningful&data=04%7C01%7Clegoupil%40unhcr.org%7C747e2e858b7542acf29508d9d077cc49%7Ce5c37981666441348a0c6543d2af80be%7C0%7C0%7C637770035204752610%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&sdata=OuS6fltzcLkj04xaKmmtRPy9xicOFZrJdEBVnVzUzEA%3D&reserved=0)
+-->
+
+<!-- 
+**TIPS:**  **Include crafted**  **charts**  **prepared by the operations' Information Management colleagues**
+
+- Include one or two key crafted charts per Protection Risk – too many charts will "distract" the reader and may draw attention away from your message
+- The presented data shall either reinforce what readers knows or reveal what they don't: (i) shedding light on a previously unexplored topic (telling readers something new or they have not heard before), (ii) introducing an interesting angle (giving new perspectives); (iii) providing useful suggestions to solve a problem (inspiring to act); (iv) disproving hypothesis / debunking widely held belief in terms of programmatic assumption.
+- Check whether data might be better reflected in a table/map/other visual representation.
+- Check that tables/visuals/maps contribute to your overall message
+- Make sure charts systematically include:
+  - **Main title** includes the key question the chart is informing
+  - **Subtitle** includes the main message you want to illustrate with this chart
+  - **Caption** to include precise reference to the data source and any potential methodological limitations
+  - **Annotations** to insert any narrative interpretations of the data
+- Design charts with a social media perspective: see [_How The Economist designs charts for Instagram_](https://medium.economist.com/charting-new-territory-7f5afb293270)
+- Leverage **multiple data sources** to build those charts: not only household surveys, but also registration data, activities tracking, key informant interviews, records from helpdesk/call centers, social media
+- Use [unhcr style](https://unhcr-web.github.io/unhcRstyle/docs/) within the charts – ideally charts should be generated through R – contact RBA DIMA for training on how to create charts with R – see examples here: [7 key questions on forced displacement](https://unhcr.github.io/unhcrdatapackage/docs/CountryFocus.html) and [UNHCR R Cookbook](https://unhcr-web.github.io/unhcRstyle/inst/examples/How_to_quickly_produce_statistical_reports.html)
+
+[https://unece.org/DAM/stats/documents/writing/MDM\_Part2\_English.pdf](https://unece.org/DAM/stats/documents/writing/MDM_Part2_English.pdf)
+-->
+
+<!-- 
+**TIPS:**  **Check**  **clarity**  **of the main message in your report**
+
+- Is your main message clear and up front?
+- Are the priorities highlighted – geographic areas and population groups?
+- Does the narrative go beyond the obvious?
+- **Will a non-expert understand it?**
+- Is the analysis in the text supported by facts (rather than facts with no conclusions, or conclusions without facts?)
+- Check any assumptions are well founded
+- Situate statements within time or space. Make comparisons, include a rate as well as an absolute number, indicate trends over time.
+- If information is missing, explain why.
+- Is the information relevant and does it contribute to your main message?
+- Check that your facts do not contradict each other.
+- Check that the sentence cannot be misinterpreted.
+- Check that when reporting numbers, that the figures add up.
+-->
+
+<!-- 
+**TIPS:**  **Age, Gender and Diversity: Check compliance with UNHCR**  **AGD Updated Policy**
+
+- Does the narrative explain how protection risks differentially impact women, men, girls, and boys from different age groups?
+- Does your analysis take into consideration groups at heightened risk of rights violation in your specific context?
+- Is the data presented disaggregated by age, gender and other diversity considerations, as contextually appropriate and possible?
+- Avoid using UNHCR jargon or conclusions when explaining protection risks impacting specific groups. The report intended for an external audience,
+-->
+
+<!-- 
+**TIPS:**  **Do not insert**  **too many numbers / figures**
+
+Carefully select the key figures you insert [and minimise the number of "quoted figures"](https://www.unhcr.org/innovation/wp-content/uploads/2018/02/InnovationYearInReview2017_web.pdf#page=21) to make sure they impact the reader.
+
+For instance, only provide numbers that can be related to a baseline or focus on ratio or proportions
+-->
+
+# Acknowledgements {-}
+ 
+<!-- 
+[Acknowledge the participants to the joint data interpretation sessions. Mention the # of joint data interpretation sessions you had. Maybe add logos of all organisations that engaged in the Joint Data Interpretation Sessions plus Donors] The addition of [[e-mail and / or websites are automatically blue](http://www.unhcr.org/)] can appear anywhere in the text.
+-->
+
+<!-- 
+**TIPS:**  **Structure: Check overall**  **structure**  **of your analysis is correct**
+
+- Is the information in the correct section of the report?
+- Does the order of protection risks identified reflect priorities?
+- If you refer to dates in your analysis, be sure that the timeline is in the correct order.
+-->
+
+<!-- 
+**TIPS:**  **Protection Monitoring Analysis is a protection activity! Think of your report as the backbone of an**  **advocacy campaign**** :**
+
+- Consider publishing your report in both English and your country's language
+- PI prepare press release for the launch of your report
+- Ask all staff in the operation to include links to the report within their email signature
+- Favour the release of your reports as a responsive microsite (that can be read through a smartphone) in addition to only a PDF that would limit the audience to desktop users
+- Have contents (Image/Charts + short quote / short video explainer) ready to be shared on social media (Tweeter, Instagram, Facebook, Tiktok..) and includes button to share on social media from your microsite
+- Have metrics in place to monitor your impact (Stats from social media + google analytics on your microsite) and learn about the profile of your audience
+- Includes links in the microsite to external papers to enhance Search Engine Discoverability
+-->
+
+# Annex: Methodology  {-}
+
+<!-- 
+**Provide a summary of:**
+
+1. the different data sources used (including primary and secondary data, insert links to publicly available data used in the report and mention not publicly available/ quantitative and qualitative data and why they are not published, etc.)
+2. the processes of data collection and their complementarity (HH surveys, unstructured or semi-structed interviews, FGD, community mapping)
+3. the data analysis process
+4. the drafting of the report, including key actors involved – this can complement the acknowledgement part before.
+
+**Clearly highlight any limitation:**
+
+Highlight key information gaps or challenges data collection (for example limitation to the sampling for the HFS or other relevant surveys, explanation related to the coverage of registration data) or in limitations in interpreting some of the available data and how this may have impacted your analysis.
+
+Highlight the reasons for why there are information gaps, i.e., limited access preventing data collection or access to existing data.
+
+**TIPS:**  **This part is to be written by data expert / IMO in the operation**
+-->
+ 
+
+
+```{r}
+## Time to archive your work once done!!
+namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
+if( params$publish == "yes"){
+  kobo_ridl(ridl = params$datafolder,
+                      datafolder = params$datafolder,
+                      form = params$dataform,
+                      name = namethisfile,
+                      republish = params$republish,
+                      visibility =  params$visibility,
+                      stage = "dissemination_story") }
+```
