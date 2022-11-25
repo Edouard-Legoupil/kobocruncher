@@ -6,6 +6,12 @@
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom tm tm_map Corpus content_transformer TermDocumentMatrix
+#'                
+#' @importFrom ggwordcloud geom_text_wordcloud
+#' 
+#' 
 #' @export
 
 #' @examples
@@ -23,6 +29,7 @@ plot_text <- function(datalist = datalist,
                       showcode = FALSE) {
   
   requireNamespace("dplyr")
+  requireNamespace("SnowballC")
   requireNamespace("ggplot2")
   require("ggplot2")
   ## Get default data source name 

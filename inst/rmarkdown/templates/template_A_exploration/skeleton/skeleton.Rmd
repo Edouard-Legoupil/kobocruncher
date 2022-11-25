@@ -7,15 +7,15 @@ output:
     toc_depth: 2
     toc_float: true 
 params:
-  datafolder: "data-raw"
-  ridl: "ridlproject"
-  data: "data.xlsx"
-  form: "form.xlsx"
-  datasource: "Study name reference"
-  publish: "no"
+  datafolder: "data-raw" ## This is the default folder where to put you data in
+  ridl: "ridlproject" ## Name of the ridl project where you data is documented and archived
+  data: "data.xlsx" ## Name of the data file
+  form: "form.xlsx" ## name of the xlsform - 
+  datasource: "Study name reference" ## String used in caption for all your charts
+  publish: "no" ## put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c
   republish: "no"
   visibility: "public"
-  stage: "exploration_initial" 
+  stage: "exploration_initial" ## you may change this to exploration_advanced if you configuring many 
   language: "" ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
 ---
 
@@ -60,6 +60,8 @@ library("kobocruncher")
 datapath <- here::here(params$datafolder, params$data)
 xlsformpath <- here::here(params$datafolder, params$form) 
 
+url <- paste0("https://ridl.unhcr.org/dataset/",params$ridl )
+
 ########################################
 ## The 2 lines below are for the demo ##
 ########################################
@@ -71,7 +73,7 @@ xlsformpath <- here::here(params$datafolder, params$form)
 
 # Crunching step
 
-This data crunching report allows to quickly explore the results of the survey. It can be regenerated as needed based on the analysis plan you did set up. The objective of this report is to allow to quickly identify potential patterns in your dataset. A quick screening of this initial report should allow to select the most meaningful graphs.
+This data crunching report allows to quickly explore the results of the survey published in [RIDL](`r url `). It can be regenerated as needed based on the analysis plan you did set up. The objective of this report is to allow to quickly identify potential patterns in your dataset. A quick screening of this initial report should allow to select the most meaningful graphs.
 
 The crunching process produces a lot of visuals. Therefore it is key to carefully select the most relevant visual that will be presented for potential interpretation in the next step. To do so, you simply copy-paste the short syntax in a second notebook to generate as powerpoint presentation. A typical data interpretation session shall not last more than 2hours and include more than 60 visuals to look at in order to keep participants with a good focus level.
  

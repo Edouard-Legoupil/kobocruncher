@@ -10,8 +10,8 @@
 <title>A Metapackage For Survey Data Crunching • kobocruncher</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="deps/Lato-0.4.2/font.css" rel="stylesheet">
-<link href="deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="deps/Lato-0.4.4/font.css" rel="stylesheet">
+<link href="deps/Source_Code_Pro-0.4.4/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="A Metapackage For Survey Data Crunching">
@@ -76,7 +76,42 @@
 <p>An organized workflow generating ‘Rmd’ files from an extended ‘xlsform’ questionnaire structure to facilitate survey data crunching.</p>
 <p><code>kobocruncher</code> support organised data analysis workflow, to conduct data discovery and analysis for data collected through <a href="https://www.kobotoolbox.org/" class="external-link">KoboToolbox</a>, <a href="https://opendatakit.org/" class="external-link">ODK</a>, <a href="https://ona.io/home/" class="external-link">ONA</a> or any <strong><a href="http://xlsform.org" class="external-link">xlsform</a></strong> compliant data collection platform.</p>
 <p>This package first builds on the capacity of <a href="http://kobo.unhcr.org" class="external-link">UNHCR Kobo server</a> but it can also be used from any structured dataset. It comes as a companion tool to the <a href="https://unhcr.github.io/Integrated-framework-household-survey" class="external-link">Integrated Framework for Household Survey</a>.</p>
+<div class="section level2">
+<h2 id="tutorial">Tutorial<a class="anchor" aria-label="anchor" href="#tutorial"></a>
+</h2>
 <p><code>kobocruncher</code> aims at helping <a href="https://humanitarian-user-group.github.io/" class="external-link">humanitarian data analysts</a> to focus in data interpretation by saving the time needed to quickly generate the graphs and charts required to discover insights from a dataset. It also ensure analysis <strong>reproducibility</strong> through a separation of the analysis configuration and the analysis process. The package allows to account for sample weights and hierarchical dataset structure (both capacities that are not available through the default <a href="http://support.kobotoolbox.org/articles/2847676-viewing-and-creating-custom-reports" class="external-link">reporting engine</a> or the <a href="http://support.kobotoolbox.org/articles/592387-using-the-excel-analyzer" class="external-link">excel-analyzer</a>).</p>
+<p>A series of presentation / tutorial are accessible here:</p>
+<ul>
+<li>
+<a href="tutorial/00-Intro.html">00-Intro</a><br>
+</li>
+<li>
+<a href="tutorial/01-First_Report.html">01-First_Report</a><br>
+</li>
+<li>
+<a href="tutorial/02-Relabeling.html">02-Relabeling</a><br>
+</li>
+<li>
+<a href="tutorial/03-Grouping_Questions.html">03-Grouping_Questions</a><br>
+</li>
+<li>
+<a href="tutorial/04-Setting_Crosstabulation.html">04-Setting_Crosstabulation</a><br>
+</li>
+<li>
+<a href="tutorial/05-Searching_Asssociation.html">05-Searching_Asssociation</a><br>
+</li>
+<li>
+<a href="tutorial/06-Cleaning_and_Indicator_calculation.html">06-Cleaning_and_Indicator_calculation</a><br>
+</li>
+<li>
+<a href="tutorial/07-Anonymising.html">07-Anonymising</a><br>
+</li>
+<li>
+<a href="tutorial/08-Weighting.html">08-Weighting</a><br>
+</li>
+<li><a href="tutorial/09-Publishing.html">09-Publishing</a></li>
+</ul>
+</div>
 <div class="section level2">
 <h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
 </h2>

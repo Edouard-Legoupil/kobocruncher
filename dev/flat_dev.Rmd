@@ -1775,6 +1775,12 @@ plot_integer(datalist = datalist,
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom tm tm_map Corpus content_transformer TermDocumentMatrix
+#'                
+#' @importFrom ggwordcloud geom_text_wordcloud
+#' 
+#' 
 #' @export
 
 plot_text <- function(datalist = datalist, 
@@ -1784,6 +1790,7 @@ plot_text <- function(datalist = datalist,
                       showcode = FALSE) {
   
   requireNamespace("dplyr")
+  requireNamespace("SnowballC")
   requireNamespace("ggplot2")
   require("ggplot2")
   ## Get default data source name 
@@ -3000,19 +3007,19 @@ kobo_likert(datalist = datalistlikert,
 #' Archive all crunching files in RIDL
 #' 
 #' RIDL is UNHCR instance of a CKAN server. It is designed to keep track and document dataset within an organisation.
-#' It can also be used to conveniently pblish your generated report and save the work you did on a notebook
+#' It can also be used to conveniently publish your generated report and save the work you did on a notebook
 #' As you have been working on the data, you want to keep track of it and save your work in a place where it can be useful for other people.
 #' 
 #' The function saves as resource within the  the RIDL container you used to get the data from : 
 #'   * the generated report 
-#'   * the analysis plan, aka the extended  xlsform used to record relabelling, clean, indicator creation, question grouping, exploration settings
+#'   * the analysis plan, aka the extended  xlsform used to record relabeling, clean, indicator creation, question grouping, exploration settings
 #'   * the source notebook
 #' 
 #' @param ridl ridl container where the resources should be added
 #' @param datafolder folder where the data used by the notebook are stored 
 #' @param form names of the file with the analysis plan
 #' @param name_of_this_file all files are archived based on the name of notebook you created. 
-#'     The function automatically get the name of the notebook where it is runned from,
+#'     The function automatically get the name of the notebook where it is run from,
 #'     using 
 #'      basename(rstudioapi::getSourceEditorContext()$path )
 #' @param republish "yes" or "no" Used in order to overwrite. default is "no
@@ -3020,7 +3027,7 @@ kobo_likert(datalist = datalistlikert,
 #'  
 #' @param visibility can be  "public" per default or set to private for obscure reasons..       
 #' @param stage  allow to document your analysis stage 
-#'    * exploration_initial if your crunching is the very initial basic cleaning, relabelling of your data 
+#'    * exploration_initial if your crunching is the very initial basic cleaning, relabeling of your data 
 #'    * exploration_advance if your crunching 
 #'    * interpretation_prez
 #'    * dissemination_story
@@ -3040,6 +3047,13 @@ kobo_ridl <- function(ridl,
 # using $ operator 
 ## Enter below the name you used to save this file - without extension
    name_of_this_file <- rstudioapi::getSourceEditorContext()$path 
+   ## Remove file name extension 
+   name2 <-  substr(name_of_this_file,1, nchar(name_of_this_file) -4) 
+   
+   ## Now just the name of the file
+   name1 <-   basename(rstudioapi::getSourceEditorContext()$path )
+   ## Remove file name extension 
+   name <-  substr(name1,1, nchar(name1) -4) 
     
     ### Time to archive your work once done!! 
 ### Uncomment and Run this only once you have knitted your file in order to quickly upload this to RIDL -
@@ -3047,39 +3061,7 @@ kobo_ridl <- function(ridl,
 # remotes::install_github("galalH/riddle") 
 time <- format(Sys.Date(),  '%d%b%y')
 
-if(stage == "interpretation_prez") {
-  metadatareport <- riddle::resource_metadata(type = "attachment",
-                                        url = paste0(stage, name, ridl, time,".html"),
-                                        name = paste0(stage, name, ridl, time),
-                                        description = paste0("Generated Report: ", 
-                                                             stage,", ", name, " built on ", time,
-                                                             " using kobocruncher "),
-                                        format = "pptx",
-                                        visibility =  visibility,
-                                        file_type = "report",
-                                        ## Revise here based on the name from your crunching report
-                                        upload = here::here(paste0(name_of_this_file,".pptx"))
-                                      )
-} else{
-  metadatareport <- riddle::resource_metadata(type = "attachment",
-                                        url = paste0(stage,"_", name,"_", ridl,"_", time,".html"),
-                                        name = paste0(stage,"_", name,"_", ridl,"_", time),
-                                        description = paste0("Generated Report: ", 
-                                                             stage,", ", name, " built on ", time,
-                                                             " using kobocruncher "),
-                                        format = "html",
-                                        visibility =  visibility,
-                                        file_type = "report",
-                                        ## Revise here based on the name from your crunching report
-                                        upload = here::here(paste0(name_of_this_file,".html"))
-                                      )
-}
-
-if(republish == "yes") {
-riddle::resource_update(ridl, metadatareport)
-} else {
-riddle::resource_create(ridl, metadatareport)
-}
+### Publish the analysis plan ####
 
 metadataanalysisplan <- riddle::resource_metadata(type = "attachment",
                                         url = paste0("analysisPlan_", stage,"_", name,
@@ -3093,13 +3075,15 @@ metadataanalysisplan <- riddle::resource_metadata(type = "attachment",
                                         visibility =  visibility,
                                         file_type = "other",
                                         ## Revise here based on the name from your crunching report
-                                        upload =  here::here(datafolder, form)
+                                        upload =  httr::upload_file(here::here(datafolder, form))
                                       )
 if(republish == "yes") {
 riddle::resource_update(ridl, metadataanalysisplan)
 } else {
 riddle::resource_create(ridl, metadataanalysisplan)
 }
+
+### Now publish the current notebook ####
 
 metadataanalysisscript <- riddle::resource_metadata(type = "attachment",
                                         url = paste0("notebook_", stage, name, ridl, time, ".Rmd"),
@@ -3112,13 +3096,52 @@ metadataanalysisscript <- riddle::resource_metadata(type = "attachment",
                                         visibility =  visibility,
                                         file_type = "script",
                                         ## Revise here based on the name from your crunching report
-                                        upload = here::here(paste0(name_of_this_file,".Rmd"))
+                                        upload = httr::upload_file(here::here(name_of_this_file))
                                       )
 if(republish == "yes") {
 riddle::resource_update(ridl, metadataanalysisscript)
 } else {
 riddle::resource_create(ridl, metadataanalysisscript)
 } 
+
+## and now the generated report - that should be hopefully already generated ####
+
+if(stage == "interpretation_prez") {
+  metadatareport <- riddle::resource_metadata(type = "attachment",
+                                        url = paste0(stage, name, ridl, time,".html"),
+                                        name = paste0(stage, name, ridl, time),
+                                        description = paste0("Generated Report: ", 
+                                                             stage,", ", name, " built on ", time,
+                                                             " using kobocruncher "),
+                                        format = "pptx",
+                                        visibility =  visibility,
+                                        file_type = "report",
+                                        ## Revise here based on the name from your crunching report
+                                        upload = httr::upload_file(here::here(paste0(name2,".pptx")))
+                                      )
+} else{
+  metadatareport <- riddle::resource_metadata(type = "attachment",
+                                        url = paste0(stage,"_", name,"_", ridl,"_", time,".html"),
+                                        name = paste0(stage,"_", name,"_", ridl,"_", time),
+                                        description = paste0("Generated Report: ", 
+                                                             stage,", ", name, " built on ", time,
+                                                             " using kobocruncher "),
+                                        format = "html",
+                                        visibility =  visibility,
+                                        file_type = "report",
+                                        ## Revise here based on the name from your crunching report
+                                        upload = httr::upload_file(here::here(paste0(name2,".html")))
+                                      )
+}
+
+if(republish == "yes") {
+riddle::resource_update(ridl, metadatareport)
+} else {
+riddle::resource_create(ridl, metadatareport)
+}
+
+
+## Once all of it done, let's the user know about it... 
 return( cat(paste0("Notebook", name, " Published")))
 }
 ```
@@ -3129,9 +3152,9 @@ return( cat(paste0("Notebook", name, " Published")))
 # namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
 ### template_1_exploration
 # if( params$publish == "yes"){
-#   kobo_ridl(ridl = params$datafolder, 
+#   kobo_ridl(ridl = params$ridl, 
 #                       datafolder = params$datafolder, 
-#                       form = params$dataform,
+#                       form = params$form,
 #                       name =  namethisfile,
 #                       republish = params$republish, 
 #                       visibility =  params$visibility,
@@ -3140,9 +3163,9 @@ return( cat(paste0("Notebook", name, " Published")))
 ### template_2_interpretation 
 
 # if( params$publish == "yes"){
-#   kobo_ridl(ridl = params$datafolder, 
+#   kobo_ridl(ridl = params$ridl, 
 #                       datafolder = params$datafolder, 
-#                       form = params$dataform,
+#                       form = params$form,
 #                       name =  namethisfile,
 #                       republish = params$republish,
 #                       visibility =  params$visibility,
@@ -3151,9 +3174,9 @@ return( cat(paste0("Notebook", name, " Published")))
 ### template_3_dissemination 
 
 # if( params$publish == "yes"){
-#  kobo_ridl(ridl = params$datafolder, 
+#  kobo_ridl(ridl = params$ridl, 
 #                       datafolder = params$datafolder, 
-#                       form = params$dataform,
+#                       form = params$form,
 #                       name =  namethisfile,
 #                       republish = params$republish,
 #                       visibility =  params$visibility,

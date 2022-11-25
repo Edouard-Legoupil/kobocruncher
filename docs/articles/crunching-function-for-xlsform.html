@@ -9,8 +9,8 @@
 <title>Crunching Function for XlsForm • kobocruncher</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Lato-0.4.2/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Lato-0.4.4/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.4/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Crunching Function for XlsForm">
@@ -854,7 +854,6 @@ steps in the data preparation.</p>
 <span>              dico <span class="op">=</span> <span class="va">dico</span>, </span>
 <span>              var <span class="op">=</span> <span class="st">"profile.country"</span>,</span>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required namespace: ggplot2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; What is your country of Origin?</span></span>
 <span><span class="co">#&gt; &lt;svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:grey;overflow:visible;position:relative;"&gt;&lt;path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/&gt;&lt;/svg&gt;`plot_select_one(datalist = datalist, dico = dico, "profile.country")` </span></span>
@@ -927,6 +926,7 @@ steps in the data preparation.</p>
 <span>              dico <span class="op">=</span> <span class="va">dico</span>, </span>
 <span>              var <span class="op">=</span> <span class="st">"profile.occupation"</span>,</span>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required namespace: SnowballC</span></span>
 <span><span class="co">#&gt; Loading required package: tm</span></span>
 <span><span class="co">#&gt; Loading required package: NLP</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1083,7 +1083,7 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; # Using lambdas list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">kobocruncher</span> package.</span></span>
 <span><span class="co">#&gt;   Please report the issue at</span></span>
-<span><span class="co">#&gt;   <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/Edouard-Legoupil/kobocruncher/issues&gt;</span>.</span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #0000BB; font-style: italic;">&lt;</span></span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_likert-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -1217,6 +1217,47 @@ steps in the data preparation.</p>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_likert-3.png" width="700"></p>
 </div>
 <div class="section level3">
+<h3 id="archive-files-in-ridl">Archive files in RIDL<a class="anchor" aria-label="anchor" href="#archive-files-in-ridl"></a>
+</h3>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co">### Example used for each template </span></span>
+<span><span class="co"># namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  </span></span>
+<span><span class="co">### template_1_exploration</span></span>
+<span><span class="co"># if( params$publish == "yes"){</span></span>
+<span><span class="co">#   kobo_ridl(ridl = params$ridl, </span></span>
+<span><span class="co">#                       datafolder = params$datafolder, </span></span>
+<span><span class="co">#                       form = params$form,</span></span>
+<span><span class="co">#                       name =  namethisfile,</span></span>
+<span><span class="co">#                       republish = params$republish, </span></span>
+<span><span class="co">#                       visibility =  params$visibility,</span></span>
+<span><span class="co">#                       stage = params$stage) }</span></span>
+<span></span>
+<span><span class="co">### template_2_interpretation </span></span>
+<span></span>
+<span><span class="co"># if( params$publish == "yes"){</span></span>
+<span><span class="co">#   kobo_ridl(ridl = params$ridl, </span></span>
+<span><span class="co">#                       datafolder = params$datafolder, </span></span>
+<span><span class="co">#                       form = params$form,</span></span>
+<span><span class="co">#                       name =  namethisfile,</span></span>
+<span><span class="co">#                       republish = params$republish,</span></span>
+<span><span class="co">#                       visibility =  params$visibility,</span></span>
+<span><span class="co">#                       stage = "interpretation_prez") }</span></span>
+<span></span>
+<span><span class="co">### template_3_dissemination </span></span>
+<span></span>
+<span><span class="co"># if( params$publish == "yes"){</span></span>
+<span><span class="co">#  kobo_ridl(ridl = params$ridl, </span></span>
+<span><span class="co">#                       datafolder = params$datafolder, </span></span>
+<span><span class="co">#                       form = params$form,</span></span>
+<span><span class="co">#                       name =  namethisfile,</span></span>
+<span><span class="co">#                       republish = params$republish,</span></span>
+<span><span class="co">#                       visibility =  params$visibility,</span></span>
+<span><span class="co">#                       stage = "dissemination_story") }</span></span>
+<span></span>
+<span> </span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="report-template-a-for-automatic-data-exploration">Report Template A for Automatic Data Exploration<a class="anchor" aria-label="anchor" href="#report-template-a-for-automatic-data-exploration"></a>
 </h3>
 <p>The first RMD template gives an output in HTML for easy navigation -
@@ -1226,7 +1267,7 @@ content. During this stage, data cleaning and new variable creation can
 be performed through iterations</p>
 <p>This report also includes each plot syntax so that they can be easily
 pasted for the second report</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Initial Template for Automatic Data Exploration</span></span>
 <span><span class="co">#' The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.</span></span>
 <span><span class="co">#' It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations</span></span>
@@ -1244,7 +1285,7 @@ pasted for the second report</p>
 <p>The second template is used following the systematic data
 exploration. It will generate a PowerPoint presentation</p>
 <p>See a more detailed presentation of that step here: <a href="https://www.youtube.com/watch?v=0jE-Y7g88K4&amp;feature=youtu.be&amp;t=2305" class="external-link uri">https://www.youtube.com/watch?v=0jE-Y7g88K4&amp;feature=youtu.be&amp;t=2305</a></p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Second Template to prepare a presentation for the Joint Data Interpretation Session</span></span>
 <span><span class="co">#' </span></span>
 <span><span class="co"># usethis::use_rmarkdown_template(</span></span>
@@ -1261,7 +1302,7 @@ Template<a class="anchor" aria-label="anchor" href="#report-template-c-for-disse
 <p>The last template can be used to take note of the data interpretation
 session.</p>
 <p>It will generate a PDF or an paginated HTML page</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Report Template 3 for Dissemination and Data Story Telling Template</span></span>
 <span><span class="co">#' The last template can be used to take note of the data interpretation session. </span></span>
 <span><span class="co">#' It will generate a PDF or an paginated HTML page</span></span>
@@ -1275,7 +1316,7 @@ session.</p>
 <div class="section level3">
 <h3 id="shiny-app">Shiny App<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
 </h3>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># app_kobocruncher(theme="flatly")</span></span></code></pre></div>
 </div>

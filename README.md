@@ -5,7 +5,22 @@ An organized workflow generating 'Rmd' files from an extended 'xlsform' question
 
 This package first builds on the capacity of [UNHCR Kobo server](http://kobo.unhcr.org) but it can also be used from any structured dataset. It comes as a companion tool to the [Integrated Framework for Household Survey](https://unhcr.github.io/Integrated-framework-household-survey).
 
-`kobocruncher` aims at helping [humanitarian data analysts](https://humanitarian-user-group.github.io/) to focus in data interpretation by saving the time needed to quickly generate the graphs and charts required to discover insights from a dataset. It also ensure analysis __reproducibility__ through a separation of the analysis configuration and the analysis process. The package allows to account for sample weights and hierarchical dataset structure (both capacities that are not available through the default [reporting engine](http://support.kobotoolbox.org/articles/2847676-viewing-and-creating-custom-reports) or the [excel-analyzer](http://support.kobotoolbox.org/articles/592387-using-the-excel-analyzer)). 
+## Tutorial 
+
+`kobocruncher` aims at helping [humanitarian data analysts](https://humanitarian-user-group.github.io/) to focus in data interpretation by saving the time needed to quickly generate the graphs and charts required to discover insights from a dataset. It also ensure analysis __reproducibility__ through a separation of the analysis configuration and the analysis process. The package allows to account for sample weights and hierarchical dataset structure (both capacities that are not available through the default [reporting engine](http://support.kobotoolbox.org/articles/2847676-viewing-and-creating-custom-reports) or the [excel-analyzer](http://support.kobotoolbox.org/articles/592387-using-the-excel-analyzer)).  
+
+A series of presentation / tutorial are accessible here:
+
+  *  [00-Intro](tutorial/00-Intro.html)  
+  *  [01-First_Report](tutorial/01-First_Report.html)  
+  *  [02-Relabeling](tutorial/02-Relabeling.html)  
+  *  [03-Grouping_Questions](tutorial/03-Grouping_Questions.html)  
+  *  [04-Setting_Crosstabulation](tutorial/04-Setting_Crosstabulation.html)  
+  *  [05-Searching_Asssociation](tutorial/05-Searching_Asssociation.html)  
+  *  [06-Cleaning_and_Indicator_calculation](tutorial/06-Cleaning_and_Indicator_calculation.html)  
+  *  [07-Anonymising](tutorial/07-Anonymising.html)  
+  *  [08-Weighting](tutorial/08-Weighting.html)   
+  *  [09-Publishing](tutorial/09-Publishing.html)  
 
 ## Install
 

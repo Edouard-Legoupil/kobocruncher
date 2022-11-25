@@ -55,6 +55,9 @@
     <loc>/reference/kobo_prepare_form.html</loc>
   </url>
   <url>
+    <loc>/reference/kobo_ridl.html</loc>
+  </url>
+  <url>
     <loc>/reference/label_choiceset.html</loc>
   </url>
   <url>
@@ -95,5 +98,35 @@
   </url>
   <url>
     <loc>/reference/plot_text.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/00-Intro.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/01-First_Report.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/02-Relabeling.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/03-Grouping_Questions.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/04-Setting_Crosstabulation.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/05-Searching_Asssociation.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/06-Cleaning_and_Indicator_calculation.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/07-Anonymising.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/08-Weighting.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/09-Publishing.html</loc>
   </url>
 </urlset>

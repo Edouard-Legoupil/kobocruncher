@@ -1,8 +1,8 @@
 ---
-title: "Main presentation title"
-subtitle: "Subtitle if needed"
-author: "Your name"
-institute: "Bureau/Divisions"
+title: "Survey Data Analysis with Kobocruncher"
+subtitle: "Session 0 - Introduction"
+author: "Edouard Legoupil"
+institute: "Snr Data Analysis Officer"
 date: "`r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
@@ -26,726 +26,179 @@ library(unhcrthemes)
 library(fontawesome)
 ```
 
-# Template
 
-**`html_slides`** is a simple online presentation template which is part of the [`unhcrdown`](https://github.com/vidonne/unhcrdown) package.
+## Survey Data, aka micro-data are key data source for a number of indicators
 
-Install the `unhcrdown` package from [Github](https://github.com/vidonne/unhcrdown):
+When implementing public programmes, some indicators can be sourced through existing monitoring systems, expert review or self assessment but a large part are __survey-based indicators__ that requires to collect information directly from the target population
 
-```{r eval=FALSE, tidy=FALSE}
-# install.packages("remotes")
-remotes::install_github("vidonne/unhcrdown")
-```
 
-**Main resources:**
+A survey is ideally designed to collect information on a small subset of the total population, in order to, assuming this subset is a representative sample of the entire population, __extrapolate the findings__ of analysis
 
-- [`unhcrdown::html_slides`](https://vidonne.github.io/unhcrdown/articles/create_html_slides.html) vignette
-- [`xaringan`](https://slides.yihui.org/xaringan/#1) slides
-- [`remark.js`](https://remarkjs.com/#1) slides
-- [R Markdown](https://rmarkdown.rstudio.com/lesson-1.html) documentation
-- [`unhcrthemes`](https://vidonne.github.io/unhcrthemes/index.html) package
-- [UNHCR Data Visualization Platform](https://dataviz.unhcr.org/)
+Based on a questionnaires, __standardized indicators are calculated__ with a view of comparing them to a baseline (for instance the same survey performed the year before, or the same indicators calculated for another population target).
 
 ---
 
-# YAML
+## Survey Data, aka micro-data have secificities
 
-The default YAML arguments are below, but not all the YAML arguments are mandatory so change it accordingly.
+The raw data need to go through a number of __technical manipulations__ before one can use them for interpretation:
 
-```yaml
----
-title: "Main presentation title"
-subtitle: "Subtitle if needed"
-author: "Your name"
-institute: "Bureau/Divisions"
-date: "`r format(Sys.Date(),  '%d %B %Y')`"
-output:
-  unhcrdown::html_slides:
-    self_contained: true
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
-      ratio: "16:9"
----
-```
+ * _relabeling_ the original question wording to make them quickly legible when doing the interpretation
+ 
+ * perform some data _cleaning_ to account for any issues on the raw data
+ 
+ * apply some basic data _anonymization_ treatment techniques to manage statistical disclosure and re-identification risks
+ 
+ * create intermediary indicator _calculations_
+ 
+ * use specific survey _weights_ to correctly express the representativeness of each records in the raw data in relation with the original sampling universe  
+ 
+ * translate the data into _visual charts_ than be easily consumed (understood and intepretated) by subject matter experts 
 
-All the arguments, coming after the `unhcrdown::html_slides` call, are part of the **xaringan** package.<br>See the help page `?xaringan::moon_reader` for all possible configurations.
 
 ---
-name: shortcut
+ 
+##  How to approach survey data analysis
 
-# Navigate
+To summarize, an analyst will need to support different stages, each of them supported by specific deliverables: 
 
-Press **h** or **?** to see the [`remark.js` keyboard shortcuts](https://bookdown.org/yihui/rmarkdown/xaringan-key.html), to help you navigate your presentation.
-
-If you have two screens, a common workflow is to:
-
-- Press **c** to clone your presentation
-
-- **On the presentation screen:** Move cloned window here, then press **f** for full-screen mode
-
-- **On the extra screen:** Press **p** for presenter mode. See below to learn how to add presenter notes
+ 1. __Initial data exploration__: this is the moment where you identify and apply all data manipulations explained before. As an output from this stage, the analyst should have a collection of relevant charts to bring to the attention of the subject matter expert.
+ 
+ 2. __Joint Data Interpretation__: Once the exploration is complete, the next step is to organize the charts into a presentation / slide deck. This can imply to add contextual information so that the information can be better interpretated. Additionally the charts should be grouped together around key research question in order to generated discussions around different point of views. All experts can jointly look at them in order to discuss the potential interpretation and agree on the main insights from the study
+ 
+ 3. __Dissemination / Data story telling__: in this last stage, the insights gathered in phase 2 are brought together into communication material. The goal is develop persuasive contents in order to use the data either for advocacy, for policy making and/or for programme design
 
 ---
-name: basic-slide
 
-# Basic slides
+## Initial Data Exploration
 
-.pull-left[
-- Slide content starts immediately after the YAML ends
+> Collect what you need and use what you collect! 
 
-- Use 3 dashes in a row `---` on a line by itself to create a new slide
+Though this stage, you need to process the data and develop visuals that can quality for intepretation. 
+This data crunching report allows to quickly identify potential patterns. It produces a lot of visuals. Therefore it is key to carefully select the most relevant visual that will be presented for potential interpretation in the next step. 
+ 
+In order to guide this selection phase, data experts, in collaboration with the data analysis group, can use the following elements:
+ 
+  *  For numeric value, check the frequency distributions of each variable to average, deviation, including outlier and oddities
+ 
+  *  For categorical variables, check for unexpected values: any weird results based on common sense expectations
+ 
+  *  Use correlation analysis to check for potential contradictions in respondents answers to different questions for identified associations (chi-square)
+ 
+  *  Always, Check for missing data (NA) or "%of respondent who answered" that you cannot confidently explain
+ 
+  *  Check unanswered questions, that corresponds to unused skip logic in the questionnaire: For instance, did a person who was never displaced answer displacement-related questions? Were employment-related answers provided for a toddler?
 
-- Use 2 dashes in a row `--` for incremental content
 
-- [Presenter notes can be created using `???`](#shortcut)
-]
-
-.pull-right[
-```{r, eval=FALSE}
 ---
-title: "Main presentation title"
-output:unhcrdown::html_slides
+
+## Joint data interpretation
+
+When analyzing those representations in a collective setting during data interpretation sessions, the group shall:  
+ 
+  1.  __Reflect__: question data quality and/or make suggestions to adjust questions, identify additional cleaning steps;   
+
+  2.  __Interpret__: develop qualitative interpretations of data patterns;     
+
+  3.  __Recommend__: suggest recommendations in terms of programmatic adjustment;    
+
+  4.  __Classify__: define level of sensitivity for certain topics if required;     
+
+ A typical data interpretation session shall not last more than 2hours and include more than 60 visuals to look at in order to keep participants with a good focus level.
+
+
 ---
 
-# Slide one
+## Dissemination / data story telling
 
-Lorem ispum...
+Story telling is that last stage of the process. A good data story is a way to communicate valuable insights and assign meaning and context to data that otherwise lives as numbers in an Excel spreadsheet. The narrative shall have a hook, momentum, or a captivating purpose. Finding such narrative structure is therefore a prerequisite. Such stories can be categorized according to the four main narrative frames below, each of them being linked to programs design or implementation. The presented data shall reflect the operation context to reinforce what readers knows or to reveal what they don’t:  
+
+ * shed light on a previously unexplored topic (it teaches people __something new__ or they have not heard before),  
+
+ * introduce an interesting angle (gives them a __new perspective__)  
+
+ * provide useful suggestions to solve a problem (__inspires to act__)  
+
+ * disprove a hypothesis / __debunk a widely held belief__ in terms of programmatic assumption.  
 
 ???
-Notes on slide 1
+Internal data are unique opportunities to build unique and original story ideas. In a world of regurgitated content, data storytelling can help UNHCR stand out above the noise. In a world full of conjecture, people want cold, hard numbers that anchor claims to reality. If you can anchor your story to credible data, readers will be more inclined to trust both the message and UNHCR as an institution. By revealing insights, the organization can demonstrate their in-depth knowledge of the subject and that rather than hiding them, there’s a much stronger benefit to share as it can lead conversations. 
+
+Many stories are built from with an explorative approach, where viewers are encouraged to explore the data to draw their own conclusions and focus on the stories most relevant to them. The narrative approach where viewers are guided through a narrative to arrive at a specific conclusion is much more effective. Building narrative stories rather than only sharing the data for information, is also a way to generate the maximum value from the initial data collection investment. 
+
+
+
+--- 
+
+
 
 ---
 
-# Slide Two
+## So how can I do all of this???
 
-Lorem ispum...
-```
-]
+Implementing all the step above is challenging :
+
+ * Manually performing all the steps is extremely time intensive
+ 
+ * Knowing the adequate tools to apply each step is an expertise by itself
+ 
+ * Re-doing the analysis if one finds an mistake in any initial steps can be a nightmare
+
+
+---
+
+## Kobocruncher main concept: document all your analysis plan within an extended xlsform
+
+
+![alt text](../../inst/workflow.png)
+
+---
+
+## You do not need to be expert as soon as you follow a recipes. 
+
+KoboCruncher is an R package designed to take care of the processing component so that the technical team can focus on the interpretation.
+
+
+ * __Productivity__: Once the configuration file is written, run the report in Rstudio to get the output
+ 
+ * __Training__: No need to write R instruction. Indeed only a limited knowledge of R is required
+ 
+ * __Iteration__: Check the output, adjust the various input files & re-run the report till you get a satisfying report
+ 
+ * __Reproducibility__: all analysis input are de facto documented  
+ 
+ *  Good __practices__ are enforced through the package.
+
+
+---
+class: inverse center middle
+
+# Workshop Overview
+
+---
+
+##  The sessions are organised to guide you through the different steps:
+
+  *  [01-First_Report](01-First_Report.html) will show how to get the first iteration of your data exploration report
+  *  [02-Relabeling](02-Relabeling.html) the way your survey variables are labelled for data collection is not always optimal when the goal is display the resulting information, hence you need to relabel (mostly shorten and simplify) the survey content
+  *  [03-Grouping_Questions](03-Grouping_Questions.html) Within a questionnaire, questions follows a certain sequence in order to facilitate the interview. When exploring the results, it is often required to regroup the questions in a different way and inline with key research questions
+  *  [04-Setting_Crosstabulation](04-Setting_Crosstabulation.html) an essential step during data exploration is compare the survey results between different respondent segments
+  *  [05-Searching_Asssociation](05-Searching_Asssociation.html) beyond the cross-tabulation, it is key to check how variables relate to each other. This can be done with statistical test that verify if variables are significantly associated
+  *  [06-Cleaning_and_Indicator_calculation](06-Cleaning_and_Indicator_calculation.html) after reviewing the first iteration of the reports, we can identify potential data quality issue to fix and create calculated variable and indicator 
+  *  [07-Anonymising](07-Anonymising.html) In order to provide other people to work with the data, a first level of data anonymisation should be implemented
+  *  [08-Weighting](08-Weighting.html) If the data was created through a probabilistic selection sampling approach, then we can apply weighting to the data before and regenerate the report so that those weights are reflected
+  *  [09-Publishing](9-Publishing.html) The final stage of the process implies to facilitate both the interpretation of the data and the creation of data story telling content 
 
 ???
-Only you will see this when in presenter mode.
 
----
+initial 
 
-# Incremental reveal
-
-As mentioned in [Basic slides](#basic-slide) use 2 dashes in a row `--` for incremental content.
-
---
-
-- Bullet 1
-
---
-
-- Bullet 2
-
---
-
-- Bullet 3
-
----
-
-# Alignement
-
-You can use the following classes to align content within a slide:
-
-- **Horizontal alignment:** `left`, `center`, `right`
-- **Vertical alignment:** `top`, `middle`, `bottom`
-
-```{r, eval=FALSE}
----
-class: center, middle
-```
-
-Or you can align specific text, **horizontal only**
-
-- for example, `.right[this text will be on the right]`
-
-.right[this text will be on the right]
-
----
-
-# Top-Left
-
-No class added as default behavior
-
----
-class: center
-
-# Top-center
-
-Apply to whole slide content
-
----
-class: center, right
-
-# Top-right
-
-Apply to whole slide content
-
----
-class: middle
-
-# Middle-left
-
-Apply to whole slide content
-
----
-class: middle, center
-
-# Middle-center
-
-Apply to whole slide content
-
----
-class: middle, right
-
-# Middle-right
-
-Apply to whole slide content
-
----
-class: bottom
-
-# Bottom-left
-
-Apply to whole slide content
-
----
-class: bottom, center
-
-# Bottom-center
-
-Apply to whole slide content
-
----
-class: bottom, right
-
-# Bottom-right
-
-Apply to whole slide content
-
----
-
-# Layout
-
-You can move content to the left or right using the following classes `.pull-left[]` and `.pull-right[]`.
-
-This will create a two-column layout, where each column takes up to **47% of the page width**.
-
-All the column content needs to go within the respective `[]`.
-
-.pull-left[
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-]
-
-.pull-right[
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-]
-
-You can even go back to the **entire width** if you need the two columns only for a certain portion of the slide.
-
----
-
-# Columns within columns
-
-The layout classes are really helpful and can **create complex layout** by nesting them.
-
-.pull-left[
-.pull-left[
-### Col 1.1
-This is a `.pull-left[]` within a `.pull-left[]`
-]
-.pull-right[
-### Col 1.2
-This is a `.pull-right[]` within a `.pull-left[]`
-]
-]
-
-.pull-right[
-.pull-left[
-### Col 2.1
-This is a `.pull-left[]` within a `.pull-right[]`
-]
-.pull-right[
-### Col 2.2
-This is a `.pull-right[]` within a `.pull-right[]`
-]
-]
-
----
-
-# More layout
-
-.left-column[
-I am a narrow column that leaves a lot of space for my bigger `.right-column[]` friend.
-
-I come with a lighter font colour. 
-]
-
-.right-column[
-You can similarly use `.left-column[]` and `.right-column[]`, the sizes are then 20% and 75%.
-
-I am a really wide column and I keep my font colour.
-
-This layout is useful to draw attention to the **main content** on the right side and keeping the left side as an **aside**.
-
-It is a specific layout and should be only use sporadically, e.g. showing a big picture on the right side.
-
-Unlike `.pull-left[]` and `.pull-right[]` these columns are meant to be used for the entire slide. You avoid avoid adding content outside the respective `[]`.
-]
-
----
-
-# Basic style
-
-The template comes with predefined styles for inline text, such as *italic*, **bold** or <u>underline text</u>.
-
-It also includes the required styles for common elements such as:
-
-.pull-left[
-**Headers:**
-
-## Heading 2
-
-### Heading 3
-
-**Lists:**
-
-* item 1
-* item 2
-    1. sub-item 2.1
-    2. sub-item 2.2
-]
-
-.pull-right[
-
-**Quotes:**
-
-> It is further proof that refugee movements and the broader issue of migration of populations ... is a global challenge that cannot be confined to a few countries.
->
-> Filippo Grandi
-
-**Footnotes:**
-
-Footnotes are created using the `.footnote[]` class outside of the column. 
-
-]
-
-.footnote[
-This is a footnote can be tied to a number in the main text using the `<sup>` html tag
-]
-
----
-
-# More style
-
-.pull-left[
-You can change the **size** of the text by using the `.large[]` or `.small[]` class
-
-.large[Large text] followed by .small[small text] example
-
-You can change the **colour** of the text by using the `.blue[]` or `.grey[]` class
-
-.blue[Blue text] followed by .grey[grey text] example
-
-You can change the **background** of the text by using the `.bg-blue[]` or `.bg-grey[]` class
-
-Some of this text will be in a .bg-blue[blue background]
-
-Some of this text will be in a .bg-grey[grey background]
-]
-
---
-
-.pull-right[
-You can also create a call out box by wrapping the entire content with the background class.
-
-```{r, eval=FALSE}
-.bg-blue[
-I will become a text box with background!
-]
-```
-
-.bg-blue[
-
-I will become a text box with background!
-
-]
-]
-
----
-
-# Images
-
-.pull-left[
-Depending on your need and control over the image output you can use the following approaches to include images in your slides:
-
-- Inline R Markdown: `![alt-text](path_to_image)`
-- [Knitr](https://www.rdocumentation.org/packages/knitr/versions/1.30/topics/include_graphics): `knitr::include_graphics("path_to_image")`
-- Plain [HTML](https://www.w3schools.com/html/html_images.asp): `<img src="path_to_image" width="90%"/>`
-
-Inline R Markdown scale depends on the image size. To control the size use `knitr` or `html`:
-
-```{r, out.width = '50%', eval=FALSE}
-# set out.width="50%" code chunk parameter
-# don't forget echo=FALSE to see only the image
-knitr::include_graphics("path_to_image")
-```
-]
-
-.pull-right[
-.center[
-```{r, echo=FALSE, out.width = '60%'}
-knitr::include_graphics("https://raw.githubusercontent.com/vidonne/unhcrdown/master/inst/resources/img/cover-example.jpg")
-```
-]
-]
-
----
-
-# Icons
-
-The brand unit recommends using the [Humanitarian icons](https://brand.unocha.org/d/xEPytAUjC3sH/icons) which are now part of the [Fontawesome](https://fontawesome.com/icons/categories/humanitarian) set.
-
-To directly access Fontawesome in R, simply install and load the [`fontawesome`](https://rstudio.github.io/fontawesome/) R package.
-
-.pull-left[
-```{r, eval=FALSE}
-# install.packages('fontawesome')
-library(fontawesome)
-
-.blue[`r fa("hands-holding-circle")`]
-```
-]
-
-.pull-right[
-.large[.blue[`r fa("hands-holding-circle")`] **Protection**]
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-]
-
----
-
-# Background colour
-
-- The default slide background is white but you can apply a branded UNHCR blue by adding the class `inverse` to the slide.
-
-- The font colours will adapt automatically.
-
-- This can be useful to create a section break in your presentation.
-
-- The `inverse` class can be coupled with the alignment classes.
-
-**Code for next slide:**
-
-```{r, eval=FALSE}
----
-class: inverse, center, middle
-
-# My new section
-
-### Be descriptive
-```
-
----
-class: inverse, center, middle
-
-# My new section
-
-### Be descriptive
-
----
-
-# Background images
-
-You can specify a background image (or multiple images) at the start of your slide, just like you set the class for the background colour:
-
---
-
-- `background-image: url(path_to_image)`
-
---
-
-- `background-size`:
-  - `cover`: Scales the image (while preserving its ratio) to the smallest possible size to fill the container.
-  - `contain`: Scales the image as large as possible within its container without cropping or stretching the image.
-  
---
-
-- `background-position`: [see here](https://www.w3schools.com/cssref/pr_background-position.asp) for different options.
-
---
-
-- Play with the `inverse` class of the slide depending on the logo colour that works better with your picture.
-
---
-
-- You can remove the logo altogether by putting the `hide-logo` class.
-
----
-class: hide-logo
-background-image: url(https://raw.githubusercontent.com/vidonne/unhcrdown/master/inst/resources/img/cover-example.jpg)
-background-size: cover
-background-position: center 25%
-
----
-class: inverse, center, middle
-
-# R content
-
-### Code, tables and plots
-
----
-
-# Highlighting code
-
-.pull-left[
-To highlight lines of code simply add `#<<` at the end of each targeted row and a light yellow background will be added.
-]
-
-.pull-right[
-```{r, eval = FALSE}
-library(unhcrthemes)
-library(tidyverse)
-idp_2019 <- unhcrthemes::idp |> 
-  filter(year == 2019) #<<
-glimpse(idp_2019)
-```
-]
-
---
-
-.pull-left[
-It is also possible to highlight the code output by adding `highlight.output = c(3,4)` to the code chunk options.
-]
-
-.pull-right[
-```{r, echo = FALSE, highlight.output = c(3, 6)}
-library(unhcrthemes)
-library(tidyverse)
-idp_2019 <- unhcrthemes::idp |> 
-  filter(year == 2019)
-glimpse(idp_2019)
-```
-]
-
----
-
-# Tables
-
-.pull-left[
-- We recommend the use of `kable` from the **knitr** package.
-
-- Make sure to add the format HTML to your `kable` call: `knitr::kable(format = "html")`..small[<sup>1</sup>] 
-
-- See [here](https://bookdown.org/yihui/rmarkdown-cookbook/kable.html) more information on `kable` and what it can do, like formatting numbers , changing column, etc.
-
-- For more flexibility and advanced table style refer to other R packages like [`GT`](https://gt.rstudio.com/) or [`DT`](https://rstudio.github.io/DT/).
-]
-
-.pull-right[
-```{r, echo = FALSE}
-library(unhcrthemes)
-library(tidyverse)
-idp_2019 <- unhcrthemes::idp |> 
-  filter(year == 2019) |> 
-  select(-year)
-head(idp_2019) |> 
-  knitr::kable(format = "html",
-               col.names = c("Country", "Sex", "Number of people"),
-               format.args = list(big.mark = ",", scientific = FALSE),
-               caption = "IDP by country and gender | 2019")
-```
-]
-
-.footnote[
-<sup>1</sup>You can also set this as a global option for all your slides using `options(knitr.table.format = "html")`.
-]
-
----
-
-# UNHCR table classes
-
-For simple tables, we included a series of **classes** that can be applied to `kable` output format. Simply add the required class names to the `table.attr` parameter of the `kable` call, don't forget to use `\` to escape the quote character.
-
-
-.pull-left[
-The following classes are available:
-
-- `.table`: initiate the possibility to stylize the table and provide base style. This class is **mandatory**.
-
-- `.table-blue`: add blue background for alternate rows.
-
-- `.table-grey`: add grey background for alternate rows.
-
-- `.table-narrow`: fit the table width to the content.
-
-- `.table-noborder`: remove all borders from the table.
-]
-
-.pull-right[
-```{r, echo = FALSE}
-library(unhcrthemes)
-library(tidyverse)
-idp_2019 <- unhcrthemes::idp |> 
-  filter(year == 2019) |> 
-  select(-year)
-head(idp_2019) |> 
-  knitr::kable(format = "html",
-               col.names = c("Country", "Sex", "Number of people"),
-               format.args = list(big.mark = ",", scientific = FALSE),
-               caption = "IDP by country and gender | 2019",
-               table.attr = "class=\"table  table-blue table-noborder\"")
-```
-]
-
----
-
-# Plots
-
-For the creation of charts, we recommend using the [**`unhcrthemes`**](https://vidonne.github.io/unhcrthemes/index.html) as it provides a `ggplot2` theme and a set of colour palettes for making charts and graphics.
-
-.pull-left[
-For more information on how to make a plot using `unhcrthemes` please refer to [package documentation](https://vidonne.github.io/unhcrthemes/articles/intro-unhcrthemes.html) and the [UNHCR Data Visualization Platform R tutorials](https://dataviz.unhcr.org/tools/r/).
-
-Getting your plot right is not always easy, but you can control your plots by playing with individual chunk options like `fig.retina` and `out.width` (plus `fig.width` and `fig.height`). 
-]
-
-.pull-right[
-```{r, echo=FALSE, dev = "ragg_png", fig.retina = 4, out.width="100%", fig.height=5}
-library(tidyverse)
-library(unhcrthemes)
-
-idp_total_sex <- idp |>
-  group_by(year, sex) |>
-  summarise(idp = sum(idp, na.rm = TRUE) / 1e6) |>
-  ungroup()
-
-ggplot(idp_total_sex) +
-  geom_col(aes(x = year, y = idp, fill = sex),
-           width = 0.8,
-           position = position_dodge(width = 0.9)) +
-  scale_fill_unhcr_d(palette = "pal_unhcr", labels = c("Female", "Male")) +
-  scale_y_continuous(expand = expansion(c(0, 0.1))) +
-  labs(title = "Globalement IDP displacement | 2010 - 2020",
-       y = "Number of people (in million)",
-       caption = "Source: UNHCR Refugee Data Finder\n© UNHCR, The UN Refugee Agency") +
-  scale_x_continuous(breaks = seq(2010, 2019, 1)) +
-  theme_unhcr(grid = "Y", axis_title = "y")
-```
-]
-
----
-
-# Code and plot
-
-**Show code alongside resulting plot**, practical for teaching purpose.
-
-Use the `fig.show` and the `ref.label` code chunk options to avoid repeating your code.
-
-* Chunk showing code: `{r plot-name, fig.show = 'hide'}`
-
-* Chunk showing plot: `{r ref.label = 'plot-name', echo = FALSE}`
-
-The chunk showing the plot will **NOT repeat** the code but rather reference the code chunk by name.
-
----
-
-# Code and plot example
-
-.pull-left[
-#### Code:
-
-```{r, echo=FALSE}
-library(tidyverse)
-library(unhcrthemes)
-
-idp_total_sex <- idp |>
-  group_by(year, sex) |>
-  summarise(idp = sum(idp, na.rm = TRUE) / 1e6) |>
-  ungroup()
-```
-
-```{r, global-idp,  fig.show='hide'}
-ggplot(idp_total_sex) +
-  geom_col(aes(x = year, y = idp, fill = sex),
-           width = 0.8,
-           position = position_dodge(width = 0.9)) +
-  scale_fill_unhcr_d(palette = "pal_unhcr",
-                     labels = c("Female", "Male")) +
-  scale_y_continuous(expand = expansion(c(0, 0.1))) +
-  labs(title = "Globalement IDP displacement | 2010 - 2020",
-       y = "Number of people (in million)",
-       caption = "Source: UNHCR Refugee Data Finder\n© UNHCR, The UN Refugee Agency") +
-  scale_x_continuous(breaks = seq(2010, 2019, 1)) +
-  theme_unhcr(grid = "Y", axis_title = "y")
-```
-]
-
-.pull-right[
-#### Plot:
-
-```{r, ref.label="global-idp", echo=FALSE, dev = "ragg_png", fig.retina = 4, out.width="100%", fig.height=5}
-
-```
-]
-
----
-
-# Scrolling R output
-
-.pull-left[
-We recommend making sure your content fits the height of the slide, but sometimes output from R can be too big.
-
-For this scenario, we include custom classes, to wrap the targeted content in the desired class:
-
-* `.scroll-box-8[]`: show 8 lines
-* `.scroll-box-10[]`: show 10 lines
-* `.scroll-box-12[]`: show 12 lines
-* `.scroll-box-14[]`: show 14 lines
-* `.scroll-box-16[]`: show 16 lines
-* `.scroll-box-18[]`: show 18 lines
-* `.scroll-box-20[]`: show 20 lines
-
-
-]
-
-.pull-right[
-**`.scroll-box-12[]` example:**
-
-.scroll-box-12[
-```{r, eval=FALSE}
-library(tidyverse)
-library(unhcrthemes)
-
-idp_total_sex <- idp |>
-  group_by(year, sex) |>
-  summarise(idp = sum(idp, na.rm = TRUE) / 1e6) |>
-  ungroup()
-ggplot(idp_total_sex) +
-  geom_col(aes(x = year, y = idp, fill = sex),
-           width = 0.8,
-           position = position_dodge(width = 0.9)) +
-  scale_fill_unhcr_d(palette = "pal_unhcr",
-                     labels = c("Female", "Male")) +
-  scale_y_continuous(expand = expansion(c(0, 0.1))) +
-  labs(title = "Globalement IDP displacement | 2010 - 2020",
-       y = "Number of people (in million)",
-       caption = "Source: UNHCR Refugee Data Finder\n© UNHCR, The UN Refugee Agency") +
-  scale_x_continuous(breaks = seq(2010, 2019, 1)) +
-  theme_unhcr(grid = "Y", axis_title = "y")
-```
-]
-]
-
-.footnote[
-Thanks to [Garth Tarr from the University of Sydney](https://garthtarr.github.io/sydney_xaringan/#13) for the idea.
-]
+https://tidy-survey-r.github.io/tidy-survey-short-course/
 
 ---
 class: inverse, center, middle
 
 # Thank you
+
+Do not hesitate to raise your questions in the ticket system so the training content can be improved accordingly
+
+__Next session__: [02-Relabeling](02-Relabeling.html) the way your survey variables are labelled for data collection is not always optimal when the goal is display the resulting information, hence you need to relabel (mostly shorten and simplify) the survey content
