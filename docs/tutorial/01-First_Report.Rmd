@@ -175,7 +175,7 @@ GITHUB_PAT="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"
 ## Screenshot from Rstudio cloud
 
 
-```{r, echo=FALSE, out.width = '80%'}
+```{r, echo=FALSE, out.width = '70%'}
 # ![alt text](../../inst/rstudio1.png)
 knitr::include_graphics("../../inst/rstudio1.png")
 ```
@@ -281,7 +281,9 @@ A YAML header contains YAML arguments, such as “title”, “author”, and �
 
 .pull-right[
 
-The YAML header for this template contains also a few parameters that we will now
+The YAML header for this template contains also a few parameters. 
+
+They have values by default that can be adjusted
 
 
  *   `datafolder`: "data-raw" ## This is the default folder where to put you data in
@@ -289,8 +291,10 @@ The YAML header for this template contains also a few parameters that we will no
  *   `form`: "form.xlsx" ## name of the xlsform - 
  *   `language`: "" ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
 
+.bg-blue[
+We will review the other parameters in the following sessions 
+] 
 
-We will review the other parameters in the following sessions
 
 
 
@@ -341,24 +345,45 @@ Then click on the `knit` button
 
 ---
 
-## Et Voila! You have now build your first report!!
+## Et Voila! You just built your first report!!
 
 
+```{r, echo=FALSE, out.width = '70%'}
+# ![alt text](../../inst/firstreport.png) 
+knitr::include_graphics("../../inst/firstreport.png")
+```
 
-![alt text](../../inst/firstreport.png) 
+---
+
+## What happenned?
+
+The xlform defines data types for each variable
+
+Based on the data types, a standard graph is generated:
+
+ * `select_one` simple bar chart
+ 
+ * `select_multiple` bar chart
+ 
+ * `integer` or `numeric` or `date` histogram
+ 
+ * `text` word cloud
+
+Later we will see how to configure charts based on `crosstabulation`
 
 ---
 class: inverse, center, middle
 
 
+# TIME TO PRACTISE ON YOUR OWN! 
 
-# Time to pro
+.large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
 
-5 minutes! 
+Get your environment ready
 
- - Get your environment ready
- - Open a notebook
- - Compile it with demo dataset
+Open a notebook
+
+Compile it with demo dataset
  
  
 

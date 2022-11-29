@@ -28,6 +28,9 @@ library(fontawesome)
 
 ## Significant associations & Chi-square 
 
+The Chi-square statistic is the primary statistic used for testing the statistical significance of the cross-tabulation table. Chi-square tests determine whether or not the two variables are independent. If the variables are independent (have no relationship), then the results of the statistical test will be “non-significant” and we are not able to reject the null hypothesis, meaning that we believe there is no relationship between the variables. If the variables are related, then the results of the statistical test will be “statistically significant” and we can reject the null hypothesis, meaning that we can state that there is some relationship between the variables.
+
+
 ---
 
 ## How to interpret correlation tables? 
@@ -45,9 +48,9 @@ In this example the strongest relationships are identified by the bigger numbers
 ---
 class: inverse, center, middle
 
-# TIME TO PRACTISE ON YOUR OWN 
+# TIME TO PRACTISE ON YOUR OWN! 
 
-5 minutes! 
+.large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
 
  - Download again locally and fill in the correlation
  

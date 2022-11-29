@@ -1,7 +1,7 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 4 - Setting Crosstabulation"
-author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](03-Grouping_Questions.html) -- [Link to Next Session](5-Searching_Asssociation.html)  "
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](03-Grouping_Questions.html) -- [Link to Next Session](05-Searching_Asssociation.html)  "
 date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
@@ -25,13 +25,66 @@ library(unhcrthemes)
 library(fontawesome)
 ```
 
+ 
+## Cross-tabulation: what is that?
+
+
+When you want to compare the results for one or more variables with the results of another, then you need to cross-tabulate
+
+
+This will allow to examine relationships within the data that might not be readily apparent when only looking at total survey responses.
+
 
 ---
+
+## Frequent variable used for cross-tabulation
+
+Typically cross-tabulation are required for standard disaggregation (i.e. breakdown) variables
+
+ * Gender of the main respondent
+
+ * Country of Origin
+
+ * Area of residence in the country (here you might group together different areas based on frequency to obtain meaningfull representation -see session 7)
+ 
+ * Age
+ 
+ * Displacement type
+
+---
+
+## How can I crosstabulate questions within my survey?
+
+
+By default the initial exploration report does not include cross-tabulation as it depends on your data:
+
+
+ 1. Open the expanded xlsform 
+ 
+ 2. set up yes in the `disaggregation` column for the variable you want to use for crosstabulation
+ 
+---
+
+## What will you get then?
+
+Once you regenerate the chart with this new setting in your analysis plan, every single questions will be be presented in aditional charts for each `disaggregation` variable
+
+ .bg-blue[
+This setting will automatically inflate considerably the size of your exploration report.
+
+You may save you expanded `xlsform` with a new name and adjust your parameters settings so that you can create multiple exploration report exploring different `disaggregation` options
+
+Do not forget, at this stage you are exploring your data so that you can select the final charts you want to include in the presentation for the joint data interpretation session
+
+]   
+
+---
+
 class: inverse, center, middle
 
-# TIME TO PRACTISE ON YOUR OWN 
+# TIME TO PRACTISE ON YOUR OWN! 
 
-5 minutes! 
+.large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
 
  - Download again locally and fill in the disaggregation
  

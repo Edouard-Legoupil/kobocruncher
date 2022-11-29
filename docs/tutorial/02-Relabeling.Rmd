@@ -27,52 +27,184 @@ library(fontawesome)
 
 ## Why do you need to relabel your dataset
 
-When you obtain the raw data from the kobo server, the questions labels are the one used for data collection
+When you obtain the raw data from RIDL or from the kobo server, the questions labels you get are the one used during data collection.
 
-The way questions are phrased during the interview might not be optimal for the data analysis stage
+The way questions are phrased during the interview might not always be optimal for the data analysis stage.
+
+In order to have __legible and effective chart ouput__, it's key to relabel some of the questions.
 
 
 ---
 
 ## What is a good question and response label for data analysis?
 
-Label should be short and concise in order to ease quick reading (capture the content of the final chart in a few seconds)
+Labels should be .large[__short__] and .large[__concise__] in order to ease quick reading (_i.e. to capture the content of the final chart in a few seconds_).
 
 
-Ideally:
+Ideally try to summarize the initial wording:
 
  * Less than 80 characters for variable labels
  
- * Less than 40 characters for responses
+ * Less than 40 characters for responses - so that resulting charts will not be overloaded.
  
-Ideally try to summarize the initial wording 
 
 
 ---
 
 ## Other issues to fix when relabeling
 
- 
- In case of skip logic questions, 
 
+In case of .large[__skip logic questions__], the original label will not be self-explanatory as it refers to a previous questions. In such, you need to rephrase explicitly the condition in the variable label.
+ 
+ 
+Reword the label so that they appear .large[__as simple statement__] rather then in an interrogative form, for instance
+ 
+  * "_For how long have you been living here?_"
+  * can be rephrased as "Residency Duration"
+  
+In case the question included .large[__calculated reference__], for instance `${HH02}` (aka a call to a previous question answer), replace this part  
+
+Potentially search and replace .large[__special characters__]
+
+---
+
+## Let's start working with your own data
+
+.pull-left[
+
+The report parameters
+
+ *   `datafolder`: "data-raw" You can create a new folder within your project. Default value for this parameter is  `data-raw`
+
+ *   `data`: "data.xlsx"  Name of the data file that you exported from [kobotoolbox](http://kobo.unhcr.org) or from [RIDL](http://ridl.unhcr.org). The demo data set is [here](https://github.com/Edouard-Legoupil/kobocruncher/blob/main/inst/data.xlsx)
+
+ *   `form`: "sample_form.xlsx" 
+ Name of the xlsform file that you exported from [kobotoolbox](http://kobo.unhcr.org) or from [RIDL](http://ridl.unhcr.org). The demo form set is [here](https://github.com/Edouard-Legoupil/kobocruncher/blob/main/inst/sample_xlsform.xlsx)
+
+
+]
+
+.pull-right[
+
+
+![alt text](../../inst/data.png)
+
+]
+
+
+
+
+---
+
+## A note on the required format for the data
+
+
+.pull-left[
+.bg-blue[
+Your data and form files need to be an `.xlsx` file! Not an `.xls` file  
+] 
+
+
+Your data need to have: 
+ * `XML values and headers` --> this is required in order to re-adjust the labels
+ 
+ * Include groups in headers --> this is required to build correctly the data dictionnary
+
+
+]
+
+.pull-right[
+
+
+![alt text](../../inst/dataformat.png)
+
+]
 
  
 ---
 
-##
+## Language
+
+You can prepare your  crunching in different languages
+ *   `language`: "" 
+ 
+ Set up the language you will use for the analysis in case your questionnaire was multilingual.
+ 
+Check what you have in your `xlsform` - for instance, this could be:
+
+ * `::english (en)` -or
+
+ * `::french (fr)` or
+
+ * `::spanish (es)`
+ 
+ 
+ 
+---
+
+## Now you can expand your xlsform!
+
+A dedicated function will process the original `xlsform` and add all the required column to configure your analysis plan
+
+```{r analysis_plan, eval=FALSE, include=TRUE}
+## Let's extract the analysis plan from the xlsform - or extend the current one
+kobo_prepare_form(xlsformpath = xlsformpath ,
+                 xlsformpathout =  here::here(params$datafolder, params$form)  ,
+                 label_language = params$language ) 
+```
+
+Once you run the function, you can re-open your xlsform and review it
+
+---
+
+
+![alt text](../../inst/expanded_form.png)
+
+---
+
+## What happenned?
+
+A few additional column were inserted in your `xlsform` in order to set up the __analysis plan__
+
+Some default formatting were created so that you can quickly identify the initial question groups and repeated questions
+
+
+---
+
+## Adjust the labels as required in this new version of the xlsform
+
+To adjust the label in the column `label`, you can filter long questions based on the `label.lenght` 
+
+You can also always refer to the original label wording in the file `labelQ`
+
+You could potentially translate the whole content in a new language and insert it in the `label`
+
+In the column `hint`, you will find the orginal hint. You can also re-adjust them to provide __interpretation hint__. Those hints will be displayed per default within each chart `subtile`
+
+
+---
+
+## And now you can regenerate the report
+
+Make sure you have the new version of the form in the correct folder
+
+Then knit the report et voila
+
+
+
 
 ---
 class: inverse, center, middle
 
-# TIME TO PRACTISE ON YOUR OWN 
+# TIME TO PRACTISE ON YOUR OWN! 
 
-5 minutes! 
+.large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
 
  - Expand the xlsfom
  
  - Download locally and adjust the wording of the questions
  
- - upload and knit again your report
+ - save/upload the revised file and knit again your report
  
  
 ---

@@ -27,11 +27,16 @@ library(fontawesome)
 
 
 ---
+
+## Data Cleaning
+
+
+---
 class: inverse, center, middle
 
-# TIME TO PRACTISE ON YOUR OWN 
+# TIME TO PRACTISE ON YOUR OWN! 
 
-5 minutes! 
+.large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
 
  - Open again locally and fill in the clean
  
