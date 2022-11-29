@@ -1,9 +1,8 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 4 - Setting Crosstabulation"
-author: "Edouard Legoupil"
-institute: "Snr Data Analysis Officer"
-date: "`r format(Sys.Date(),  '%d %B %Y')`"
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](03-Grouping_Questions.html) -- [Link to Next Session](5-Searching_Asssociation.html)  "
+date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
     self_contained: true

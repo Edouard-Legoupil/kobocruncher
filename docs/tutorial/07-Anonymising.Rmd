@@ -1,9 +1,8 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 7 - Anonymising"
-author: "Edouard Legoupil"
-institute: "Snr Data Analysis Officer"
-date: "`r format(Sys.Date(),  '%d %B %Y')`"
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](06-Cleaning_and_Indicator_calculation.html) -- [Link to Next Session](08-Weighting.html)  "
+date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
     self_contained: true
@@ -26,7 +25,46 @@ library(unhcrthemes)
 library(fontawesome)
 ```
 
-#  
+##  Why anonymising? 
+
+
+>  Even when personal data is not being collected it still may be appropriate to apply the methodology since quasi-identifiable data  or other sensitive data could lead to personal identification or should not be shared.
+
+
+  https://jangorecki.github.io/blog/2014-11-07/Data-Anonymization-in-R.html
+  
+  
+--- 
+
+##  What variables to consider?
+
+  
+ * __Direct identifiers__:	Can be directly used to identify an individual. E.g. Name, Address, Date of birth, Telephone number, GPS location  
+ * __Quasi- identifiers__:	Can be used to identify individuals when it is joined with other information. E.g. Age, Salary, Next of kin, School name, Place of work 
+ 
+ *  __Sensitive information__: Community identifiable information	Might not identify an individual but could put an individual or group at risk. E.g. Gender, Ethnicity, Religious belief 
+ 
+ * __Meta data__: Data about who, where and how the data is collected is often stored separately to the main data and can be used identify individuals
+ 
+
+## Anonymisation treatment
+
+The following are different anonymisation actions that can be performed on sensitive fields.
+
+The type of anonymisation should be dictated by the desired use of the data. 
+
+A good approach to follow is to start from the minimum data required, and then to identify if any of those fields should be obscured.
+
+
+ * __Remove	Data __: is removed entirely from the data set. The data is preserved in the original file. 
+ 
+ * __Reference __: Data is removed entirely from the data set and is copied into a reference file. A random unique identifier field is added to the reference file and the data set so that they can be joined together in future.  The reference file is never shared and the data is also preserved in the original file. \cr
+}
+
+--- 
+
+
+
 
  
 ---

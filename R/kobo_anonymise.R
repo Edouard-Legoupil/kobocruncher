@@ -35,8 +35,7 @@
 #' 
 #'  
 kobo_anonymise <- function(datalist,
-                       dico, 
-                       indicatoradd = NULL) {
+                       dico) {
 
 #   1 - load the indicators, 
   indicator <- as.data.frame(dico[4])  

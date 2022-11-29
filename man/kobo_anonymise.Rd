@@ -4,7 +4,7 @@
 \alias{kobo_anonymise}
 \title{Assess Statistical disclosure risk based on an intrusions scenario}
 \usage{
-kobo_anonymise(datalist, dico, indicatoradd = NULL)
+kobo_anonymise(datalist, dico)
 }
 \arguments{
 \item{datalist}{An object of the "datalist" class as defined in kobocruncher}

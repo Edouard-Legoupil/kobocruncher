@@ -1,9 +1,8 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 1 - Your first report"
-author: "Edouard Legoupil"
-institute: "Snr Data Analysis Officer"
-date: "`r format(Sys.Date(),  '%d %B %Y')`"
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](00-Intro.html) -- [Link to Next Session](02-Relabeling.html)  "
+date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
     self_contained: true
@@ -34,27 +33,40 @@ library(fontawesome)
 
 2 options:
 
- - Rstudio Cloud for training and testing
+ - Start with Rstudio Cloud for training and testing
  
- - install your own Rstudio on your computer
+ - Then install your own Rstudio on your computer for production stage 
  
- 
-Recall that all slides and code for this training are available on GitHub: https://github.com/tidy-survey-r/tidy-survey-short-course 
+
+.bg-blue[
+Recall that all slides and code for this training are available on GitHub:
+https://edouard-legoupil.github.io/kobocruncher/tutorial/00-Intro.html  
+] 
+
 
 ---
 
 ## Option 1: RStudio Cloud
 
-Good option if you are a __first time user__ and in oder to get a first introduction! 
+
+.pull-left[
+
+Good option if you are a __first time user__ and in order to get a first introduction! 
 
 - Sign-up for a free RStudio Cloud account (https://rstudio.cloud/)
-
-- Access the project and files via link in email and Zoom chat
 
 - Click "START" to open the project and get started
 
 - RStudio Cloud has the same features and appearance as RStudio for ease of use
+]
 
+.pull-right[
+
+
+![alt text](../../inst/posit.png)
+
+
+]
 
 ???
 Github repo is for future reference, all material on RStudio cloud
@@ -63,7 +75,10 @@ Github repo is for future reference, all material on RStudio cloud
 
 ## Option 2: Use your own RStudio environment
 
-For data Protection reason, needs to be done as soon as you are working with production data
+.bg-blue[
+For data Protection reason, this needs to be done as soon as you are working with production data
+] 
+
 
 .pull-left[
 
@@ -100,15 +115,29 @@ Create project
 
 ---
 
-## Rstudio Interface
+## Exploring Rstudio Interface
 
 
-![alt text](../../inst/rstudio6.png)
+ ![alt text](../../inst/rstudio6.png)
+ 
+```{r, echo=FALSE, out.width = '80%'}
+#knitr::include_graphics("../../inst/rstudio6.png")
+```
+
+
+
 
 
 ---
 
 ## Package installation from Github
+
+
+.left-column[
+![alt text](../../inst/file.png)
+]
+
+.right-column[
 
 Create an R script and paste the following command: 
 
@@ -118,20 +147,39 @@ Create an R script and paste the following command:
 # As a reminder, installing takes package from internet to your computer 
 # and only needs to be done once, not each session
 
-install.packages("remotes")
+install.packages("devtools")
 ### Install Key unhcRverse packages in order to get the corporate style & brand
-remotes::install_github('vidonne/unhcrdown')
-remotes::install_github('vidonne/unhcrthemes')
+devtools::install_github('vidonne/unhcrdown')
+devtools::install_github('vidonne/unhcrthemes')
+devtools::install_github('galalH/riddle')
 ## Now get kobocruncher
-remotes::install_github("Edouard-Legoupil/kobocruncher", Ncpus=4) 
+devtools::install_github("edouard-legoupil/kobocruncher") 
+
 ``` 
+
+you can then click on the Run button to `execute` the command one by one
+
+]
+
+???
+
+GitHub has a rate limit of 60 requests per hour for unauthenticated requests, but 5000 an hour for authenticated requests. 
+So the easiest solution is to create a GitHub PAT, with `usethis::browse_github_pat()` and add it to your `.Renviron` file with `usethis::edit_r_environ()`.
+
+one for the training in case... 
+GITHUB_PAT="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"
+
 
 ---
 
 ## Screenshot from Rstudio cloud
 
 
-![alt text](../../inst/rstudio1.png)
+```{r, echo=FALSE, out.width = '80%'}
+# ![alt text](../../inst/rstudio1.png)
+knitr::include_graphics("../../inst/rstudio1.png")
+```
+ 
 
 
 ---
@@ -140,7 +188,7 @@ remotes::install_github("Edouard-Legoupil/kobocruncher", Ncpus=4)
 
 
 .pull-left[
-.
+ 
 See the package tab in the right-down panel
 
 You can search for the package name `kobocruncher`
@@ -156,35 +204,58 @@ You can click on the blue link to access the documentation
 
 ---
 
-## R Markdown combines __R code with text__ 
+## R Markdown: how to combines __R code with text__ ?
+
+.pull-left[
 
 
- 1. Knit to different __output format__: PDF, DOCX, HTML, PPTX, and more
+Rmarkdown files have an `.Rmd` extension.
+ 
+ 1. Embed your data processing code within `snippet`
+ 
+ 2. Knit to different __output format__: PDF, DOCX, HTML, PPTX, and more
 
- 2. Don't copy/paste output to your manuscript/report. __Make your manuscript/report with R Markdown__
+ 3. Don't copy/paste output to your manuscript/report. __Make your manuscript/report with R Markdown__
 
- 3. __Automatic styling__ table, figure numbering, colors, font, etc.. 
+ 4. __Automatic styling__ table, figure numbering, colors, font, etc.. 
 
- 4. Can create __parameterized reports__. Example: run an analysis for each state and each state gets a report
+ 5. Can create __parameterized reports__. Example: run an analysis for each state and each state gets a report
 
-For beginners: https://rmarkdown.rstudio.com/lesson-1.html
+For beginners: https://rmarkdown.rstudio.com/lesson-1.html. 
+Actually this presentation is built from an [Rmd file](https://github.com/Edouard-Legoupil/kobocruncher/blob/main/docs/tutorial/01-First_Report.Rmd)
+
+]
+
+.pull-right[
+
+![alt text](../../inst/knit.png)
+]
+
+ 
+
 
 ???
 
 Each time document is Knitted, a self-contained session is started.  Prevents problems with depending on something in your environment that aren't explicitly called out
 
+https://www.rforecology.com/post/how-to-use-rmarkdown-part-one/
+
+
 ---
 
-## Now Let's create your first report
+## Now Let's create our first report!!!
 
 
 .pull-left[
 
 To start with, let's use the first template "KoboCruncher A - Exploration"
 
-To do so:
+To do so, from the top menu on the left:
 
-> file > New file > R markdown > From Template
+> file  > New file  > R markdown   > From Template
+
+
+In the process you may be requested to install missing packages, do so as required
 
 ]
 
@@ -196,7 +267,7 @@ To do so:
 
 ---
 
-## Save you notebook and check the report __parameters__
+## Save you notebook file and check the report __parameters__
 
 .pull-left[
 
@@ -212,43 +283,76 @@ A YAML header contains YAML arguments, such as “title”, “author”, and �
 
 The YAML header for this template contains also a few parameters that we will now
 
-```
-params:
-  datafolder: "data-raw" ## This is the default folder where to put you data in
-  ridl: "ridlproject" ## Name of the ridl project where you data is documented and archived
-  data: "data.xlsx" ## Name of the data file
-  form: "form.xlsx" ## name of the xlsform - 
-  datasource: "Study name reference" ## String used in caption for all your charts
-  publish: "no" ## put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c
-  republish: "no"
-  visibility: "public"
-  stage: "exploration_initial" ## you may change this to exploration_advanced if you configuring many 
-  language: "" ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
-```
+
+ *   `datafolder`: "data-raw" ## This is the default folder where to put you data in
+ *   `data`: "data.xlsx" ## Name of the data file
+ *   `form`: "form.xlsx" ## name of the xlsform - 
+ *   `language`: "" ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
+
+
+We will review the other parameters in the following sessions
+
 
 
 ]
 
+???
+ *   `datasource`: "Study name reference" ## String used in caption for all your charts
+ *   `ridl`: "ridlproject" ## Name of the ridl project where you data is documented and archived
+ *   `publish`: "no" ## put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c
+ *   `republish`: "no"
+ *   `visibility`: "public"
+ *   `stage`: "exploration_initial" ## you may change this to exploration_advanced if you configuring many 
+ 
 
 ---
 
-
-
-
----
 
 ## Editing a notebook is simple!
 
 
 ![alt text](../../inst/rstudio5.png)
 
+---
+
+## Let's review the chunk to run the demo!
 
 
+.pull-left[
+
+
+![alt text](../../inst/chunkc1.png) 
+
+]
+
+.pull-right[
+
+
+Each line with a `#` will not be executed
+
+Remove the `#` at the beginning of line 69 & 70 so that the report use the demo dataset
+
+Then click on the `knit` button
+
+
+
+
+]
+
+---
+
+## Et Voila! You have now build your first report!!
+
+
+
+![alt text](../../inst/firstreport.png) 
 
 ---
 class: inverse, center, middle
 
-# TIME TO PRACTISE ON YOUR OWN 
+
+
+# Time to pro
 
 5 minutes! 
 

@@ -1,9 +1,8 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 2 - Relabeling"
-author: "Edouard Legoupil"
-institute: "Snr Data Analysis Officer"
-date: "`r format(Sys.Date(),  '%d %B %Y')`"
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](01-First_Report.html) -- [Link to Next Session](03-Grouping_Questions.html)  "
+date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
     self_contained: true
@@ -26,7 +25,41 @@ library(unhcrthemes)
 library(fontawesome)
 ```
 
+## Why do you need to relabel your dataset
 
+When you obtain the raw data from the kobo server, the questions labels are the one used for data collection
+
+The way questions are phrased during the interview might not be optimal for the data analysis stage
+
+
+---
+
+## What is a good question and response label for data analysis?
+
+Label should be short and concise in order to ease quick reading (capture the content of the final chart in a few seconds)
+
+
+Ideally:
+
+ * Less than 80 characters for variable labels
+ 
+ * Less than 40 characters for responses
+ 
+Ideally try to summarize the initial wording 
+
+
+---
+
+## Other issues to fix when relabeling
+
+ 
+ In case of skip logic questions, 
+
+
+ 
+---
+
+##
 
 ---
 class: inverse, center, middle

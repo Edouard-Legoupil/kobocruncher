@@ -1,9 +1,8 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 0 - Introduction"
-author: "Edouard Legoupil"
-institute: "Snr Data Analysis Officer"
-date: "`r format(Sys.Date(),  '%d %B %Y')`"
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Next Session](01-First_Report.html)  "
+date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
     self_contained: true
@@ -93,6 +92,8 @@ In order to guide this selection phase, data experts, in collaboration with the 
 
 ## Joint data interpretation
 
+.pull-left[
+
 When analyzing those representations in a collective setting during data interpretation sessions, the group shall:  
  
   1.  __Reflect__: question data quality and/or make suggestions to adjust questions, identify additional cleaning steps;   
@@ -103,14 +104,44 @@ When analyzing those representations in a collective setting during data interpr
 
   4.  __Classify__: define level of sensitivity for certain topics if required;     
 
- A typical data interpretation session shall not last more than 2hours and include more than 60 visuals to look at in order to keep participants with a good focus level.
+
+
+.bg-blue[
+
+ A typical data interpretation session shall not last more than 2 hours and include more than 60 visuals to look at in order to keep participants with a good focus level.
+
+]
+
+
+
+]
+
+.pull-right[
+
+
+```{r, echo=FALSE, out.width = '80%'}
+# ![alt text](../../inst/analysis.jpeg)
+knitr::include_graphics("../../inst/analysis.jpeg")
+```
+
+
+]
+
+
+
 
 
 ---
 
 ## Dissemination / data story telling
 
-Story telling is that last stage of the process. A good data story is a way to communicate valuable insights and assign meaning and context to data that otherwise lives as numbers in an Excel spreadsheet. The narrative shall have a hook, momentum, or a captivating purpose. Finding such narrative structure is therefore a prerequisite. Such stories can be categorized according to the four main narrative frames below, each of them being linked to programs design or implementation. The presented data shall reflect the operation context to reinforce what readers knows or to reveal what they don’t:  
+Story telling is that last stage of the process. A good data story is a way to communicate valuable insights and assign meaning and context to data that otherwise lives as numbers in an Excel spreadsheet. 
+
+.bg-blue[
+The narrative shall have a hook, momentum, or a captivating purpose. Finding such narrative structure is therefore a prerequisite. 
+]
+
+Such stories can be categorized according to the four main narrative frames below, each of them being linked to programs design or implementation. The presented data shall reflect the operation context to reinforce what readers knows or to reveal what they don’t:  
 
  * shed light on a previously unexplored topic (it teaches people __something new__ or they have not heard before),  
 
@@ -121,6 +152,7 @@ Story telling is that last stage of the process. A good data story is a way to c
  * disprove a hypothesis / __debunk a widely held belief__ in terms of programmatic assumption.  
 
 ???
+
 Internal data are unique opportunities to build unique and original story ideas. In a world of regurgitated content, data storytelling can help UNHCR stand out above the noise. In a world full of conjecture, people want cold, hard numbers that anchor claims to reality. If you can anchor your story to credible data, readers will be more inclined to trust both the message and UNHCR as an institution. By revealing insights, the organization can demonstrate their in-depth knowledge of the subject and that rather than hiding them, there’s a much stronger benefit to share as it can lead conversations. 
 
 Many stories are built from with an explorative approach, where viewers are encouraged to explore the data to draw their own conclusions and focus on the stories most relevant to them. The narrative approach where viewers are guided through a narrative to arrive at a specific conclusion is much more effective. Building narrative stories rather than only sharing the data for information, is also a way to generate the maximum value from the initial data collection investment. 

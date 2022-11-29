@@ -94,27 +94,6 @@ knitr::kable(utils::head(indicator, 10))
  
 ```
 
- 
-
-
-## Anonymisation
-
- to do....
-
-
-
-```{r examples-kobo_anonymise}
-# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-# 
-# kobo_anonymise(datalist = datalist,
-#                    dico = dico,
-#                 indicatoradd = indicatoradd   )
-
-
- 
-```
-
 ## Indicator Calculation
 
 Indicator calculation 
@@ -181,6 +160,27 @@ datalist <- expanded[[2]]
 
 ## Check my new indicator
 table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
+ 
+```
+
+ 
+
+
+## Anonymisation
+
+ to do....
+
+
+
+```{r examples-kobo_anonymise}
+# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+# 
+# kobo_anonymise(datalist = datalist,
+#                    dico = dico,
+#                 indicatoradd = indicatoradd   )
+
+
  
 ```
 
@@ -492,25 +492,31 @@ kobo_likert(datalist = datalistlikert,
 
 ## Report Template A for Automatic Data Exploration
 
-The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
+    
 
-It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
+  
 
-This report also includes each plot syntax so that they can be easily pasted for the second report
+```{r example-template_1_exploration}
+# template_1_exploration(datafolder= "data-raw",
+#                                    ridl =  "ridlproject",
+#                                     data = "data.xlsx" ,
+#                                     form =  "form.xlsx",
+#                                     datasource = "Study name reference",
+#                                     publish =  "no", 
+#                                     republish = "no",
+#                                     visibility = "public",
+#                                     stage = "exploration_initial",
+#                                    language = "",
+#                                    folder = "Report")
+```
 
+  
+
+  
 
 
 ```{r template_1_exploration}
-#' Initial Template for Automatic Data Exploration
-#' The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
-#' It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
-#'  This report also includes each plot syntax so that they can be easyly pasted for the second report
-# usethis::use_rmarkdown_template(
-#   template_name = "template_1_exploration",
-#   template_dir = NULL,
-#   template_description = "Automatic Data Exploration - html",
-#   template_create_dir = TRUE
-# )
+
 
 
 ```

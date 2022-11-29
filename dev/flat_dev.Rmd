@@ -875,70 +875,6 @@ kobo_clean <- function(datalist,
 
  
 ```
- 
-
-## Anonymisation
-
- to do....
-
-
-```{r function-kobo_anonymise}
-#' @title Assess Statistical disclosure risk based on an intrusions scenario
-#' 
-#' @description  When personal data is being collected, performing basic de-identification (i.e. removal of direct identifiers) and assessing risk of re-identification (i.e. using indirect identifiers to re-identify individuals) is a key sep to perform in order to be able to share the data with multiple analyst.
-#' 
-#' The initial step consist in defining potential intrusion scenario.
-#'  This suppose to document the anonymise cell for each variable
-#'
-#' \tabular{rrrrrr}{
-#'   \strong{Type}    \tab \strong{Description}  \cr
-#'   ----------------\tab----------- \cr
-#'   \strong{Direct_identifier}     \tab	Can be directly used to identify an individual. E.g. Name, Address, Date of birth, Telephone number, GPS location \cr
-#'   \strong{Quasi_identifier}     \tab	Can be used to identify individuals when it is joined with other information. E.g. Age, Salary, Next of kin, School name, Place of work \cr
-#'   \strong{Sensitive_information}  \tab & Community identifiable information	Might not identify an individual but could put an individual or group at risk. E.g. Gender, Ethnicity, Religious belief 
-#' }
-#'
-#'  Direct identifiers will be automatically removed from the data.
-#'  The function will perform the measurement of various statistical disclosure risk measurement
-#'  for the selected quasi_identifier and sensitive_information.
-#'  
-#' 
-#' @param datalist An object of the "datalist" class as defined in kobocruncher 
-#' @param dico An object of the "kobodico" class format as defined in kobocruncher
-#' @export
-
-kobo_anonymise <- function(datalist,
-                       dico, 
-                       indicatoradd = NULL) {
-
-#   1 - load the indicators, 
-  indicator <- as.data.frame(dico[4])  
-#   2 - append the one from inidcatoradd if any,
-  
-#   3 - apply the indicator, i.e. do the calculation,
-#   4 - re-save all the working indicator definition within the extended xlsform  
-#   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
-#   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
-  
-  with_anonymise <- list( datalist, dico)
-    
-    return(with_anonymise)
-}
-
-```
-
-
-```{r examples-kobo_anonymise}
-# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-# 
-# kobo_anonymise(datalist = datalist,
-#                    dico = dico,
-#                 indicatoradd = indicatoradd   )
-
-
- 
-```
 
 
 ## Indicator Calculation
@@ -1207,6 +1143,70 @@ table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
  
 ```
 
+
+ 
+
+## Anonymisation
+
+ to do....
+
+
+```{r function-kobo_anonymise}
+#' @title Assess Statistical disclosure risk based on an intrusions scenario
+#' 
+#' @description  When personal data is being collected, performing basic de-identification (i.e. removal of direct identifiers) and assessing risk of re-identification (i.e. using indirect identifiers to re-identify individuals) is a key sep to perform in order to be able to share the data with multiple analyst.
+#' 
+#' The initial step consist in defining potential intrusion scenario.
+#'  This suppose to document the anonymise cell for each variable
+#'
+#' \tabular{rrrrrr}{
+#'   \strong{Type}    \tab \strong{Description}  \cr
+#'   ----------------\tab----------- \cr
+#'   \strong{Direct_identifier}     \tab	Can be directly used to identify an individual. E.g. Name, Address, Date of birth, Telephone number, GPS location \cr
+#'   \strong{Quasi_identifier}     \tab	Can be used to identify individuals when it is joined with other information. E.g. Age, Salary, Next of kin, School name, Place of work \cr
+#'   \strong{Sensitive_information}  \tab & Community identifiable information	Might not identify an individual but could put an individual or group at risk. E.g. Gender, Ethnicity, Religious belief 
+#' }
+#'
+#'  Direct identifiers will be automatically removed from the data.
+#'  The function will perform the measurement of various statistical disclosure risk measurement
+#'  for the selected quasi_identifier and sensitive_information.
+#'  
+#' 
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @export
+
+kobo_anonymise <- function(datalist,
+                       dico) {
+
+#   1 - load the indicators, 
+  indicator <- as.data.frame(dico[4])  
+#   2 - append the one from inidcatoradd if any,
+  
+#   3 - apply the indicator, i.e. do the calculation,
+#   4 - re-save all the working indicator definition within the extended xlsform  
+#   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
+#   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
+  
+  with_anonymise <- list( datalist, dico)
+    
+    return(with_anonymise)
+}
+
+```
+
+
+```{r examples-kobo_anonymise}
+# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+# 
+# kobo_anonymise(datalist = datalist,
+#                    dico = dico,
+#                 indicatoradd = indicatoradd   )
+
+
+ 
+```
 
 # Labeling functions
 
@@ -1779,6 +1779,7 @@ plot_integer(datalist = datalist,
 #' @importFrom tm tm_map Corpus content_transformer TermDocumentMatrix
 #'                
 #' @importFrom ggwordcloud geom_text_wordcloud
+#' @importFrom SnowballC wordStem
 #' 
 #' 
 #' @export
@@ -3033,7 +3034,6 @@ kobo_likert(datalist = datalistlikert,
 #'    * dissemination_story
 #' 
 #' @return nothing all analysis files are added as a resources 
-#' @importFrom riddle resource_metadata resource_create resource_update
 #' 
 #' @export
 kobo_ridl <- function(ridl, 
@@ -3043,106 +3043,109 @@ kobo_ridl <- function(ridl,
                       republish = "no", 
                       visibility =  "public",
                       stage = "explo_initial"){
+  
+  # #' @importFrom riddle resource_metadata resource_create resource_update
+  
     # retrieving path from getSourceEditorContext() 
 # using $ operator 
 ## Enter below the name you used to save this file - without extension
-   name_of_this_file <- rstudioapi::getSourceEditorContext()$path 
-   ## Remove file name extension 
-   name2 <-  substr(name_of_this_file,1, nchar(name_of_this_file) -4) 
-   
-   ## Now just the name of the file
-   name1 <-   basename(rstudioapi::getSourceEditorContext()$path )
-   ## Remove file name extension 
-   name <-  substr(name1,1, nchar(name1) -4) 
-    
-    ### Time to archive your work once done!! 
-### Uncomment and Run this only once you have knitted your file in order to quickly upload this to RIDL -
-# https://galalh.github.io/riddle/reference/resource.html
-# remotes::install_github("galalH/riddle") 
-time <- format(Sys.Date(),  '%d%b%y')
-
-### Publish the analysis plan ####
-
-metadataanalysisplan <- riddle::resource_metadata(type = "attachment",
-                                        url = paste0("analysisPlan_", stage,"_", name,
-                                                     "_", ridl,"_", time, ".xlsx"),
-                                        name = paste0("analysisPlan_", stage,"_", name,
-                                                      "_", ridl,"_", time ),
-                                        description = paste0("Analysis Plan to use with: ", 
-                                                             stage,"_", name,"_", ridl,"_", time,
-                                                             ". Built using kobocruncher "),
-                                        format = "xlsx",
-                                        visibility =  visibility,
-                                        file_type = "other",
-                                        ## Revise here based on the name from your crunching report
-                                        upload =  httr::upload_file(here::here(datafolder, form))
-                                      )
-if(republish == "yes") {
-riddle::resource_update(ridl, metadataanalysisplan)
-} else {
-riddle::resource_create(ridl, metadataanalysisplan)
-}
-
-### Now publish the current notebook ####
-
-metadataanalysisscript <- riddle::resource_metadata(type = "attachment",
-                                        url = paste0("notebook_", stage, name, ridl, time, ".Rmd"),
-                                        name = paste0("notebook_", stage, name, ridl, time),
-                                        description = paste0("Notebook for ", 
-                                                             stage,"_", name,"_", ridl,"_", time,
-                                                             " report. Built using kobocruncher "),
-                                        description = "Notebook using kobocruncher",
-                                        format = "Rmd",
-                                        visibility =  visibility,
-                                        file_type = "script",
-                                        ## Revise here based on the name from your crunching report
-                                        upload = httr::upload_file(here::here(name_of_this_file))
-                                      )
-if(republish == "yes") {
-riddle::resource_update(ridl, metadataanalysisscript)
-} else {
-riddle::resource_create(ridl, metadataanalysisscript)
-} 
-
-## and now the generated report - that should be hopefully already generated ####
-
-if(stage == "interpretation_prez") {
-  metadatareport <- riddle::resource_metadata(type = "attachment",
-                                        url = paste0(stage, name, ridl, time,".html"),
-                                        name = paste0(stage, name, ridl, time),
-                                        description = paste0("Generated Report: ", 
-                                                             stage,", ", name, " built on ", time,
-                                                             " using kobocruncher "),
-                                        format = "pptx",
-                                        visibility =  visibility,
-                                        file_type = "report",
-                                        ## Revise here based on the name from your crunching report
-                                        upload = httr::upload_file(here::here(paste0(name2,".pptx")))
-                                      )
-} else{
-  metadatareport <- riddle::resource_metadata(type = "attachment",
-                                        url = paste0(stage,"_", name,"_", ridl,"_", time,".html"),
-                                        name = paste0(stage,"_", name,"_", ridl,"_", time),
-                                        description = paste0("Generated Report: ", 
-                                                             stage,", ", name, " built on ", time,
-                                                             " using kobocruncher "),
-                                        format = "html",
-                                        visibility =  visibility,
-                                        file_type = "report",
-                                        ## Revise here based on the name from your crunching report
-                                        upload = httr::upload_file(here::here(paste0(name2,".html")))
-                                      )
-}
-
-if(republish == "yes") {
-riddle::resource_update(ridl, metadatareport)
-} else {
-riddle::resource_create(ridl, metadatareport)
-}
-
-
-## Once all of it done, let's the user know about it... 
-return( cat(paste0("Notebook", name, " Published")))
+#    name_of_this_file <- rstudioapi::getSourceEditorContext()$path 
+#    ## Remove file name extension 
+#    name2 <-  substr(name_of_this_file,1, nchar(name_of_this_file) -4) 
+#    
+#    ## Now just the name of the file
+#    name1 <-   basename(rstudioapi::getSourceEditorContext()$path )
+#    ## Remove file name extension 
+#    name <-  substr(name1,1, nchar(name1) -4) 
+#     
+#     ### Time to archive your work once done!! 
+# ### Uncomment and Run this only once you have knitted your file in order to quickly upload this to RIDL -
+# # https://galalh.github.io/riddle/reference/resource.html
+# # remotes::install_github("galalH/riddle") 
+# time <- format(Sys.Date(),  '%d%b%y')
+# 
+# ### Publish the analysis plan ####
+# 
+# metadataanalysisplan <- riddle::resource_metadata(type = "attachment",
+#                                         url = paste0("analysisPlan_", stage,"_", name,
+#                                                      "_", ridl,"_", time, ".xlsx"),
+#                                         name = paste0("analysisPlan_", stage,"_", name,
+#                                                       "_", ridl,"_", time ),
+#                                         description = paste0("Analysis Plan to use with: ", 
+#                                                              stage,"_", name,"_", ridl,"_", time,
+#                                                              ". Built using kobocruncher "),
+#                                         format = "xlsx",
+#                                         visibility =  visibility,
+#                                         file_type = "other",
+#                                         ## Revise here based on the name from your crunching report
+#                                         upload =  httr::upload_file(here::here(datafolder, form))
+#                                       )
+# if(republish == "yes") {
+# riddle::resource_update(ridl, metadataanalysisplan)
+# } else {
+# riddle::resource_create(ridl, metadataanalysisplan)
+# }
+# 
+# ### Now publish the current notebook ####
+# 
+# metadataanalysisscript <- riddle::resource_metadata(type = "attachment",
+#                                         url = paste0("notebook_", stage, name, ridl, time, ".Rmd"),
+#                                         name = paste0("notebook_", stage, name, ridl, time),
+#                                         description = paste0("Notebook for ", 
+#                                                              stage,"_", name,"_", ridl,"_", time,
+#                                                              " report. Built using kobocruncher "),
+#                                         description = "Notebook using kobocruncher",
+#                                         format = "Rmd",
+#                                         visibility =  visibility,
+#                                         file_type = "script",
+#                                         ## Revise here based on the name from your crunching report
+#                                         upload = httr::upload_file(here::here(name_of_this_file))
+#                                       )
+# if(republish == "yes") {
+# riddle::resource_update(ridl, metadataanalysisscript)
+# } else {
+# riddle::resource_create(ridl, metadataanalysisscript)
+# } 
+# 
+# ## and now the generated report - that should be hopefully already generated ####
+# 
+# if(stage == "interpretation_prez") {
+#   metadatareport <- riddle::resource_metadata(type = "attachment",
+#                                         url = paste0(stage, name, ridl, time,".html"),
+#                                         name = paste0(stage, name, ridl, time),
+#                                         description = paste0("Generated Report: ", 
+#                                                              stage,", ", name, " built on ", time,
+#                                                              " using kobocruncher "),
+#                                         format = "pptx",
+#                                         visibility =  visibility,
+#                                         file_type = "report",
+#                                         ## Revise here based on the name from your crunching report
+#                                         upload = httr::upload_file(here::here(paste0(name2,".pptx")))
+#                                       )
+# } else{
+#   metadatareport <- riddle::resource_metadata(type = "attachment",
+#                                         url = paste0(stage,"_", name,"_", ridl,"_", time,".html"),
+#                                         name = paste0(stage,"_", name,"_", ridl,"_", time),
+#                                         description = paste0("Generated Report: ", 
+#                                                              stage,", ", name, " built on ", time,
+#                                                              " using kobocruncher "),
+#                                         format = "html",
+#                                         visibility =  visibility,
+#                                         file_type = "report",
+#                                         ## Revise here based on the name from your crunching report
+#                                         upload = httr::upload_file(here::here(paste0(name2,".html")))
+#                                       )
+# }
+# 
+# if(republish == "yes") {
+# riddle::resource_update(ridl, metadatareport)
+# } else {
+# riddle::resource_create(ridl, metadatareport)
+# }
+# 
+# 
+# ## Once all of it done, let's the user know about it... 
+# return( cat(paste0("Notebook", name, " Published")))
 }
 ```
   
@@ -3186,33 +3189,107 @@ return( cat(paste0("Notebook", name, " Published")))
 ```
   
 ```{r tests-kobo_ridl}
-test_that("kobo_ridl works", {
-  expect_true(inherits(kobo_ridl, "function")) 
-})
+# test_that("kobo_ridl works", {   expect_true(inherits(kobo_ridl, "function")) })
 ```
   
 
 
 ## Report Template A for Automatic Data Exploration
 
-The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
 
-It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
+    
+```{r function-template_1_exploration}
 
-This report also includes each plot syntax so that they can be easily pasted for the second report
-
-
-```{r template_1_exploration}
 #' Initial Template for Automatic Data Exploration
-#' The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
+#' 
+#' This template is designed for initial data crunching - The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.
 #' It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations
-#'  This report also includes each plot syntax so that they can be easyly pasted for the second report
+#' This report also includes each plot syntax so that they can be easily pasted for the second report 
+#' 
 # usethis::use_rmarkdown_template(
 #   template_name = "template_1_exploration",
 #   template_dir = NULL,
 #   template_description = "Automatic Data Exploration - html",
 #   template_create_dir = TRUE
-# )
+# ) 
+#' 
+#' @param   datafolder: "data-raw" This is the default folder where to put you data in
+#' @param   ridl: "ridlproject" Name of the ridl project where you data is documented and archived
+#' @param   data: "data.xlsx" Name of the data file
+#' @param   form: "form.xlsx" Name of the xlsform - 
+#' @param   datasource: "Study name reference" ## String used in caption for all your charts
+#' @param   publish: "no" Put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c
+#' @param   republish: "no"
+#' @param   visibility: "public"
+#' @param   stage: "exploration_initial" You may change this to exploration_advanced if you configuring many 
+#' @param   language: "" Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
+#' @param folder folder within your project where to put the generated report. 
+#' Folder will be created if it does not exist
+#' 
+#' @importFrom unhcrdown html_page pptx_slides paged_simple
+#' @importFrom rmarkdown render
+#' @importFrom here here
+#' 
+#' @return nothing the file for the report is generated
+#' 
+#' @export 
+#'
+template_1_exploration <- function(datafolder= "data-raw",
+                                   ridl =  "ridlproject",
+                                    data = "data.xlsx" ,
+                                    form =  "form.xlsx",
+                                    datasource = "Study name reference",
+                                    publish =  "no", 
+                                    republish = "no",
+                                    visibility = "public",
+                                    stage = "exploration_initial",
+                                   language = "",
+                                   folder = "Report"){
+  
+  
+  ## Create the outfolder if it does not exist
+  output_dir <- paste0(getwd(),"/",folder)
+  if (!dir.exists(output_dir)) {dir.create(output_dir)}
+  
+  
+  rmarkdown::render(
+    system.file("rmarkdown/templates/template_A_exploration/skeleton/skeleton.Rmd", package = "kobocruncher"),
+    output_file = here::here(folder, paste0('StatFactsheetCtr-', country_asylum_iso3c, '-', year, '.html') ),
+    params = list(datafolder= datafolder,
+                  ridl =  ridl,
+                  data = data  ,
+                  form =   form,
+                  datasource = datasource,
+                  publish =  publish, 
+                  republish = publish,
+                  visibility= visibility,
+                  stage = stage,
+                  language =language )  )
+}
+  
+```
+  
+```{r example-template_1_exploration}
+# template_1_exploration(datafolder= "data-raw",
+#                                    ridl =  "ridlproject",
+#                                     data = "data.xlsx" ,
+#                                     form =  "form.xlsx",
+#                                     datasource = "Study name reference",
+#                                     publish =  "no", 
+#                                     republish = "no",
+#                                     visibility = "public",
+#                                     stage = "exploration_initial",
+#                                    language = "",
+#                                    folder = "Report")
+```
+  
+```{r tests-template_1_exploration}
+# test_that("template_1_exploration works", { expect_true(inherits(template_1_exploration, "function")) })
+```
+  
+
+```{r template_1_exploration}
+
 
 
 ```

@@ -25,15 +25,13 @@ A series of presentation / tutorial are accessible here:
 ## Install
 
 ```{r}
-install.packages("remotes")
-### Install Key unhcRverse packages
-remotes::install_github('dickoa/ridl') 
-remotes::install_github('vidonne/unhcrdown')
-remotes::install_github('vidonne/unhcrdesign')
-remotes::install_github('vidonne/unhcrtemplate')
-remotes::install_github('vidonne/unhcrthemes')
+install.packages("devtools")
+### Install Key unhcRverse packages in order to get the corporate style & brand
+devtools::install_github('vidonne/unhcrdown')
+devtools::install_github('vidonne/unhcrthemes')
+devtools::install_github('galalH/riddle')
 ## Now get kobocruncher
-remotes::install_github("Edouard-Legoupil/kobocruncher", Ncpus=4) 
+devtools::install_github("edouard-legoupil/kobocruncher")  
 ```  
 
 ## Contributing

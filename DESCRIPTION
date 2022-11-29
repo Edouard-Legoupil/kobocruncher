@@ -19,15 +19,13 @@ Imports:
     ggwordcloud,
     glue,
     here,
-    httr,
     jsonlite,
     likert,
     magrittr,
     openxlsx,
     purrr,
     readxl,
-    riddle,
-    rstudioapi,
+    rmarkdown,
     scales,
     shiny,
     showtext,
@@ -40,15 +38,15 @@ Imports:
     tidyr,
     tidyselect,
     tm,
+    unhcrdown,
     utils
 Suggests: 
     knitr,
-    rmarkdown,
     testthat
 VignetteBuilder: 
     knitr
 Remotes: 
-    vidonne/unhcrthemes
+    vidonne/unhcrdown
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1

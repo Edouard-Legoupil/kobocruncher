@@ -10,6 +10,7 @@
 #' @importFrom tm tm_map Corpus content_transformer TermDocumentMatrix
 #'                
 #' @importFrom ggwordcloud geom_text_wordcloud
+#' @importFrom SnowballC wordStem
 #' 
 #' 
 #' @export

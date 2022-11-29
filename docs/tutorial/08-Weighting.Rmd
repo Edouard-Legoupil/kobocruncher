@@ -1,9 +1,8 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 8 - Weighting"
-author: "Edouard Legoupil"
-institute: "Snr Data Analysis Officer"
-date: "`r format(Sys.Date(),  '%d %B %Y')`"
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](07-Anonymising.html) -- [Link to Next Session](09-Publishing.html)  "
+date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
     self_contained: true
@@ -43,7 +42,7 @@ These features can be combined to form one design
 
  *  __Clustered sampling__: divide population into mutually exclusive subgroups (clusters). Randomly sample clusters and then individuals within clusters
 
-
+---
 
 ## Determining the design
 
@@ -58,7 +57,7 @@ Documentation will indicate the variables needed to specify the design. Look for
  *  replicate weights (this is used instead of strata/clusters for analysis)
  *  might also see finite population correction or population sizes
 
-
+---
 
 ##  Syntax for common designs
 

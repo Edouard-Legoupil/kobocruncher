@@ -566,25 +566,10 @@ steps in the data preparation.</p>
 <span> </span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="anonymisation">Anonymisation<a class="anchor" aria-label="anchor" href="#anonymisation"></a>
-</h3>
-<p>to do….</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># dico &lt;- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )</span></span>
-<span><span class="co"># datalist &lt;- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co"># kobo_anonymise(datalist = datalist,</span></span>
-<span><span class="co">#                    dico = dico,</span></span>
-<span><span class="co">#                 indicatoradd = indicatoradd   )</span></span>
-<span></span>
-<span></span>
-<span> </span></code></pre></div>
-</div>
-<div class="section level3">
 <h3 id="indicator-calculation">Indicator Calculation<a class="anchor" aria-label="anchor" href="#indicator-calculation"></a>
 </h3>
 <p>Indicator calculation</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xlsformpath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sample_xlsform.xlsx"</span>, package <span class="op">=</span> <span class="st">"kobocruncher"</span><span class="op">)</span></span>
 <span><span class="va">xlsformpathout</span> <span class="op">&lt;-</span> <span class="st">"sample_xlsform_withindic.xlsx"</span></span>
 <span></span>
@@ -651,6 +636,21 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; female</span></span>
 <span><span class="co">#&gt; 0 1 2 </span></span>
 <span><span class="co">#&gt; 1 3 1</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="anonymisation">Anonymisation<a class="anchor" aria-label="anchor" href="#anonymisation"></a>
+</h3>
+<p>to do….</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># dico &lt;- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )</span></span>
+<span><span class="co"># datalist &lt;- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># kobo_anonymise(datalist = datalist,</span></span>
+<span><span class="co">#                    dico = dico,</span></span>
+<span><span class="co">#                 indicatoradd = indicatoradd   )</span></span>
+<span></span>
+<span></span>
+<span> </span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -926,7 +926,6 @@ steps in the data preparation.</p>
 <span>              dico <span class="op">=</span> <span class="va">dico</span>, </span>
 <span>              var <span class="op">=</span> <span class="st">"profile.occupation"</span>,</span>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required namespace: SnowballC</span></span>
 <span><span class="co">#&gt; Loading required package: tm</span></span>
 <span><span class="co">#&gt; Loading required package: NLP</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1260,24 +1259,18 @@ steps in the data preparation.</p>
 <div class="section level3">
 <h3 id="report-template-a-for-automatic-data-exploration">Report Template A for Automatic Data Exploration<a class="anchor" aria-label="anchor" href="#report-template-a-for-automatic-data-exploration"></a>
 </h3>
-<p>The first RMD template gives an output in HTML for easy navigation -
-the left menu provides smooth transition.</p>
-<p>It includes a function to automatically run throughout all the survey
-content. During this stage, data cleaning and new variable creation can
-be performed through iterations</p>
-<p>This report also includes each plot syntax so that they can be easily
-pasted for the second report</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#' Initial Template for Automatic Data Exploration</span></span>
-<span><span class="co">#' The first RMD template gives an output in HTML for easy navigation - the left menu provides smooth transition.</span></span>
-<span><span class="co">#' It includes a function to automatically run throughout all the survey content. During this stage, data cleaning and new variable creation can be performed through iterations</span></span>
-<span><span class="co">#'  This report also includes each plot syntax so that they can be easyly pasted for the second report</span></span>
-<span><span class="co"># usethis::use_rmarkdown_template(</span></span>
-<span><span class="co">#   template_name = "template_1_exploration",</span></span>
-<span><span class="co">#   template_dir = NULL,</span></span>
-<span><span class="co">#   template_description = "Automatic Data Exploration - html",</span></span>
-<span><span class="co">#   template_create_dir = TRUE</span></span>
-<span><span class="co"># )</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># template_1_exploration(datafolder= "data-raw",</span></span>
+<span><span class="co">#                                    ridl =  "ridlproject",</span></span>
+<span><span class="co">#                                     data = "data.xlsx" ,</span></span>
+<span><span class="co">#                                     form =  "form.xlsx",</span></span>
+<span><span class="co">#                                     datasource = "Study name reference",</span></span>
+<span><span class="co">#                                     publish =  "no", </span></span>
+<span><span class="co">#                                     republish = "no",</span></span>
+<span><span class="co">#                                     visibility = "public",</span></span>
+<span><span class="co">#                                     stage = "exploration_initial",</span></span>
+<span><span class="co">#                                    language = "",</span></span>
+<span><span class="co">#                                    folder = "Report")</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="report-template-b-for-joint-data-interpretation-session">Report Template B for Joint Data Interpretation Session<a class="anchor" aria-label="anchor" href="#report-template-b-for-joint-data-interpretation-session"></a>

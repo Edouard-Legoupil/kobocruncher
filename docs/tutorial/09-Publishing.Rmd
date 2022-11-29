@@ -1,9 +1,8 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 9 - Publishing"
-author: "Edouard Legoupil"
-institute: "Snr Data Analysis Officer"
-date: "`r format(Sys.Date(),  '%d %B %Y')`"
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](08-Weighting.html)   "
+date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
     self_contained: true
@@ -32,6 +31,7 @@ library(fontawesome)
 
 https://www.jips.org/jips-publication/joint-analysis-guide-2021/
 
+--- 
 
 ## Building Publication-Tailored Content 
 
@@ -39,7 +39,7 @@ Having refugee and displacement topics in major news channel is key to retain pu
 
 In order to bring the potential publishers in the content creation, it requires to pro-actively identify and reach out to them. It might also be necessary to offer some exclusivity as publishers want content their competitors don’t have. As a result, Publication-Tailored content approach greatly increases the likelihood of getting published and reaching out to a larger audience, leveraging the time and energy investment and resulting in more traffic to UNHCR regular communication channel. Continued collaboration with publishers can also change the partnership approach as the same entity can then proactively start asking for high-quality and free content to help support their stories.
 
-
+---
 
 ## Get more for less effort: Divisible Content Strategy
 
@@ -73,6 +73,7 @@ The implementation of a divisible content strategy can be summarized by the expl
 
  10. An editorial calendar and media plan should be established in advance so a human story and a Briefing Note can accompany the release of each report
 
+---
 
 ## Impact measurement of you campaign
 
