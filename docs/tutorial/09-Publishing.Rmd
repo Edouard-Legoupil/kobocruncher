@@ -53,6 +53,34 @@ library(fontawesome)
 
 
 
+---
+
+## Engage with technical expert before sessions
+
+
+.pull-left[
+
+Request each focal point from multifunctional team to share their programmatic assumptions
+
+ * What do they assume about the population?
+
+ * What do they see as the most critical need?
+
+ * One slide to be prepared and shared per expert with a list of their assumptions
+]
+.pull-right[
+
+Start from assumptions and associate to them graphs from crunching output in order to give foundation for potential data stories according to narrative frames:
+
+ * Shed light on a previously unexplored topic
+
+ * Introduce an interesting angle
+
+ * Provide useful suggestions to solve a problem
+
+ * Disprove an hypothesis / debunk a widely held belief in terms of programmatic assumption
+
+]
 
 --- 
 

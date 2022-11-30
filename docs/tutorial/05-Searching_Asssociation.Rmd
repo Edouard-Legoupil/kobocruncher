@@ -79,7 +79,12 @@ For this table, the following interpretation can be made: __“When a person rep
 ]
 
 
+---
 
+## Another example
+
+
+![alt text](../../inst/correlation2.png)
 
 
 ---
