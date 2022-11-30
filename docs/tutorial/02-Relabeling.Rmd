@@ -210,11 +210,7 @@ countdown::countdown(minutes = 5,
                      play_sound = TRUE)
 ```
 
- - Expand the xlsfom
- 
- - Download locally and adjust the wording of the questions
- 
- - save/upload the revised file and knit again your report
+ Expand the xlsfom, Open it with Excel and adjust the wording of the questions, then save/upload the revised file and knit again your report
  
  
 Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 

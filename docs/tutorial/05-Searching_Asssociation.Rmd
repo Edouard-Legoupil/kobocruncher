@@ -52,18 +52,75 @@ The larger the numeric value, the stronger the relationship.
 
 ---
 
-## Let's look at an example
+## Let's look at an example: a correlogramme
 
-
-
+.pull-left[
+ 
 In this example the strongest relationships are identified by the bigger numbers and circles. 
 
 Choose the strongest or most relevant positive (+) relationship to ease the interpretation. 
 
+
+
+ 
+ .bg-blue[
 For this table, the following interpretation can be made: __“When a person reports that they have witnessed or suffered any incidents (Row ‘Yes’), they are more likely to report that they feel lonely or socially isolated in their current location (Column ‘Strongly Agree’)__.
+] 
 
 
 
+
+]
+
+.pull-right[
+
+
+![alt text](../../inst/correlation.png)
+]
+
+
+
+
+
+---
+
+## How can I crosstabulate questions within my survey?
+
+
+By default the initial exploration report does not include cross-tabulation as it depends on your data:
+
+
+ 1. Open the expanded xlsform 
+ 
+ 2. set up yes in the `correlation` column for the variables for which you want to check potential correlation
+ 
+---
+
+## What will you get then?
+
+Once you regenerate the chart with this new setting in your analysis plan, you will get a correlogramme for every single questions where an association will be detected.
+
+ .bg-blue[
+This setting will automatically inflate considerably the size of your exploration report.
+
+You may save you expanded `xlsform` with a new name and adjust your parameters settings so that you can create multiple exploration report exploring different `disaggregation` options
+
+Do not forget, at this stage you are exploring your data so that you can select the final charts you want to include in the presentation for the joint data interpretation session
+
+]   
+
+---
+
+## What happenned?
+
+
+The function [kobo_cruncher](https://edouard-legoupil.github.io/kobocruncher/reference/kobo_cruncher.html) then loop around all the questions.
+
+In addition of the default simple tabulations and cross-tabulation, it run the [plot_correlation](https://edouard-legoupil.github.io/kobocruncher/reference/plot_correlation.html)
+
+  
+ 
+ 
 ---
 class: inverse, center, middle
 
@@ -83,9 +140,9 @@ countdown::countdown(minutes = 5,
 ```
 
 
- - Download again locally and fill in the correlation
+Open your xlsform and fill in the .large[correlation] column, save and knit again your report
  
- - upload and knit again your report
+
  
 
 Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 

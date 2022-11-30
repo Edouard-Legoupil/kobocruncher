@@ -27,9 +27,32 @@ library(fontawesome)
 
 
 
-![alt text](../../inst/jips.png)
+![https://www.jips.org/jips-publication/joint-analysis-guide-2021/](../../inst/jips.png)
 
-https://www.jips.org/jips-publication/joint-analysis-guide-2021/
+???
+
+
+
+
+---
+
+## Agree to disagree
+
+
+
+![https://www.instagram.com/p/CLmsp_AhLen/](../../inst/garcia.png)
+
+---
+
+## Joint Data Interpretation
+
+
+![https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305](../../inst/joint.png)
+
+???
+
+
+
 
 --- 
 
@@ -43,14 +66,35 @@ In order to bring the potential publishers in the content creation, it requires 
 
 ## Get more for less effort: Divisible Content Strategy
 
-Nowadays, the average consumer attention span is less than 10 sec. Long reports are therefore less likely to draw large audience. “Divisible Content Strategy” consists in breaking  a traditional report into a few articles, an infographic, social microcontent, or even a motion graphic video. For instance, if an article includes 5 different charts, each chart can be posted it as a visual tweet implying that the same content can be promoted through different angles.
+.pull-left[
+ 
+ .bg-blue[
+Nowadays, the average consumer attention span is less than 10 sec. Long reports are therefore less likely to draw large audience.
+] 
 
-The implementation of a divisible content strategy can be summarized by the explainer below3
+“Divisible Content Strategy” consists in breaking  a traditional report into a few articles, an infographic, social microcontent, or even a motion graphic video. For instance, if an article includes 5 different charts, each chart can be posted it as a visual tweet implying that the same content can be promoted through different angles.
+
+]
+
+.pull-right[
+
+
+![https://www.columnfivemedia.com/divisible-content-strategy-gives-brand-less](../../inst/divisible.png)
+]
+
+
+
+
+
+
+---
 
 
 
 ## Publication Tips
 
+
+.pull-left[
  1. Each chapter from the report should behave as an independent article. Reports to be shared through usual publication approach on http://data.unhcr.org . Potentially an EPUB version (for people using e-readers) of the report, in addition of the PDF version can be offered.
 
  2. The full report can be shared within existing platform and sub-articles can be shared in parallel within blogging platform like Medium4 or pre-identified publication partner.
@@ -62,6 +106,10 @@ The implementation of a divisible content strategy can be summarized by the expl
  5. Charts should be self-explanatory in order to be engaging. This implies to have both a title (with same constraint that a headline, less than 80 char) and sub-title that should act as a short interpretation hint. Chart items should be concise (less than 40 characters). There should be a chart caption stating the reference and date of the data collection as well as the number of observations and confidence interval. A good chart shall deliver a clear message in less than 10 seconds, it is therefore key to adopt a minimalist design.
 
  6. Content shall include integrated social media sharing tools (like “Click to Tweet”) in order to make it easy for readers to share interesting information within the content. Shareable content shall include systematically one graphic from the article as it acts as a powerful micro-content, i.e. teaser for the main story.
+]
+
+.pull-right[
+
 
  7. Content shall systematically include a call to action at the end of each article, direct the audience to take the next action: link to donate, link to the full report, link to the most recent appeal or link to subscribe to mailing list.
 
@@ -72,6 +120,11 @@ The implementation of a divisible content strategy can be summarized by the expl
  9.  Notify subscribers once by email, a day after the piece has gone live. This gives some lead time to get the social share numbers up, which increases the chances that others will share.
 
  10. An editorial calendar and media plan should be established in advance so a human story and a Briefing Note can accompany the release of each report
+]
+
+
+
+
 
 ---
 

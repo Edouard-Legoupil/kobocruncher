@@ -61,13 +61,13 @@ By default the initial exploration report does not include cross-tabulation as i
 
  1. Open the expanded xlsform 
  
- 2. set up yes in the `disaggregation` column for the variable you want to use for crosstabulation
+ 2. set up yes in the `disaggregation` column for the variable you want to use for cross-tabulation
  
 ---
 
 ## What will you get then?
 
-Once you regenerate the chart with this new setting in your analysis plan, every single questions will be be presented in aditional charts for each `disaggregation` variable
+Once you regenerate the chart with this new setting in your analysis plan, every single questions will be be presented in additional charts for each `disaggregation` variable
 
  .bg-blue[
 This setting will automatically inflate considerably the size of your exploration report.
@@ -77,6 +77,21 @@ You may save you expanded `xlsform` with a new name and adjust your parameters s
 Do not forget, at this stage you are exploring your data so that you can select the final charts you want to include in the presentation for the joint data interpretation session
 
 ]   
+
+---
+
+## What happenned?
+
+
+The function [kobo_cruncher](https://edouard-legoupil.github.io/kobocruncher/reference/kobo_cruncher.html) then loop around all the questions, and in adition of the default simple tabulations, and based on the data types, generate standard charts:
+
+ * `select_one` simple bar chart with [plot_select_one_cross](https://edouard-legoupil.github.io/kobocruncher/reference/plot_select_one_cross.html)
+ 
+ * `select_multiple` bar chart [plot_select_multiple_cross](https://edouard-legoupil.github.io/kobocruncher/reference/plot_select_multiple_cross.html)
+ 
+ * `integer` or `numeric` or `date` histogram with [plot_integer_cross](https://edouard-legoupil.github.io/kobocruncher/reference/plot_integer_cross.html)
+  
+ 
 
 ---
 
@@ -97,9 +112,7 @@ countdown::countdown(minutes = 5,
                      play_sound = TRUE)
 ```
 
- - Download again locally and fill in the disaggregation
- 
- - upload and knit again your report
+Open your xlsform and fill in the .large[disaggregation] column, save and knit again your report
  
 
 

@@ -122,9 +122,7 @@ countdown::countdown(minutes = 5,
                      play_sound = TRUE)
 ```
 
- Download again locally and fill in the chapter and sub-chapter column
- 
- Upload and knit again your report
+ Download again locally and fill in the chapter and sub-chapter column, save the file and knit again your report
 
 
 Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 

@@ -65,7 +65,7 @@ Per default, it is assumed that __direct identifiers__ (such as name, progres ID
  
 ---
 
-## The paradow of Disclosure risks and information loss
+## The paradox of Disclosure risks and information loss
 
 .pull-left[
 
@@ -77,137 +77,130 @@ There's no standards based on risk measurement as the risk measurement is linked
 ]
 .pull-right[
 
-```{r}
-library("xkcd")
-#vignette("xkcd-intro")
-#download.file("http://simonsoftware.se/other/xkcd.ttf", dest = "xkcd.ttf", mode = "wb")
-#font_import(paths = getwd(), pattern = "[X/x]kcd", prompt = FALSE)
-volunteers <- data.frame(year=c(2007:2011), 
-                         number=c(56470, 56998, 59686, 61783, 64251))
+```{r echo=FALSE}
 
-xrange <- range(volunteers$year)
-yrange <- range(volunteers$number)
-
-ratioxy <-  diff(xrange) / diff(yrange)
-
-datalines <- data.frame(xbegin=c(2008.3,2010.5),
-                        ybegin=c(63000,59600), 
-                        xend=c(2008.5,2010.3),
-                        yend=c(63400,59000))
-
-mapping <- aes(x,
-               y,
-               scale,
-               ratioxy, 
-               angleofspine,
-               anglerighthumerus,
-               anglelefthumerus,
-               anglerightradius, 
-               angleleftradius,
-               anglerightleg, 
-               angleleftleg, 
-               angleofneck)
-
-dataman <- data.frame( x= c(2008,2010),
-                       y=c(63000, 58850),
-                      scale = 1000 ,
-                      ratioxy = ratioxy,
-                      angleofspine =  -pi/2  ,
-                      anglerighthumerus = c(-pi/6, -pi/6),
-                      anglelefthumerus = c(-pi/2 - pi/6, -pi/2 - pi/6),
-                      anglerightradius = c(pi/5, -pi/5),
-                      angleleftradius = c(pi/5, -pi/5),
-                      angleleftleg = 3*pi/2  + pi / 12 ,
-                      anglerightleg = 3*pi/2  - pi / 12,
-                      angleofneck = runif(1, 3*pi/2-pi/10, 3*pi/2+pi/10))
-```
-
-```{r}
-datascaled <- data.frame(x=c(-3,3),y=c(-30,30))
-p <- ggplot(data=datascaled, aes(x=x,y=y)) + geom_point()
-xrange <- range(datascaled$x)
-yrange <- range(datascaled$y)
-ratioxy <- diff(xrange) / diff(yrange)
- 
-mapping <- aes(x=x,
-               y=y,
-               scale=scale,
-               ratioxy=ratioxy,
-               angleofspine = angleofspine,
-               anglerighthumerus = anglerighthumerus,
-               anglelefthumerus = anglelefthumerus,
-               anglerightradius = anglerightradius,
-               angleleftradius = angleleftradius,
-               anglerightleg =  anglerightleg,
-               angleleftleg = angleleftleg,
-               angleofneck = angleofneck,
-               color = color )
- 
-dataman <- data.frame( x= c(-1,0,1),
-                       y=c(-10,0,10),
-                       scale = c(10,7,5),
-                       ratioxy = ratioxy,
-                       angleofspine =  seq(- pi / 2, -pi/2 + pi/8, l=3) ,
-                       anglerighthumerus = -pi/6,
-                       anglelefthumerus = pi + pi/6,
-                       anglerightradius = 0,
-                       angleleftradius = runif(3,- pi/4, pi/4),
-                       angleleftleg = 3*pi/2  + pi / 12 ,
-                       anglerightleg = 3*pi/2  - pi / 12,
-                       angleofneck = runif(3, min = 3 * pi / 2 - pi/10 , max = 3 * pi / 2 + pi/10),
-                  color=c("A","B","C"))
- 
-p + xkcdman(mapping,dataman)
-```
-
-
-
-```{r}
-ggplot() + 
-  geom_smooth(
-              data =volunteers, 
-              aes(x=year, y =number),
-              method="loess") +
-  ylab("disclosure risks and information loss") +
-  annotate("text", x=2008.7, y = 63700, 
-           label = "More risk\n More information!", 
-           family="xkcd" ) +
-  annotate("text", x=2010.5, y = 60000, 
-           label = "Less Risk \n less Value",
-           family="xkcd" ) +
-  xkcd::xkcdaxis(xrange,yrange) +
-  #xkcd::xkcdman(mapping,  dataman) +
-  xkcd::xkcdline(aes(x=xbegin,
-                      y=ybegin,
-                      xend=xend,
-                      yend=yend),
-           datalines, xjitteramount = 0.12)
-```
-
-
-```{r}
-data <- data.frame(x1=c(1,2), y1=c(10,20), xend=c(2.5,0.5),
-yend=c(20,10), model=c("low","high"))
-
-ggplot() + xkcdline(mapping=aes(x=x1 +y1,
-                                y=y1, 
-                                xend =xend,
-                                yend= yend,
-                                color = model), 
-                    data=data)
-
-ggplot() + xkcdline(mapping = aes(x=x1 +y1,
-                                  y=y1, 
-                                  xend =xend,
-                                  yend= yend,
-                                  color = model), 
-                    data=data) + 
-  facet_grid(. ~ model)
-
-ggplot() + xkcdline(mapping=aes(x=x1 +y1,
-                                y=y1, 
-                                diameter =xend), 
-                    data=data, type="circunference")
+### Tentative summary chart to explain the paradox
+# library("xkcd")
+# #vignette("xkcd-intro")
+# #download.file("http://simonsoftware.se/other/xkcd.ttf", dest = "xkcd.ttf", mode = "wb")
+# #font_import(paths = getwd(), pattern = "[X/x]kcd", prompt = FALSE)
+# volunteers <- data.frame(year=c(2007:2011), 
+#                          number=c(56470, 56998, 59686, 61783, 64251))
+# 
+# xrange <- range(volunteers$year)
+# yrange <- range(volunteers$number)
+# 
+# ratioxy <-  diff(xrange) / diff(yrange)
+# 
+# datalines <- data.frame(xbegin=c(2008.3,2010.5),
+#                         ybegin=c(63000,59600), 
+#                         xend=c(2008.5,2010.3),
+#                         yend=c(63400,59000))
+# 
+# mapping <- aes(x,
+#                y,
+#                scale,
+#                ratioxy, 
+#                angleofspine,
+#                anglerighthumerus,
+#                anglelefthumerus,
+#                anglerightradius, 
+#                angleleftradius,
+#                anglerightleg, 
+#                angleleftleg, 
+#                angleofneck)
+# 
+# dataman <- data.frame( x= c(2008,2010),
+#                        y=c(63000, 58850),
+#                       scale = 1000 ,
+#                       ratioxy = ratioxy,
+#                       angleofspine =  -pi/2  ,
+#                       anglerighthumerus = c(-pi/6, -pi/6),
+#                       anglelefthumerus = c(-pi/2 - pi/6, -pi/2 - pi/6),
+#                       anglerightradius = c(pi/5, -pi/5),
+#                       angleleftradius = c(pi/5, -pi/5),
+#                       angleleftleg = 3*pi/2  + pi / 12 ,
+#                       anglerightleg = 3*pi/2  - pi / 12,
+#                       angleofneck = runif(1, 3*pi/2-pi/10, 3*pi/2+pi/10))
+#  
+# datascaled <- data.frame(x=c(-3,3),y=c(-30,30))
+# p <- ggplot(data=datascaled, aes(x=x,y=y)) + geom_point()
+# xrange <- range(datascaled$x)
+# yrange <- range(datascaled$y)
+# ratioxy <- diff(xrange) / diff(yrange)
+#  
+# mapping <- aes(x=x,
+#                y=y,
+#                scale=scale,
+#                ratioxy=ratioxy,
+#                angleofspine = angleofspine,
+#                anglerighthumerus = anglerighthumerus,
+#                anglelefthumerus = anglelefthumerus,
+#                anglerightradius = anglerightradius,
+#                angleleftradius = angleleftradius,
+#                anglerightleg =  anglerightleg,
+#                angleleftleg = angleleftleg,
+#                angleofneck = angleofneck,
+#                color = color )
+#  
+# dataman <- data.frame( x= c(-1,0,1),
+#                        y=c(-10,0,10),
+#                        scale = c(10,7,5),
+#                        ratioxy = ratioxy,
+#                        angleofspine =  seq(- pi / 2, -pi/2 + pi/8, l=3) ,
+#                        anglerighthumerus = -pi/6,
+#                        anglelefthumerus = pi + pi/6,
+#                        anglerightradius = 0,
+#                        angleleftradius = runif(3,- pi/4, pi/4),
+#                        angleleftleg = 3*pi/2  + pi / 12 ,
+#                        anglerightleg = 3*pi/2  - pi / 12,
+#                        angleofneck = runif(3, min = 3 * pi / 2 - pi/10 , max = 3 * pi / 2 + pi/10),
+#                   color=c("A","B","C"))
+#  
+# p + xkcdman(mapping,dataman)
+# 
+# ggplot() + 
+#   geom_smooth(
+#               data =volunteers, 
+#               aes(x=year, y =number),
+#               method="loess") +
+#   ylab("disclosure risks and information loss") +
+#   annotate("text", x=2008.7, y = 63700, 
+#            label = "More risk\n More information!", 
+#            family="xkcd" ) +
+#   annotate("text", x=2010.5, y = 60000, 
+#            label = "Less Risk \n less Value",
+#            family="xkcd" ) +
+#   xkcd::xkcdaxis(xrange,yrange) +
+#   #xkcd::xkcdman(mapping,  dataman) +
+#   xkcd::xkcdline(aes(x=xbegin,
+#                       y=ybegin,
+#                       xend=xend,
+#                       yend=yend),
+#            datalines, xjitteramount = 0.12)
+# 
+# data <- data.frame(x1=c(1,2), y1=c(10,20), xend=c(2.5,0.5),
+# yend=c(20,10), model=c("low","high"))
+# 
+# ggplot() + xkcdline(mapping=aes(x=x1 +y1,
+#                                 y=y1, 
+#                                 xend =xend,
+#                                 yend= yend,
+#                                 color = model), 
+#                     data=data)
+# 
+# ggplot() + xkcdline(mapping = aes(x=x1 +y1,
+#                                   y=y1, 
+#                                   xend =xend,
+#                                   yend= yend,
+#                                   color = model), 
+#                     data=data) + 
+#   facet_grid(. ~ model)
+# 
+# ggplot() + xkcdline(mapping=aes(x=x1 +y1,
+#                                 y=y1, 
+#                                 diameter =xend), 
+#                     data=data, type="circunference")
 
 ```
 
@@ -255,9 +248,9 @@ To assess disclosure risk, one must make realistic assumptions about the informa
 
 This goes hand in hand with the selection of categorical key variables because the choice these identifying variables defines a specific disclosure risk scenario. The specific set of chosen key variables has direct influence on the risk assessment. 
 
---- 
+---
 
-##  What variables to consider when configuring the anonymisation (define the intrusion scenerio) ?
+## The intrusion scenario: What variables to consider when configuring the anonymisation?
 
   
  * __Direct identifiers__:	Can be directly used to identify an individual. E.g. Name, Address, Date of birth, Telephone number, GPS location. Metadata, Data about who, where and how the data is collected is often stored separately to the main data and can be used identify individuals and should usually be removed

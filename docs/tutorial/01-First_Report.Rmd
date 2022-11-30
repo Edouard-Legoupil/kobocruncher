@@ -357,17 +357,19 @@ knitr::include_graphics("../../inst/firstreport.png")
 
 ## What happenned?
 
-The xlform defines data types for each variable
+The xlsform was first expanded with the [kobo_prepare_form](https://edouard-legoupil.github.io/kobocruncher/reference/kobo_prepare_form.html). The file then got converted in a broad data dictionary with [kobo_dico](https://edouard-legoupil.github.io/kobocruncher/reference/kobo_dico.html) and data got loaded in the session with [kobo_data](https://edouard-legoupil.github.io/kobocruncher/reference/kobo_data.html). 
 
-Based on the data types, a standard graph is generated:
+The function [kobo_cruncher](https://edouard-legoupil.github.io/kobocruncher/reference/kobo_cruncher.html) then loop around all the questions and based on the data types, generate standard charts:
 
- * `select_one` simple bar chart
+ * `select_one` simple bar chart with [plot_select_one](https://edouard-legoupil.github.io/kobocruncher/reference/plot_select_one.html)
  
- * `select_multiple` bar chart
+ * `select_multiple` bar chart [plot_select_multiple](https://edouard-legoupil.github.io/kobocruncher/reference/plot_select_multiple.html)
  
- * `integer` or `numeric` or `date` histogram
+ * `integer` or `numeric` or `date` histogram with [plot_integer](https://edouard-legoupil.github.io/kobocruncher/reference/plot_integer.html)
  
- * `text` word cloud
+ * `text` word cloud with [plot_text](https://edouard-legoupil.github.io/kobocruncher/reference/plot_text.html)
+ 
+ * In addition, the [kobo_likert](https://edouard-legoupil.github.io/kobocruncher/reference/kobo_likert.html) serach for questions that have common responses in order to output [likert chart](https://edouard-legoupil.github.io/kobocruncher/reference/plot_likert.html)
 
 Later we will see how to configure charts based on `crosstabulation`
 
@@ -379,11 +381,7 @@ class: inverse, center, middle
 
 ###  .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
 
-Get your environment ready
-
-Open a notebook
-
-Compile it with demo dataset
+Get your environment ready, Open a notebook & Compile it with demo dataset
  
  
 Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 
