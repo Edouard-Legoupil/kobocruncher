@@ -45,6 +45,11 @@ Data cleaning remains a last resort option that can be at first minimized by:
  .bg-blue[
 For data quality, prevention is lot more effective, quicker and cheaper than curing. Take the time to thoroughly test the questionnaire before starting full on data collection.
 ]    
+
+
+???
+
+
  
 ---
 
