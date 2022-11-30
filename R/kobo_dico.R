@@ -3,6 +3,8 @@
 #' @title Prepare Analysis plan
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' 
+#' @importFrom tidyselect matches
+#' 
 #' @return A "kobodico" S3 class object (list) formatted to the specifications of "kobocruncher".
 #' @export
 

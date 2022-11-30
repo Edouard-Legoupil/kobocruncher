@@ -22,6 +22,7 @@
 #'  
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @param indicatoradd a list with instruction to create new calculated indicator
 #' 
 #' @export
 

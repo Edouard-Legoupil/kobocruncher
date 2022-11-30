@@ -71,7 +71,7 @@
 kobo_ridl <- function(ridl, 
                       datafolder, 
                       form,
-                      name,
+                      name_of_this_file,
                       republish = "no", 
                       visibility =  "public",
                       stage = "explo_initial"){

@@ -8,6 +8,9 @@
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous scale_y_discrete coord_cartesian labs theme_minimal geom_vline theme element_line element_blank
+#' @importFrom data.table :=  
 #' @export
 
 #' @examples

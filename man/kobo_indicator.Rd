@@ -21,7 +21,8 @@ kobo_indicator(
 
 \item{xlsformpathout}{path to save the xlsform file with newly added indicators}
 
-\item{indicatoradd}{a list containing all key information to add a calculated indicator within the analysis plan}
+\item{indicatoradd}{a list containing all key information to add a calculated
+indicator within the analysis plan}
 }
 \description{
 The function goes through steps:
@@ -29,7 +30,8 @@ The function goes through steps:
 2 - append the one from inidcatoradd if any,
 3 - apply the indicator, i.e. do the calculation,
 4 - re-save all the working indicator definition within the extended xlsform
-5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting
+5 - bind the new indicators in the dictionary in order to use the
+kobo_frame() function for further plotting
 6 - rebuild the plan if indicators are allocated to chapter, subchapter
 
 Example of calculations:
@@ -39,11 +41,15 @@ Example of calculations:
 \item Ratio between 2 numeric variable
 'datalist[\link{1}]$varnum1 / datalist[\link{1}]$varnum2'
 \item Calculation on date - month between data and now calculated in months
-'lubridate::interval( datalist[\link{1}]$datetocheck, lubridate::today()) \%/\%  months(1)'
+'lubridate::interval( datalist[\link{1}]$datetocheck,
+lubridate::today()) \%/\%  months(1)'
 \item Discretization of numeric variable according to quintile
 'Hmisc::cut2(datalist[\link{1}]$varnum, g =5)'
-\item Discretization of numeric variable according to fixed break - for instance case size from integer to categoric
-'cut(datalist[\link{1}]$casesize, breaks = c(0, 1, 2, 3,5,30), labels = c("Case.size.1", "Case.size.2", "Case.size.3", "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
+\item Discretization of numeric variable according to fixed break -
+for instance case size from integer to categoric
+'cut(datalist[\link{1}]$casesize, breaks = c(0, 1, 2, 3,5,30),
+labels = c("Case.size.1", "Case.size.2", "Case.size.3",
+"Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
 \item Aggregate variable from nested frame (aka within repeat) to parent table
 'datalist[\link{2}] |>
 dplyr::select( members.sex, parent_index) |>

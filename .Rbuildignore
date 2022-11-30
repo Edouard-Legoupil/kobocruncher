@@ -10,3 +10,4 @@
 ^_pkgdown\.yml$
 ^kobocruncher\.Rproj$
 ^pkgdown$
+^rsconnect$

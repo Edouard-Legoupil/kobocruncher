@@ -19,6 +19,9 @@
 #' starting the shiny application
 #' @param shiny.server Setting this parameter to \code{TRUE} will return the app in the form of an 
 #' object rather than invoking it. This is useful for deploying \code{app_kobocruncher} via \code{shiny-server}.
+#' 
+#' 
+#' @importFrom shiny runApp shinyOptions
 #' @export
 #'
 

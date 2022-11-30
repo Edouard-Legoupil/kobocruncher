@@ -28,7 +28,13 @@ library(fontawesome)
 
 ## Significant associations & Chi-square 
 
-The Chi-square statistic is the primary statistic used for testing the statistical significance of the cross-tabulation table. Chi-square tests determine whether or not the two variables are independent. If the variables are independent (have no relationship), then the results of the statistical test will be “non-significant” and we are not able to reject the null hypothesis, meaning that we believe there is no relationship between the variables. If the variables are related, then the results of the statistical test will be “statistically significant” and we can reject the null hypothesis, meaning that we can state that there is some relationship between the variables.
+The Chi-square statistic is the primary statistic used for testing the statistical significance of the cross-tabulation table. 
+
+Chi-square tests determine whether or not the two variables are independent:
+
+ * If the variables are independent (have no relationship), then the results of the statistical test will be “non-significant” and we are not able to reject the null hypothesis, meaning that we believe there is no relationship between the variables. 
+ 
+ * If the variables are related, then the results of the statistical test will be “statistically significant” and we can reject the null hypothesis, meaning that we can state that there is some relationship between the variables.
 
 
 ---
@@ -37,11 +43,24 @@ The Chi-square statistic is the primary statistic used for testing the statistic
 
 
 
-Correlation tables only appear if the question has a significant relationship with another indicator. All the answer options for the two questions are seen in the rows and columns and each cell conveys the relationship between the two answer options. Each cell value indicates two characteristics of the relationship: the strength (numeric value) and the direction (- or + sign). The larger the numeric value, the stronger the relationship. Pay attention to the stronger relationships in a table. A + sign indicates same direction (one answer occurs more frequently with the other answer that forms the cell). A – sign indicates opposite direction (one answer occurs less frequently with the other answer). For easier interpretation, focus only on + correlations.
+Correlation tables only appear if the question has a significant relationship with another indicator. All the answer options for the two questions are seen in the rows and columns and each cell conveys the relationship between the two answer options. 
+
+Each cell value indicates two characteristics of the relationship: the strength (numeric value) and the direction (- or + sign). 
+
+The larger the numeric value, the stronger the relationship. 
+
+
+---
+
+## Let's look at an example
 
 
 
-In this example the strongest relationships are identified by the bigger numbers and circles. Choose the strongest or most relevant positive (+) relationship to ease the interpretation. For this table, the following interpretation can be made: “When a person reports that they have witnessed or suffered any incidents (Row ‘Yes’), they are more likely to report that they feel lonely or socially isolated in their current location (Column ‘Strongly Agree’).
+In this example the strongest relationships are identified by the bigger numbers and circles. 
+
+Choose the strongest or most relevant positive (+) relationship to ease the interpretation. 
+
+For this table, the following interpretation can be made: __“When a person reports that they have witnessed or suffered any incidents (Row ‘Yes’), they are more likely to report that they feel lonely or socially isolated in their current location (Column ‘Strongly Agree’)__.
 
 
 

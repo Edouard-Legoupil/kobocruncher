@@ -67,7 +67,7 @@ As you have been working on the data, you want to keep track of it and save your
 <span>  <span class="va">ridl</span>,</span>
 <span>  <span class="va">datafolder</span>,</span>
 <span>  <span class="va">form</span>,</span>
-<span>  <span class="va">name</span>,</span>
+<span>  <span class="va">name_of_this_file</span>,</span>
 <span>  republish <span class="op">=</span> <span class="st">"no"</span>,</span>
 <span>  visibility <span class="op">=</span> <span class="st">"public"</span>,</span>
 <span>  stage <span class="op">=</span> <span class="st">"explo_initial"</span></span>
@@ -88,6 +88,13 @@ As you have been working on the data, you want to keep track of it and save your
 <dd><p>names of the file with the analysis plan</p></dd>
 
 
+<dt>name_of_this_file</dt>
+<dd><p>all files are archived based on the name of notebook you created.
+The function automatically get the name of the notebook where it is run from,
+using
+basename(rstudioapi::getSourceEditorContext()$path )</p></dd>
+
+
 <dt>republish</dt>
 <dd><p>"yes" or "no" Used in order to overwrite. default is "no
 an existing ridl resource if required</p></dd>
@@ -103,13 +110,6 @@ an existing ridl resource if required</p></dd>
 <li><p>interpretation_prez</p></li>
 <li><p>dissemination_story</p></li>
 </ul></dd>
-
-
-<dt>name_of_this_file</dt>
-<dd><p>all files are archived based on the name of notebook you created.
-The function automatically get the name of the notebook where it is run from,
-using
-basename(rstudioapi::getSourceEditorContext()$path )</p></dd>
 
 </dl></div>
     <div class="section level2">

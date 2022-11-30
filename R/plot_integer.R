@@ -6,6 +6,10 @@
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom   ggplot2 theme element_line element_blank element_text aes labs
+#'             theme_minimal geom_hline
+#' 
 #' @export
 
 #' @examples

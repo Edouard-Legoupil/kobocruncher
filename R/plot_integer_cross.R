@@ -7,6 +7,10 @@
 #' @param by_var variable to use for cross tabulation
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom   ggplot2 theme element_line element_blank element_text aes labs
+#'             theme_minimal geom_hline geom_boxplot scale_size_area 
+#'              scale_y_discrete theme_minimal
 #' @export
 
 #' @examples

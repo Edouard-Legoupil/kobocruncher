@@ -7,7 +7,8 @@
 #'   2 - append the one from inidcatoradd if any, 
 #'   3 - apply the indicator, i.e. do the calculation,
 #'   4 - re-save all the working indicator definition within the extended xlsform  
-#'   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
+#'   5 - bind the new indicators in the dictionary in order to use the
+#'        kobo_frame() function for further plotting 
 #'   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
 #'   
 #'   Example of calculations:
@@ -21,13 +22,17 @@
 #'   
 #'   
 #'   3. Calculation on date - month between data and now calculated in months
-#'   'lubridate::interval( datalist[[1]]$datetocheck, lubridate::today()) %/%  months(1)'
+#'   'lubridate::interval( datalist[[1]]$datetocheck, 
+#'                         lubridate::today()) %/%  months(1)'
 #'   
 #'   4. Discretization of numeric variable according to quintile
 #'   'Hmisc::cut2(datalist[[1]]$varnum, g =5)'
 #'   
-#'   5. Discretization of numeric variable according to fixed break - for instance case size from integer to categoric
-#'   'cut(datalist[[1]]$casesize, breaks = c(0, 1, 2, 3,5,30), labels = c("Case.size.1", "Case.size.2", "Case.size.3", "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
+#'   5. Discretization of numeric variable according to fixed break - 
+#'   for instance case size from integer to categoric
+#'   'cut(datalist[[1]]$casesize, breaks = c(0, 1, 2, 3,5,30), 
+#'   labels = c("Case.size.1", "Case.size.2", "Case.size.3", 
+#'   "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
 #'   
 #'   6. Aggregate variable from nested frame (aka within repeat) to parent table
 #'   'datalist[[2]] |>
@@ -39,7 +44,8 @@
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
-#' @param indicatoradd a list containing all key information to add a calculated indicator within the analysis plan
+#' @param indicatoradd a list containing all key information to add a calculated 
+#'                indicator within the analysis plan
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' @param xlsformpathout path to save the xlsform file with newly added indicators
 #' 

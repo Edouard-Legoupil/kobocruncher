@@ -14,16 +14,16 @@
 #   template_create_dir = TRUE
 # ) 
 #' 
-#' @param   datafolder: "data-raw" This is the default folder where to put you data in
-#' @param   ridl: "ridlproject" Name of the ridl project where you data is documented and archived
-#' @param   data: "data.xlsx" Name of the data file
-#' @param   form: "form.xlsx" Name of the xlsform - 
-#' @param   datasource: "Study name reference" ## String used in caption for all your charts
-#' @param   publish: "no" Put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c
-#' @param   republish: "no"
-#' @param   visibility: "public"
-#' @param   stage: "exploration_initial" You may change this to exploration_advanced if you configuring many 
-#' @param   language: "" Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
+#' @param   datafolder  "data-raw" This is the default folder where to put you data in
+#' @param   ridl "ridlproject" Name of the ridl project where you data is documented and archived
+#' @param   data "data.xlsx" Name of the data file
+#' @param   form "form.xlsx" Name of the xlsform - 
+#' @param   datasource "Study name reference" ## String used in caption for all your charts
+#' @param   publish "no" Put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c
+#' @param   republish "no"
+#' @param   visibility "public"
+#' @param   stage "exploration_initial" You may change this to exploration_advanced if you configuring many 
+#' @param   language "" Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
 #' @param folder folder within your project where to put the generated report. 
 #' Folder will be created if it does not exist
 #' 

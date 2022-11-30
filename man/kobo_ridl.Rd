@@ -8,7 +8,7 @@ kobo_ridl(
   ridl,
   datafolder,
   form,
-  name,
+  name_of_this_file,
   republish = "no",
   visibility = "public",
   stage = "explo_initial"
@@ -20,6 +20,11 @@ kobo_ridl(
 \item{datafolder}{folder where the data used by the notebook are stored}
 
 \item{form}{names of the file with the analysis plan}
+
+\item{name_of_this_file}{all files are archived based on the name of notebook you created.
+The function automatically get the name of the notebook where it is run from,
+using
+basename(rstudioapi::getSourceEditorContext()$path )}
 
 \item{republish}{"yes" or "no" Used in order to overwrite. default is "no
 an existing ridl resource if required}
@@ -33,11 +38,6 @@ an existing ridl resource if required}
 \item interpretation_prez
 \item dissemination_story
 }}
-
-\item{name_of_this_file}{all files are archived based on the name of notebook you created.
-The function automatically get the name of the notebook where it is run from,
-using
-basename(rstudioapi::getSourceEditorContext()$path )}
 }
 \value{
 nothing all analysis files are added as a resources

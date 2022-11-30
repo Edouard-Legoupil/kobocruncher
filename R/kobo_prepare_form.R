@@ -34,6 +34,8 @@
 #' @param xlsformpathout The full path and filename of the xlsform to be accessed (has to be xlsx file)
 #' @param label_language Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file -default is  ::english (en)
 #' @param ridl If available, it will prefill the RIDL info through what was already recorded there
+#' 
+#' @importFrom tidyselect where
 #'
 #' @export 
 #' @examples

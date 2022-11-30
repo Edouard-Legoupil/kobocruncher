@@ -7,9 +7,13 @@
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' 
-#' @importFrom tm tm_map Corpus content_transformer TermDocumentMatrix
+#' @importFrom tm tm_map Corpus content_transformer
+#'              TermDocumentMatrix stopwords
 #'                
 #' @importFrom ggwordcloud geom_text_wordcloud
+#' 
+#' @importFrom ggplot2 labs theme_minimal
+#' 
 #' @importFrom SnowballC wordStem
 #' 
 #' 

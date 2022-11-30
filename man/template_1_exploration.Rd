@@ -19,28 +19,28 @@ template_1_exploration(
 )
 }
 \arguments{
+\item{datafolder}{"data-raw" This is the default folder where to put you data in}
+
+\item{ridl}{"ridlproject" Name of the ridl project where you data is documented and archived}
+
+\item{data}{"data.xlsx" Name of the data file}
+
+\item{form}{"form.xlsx" Name of the xlsform -}
+
+\item{datasource}{"Study name reference" ## String used in caption for all your charts}
+
+\item{publish}{"no" Put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c}
+
+\item{republish}{"no"}
+
+\item{visibility}{"public"}
+
+\item{stage}{"exploration_initial" You may change this to exploration_advanced if you configuring many}
+
+\item{language}{"" Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)}
+
 \item{folder}{folder within your project where to put the generated report.
 Folder will be created if it does not exist}
-
-\item{datafolder:}{"data-raw" This is the default folder where to put you data in}
-
-\item{ridl:}{"ridlproject" Name of the ridl project where you data is documented and archived}
-
-\item{data:}{"data.xlsx" Name of the data file}
-
-\item{form:}{"form.xlsx" Name of the xlsform -}
-
-\item{datasource:}{"Study name reference" ## String used in caption for all your charts}
-
-\item{publish:}{"no" Put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c}
-
-\item{republish:}{"no"}
-
-\item{visibility:}{"public"}
-
-\item{stage:}{"exploration_initial" You may change this to exploration_advanced if you configuring many}
-
-\item{language:}{"" Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)}
 }
 \value{
 nothing the file for the report is generated

@@ -10,6 +10,8 @@ kobo_clean(datalist, dico, indicatoradd = NULL)
 \item{datalist}{An object of the "datalist" class as defined in kobocruncher}
 
 \item{dico}{An object of the "kobodico" class format as defined in kobocruncher}
+
+\item{indicatoradd}{a list with instruction to create new calculated indicator}
 }
 \description{
 Basic data cleaning is often required. This functions covers tow use cases:

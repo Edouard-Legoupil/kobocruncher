@@ -12,6 +12,16 @@
 #' @param dataframei name of the frame within the dataset where to look for the data
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom stats setNames
+#' @importFrom dplyr if_any everything mutate_all funs 
+#' @importFrom ggplot2 labs theme_minimal theme margin
+#' @importFrom likert likert
+#' 
+#'  
+#' 
+#' 
+#' 
 #' @export
 
 #' @examples

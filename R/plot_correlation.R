@@ -10,6 +10,10 @@
 #' @param by_var variable to use for cross tabulation
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom tidyselect all_of
+#' @importFrom ggplot2 theme element_line element_blank element_text
+#' 
 #' @export
 
 #' @examples

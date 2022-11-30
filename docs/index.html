@@ -80,28 +80,28 @@
 <h2 id="tutorial">Tutorial<a class="anchor" aria-label="anchor" href="#tutorial"></a>
 </h2>
 <p><code>kobocruncher</code> aims at helping <a href="https://humanitarian-user-group.github.io/" class="external-link">humanitarian data analysts</a> to focus in data interpretation by saving the time needed to quickly generate the graphs and charts required to discover insights from a dataset. It also ensure analysis <strong>reproducibility</strong> through a separation of the analysis configuration and the analysis process. The package allows to account for sample weights and hierarchical dataset structure (both capacities that are not available through the default <a href="http://support.kobotoolbox.org/articles/2847676-viewing-and-creating-custom-reports" class="external-link">reporting engine</a> or the <a href="http://support.kobotoolbox.org/articles/592387-using-the-excel-analyzer" class="external-link">excel-analyzer</a>).</p>
-<p>A series of presentation / tutorial are accessible here:</p>
+<p>Presentations / tutorials for a one day training workshop are accessible here:</p>
 <ul>
 <li>
 <a href="tutorial/00-Intro.html">00-Intro</a><br>
 </li>
 <li>
-<a href="tutorial/01-First_Report.html">01-First_Report</a><br>
+<a href="tutorial/01-First_Report.html">01-First Report</a><br>
 </li>
 <li>
 <a href="tutorial/02-Relabeling.html">02-Relabeling</a><br>
 </li>
 <li>
-<a href="tutorial/03-Grouping_Questions.html">03-Grouping_Questions</a><br>
+<a href="tutorial/03-Grouping_Questions.html">03-Grouping Questions</a><br>
 </li>
 <li>
-<a href="tutorial/04-Setting_Crosstabulation.html">04-Setting_Crosstabulation</a><br>
+<a href="tutorial/04-Setting_Crosstabulation.html">04-Setting Crosstabulation</a><br>
 </li>
 <li>
-<a href="tutorial/05-Searching_Asssociation.html">05-Searching_Asssociation</a><br>
+<a href="tutorial/05-Searching_Asssociation.html">05-Searching Asssociation</a><br>
 </li>
 <li>
-<a href="tutorial/06-Cleaning_and_Indicator_calculation.html">06-Cleaning_and_Indicator_calculation</a><br>
+<a href="tutorial/06-Cleaning_and_Indicator_calculation.html">06-Cleaning and Indicator Calculation</a><br>
 </li>
 <li>
 <a href="tutorial/07-Anonymising.html">07-Anonymising</a><br>
@@ -129,9 +129,17 @@
 <p>Contributions to the packages are welcome. Please read first the <a href="CONTRIBUTING.html">contribution guidelines</a>, follow the <a href="CODE_OF_CONDUCT.html">code of conduct</a> and use the <a href="ISSUE_TEMPLATE.html">issue template</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
+<h2 id="references-and-rational-for-the-package">References and rational for the package<a class="anchor" aria-label="anchor" href="#references-and-rational-for-the-package"></a>
 </h2>
-<p><a href="https://boxuancui.github.io/DataExplorer/" class="external-link uri">https://boxuancui.github.io/DataExplorer/</a></p>
+<p>The package falls into the category of Automatic Data Exploration package (see an <a href="https://github.com/mstaniak/autoEDA-resources" class="external-link">extensive review here</a>) and mostly act as a <strong>wrapper</strong> for different specialized packages from the <a href="https://www.tidyverse.org/" class="external-link">tidyverse</a> .</p>
+<p>Compare to those packages, <code>kobocruncher</code> provides:</p>
+<ul>
+<li><p>An integration of all the data processing stages, not only visualization</p></li>
+<li><p>An approach where most of the exploration is documented in the original <code>xlsform</code> used to collect the data as UNHCR standard for Survey Data Collection is based on Kobotoolbox. This allows for <a href="https://unhcr-americas.github.io/reproducibility/index.html" class="external-link">reproducible analysis</a></p></li>
+<li><p>Multiple notebook templates with standard charts designed to be interpretable by a non-technical audience</p></li>
+<li><p>Relabeling functions and Questions grouping ability</p></li>
+<li><p>Full integration with UNHCR Brand Style</p></li>
+</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

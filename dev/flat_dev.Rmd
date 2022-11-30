@@ -136,6 +136,8 @@ Now we can extend the xlsform that was used to document key next steps in the da
 #' @param xlsformpathout The full path and filename of the xlsform to be accessed (has to be xlsx file)
 #' @param label_language Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file -default is  ::english (en)
 #' @param ridl If available, it will prefill the RIDL info through what was already recorded there
+#' 
+#' @importFrom tidyselect where
 #'
 #' @export 
 kobo_prepare_form <- function(xlsformpath,
@@ -548,6 +550,8 @@ kobo_prepare_form <- function(xlsformpath,
 #' @title Prepare Analysis plan
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' 
+#' @importFrom tidyselect matches
+#' 
 #' @return A "kobodico" S3 class object (list) formatted to the specifications of "kobocruncher".
 #' @export
 
@@ -840,6 +844,7 @@ knitr::kable(utils::head(indicator, 10))
 #'  
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' @param indicatoradd a list with instruction to create new calculated indicator
 #' 
 #' @export
 
@@ -890,7 +895,8 @@ Indicator calculation
 #'   2 - append the one from inidcatoradd if any, 
 #'   3 - apply the indicator, i.e. do the calculation,
 #'   4 - re-save all the working indicator definition within the extended xlsform  
-#'   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
+#'   5 - bind the new indicators in the dictionary in order to use the
+#'        kobo_frame() function for further plotting 
 #'   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
 #'   
 #'   Example of calculations:
@@ -904,13 +910,17 @@ Indicator calculation
 #'   
 #'   
 #'   3. Calculation on date - month between data and now calculated in months
-#'   'lubridate::interval( datalist[[1]]$datetocheck, lubridate::today()) %/%  months(1)'
+#'   'lubridate::interval( datalist[[1]]$datetocheck, 
+#'                         lubridate::today()) %/%  months(1)'
 #'   
 #'   4. Discretization of numeric variable according to quintile
 #'   'Hmisc::cut2(datalist[[1]]$varnum, g =5)'
 #'   
-#'   5. Discretization of numeric variable according to fixed break - for instance case size from integer to categoric
-#'   'cut(datalist[[1]]$casesize, breaks = c(0, 1, 2, 3,5,30), labels = c("Case.size.1", "Case.size.2", "Case.size.3", "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
+#'   5. Discretization of numeric variable according to fixed break - 
+#'   for instance case size from integer to categoric
+#'   'cut(datalist[[1]]$casesize, breaks = c(0, 1, 2, 3,5,30), 
+#'   labels = c("Case.size.1", "Case.size.2", "Case.size.3", 
+#'   "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
 #'   
 #'   6. Aggregate variable from nested frame (aka within repeat) to parent table
 #'   'datalist[[2]] |>
@@ -922,7 +932,8 @@ Indicator calculation
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
-#' @param indicatoradd a list containing all key information to add a calculated indicator within the analysis plan
+#' @param indicatoradd a list containing all key information to add a calculated 
+#'                indicator within the analysis plan
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' @param xlsformpathout path to save the xlsform file with newly added indicators
 #' 
@@ -1390,6 +1401,10 @@ label_choiceset(dico = dico,
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous scale_y_discrete coord_cartesian labs theme_minimal geom_vline theme element_line element_blank
+#' @importFrom data.table := 
+#' 
 #' @export
 
 plot_select_one <- function(datalist  ,
@@ -1534,6 +1549,9 @@ plot_select_one(datalist = datalist,
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous scale_y_discrete coord_cartesian labs theme_minimal geom_vline theme element_line element_blank
+#' @importFrom data.table :=  
 #' @export
 
 plot_select_multiple <- function(datalist = datalist, 
@@ -1685,6 +1703,10 @@ plot_select_multiple(datalist = datalist,
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom   ggplot2 theme element_line element_blank element_text aes labs
+#'             theme_minimal geom_hline
+#' 
 #' @export
 
 plot_integer <- function(datalist = datalist, 
@@ -1776,9 +1798,13 @@ plot_integer(datalist = datalist,
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' 
-#' @importFrom tm tm_map Corpus content_transformer TermDocumentMatrix
+#' @importFrom tm tm_map Corpus content_transformer
+#'              TermDocumentMatrix stopwords
 #'                
 #' @importFrom ggwordcloud geom_text_wordcloud
+#' 
+#' @importFrom ggplot2 labs theme_minimal
+#' 
 #' @importFrom SnowballC wordStem
 #' 
 #' 
@@ -1933,6 +1959,13 @@ plot_text(datalist = datalist,
 #' @param by_var variable to use for cross tabulation
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom ggplot2 aes  geom_col geom_label 
+#'             scale_x_continuous scale_y_discrete 
+#'             coord_cartesian labs theme_minimal 
+#'             geom_vline theme element_line element_blank
+#'             as_labeller facet_wrap
+#' @importFrom data.table :=  
 #' @export
 
 plot_select_one_cross <- function(datalist = datalist,
@@ -2095,6 +2128,12 @@ plot_select_one_cross(datalist = datalist,
 #' @param by_var variable to use for cross tabulation
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous
+#'            scale_y_discrete coord_cartesian labs theme_minimal 
+#'            geom_vline theme element_line element_blank facet_wrap as_labeller 
+#' @importFrom data.table :=  
+#' 
 #' @export
 
 plot_select_multiple_cross <- function(datalist = datalist,
@@ -2260,6 +2299,10 @@ plot_select_multiple_cross(datalist = datalist,
 #' @param by_var variable to use for cross tabulation
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom   ggplot2 theme element_line element_blank element_text aes labs
+#'             theme_minimal geom_hline geom_boxplot scale_size_area 
+#'              scale_y_discrete theme_minimal
 #' @export
 
 plot_integer_cross <- function(datalist = datalist, 
@@ -2371,6 +2414,10 @@ plot_integer_cross(datalist = datalist,
 #' @param by_var variable to use for cross tabulation
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom tidyselect all_of
+#' @importFrom ggplot2 theme element_line element_blank element_text
+#' 
 #' @export
 
 plot_correlation <- function(datalist = datalist, 
@@ -2575,6 +2622,16 @@ plot_correlation(datalist = datalist,
 #' @param dataframei name of the frame within the dataset where to look for the data
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
+#' 
+#' @importFrom stats setNames
+#' @importFrom dplyr if_any everything mutate_all funs 
+#' @importFrom ggplot2 labs theme_minimal theme margin
+#' @importFrom likert likert
+#' 
+#'  
+#' 
+#' 
+#' 
 #' @export
 
 plot_likert <- function(datalist = datalist,
@@ -3039,7 +3096,7 @@ kobo_likert(datalist = datalistlikert,
 kobo_ridl <- function(ridl, 
                       datafolder, 
                       form,
-                      name,
+                      name_of_this_file,
                       republish = "no", 
                       visibility =  "public",
                       stage = "explo_initial"){
@@ -3213,16 +3270,16 @@ kobo_ridl <- function(ridl,
 #   template_create_dir = TRUE
 # ) 
 #' 
-#' @param   datafolder: "data-raw" This is the default folder where to put you data in
-#' @param   ridl: "ridlproject" Name of the ridl project where you data is documented and archived
-#' @param   data: "data.xlsx" Name of the data file
-#' @param   form: "form.xlsx" Name of the xlsform - 
-#' @param   datasource: "Study name reference" ## String used in caption for all your charts
-#' @param   publish: "no" Put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c
-#' @param   republish: "no"
-#' @param   visibility: "public"
-#' @param   stage: "exploration_initial" You may change this to exploration_advanced if you configuring many 
-#' @param   language: "" Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
+#' @param   datafolder  "data-raw" This is the default folder where to put you data in
+#' @param   ridl "ridlproject" Name of the ridl project where you data is documented and archived
+#' @param   data "data.xlsx" Name of the data file
+#' @param   form "form.xlsx" Name of the xlsform - 
+#' @param   datasource "Study name reference" ## String used in caption for all your charts
+#' @param   publish "no" Put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c
+#' @param   republish "no"
+#' @param   visibility "public"
+#' @param   stage "exploration_initial" You may change this to exploration_advanced if you configuring many 
+#' @param   language "" Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
 #' @param folder folder within your project where to put the generated report. 
 #' Folder will be created if it does not exist
 #' 
@@ -3356,6 +3413,9 @@ It will generate a PDF or an paginated HTML page
 #' starting the shiny application
 #' @param shiny.server Setting this parameter to \code{TRUE} will return the app in the form of an 
 #' object rather than invoking it. This is useful for deploying \code{app_kobocruncher} via \code{shiny-server}.
+#' 
+#' 
+#' @importFrom shiny runApp shinyOptions
 #' @export
 #'
 
