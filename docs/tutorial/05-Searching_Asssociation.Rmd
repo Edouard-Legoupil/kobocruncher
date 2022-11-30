@@ -155,7 +155,7 @@ class: inverse, center, middle
 ### .large[.white[`r fontawesome::fa("fas fa-clock"  )  `] **Let's take a break! **] 
  
 ```{r echo=FALSE}
-countdown::countdown(minutes = 5,
+countdown::countdown(minutes = 10,
                      seconds = 0,
                      margin = "5%",
                      font_size = "8em",

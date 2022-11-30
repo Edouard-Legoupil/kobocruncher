@@ -117,6 +117,77 @@ In other cases, cleaning will involve recoding some variables
 ## New calculated variables
  
  
+ * filters on specific criteria
+ 
+ 
+ * Create a filters on specific criteria 
+ 
+ * Ratio between 2 numeric variable 
+ 
+ * Calculation on date 
+ 
+ * Discretization of numeric variable according to quintile 
+ 
+ * Discretization of numeric variable according to fixed break 
+ 
+ * Aggregate variable from nested frame (aka within repeat) to parent table 
+ 
+ * filters on specific criteria
+ 
+---
+
+## Create a filters on specific criteria 
+
+```{r eval=FALSE, include=TRUE}
+dplyr::if_else(datalist[1]$variable =="criteria", "yes","no")
+```
+
+---
+
+## Ratio between 2 numeric variable 
+
+```{r eval=FALSE, include=TRUE}
+datalist[1]$varnum1 / datalist[1]$varnum2
+```
+
+ 
+---
+
+## Calculation on date 
+
+```{r eval=FALSE, include=TRUE}
+lubridate::interval( datalist[1]$datetocheck, lubridate::today()) %/% months(1)
+```
+
+ 
+---
+
+## Discretization of numeric variable according to quintile 
+
+```{r eval=FALSE, include=TRUE}
+Hmisc::cut2(datalist[1]$varnum, g =5)
+```
+
+ 
+---
+
+## Discretization of numeric variable according to fixed break 
+
+for instance case size from integer to categoric
+
+```{r eval=FALSE, include=TRUE}
+cut(datalist[1]$casesize, breaks = c(0, 1, 2, 3,5,30), labels = c("Case.size.1", "Case.size.2", "Case.size.3", "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)
+```
+
+ 
+---
+
+## Aggregate variable from nested frame (aka within repeat) to parent table 
+
+```{r eval=FALSE, include=TRUE}
+datalist[2] |> dplyr::select( members.sex, parent_index) |> tidyr::gather( parent_index, members.sex) |> dplyr::count(parent_index, members.sex) |> tidyr::spread(members.sex, n, fill = 0) |> dplyr::select( female)
+```
+
 
 
 
@@ -130,7 +201,7 @@ class: inverse, center, middle
 
  
 ```{r echo=FALSE}
-countdown::countdown(minutes = 5,
+countdown::countdown(minutes = 10,
                      seconds = 0,
                      margin = "5%",
                      font_size = "8em",
@@ -163,4 +234,4 @@ countdown::countdown(minutes = 5,
 
 __Next session__:  
 
-[07-Anonymising](07-Anonymising.html) In order to provide other people to work with the data, a first level of data anonymisation should be implemented
+[07-Anonymising In order to provide other people to work with the data, a first level of data anonymisation should be implemented](07-Anonymising.html)
