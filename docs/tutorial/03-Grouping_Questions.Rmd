@@ -110,16 +110,43 @@ class: inverse, center, middle
 
 # TIME TO PRACTISE ON YOUR OWN! 
 
-.large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+###  .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
 
  Download again locally and fill in the chapter and sub-chapter column
  
  Upload and knit again your report
 
 
+Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 
+ 
 ---
 class: inverse, center, middle
 
-# Thank you
 
-__Next session__:  [04-Setting_Crosstabulation](04-Setting_Crosstabulation.html) an essential step during data exploration is compare the survey results between different respondent segments
+
+### .large[.white[`r fontawesome::fa("fas fa-clock"  )  `] **Let's take a break! **] 
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+
+__Next session__: 
+
+[04-Setting_Crosstabulation an essential step during data exploration is compare the survey results between different respondent segments](04-Setting_Crosstabulation.html)

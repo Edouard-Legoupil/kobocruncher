@@ -185,7 +185,7 @@ Implementing all the step above is challenging :
 
 ---
 
-## You do not need to be expert as soon as you follow a recipes. 
+## You do not need to be expert as soon as you follow recipes. 
 
 KoboCruncher is an R package designed to take care of the processing component so that the technical team can focus on the interpretation.
 
@@ -206,15 +206,27 @@ class: inverse center middle
 
 # Workshop Overview
 
+###  The sessions are organised to guide you through the different steps through a full day of training:
+
+In the morning, explaining the main concepts
+
+Afternoon with data cleaning, indicator calculations and basic anonymisation
+
 ---
 
-##  The sessions are organised to guide you through the different steps:
+## Morning sessions: 
 
   *  [01-First_Report](01-First_Report.html) will show how to get the first iteration of your data exploration report
   *  [02-Relabeling](02-Relabeling.html) the way your survey variables are labelled for data collection is not always optimal when the goal is display the resulting information, hence you need to relabel (mostly shorten and simplify) the survey content
   *  [03-Grouping_Questions](03-Grouping_Questions.html) Within a questionnaire, questions follows a certain sequence in order to facilitate the interview. When exploring the results, it is often required to regroup the questions in a different way and inline with key research questions
   *  [04-Setting_Crosstabulation](04-Setting_Crosstabulation.html) an essential step during data exploration is compare the survey results between different respondent segments
   *  [05-Searching_Asssociation](05-Searching_Asssociation.html) beyond the cross-tabulation, it is key to check how variables relate to each other. This can be done with statistical test that verify if variables are significantly associated
+
+  
+---
+
+## Afternoon session: 
+
   *  [06-Cleaning_and_Indicator_calculation](06-Cleaning_and_Indicator_calculation.html) after reviewing the first iteration of the reports, we can identify potential data quality issue to fix and create calculated variable and indicator 
   *  [07-Anonymising](07-Anonymising.html) In order to provide other people to work with the data, a first level of data anonymisation should be implemented
   *  [08-Weighting](08-Weighting.html) If the data was created through a probabilistic selection sampling approach, then we can apply weighting to the data before and regenerate the report so that those weights are reflected
@@ -231,6 +243,8 @@ class: inverse, center, middle
 
 # Thank you
 
-Do not hesitate to raise your questions in the ticket system so the training content can be improved accordingly
+Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) so the training content can be improved accordingly!
 
-__Next session__: [02-Relabeling](02-Relabeling.html) the way your survey variables are labelled for data collection is not always optimal when the goal is display the resulting information, hence you need to relabel (mostly shorten and simplify) the survey content
+__Next session__: 
+
+ [01-First_Report will show how to get the first iteration of your data exploration report](01-First_Report.html) 

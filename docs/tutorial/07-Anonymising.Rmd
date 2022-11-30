@@ -25,53 +25,192 @@ library(unhcrthemes)
 library(fontawesome)
 ```
 
-##  Why anonymising? 
 
+ 
+# Dissemination of microdata (i.e. raw survey data) is crucial 
+
+ * Reducing duplication in data collection; 
+ 
+ * Improving the reliability and relevance of data; 
+ 
+ * Supporting research and promoting development of new tools for using data; 
+ 
+ * Enhancing the credibility of UNHCR as an authoritative source of Information on refugees. 
+ 
+
+---
+
+##  But requires first proper anonymisation
+
+
+Suppose a hypothetical intruder has access to some released microdata and attempts to identify or find out more information about a particular respondent. Disclosure, also known as re-identification, occurs when the intruder reveals previously unknown information about a respondent by using the released data.
+
+Three types of disclosure can be distinguished:  
+
+ * __Identity disclosure__ occurs if the intruder associates a known individual with a released data record. For example, the intruder links a released data record with external information, or identifies a respondent with extreme data values. In this case, an intruder can exploit a small subset of variables to make the linkage, and once the linkage is successful, the intruder has access to all other information in the released data related to the specific respondent.
+ 
+ * __Attribute disclosure__ occurs if the intruder is able to determine some new characteristics of an individual based on the information available in the released data. For example, if a hospital publishes data showing that all female patients aged 56 to 60 have cancer, an intruder then knows the medical condition of any female patient aged 56 to 60 without having to identify the specific individual. 
+ 
+ * __Inferential disclosure__ occurs if the intruder is able to determine the value of some characteristic of an individual more accurately with the released data than otherwise would have been possible. For example, with a highly predictive regression model, an intruder may be able to infer a respondent's sensitive income information using attributes recorded in the data, leading to inferential disclosure.
+
+???
 
 >  Even when personal data is not being collected it still may be appropriate to apply the methodology since quasi-identifiable data  or other sensitive data could lead to personal identification or should not be shared.
+https://jangorecki.github.io/blog/2014-11-07/Data-Anonymization-in-R.html
+ 
+
+Thi is based on the World Bank sponsored [disclosure Control Toolbox](http://www.ihsn.org/software/disclosure-control-toolbox) for the R language and built on the recommendations from the [International Household Survey Network](http://ihsn.org/sites/default/files/resources/ihsn-working-paper-007-Oct27.pdf).
+ 
+Per default, it is assumed that __direct identifiers__ (such as name, progres ID, telephone, GPS locations) values are removed.
+ 
+---
+
+## Disclosure risks and information loss
 
 
-  https://jangorecki.github.io/blog/2014-11-07/Data-Anonymization-in-R.html
-  
-  
+Data anonymisation is always a trade-off between disclosure risks and information loss. 
+
+The objective is to modify data in such a way that both the disclosure risk and the information loss caused are acceptably low. 
+
+There's no standards based on risk measurement as the risk measurement is linked to both the level of conservatism in the number of selected variables that are considered to be "at risk" and on the trust in the data analyst..
+
+
+
+
+
+---
+ 
+## Identify potential statistical disclosure risks 
+ 
+ * Risk linked to each records in the dataset: __Global disclosure risk__ &  __Record-level disclosure risk__; 
+ 
+ * Risk linked to combination of categoric variables in the dataset: __k-anonymity__ &  __l-diversity__: ; 
+ 
+ * Risk linked to specific values for numeric variables in the dataset: various index based on __Robust Mahalanobis distances__ are calculated;  
+ 
+---
+ 
+## Anonymisation treatment  
+
+Perturbative and non-pertubative approaches to decrease risks  can be used:  
+
+ * for __categoric__ variable: Recoding, suppressing, post randomization , 
+ 
+ * for __continuous__ variables: Discretisation (convert from continuous to categoric), Adding noise, micro-aggregation, swapping 
+ 
+Once those additional treatments are applied, this report can be then regenerated till the ratio risk/loss is acceptable.
+
+ 
+ .bg-blue[
+__Global recoding__ is a non-perturbative method that can be equally applied to both categorical and continuous key variables. The basic idea of recoding a categorical variable is to combine several categories into a new, less informative category. A frequent use case is the recoding of age given in years into age-groups. If the method is applied to a continuous variable, it means to discretize the variable. 
+]    
+
+
+---
+
+## Variables for risk scenarios
+
+To assess disclosure risk, one must make realistic assumptions about the information data users might have at hand to match against the micro dataset; these assumptions are called disclosure risk scenarios.
+
+This goes hand in hand with the selection of categorical key variables because the choice these identifying variables defines a specific disclosure risk scenario. The specific set of chosen key variables has direct influence on the risk assessment. 
+
 --- 
 
-##  What variables to consider?
+##  What variables to consider when configuring the anonymisation (define the intrusion scenerio) ?
 
   
- * __Direct identifiers__:	Can be directly used to identify an individual. E.g. Name, Address, Date of birth, Telephone number, GPS location  
- * __Quasi- identifiers__:	Can be used to identify individuals when it is joined with other information. E.g. Age, Salary, Next of kin, School name, Place of work 
+ * __Direct identifiers__:	Can be directly used to identify an individual. E.g. Name, Address, Date of birth, Telephone number, GPS location. Metadata, Data about who, where and how the data is collected is often stored separately to the main data and can be used identify individuals and should usually be removed
  
- *  __Sensitive information__: Community identifiable information	Might not identify an individual but could put an individual or group at risk. E.g. Gender, Ethnicity, Religious belief 
+ * __Quasi- identifiers__ also called _implicit identifiers_ or _key variables_:	Can be used in combination  to re-identify respondents in the released dataset when it is joined with other information. (E.g. gender, age, occupation, specific needs, region..().  .  
  
- * __Meta data__: Data about who, where and how the data is collected is often stored separately to the main data and can be used identify individuals
+ *  __Sensitive information__: Variables whose values must not be discovered for any respondent. Determination is often subject to legal and ethical concerns (Protection risk, Vulnerabilities, Ethnicity, Religious belief ..) Such information might not identify an individual but could put an individual or group at risk.  
+   
+ 
+---
+
+## How to set it up in Kobocruncher?
+
+
+By default the initial exploration report does not include anonymisation as it depends on your data:
+
+
+ 1. Open the expanded xlsform 
+ 
+ 2. Categorize the variable in the `anonymise` column 
+ 
+   * `remove`
+   
+   * `key` 
+   
+   * `sensitve`
+   
+ 
+---
+
+## What will you get then?
+
+Once you regenerate the report, the function Kobo_anonymise will be automatically generated and output some information about statistical disclosure risk of your dataset
+
+ * Key metrics
+ 
+ * Visual representation
+
+
+ .bg-blue[
+
+Those measurement will automatically appear in the report. Obviously a revision of the intrusion scenerio or removing certain variable for a recoded version will change the metrics
+
+Some automatic recoding and variable removing will be applied to the data and used in the rest of the data exploration 
+
+A new version of the dataset will be save in the data folder and can be uploaded to RIDL for broade data sharing.
+
+]   
+  
+
+
+---
+class: inverse, center, middle
+
+# TIME TO PRACTISE ON YOUR OWN! 
+
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+ - Open again locally and fill in the anonymisation column
+ 
+ - Regenerate the report and check the results
  
 
-## Anonymisation treatment
-
-The following are different anonymisation actions that can be performed on sensitive fields.
-
-The type of anonymisation should be dictated by the desired use of the data. 
-
-A good approach to follow is to start from the minimum data required, and then to identify if any of those fields should be obscured.
-
-
- * __Remove	Data __: is removed entirely from the data set. The data is preserved in the original file. 
- 
- * __Reference __: Data is removed entirely from the data set and is copied into a reference file. A random unique identifier field is added to the reference file and the data set so that they can be joined together in future.  The reference file is never shared and the data is also preserved in the original file. \cr
-}
-
---- 
-
-
-
-
+Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 
  
 ---
 class: inverse, center, middle
 
-# Thank you
 
 
-__Next session__:   [08-Weighting](08-Weighting.html) If the data was created through a probabilistic selection sampling approach, then we can apply weighting to the data before and regenerate the report so that those weights are reflected
+### .large[.white[`r fontawesome::fa("fas fa-clock"  )  `] **Let's take a break! **] 
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+
+__Next session__:  
+
+[08-Weighting If the data was created through a probabilistic selection sampling approach, then we can apply weighting to the data before and regenerate the report so that those weights are reflected](08-Weighting.html)
 

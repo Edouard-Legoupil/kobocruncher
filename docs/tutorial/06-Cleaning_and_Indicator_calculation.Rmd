@@ -1,7 +1,7 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 6 - Cleaning and Indicator Calculation"
-author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](5-Searching_Asssociation.html) -- [Link to Next Session](07-Anonymising.html)  "
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](05-Searching_Asssociation.html) -- [Link to Next Session](07-Anonymising.html)  "
 date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
@@ -25,10 +25,77 @@ library(unhcrthemes)
 library(fontawesome)
 ```
 
+ 
+
+## When do yo need to clean the data?
+
+Survey data cleaning involves identifying and removing responses from individuals who either don’t match your target audience criteria or didn’t answer your questions thoughtfully. This filtering is done to avoid drawing misleading conclusions. 
+
+Data cleaning remains a last resort option that can be at first minimized by:
+
+ * .large[__Quality of questionnaire design__] not only to minimize social desirability and biased questions but also to ensure that the interview duration is limited (_ideally less than 45 minutes for a face to face interview and less than 25 minutes for a telephone interview_)
+
+ * .large[__Good form encoding__] - with well defined [constraints](https://xlsform.org/en/#constraints) and [skip logic](https://xlsform.org/en/#relevant) and [requirement](https://xlsform.org/en/#required) to avoid Inconsistent Responses, sufficient testing to ensure that the questions are well understood and the responses options are covering well the options
+ 
+ * .large[__Good training for the data enumerator__] and detailed [question hints](https://xlsform.org/en/#hints) so the enumerators fills correctly the questionnaire
+ 
+ * .large[__Sufficient data collection quality monitoring__] to identify, prevent and cure issues early on. This can be done through [High Frequency Check](https://unhcr.github.io/HighFrequencyChecks/docs/). This should help to  flag Straightlining / Patterned Responses when an enumerator is using the same answer option ("B") over and over (for instance  for at least five rows in a grid)...  
+ 
+ 
+ .bg-blue[
+For data quality, prevention is lot more effective, quicker and cheaper than curing. Take the time to thoroughly test the questionnaire before starting full on data collection.
+]    
+ 
+---
+
+## Situation when you will still need minimum cleaning a priori
+
+Whatever is quality of form design, enumerator training and data collection quality monitoring, there will be still cases where cleaning will involve removing entire records:
+
+ * Remove from the dataset records where no consent were obtained and/or more broadly one a specific filter/condition (where the respondent do not meet certain criteria or data from an unreliable enumerator identified during data collection quality monitoring...
+ 
+ * Remove duplicate respondent ID based on the original sample list
+ 
+ * Remove from the dataset records before or at specific dates
+ 
+ * Remove from the dataset  records when interview duration appears as outliers, either too long or too short, aka "speed responses" 
+ 
+ 
+---
+
+## How to set up filters on the data
+ 
+---
+
+## Situation when you will still need minimum cleaning a posteriori
+ 
+In other cases, cleaning will involve recoding some variables 
+ 
+ 
+ 1. Recode un-explainable .large[__outliers for numerical questions__]. An example of this would be if you asked how much water one person use in a day and someone answered that they use 1000 liters, while the second largest usage reported is 150 liters.
+ 
+ 
+ 2. Recode questions consecutive from  .large[__"or other" choices__].
+ 
+ 3. Recode some questions answer as .large[__new calculated variables__] to have more balanced response categories based on frequency or potential closes meaning
+ 
+ 
+ 
+ 
+---
+
+## Outliers for numerical questions
 
 ---
 
-## Data Cleaning
+## "or other" choices
+---
+
+## New calculated variables
+ 
+ 
+
+
 
 
 ---
@@ -36,9 +103,20 @@ class: inverse, center, middle
 
 # TIME TO PRACTISE ON YOUR OWN! 
 
-.large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
 
- - Open again locally and fill in the clean
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+ - Open again locally and set up the outliers treatment, clean the _"or_other"_ and add calculated variables
  
  - upload and build up you data dictionary `kobo_dico()`
  
@@ -46,12 +124,26 @@ class: inverse, center, middle
  
  - add the following indicator:
  
- 
 
+Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 
+ 
 ---
 class: inverse, center, middle
 
-# Thank you
 
 
-__Next session__:   [07-Anonymising](07-Anonymising.html) In order to provide other people to work with the data, a first level of data anonymisation should be implemented
+### .large[.white[`r fontawesome::fa("fas fa-clock"  )  `] **Let's take a break! **] 
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+__Next session__:  
+
+[07-Anonymising](07-Anonymising.html) In order to provide other people to work with the data, a first level of data anonymisation should be implemented

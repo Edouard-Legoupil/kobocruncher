@@ -377,7 +377,7 @@ class: inverse, center, middle
 
 # TIME TO PRACTISE ON YOUR OWN! 
 
-.large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+###  .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
 
 Get your environment ready
 
@@ -386,10 +386,26 @@ Open a notebook
 Compile it with demo dataset
  
  
-
+Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 
+ 
 ---
 class: inverse, center, middle
 
-# Thank you
 
-__Next session__: [02-Relabeling](02-Relabeling.html) the way your survey variables are labelled for data collection is not always optimal when the goal is display the resulting information, hence you need to relabel (mostly shorten and simplify) the survey content
+
+### .large[.white[`r fontawesome::fa("fas fa-clock"  )  `] **Let's take a break! **] 
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+
+__Next session__: 
+
+[02-Relabeling the way your survey variables are labelled for data collection is not always optimal when the goal is display the resulting information, hence you need to relabel (mostly shorten and simplify) the survey content](02-Relabeling.html) 

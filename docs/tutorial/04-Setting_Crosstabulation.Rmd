@@ -84,7 +84,18 @@ class: inverse, center, middle
 
 # TIME TO PRACTISE ON YOUR OWN! 
 
-.large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
 
  - Download again locally and fill in the disaggregation
  
@@ -92,12 +103,26 @@ class: inverse, center, middle
  
 
 
+Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 
  
 ---
 class: inverse, center, middle
 
-# Thank you
 
 
+### .large[.white[`r fontawesome::fa("fas fa-clock"  )  `] **Let's take a break! **] 
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
 
-__Next session__:   [05-Searching_Asssociation](05-Searching_Asssociation.html) beyond the cross-tabulation, it is key to check how variables relate to each other. This can be done with statistical test that verify if variables are significantly associated
+
+__Next session__:   
+
+[05-Searching_Asssociation: beyond the cross-tabulation, it is key to check how variables relate to each other. This can be done with statistical test that verify if variables are significantly associated](05-Searching_Asssociation.html) 

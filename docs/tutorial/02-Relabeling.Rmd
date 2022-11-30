@@ -198,7 +198,17 @@ class: inverse, center, middle
 
 # TIME TO PRACTISE ON YOUR OWN! 
 
-.large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+###  .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
 
  - Expand the xlsfom
  
@@ -207,9 +217,25 @@ class: inverse, center, middle
  - save/upload the revised file and knit again your report
  
  
+Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 
+ 
 ---
 class: inverse, center, middle
 
-# Thank you
 
-__Next session__: [03-Grouping_Questions](03-Grouping_Questions.html) Within a questionnaire, questions follows a certain sequence in order to facilitate the interview. When exploring the results, it is often required to regroup the questions in a different way and inline with key research questions
+
+### .large[.white[`r fontawesome::fa("fas fa-clock"  )  `] **Let's take a break! **] 
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+__Next session__: 
+
+[03-Grouping_Questions Within a questionnaire, questions follows a certain sequence in order to facilitate the interview. When exploring the results, it is often required to regroup the questions in a different way and inline with key research questions](03-Grouping_Questions.html)

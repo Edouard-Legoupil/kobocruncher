@@ -76,10 +76,51 @@ apiclus2 %>% as_survey_design(ids = c(dnum, snum), fpc = c(fpc1, fpc2))
 apistrat %>% as_survey_design(ids = dnum, strata = stype, weights =pw, nest = TRUE)
 ```
 
+
 ---
 class: inverse, center, middle
 
-# Thank you
+# TIME TO PRACTISE ON YOUR OWN! 
+
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+ - Open again locally and fill in the anonymisation column
+ 
+ - Regenerate the report and check the results
+ 
+
+Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 
+ 
+---
+class: inverse, center, middle
 
 
-__Next session__:   [09-Publishing](9-Publishing.html) The final stage of the process implies to facilitate both the interpretation of the data and the creation of data story telling content 
+
+### .large[.white[`r fontawesome::fa("fas fa-clock"  )  `] **Let's take a break! **] 
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+
+
+__Next session__:   
+
+[09-Publishing The final stage of the process implies to facilitate both the interpretation of the data and the creation of data story telling content ](9-Publishing.html) 
