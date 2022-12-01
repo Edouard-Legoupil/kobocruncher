@@ -184,6 +184,24 @@ In the column `hint`, you will find the orginal hint. You can also re-adjust the
 
 ---
 
+## Ordinal variables
+
+By default, charts will be generated and order by frequencies
+
+BUT some variables are ordinal... for instance likert questions:
+
+ * Very safe  
+ 
+ * Fairly safe 
+ 
+ * Bit unsafe 
+ 
+ * Very unsafe
+
+In order to get those variables correctly represented, fill in the order column within the choices worksheet
+
+---
+
 ## And now you can regenerate the report
 
 Make sure you have the new version of the form in the correct folder

@@ -88,13 +88,15 @@ Whatever is quality of form design, enumerator training and data collection qual
 
 ## How to set up filters on the data
 
+ * Often survey includes nested tables (aka `repeat`), so if you remove records from the main table, you need to remove linked records in the nested tables
+
 
  
 ---
 
 ## Situation when you will still need minimum cleaning a posteriori
  
-In other cases, cleaning will involve recoding some variables 
+In other cases, cleaning will involve `recoding` some variables 
  
  
  1. Recode un-explainable .large[__outliers for numerical questions__]. An example of this would be if you asked how much water one person use in a day and someone answered that they use 1000 liters, while the second largest usage reported is 150 liters.
@@ -111,16 +113,32 @@ In other cases, cleaning will involve recoding some variables
 
 ## Outliers for numerical questions
 
+
+ After reviewing the first exploration report, set up the maximum accepted standard deviation
+ 
+ 
+
 ---
 
-## "or other" choices
+## Recode categories, treat "or other" choices
+
+ 
+
+
+Often, categorical questions include an "or other" variables and this option might be mis-used
+
+In the exploratory report, those are plotted with a word cloud
+
+
+
+
+
 ---
 
-## New calculated variables
+## New calculated variables use case
  
  
  * filters on specific criteria
- 
  
  * Create a filters on specific criteria 
  
@@ -135,6 +153,25 @@ In other cases, cleaning will involve recoding some variables
  * Aggregate variable from nested frame (aka within repeat) to parent table 
  
  * filters on specific criteria
+ 
+
+---
+
+## kobo_indicator
+ 
+In kobocruncher, this is done with [kobo_indicator](https://edouard-legoupil.github.io/kobocruncher/reference/kobo_indicator.html) function. The function goes through steps:
+
+  1 - load the already defined indicators in the xlsform 
+  
+  2 - append new indicator supplied to the function if any, 
+  
+  3 - apply the indicator, i.e. do the calculation,
+  
+  4 - re-save all the working indicator definition within the extended xlsform, dedicated indicator worksheet 
+  
+  5 - bind the new indicators in the dictionary for further plotting 
+  
+  6 - rebuild the plan if indicators are allocated to chapter, subchapter 
  
 ---
 
