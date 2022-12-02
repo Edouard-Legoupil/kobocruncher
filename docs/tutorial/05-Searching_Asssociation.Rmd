@@ -83,8 +83,12 @@ For this table, the following interpretation can be made: __“When a person rep
 
 ## Another example
 
+```{r, echo=FALSE, out.width = '50%'}
+# ![alt text](../../inst/correlation2.png)
+knitr::include_graphics("../../inst/correlation2.png")
+```
 
-![alt text](../../inst/correlation2.png)
+
 
 
 ---

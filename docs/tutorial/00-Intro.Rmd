@@ -185,20 +185,20 @@ Implementing all the step above is challenging :
 
 ---
 
-## You do not need to be expert as soon as you follow recipes. 
+## You do not need to be an expert as soon as you follow recipes. 
 
 KoboCruncher is an R package designed to take care of the processing component in a .large[__Reproducibile way__] so that the technical team can focus on the interpretation.
 
 
- * all analysis input are de facto .large[__fully documented__]  
+ * all analysis input are de facto .large[__fully documented__],  
  
- * .large[__Good practices__] are enforced through the package
+ * .large[__Good practices & standards__] are enforced through the package
  
- * Once the configuration file is written, run the report in Rstudio to get the output, this i.large[__increased productivity__]
+ * Once the configuration file is written, getting quickly reports with Rstudio allows for .large[__increased productivity__]
  
- * No need to write R instructions. Indeed only a limited knowledge of R is required as most of the work is done in excel, which requires  .large[__minimum training__]: 
+ * Indeed only a limited knowledge of R is required as most of the work is done in excel, which results  .large[__minimum training__] 
  
- * .large[__Working through iteration__] where you check the output and adjust as many time as needed the settings is a logic approach
+ * .large[__Working through iterations__] where you check the output and adjust as many time as needed the settings is a natural approach
  
 
 

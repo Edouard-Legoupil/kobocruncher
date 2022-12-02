@@ -34,6 +34,10 @@ When you want to compare the results for one or more variables with the results 
 
 This will allow to examine relationships within the data that might not be readily apparent when only looking at total survey responses.
 
+ .bg-blue[
+
+Cross tabulation is also a key tool to help identifying data cleaning needs as we will see later
+]
 
 ---
 
@@ -98,11 +102,11 @@ class: inverse, center, middle
 
 # TIME TO PRACTISE ON YOUR OWN! 
 
-### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **10 minutes! **] 
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
 
  
 ```{r echo=FALSE}
-countdown::countdown(minutes = 10,
+countdown::countdown(minutes = 5,
                      seconds = 0,
                      margin = "5%",
                      font_size = "8em",
