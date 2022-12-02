@@ -59,7 +59,7 @@ Three types of disclosure can be distinguished:
 https://jangorecki.github.io/blog/2014-11-07/Data-Anonymization-in-R.html
  
 
-Thi is based on the World Bank sponsored [disclosure Control Toolbox](http://www.ihsn.org/software/disclosure-control-toolbox) for the R language and built on the recommendations from the [International Household Survey Network](http://ihsn.org/sites/default/files/resources/ihsn-working-paper-007-Oct27.pdf).
+This is based on the World Bank sponsored [disclosure Control Toolbox](http://www.ihsn.org/software/disclosure-control-toolbox) for the R language and built on the recommendations from the [International Household Survey Network](http://ihsn.org/sites/default/files/resources/ihsn-working-paper-007-Oct27.pdf).
  
 Per default, it is assumed that __direct identifiers__ (such as name, progres ID, telephone, GPS locations) values are removed.
  
@@ -237,6 +237,9 @@ Once those additional treatments are applied, this report can be then regenerate
  
  .bg-blue[
 __Global recoding__ is a non-perturbative method that can be equally applied to both categorical and continuous key variables. The basic idea of recoding a categorical variable is to combine several categories into a new, less informative category. A frequent use case is the recoding of age given in years into age-groups. If the method is applied to a continuous variable, it means to discretize the variable. 
+
+You can apply recoding using the basic cleaning functions.
+
 ]    
 
 
@@ -259,13 +262,34 @@ This goes hand in hand with the selection of categorical key variables because t
  
  *  __Sensitive information__: Variables whose values must not be discovered for any respondent. Determination is often subject to legal and ethical concerns (Protection risk, Vulnerabilities, Ethnicity, Religious belief ..) Such information might not identify an individual but could put an individual or group at risk.  
    
+   
+---
+
+## Corporate Data Curation
+
+
+.pull-left[
+Given the risk linked to Statistical Disclosure, full and final anonymisation in UNHCR is performed by a dedicated team
+ 
+  1. Start from the data documented and archived in the Internal Data Library: [RIDL](https://im.unhcr.org/ridl/)
+  
+  2. Review and proceed with anonymisation in order to get the formal approval of the data controller in the operation in line with [UNHCR Data Protection Policy](https://www.refworld.org/docid/55643c1d4.html)
+  
+  3. Publish the resulting microdata within [UNHCR Microdata Library](https://www.unhcr.org/blogs/advancing-unhcrs-open-data-vision-the-new-microdata-library/)
+]
+.pull-right[
+
+![https://microdata.unhcr.org/index.php/home](../../inst/mdl.png)
+]
  
 ---
 
 ## How to set it up in Kobocruncher?
 
 
-By default the initial exploration report does not include anonymisation as it depends on your data:
+By default the initial exploration report does not include anonymisation as it depends on your data. Though you can implement a very first level so that potential high risk of re-identification are prevented during the analysis stage (for the record, disclosure risk also occurs on tabulation, not only when releasing microdata).
+
+To do so:
 
 
  1. Open the expanded xlsform 
