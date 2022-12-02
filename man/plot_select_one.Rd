@@ -29,8 +29,8 @@ plot_select_one(datalist = datalist,
               var = "profile.country",
               showcode = TRUE)
 
-plot_select_one(datalist = datalist,
-              dico = dico, 
-              var = "profile.countryerror",
-              showcode = TRUE)
+# plot_select_one(datalist = datalist,
+#               dico = dico, 
+#               var = "profile.countryerror",
+#               showcode = TRUE)
 }

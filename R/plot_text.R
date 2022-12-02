@@ -36,9 +36,9 @@ plot_text <- function(datalist = datalist,
   requireNamespace("dplyr")
   requireNamespace("SnowballC")
   requireNamespace("ggplot2")
-  require("ggplot2")
+ # require("ggplot2")
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -53,6 +53,9 @@ plot_text <- function(datalist = datalist,
   rr <- mean(!is.na(data[[var]]))
    if ( is.nan(rr)) {
     cat(paste0("\n <strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
+     #return(as.character(""))
+     return(invisible())
+     
   } else { 
       
   require("tm")
@@ -97,7 +100,7 @@ plot_text <- function(datalist = datalist,
         if( showcode == TRUE) {
           cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_text(datalist = datalist, dico = dico, \"", var, "\")`  \n\n"))}   else {}
+                                      "  `plot_text(datalist = datalist, dico = dico, \"", var, "\")`  \n\n"))}   else {}
       
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :
@@ -138,7 +141,10 @@ plot_text <- function(datalist = datalist,
       return(p1)
       
     
-  } else { cat("<strong style=\"color:#0072BC;\">No significant text for this specific question!</strong>\n\n")}
+    } else { 
+      cat(paste0("<strong style=\"color:#0072BC;\">No significant text for the  question: </strong>\n\n", var))}
+      return(invisible())
+      #return(invisible(NULL))
   
   # cat("\n\n")
   }

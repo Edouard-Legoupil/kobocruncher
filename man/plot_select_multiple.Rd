@@ -37,10 +37,10 @@ plot_select_multiple(datalist = datalist,
               showcode = TRUE
             )
 
-plot_select_multiple(datalist = datalist,
-              dico = dico, 
-              var = "profile.reason1",
-              showcode = TRUE
-            )
+# plot_select_multiple(datalist = datalist,
+#               dico = dico, 
+#               var = "profile.reason1",
+#               showcode = TRUE
+#             )
 
 }

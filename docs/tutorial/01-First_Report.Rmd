@@ -376,10 +376,20 @@ Later we will see how to configure charts based on `crosstabulation`
 ---
 class: inverse, center, middle
 
-
 # TIME TO PRACTISE ON YOUR OWN! 
 
-###  .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **10 minutes! **] 
+
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 10,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
 
 Get your environment ready, Open a notebook & Compile it with demo dataset
  

@@ -22,14 +22,14 @@ plot_header <- function(dico = dico,
   ## getting header levels
   lvl <- stringr::str_count(var, "\\.")
   
-  label <- as.data.frame(dico[1]) |>
+  label <- as.data.frame(dico[[1]]) |>
            dplyr::filter(name == var) |>
           ## Filter down in case the same var name was given to end group or repat... 
            dplyr::filter(! (type %in% c("end_group", "end_repeat")) ) |>
            dplyr::pull(label)
 
   ## In case the header comes from chapter   
-  lbchap <- as.data.frame(dico[4]) |>
+  lbchap <- as.data.frame(dico[[4]]) |>
             dplyr::filter(name == var) |>
             dplyr::pull(label)
 
@@ -43,10 +43,16 @@ plot_header <- function(dico = dico,
   hdr <- stringr::str_c(strrep("#", 1+lvl), " ", title, sep = "")
   
   ## Now Printing the headers
-  cat("---\n")
+  #head <- paste0("\n --- \n \n \n", hdr,"\n\n" )
+  
+  cat("------\n")
   cat("\n\n")
   cat("\n")
   cat(hdr)
   cat("\n\n")
+  #return(head)
+  #return( as.character(""))
+  return(invisible())
+   #return(invisible(NULL))
 }
 

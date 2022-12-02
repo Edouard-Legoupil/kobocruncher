@@ -21,13 +21,13 @@ kobo_likert <- function(datalist = datalist,
                           dico = dico) {
   
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
   require(dplyr)
   ## Check the frequency of list_name within each group,
   ## Filter the combination of list and group where we have more than 3 occurrences
   # not taking in account when the appearance is not "label"
-  grouplikert <- as.data.frame(dico[1]) |>
+  grouplikert <- as.data.frame(dico[[1]]) |>
     dplyr::filter( type ==  "select_one") |>
     dplyr::filter( appearance !=  "label") |>
     dplyr::group_by( scope, list_name, dataframe) |>

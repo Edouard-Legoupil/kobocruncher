@@ -25,12 +25,12 @@
 #'                 x="profile.occupation")(data$profile.occupation)
 label_choiceset <- function(dico,
                             x) {
-  lname <- as.data.frame(dico[1]) |>
+  lname <- as.data.frame(dico[[1]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(list_name)
   
   dict <- 
-    as.data.frame(dico[2]) |>
+    as.data.frame(dico[[2]]) |>
     dplyr::filter(list_name == lname) |> 
     (\(x) purrr::set_names(x$label, x$name))()
   

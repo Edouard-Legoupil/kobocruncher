@@ -10,26 +10,26 @@
 #' @examples
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 #' # MainFrame
-#' datalist[1]
+#' datalist[["main"]]
 #' # Second Frame - based on presence of repeat within the form, aka nested or
 #' # hierarchical data structure, etc... 
-#' datalist[2]  
+#' datalist[["members"]]
 kobo_data <- function(datapath) {
    # cat(readxl::excel_sheets(datapath ))
-    datalist <- lapply(readxl::excel_sheets(datapath ), function(x) readxl::read_excel(datapath , sheet = x))  
+  
+  datalist <- lapply(readxl::excel_sheets(datapath ), function(x) readxl::read_excel(datapath , sheet = x))  
+  
+  # Get sheet names
+  sheet_names <- readxl::excel_sheets(datapath)  
+  ## rename the first sheet as name
+  sheet_names[1] <- "main"
+  # Rename list elements
+  names(datalist) <- sheet_names  
     
     ## In case we do not have the right group separator!
     datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("/", ".", colnames(y)); y})
     
-    ## Recent kobo export append a counter in the export when there's a unique vaiable
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_001", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_002", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_003", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_004", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_005", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_006", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_007", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_008", "", colnames(y)); y})
+     
     #names(datalist) <- readxl::excel_sheets(datapath )
     
    ## Rebuild  a single key var - parent_index between the main frames and nested ones.. assume a single level of nesting

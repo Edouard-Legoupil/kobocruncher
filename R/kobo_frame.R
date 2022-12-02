@@ -20,14 +20,14 @@ kobo_frame <- function(datalist,
                        var) {
   
   ## Identify the right frame number
-  dataframen <- as.data.frame(dico[1]) |>
+  dataframen <- as.data.frame(dico[[1]]) |>
                   dplyr::filter(name == var) |>
-                  dplyr::pull(dataframe)  
+                  dplyr::pull(repeatvar)  
   ## Pull the data
-  data  <-  datalist[dataframen] |>
+  data  <-  datalist[[dataframen]] |>
               as.data.frame()
   
-## get correct id whether the frmae is nested one or not.. 
+## get correct id whether the frame is nested one or not.. 
 if ("_id" %in% colnames(data)) { data$X_id <-  data$`_id` } else {  }
 if ("_index" %in% colnames(data)) { data$X_id <-  data$`_index` } else {  }
 if ("X_index" %in% colnames(data)) { data$X_id <-  data$X_index  } else { }

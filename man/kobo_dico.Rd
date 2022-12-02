@@ -18,18 +18,18 @@ Prepare Analysis plan
 \examples{
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # Survey
-questions <- as.data.frame(dico[1])
+questions <- as.data.frame(dico[[1]])
 knitr::kable(utils::head(questions, 10))
 # Choices
-responses <- as.data.frame(dico[2])
+responses <- as.data.frame(dico[[2]])
 knitr::kable(utils::head(responses, 10))
 # Settings
-metadata <- as.data.frame(dico[3])
+metadata <- as.data.frame(dico[[3]])
 knitr::kable(utils::head(metadata, 10))
 # Report ToC
-toc <- as.data.frame(dico[4])
+toc <- as.data.frame(dico[[4]])
 knitr::kable(utils::head(toc, 10))
 # Indicator
-indicator <- as.data.frame(dico[5])
+indicator <- as.data.frame(dico[[5]])
 knitr::kable(utils::head(indicator, 10))
 }

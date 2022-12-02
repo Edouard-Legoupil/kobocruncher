@@ -36,123 +36,178 @@ plot_select_multiple_cross <- function(datalist = datalist,
   
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
-  ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  ## Get default data source name
+  if (is.null(datasource)) {
+    datasource <- as.character(dico[[3]]$form_title)
+  }
   
   data <- kobo_frame(datalist = datalist,
-                   dico = dico,
-                   var = var  )
+                     dico = dico,
+                     var = var)
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   nr <- sum(!is.na(data[[var]]))
   
-   data2 <- kobo_frame(datalist = datalist,
-                   dico = dico,
-                   var = by_var   )
+  data2 <- kobo_frame(datalist = datalist,
+                      dico = dico,
+                      var = by_var)
   
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   rr2 <- mean(!is.na(data2[[by_var]]))
   ## Writing report
   # cat("\n")
- # cat(paste("####", label_varname(var)))
+  # cat(paste("####", label_varname(var)))
   #cat(paste("#### Variable: ", var))
   
-  if ( is.nan(rr) | is.nan(rr2) ) {
-    cat(paste0("<strong style=\"color:#0072BC;\">The variables from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
-  } else if (  ! (identical(data,data2))  ) {
+  if (is.nan(rr) | is.nan(rr2)) {
+    cat(
+      paste0(
+        "<strong style=\"color:#0072BC;\">The variables from the form called: ",
+        var,
+        " or ",
+        by_var,
+        " could not be identified in the dataset</strong>\n\n"
+      )
+    )
+  } else if (!(identical(data, data2))) {
     # nothing to do - the variable are not in the same frame
-    } else {
-  
-  ## Writing report
-  if (rr != 0 & ! (is.nan(rr))  ) { 
+    cat("")
+    return(invisible())
     
-    if(by_var != "") {
-      if( by_var != var ) {
-        
+  } else {
+    ## Writing report
+    if (rr != 0 & !(is.nan(rr))) {
+      if (by_var != "") {
+        if (by_var != var) {
           ## Writing code instruction in report
-          if( showcode == TRUE) {
-             cat(paste0(label_varname(dico = dico,
-                                                   x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}   else {}
-
-        
-      cntscross1 <- data |>
-        ## keep only the variable we need 
-        tidyr::drop_na( tidyselect::all_of(c(var,by_var)))
-      
-      ## Need to check that there's actually a proper intersection in the response... 
-      if(nrow(cntscross1) == 0) {
-        
-         cat(paste0("<strong style=\"color:#0072BC;\">There is not intersection between the answers from the variables from the form called: ",var," or ", by_var, " in the dataset</strong>\n\n"))
+          if (showcode == TRUE) {
+            cat(
+              paste0(
+                label_varname(dico = dico,
+                              x = var),
+                "\n",
+                "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"",
+                var,
+                "\",\"",
+                by_var,
+                "\")` \n\n "
+              )
+            )
+          }   else {
+          }
+          
+          
+          cntscross1 <- data |>
+            ## keep only the variable we need
+            tidyr::drop_na(tidyselect::all_of(c(var, by_var)))
+          
+          ## Need to check that there's actually a proper intersection in the response...
+          if (nrow(cntscross1) == 0) {
+            cat(
+              paste0(
+                "<strong style=\"color:#0072BC;\">There is not intersection between the answers from the variables from the form called: ",
+                var,
+                " or ",
+                by_var,
+                " in the dataset</strong>\n\n"
+              )
+            )
+          } else {
+            cntscross <- cntscross1 |>
+              ## Separate the var with select_multiple
+              tidyr::separate_rows(.data[[var]], sep = " ") |>
+              # Lump together factor levels into "other"
+              dplyr::distinct(
+                `X_id`,!!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),!!by_var := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5)
+              ) |>
+              # Lump together factor levels into "other"
+              dplyr::count(x := .data[[var]],
+                           y := .data[[by_var]]) |>
+              dplyr::mutate(p = n / sum(n)) |>
+              dplyr::group_by(y) |>
+              dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
+                            pcum = n / cumsum)
+            ##plot
+            
+            require(ggplot2)
+            p <- ggplot2::ggplot(cntscross,
+                                 aes(x = pcum,
+                                     y = x)) +
+              geom_col(fill = "#0072BC") +
+              #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
+              ## Position label differently in the bar in white - outside bar in black
+              geom_label(
+                data =   function(x)
+                  subset(x, pcum < max(pcum) / 1.5),
+                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                hjust = -0.1 ,
+                vjust = 0.5,
+                colour = "black",
+                fill = NA,
+                label.size = NA,
+                size = 5
+              ) +
+              geom_label(
+                data =   function(x)
+                  subset(x, pcum >= max(pcum) / 1.5),
+                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                hjust = 1.1 ,
+                vjust = 0.5,
+                colour = "white",
+                fill = NA,
+                label.size = NA,
+                size = 5
+              ) +
+              scale_x_continuous(labels = scales::label_percent()) +
+              facet_wrap(~ y ,
+                         nrow = 3,
+                         labeller = as_labeller(function(x)
+                           label_choiceset(dico = dico,
+                                           x = by_var)(x))) +
+              scale_y_discrete(
+                labels = function(x) {
+                  label_choiceset(dico = dico,
+                                  x = var)(x) |>
+                    stringr::str_wrap(40)
+                }
+              ) +
+              coord_cartesian(clip = "off") +
+              labs(
+                x = NULL,
+                y = NULL,
+                title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
+                subtitle = stringr::str_wrap(paste0(
+                  "Crossed by ", label_varname(dico = dico,  x = by_var)
+                ), 90),
+                caption = glue::glue(
+                  "Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
+                )
+              ) +
+              theme_minimal(base_size = 24) +
+              geom_vline(xintercept = 0,
+                         size = 1.1,
+                         colour = "#333333") +
+              theme(
+                panel.grid.major.x  = element_line(color = "#cbcbcb"),
+                panel.grid.major.y  = element_blank(),
+                panel.grid.minor = element_blank()
+              ) +
+              theme(plot.title.position = "plot")
+            
+            return(p) #  print(p)
+          }
+          
+        }
       } else {
-      
-      cntscross <- cntscross1 |>
-        ## Separate the var with select_multiple 
-        tidyr::separate_rows(.data[[var]], sep = " ") |>
-        # Lump together factor levels into "other"
-        dplyr::distinct(`X_id`, 
-                 !!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
-                 !!by_var := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
-        # Lump together factor levels into "other"
-        dplyr::count(x := .data[[var]],
-                     y := .data[[by_var]] ) |>
-        dplyr::mutate(p = n/sum(n)) |>
-        dplyr::group_by(y) |>
-        dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                      pcum = n / cumsum)  
-      ##plot
-      
-       require(ggplot2)
-       p <- ggplot2::ggplot(cntscross, 
-                  aes(x= pcum, 
-                      y = x)) +
-        geom_col(fill = "#0072BC") +
-        #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
-        ## Position label differently in the bar in white - outside bar in black
-        geom_label( data =   function(x) subset(x, pcum < max(pcum) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                    hjust = -0.1 ,
-                    vjust = 0.5, 
-                    colour = "black", 
-                    fill = NA, 
-                    label.size = NA, 
-                    size = 5   ) +  
-        geom_label( data =   function(x) subset(x, pcum >= max(pcum) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                    hjust = 1.1 ,
-                    vjust = 0.5, 
-                    colour = "white", 
-                    fill = NA, 
-                    label.size = NA, 
-                    size = 5   ) +   
-        scale_x_continuous(labels = scales::label_percent()) +
-        facet_wrap( ~ y ,  nrow = 3,
-                    labeller = as_labeller(function(x) label_choiceset(dico = dico,
-                                                         x= by_var)(x))
-                    ) +
-        scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
-                                                          x = var)(x) |>
-            stringr::str_wrap(40)}) +
-        coord_cartesian(clip = "off") +
-        labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,  x = by_var)), 90),
-             caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-        theme_minimal( base_size = 24) +  
-        geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
-        theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
-               panel.grid.major.y  = element_blank(), 
-               panel.grid.minor = element_blank()    ) +
-        theme(plot.title.position = "plot")
-      
-      return(p) #  print(p)
+        
+          return(invisible())
       }
-       
-    }   
-    } else { }
-  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
-  # cat("\n\n")
+    } else {
+      cat( paste0( "<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n"))
+      return(invisible())
+    }
+    # cat("\n\n")
     
   }
 }

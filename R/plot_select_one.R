@@ -22,10 +22,10 @@
 #'               var = "profile.country",
 #'               showcode = TRUE)
 #' 
-#' plot_select_one(datalist = datalist,
-#'               dico = dico, 
-#'               var = "profile.countryerror",
-#'               showcode = TRUE)
+#' # plot_select_one(datalist = datalist,
+#' #               dico = dico, 
+#' #               var = "profile.countryerror",
+#' #               showcode = TRUE)
 plot_select_one <- function(datalist  ,
                             dico  ,
                             var,
@@ -35,7 +35,7 @@ plot_select_one <- function(datalist  ,
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
  
   data <- kobo_frame(datalist = datalist,
@@ -47,6 +47,9 @@ plot_select_one <- function(datalist  ,
   
   if ( is.nan(rr)) {
     cat(paste0("\n <strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
+   # return(invisible(NULL))
+     return(invisible())
+    
   } else {
   
   ## Put a condition in case there's no record
@@ -83,7 +86,7 @@ plot_select_one <- function(datalist  ,
   ## Writing code instruction in report
   if( showcode == TRUE) { cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),
+                                      
                                       "`plot_select_one(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}  else {}
   
     
@@ -128,7 +131,11 @@ plot_select_one <- function(datalist  ,
     
    return(p) #  print(p)
     
-  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
+  } else { 
+    cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) 
+      #return(invisible(NULL))
+      return(invisible())
+    }
   # cat("\n\n")
   }
 }  

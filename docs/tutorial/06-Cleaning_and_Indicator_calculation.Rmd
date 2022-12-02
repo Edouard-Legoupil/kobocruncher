@@ -9,7 +9,7 @@ output:
     nature:
       highlightStyle: github
       highlightLines: true
-      countIncrementalSlides: false
+      countIncrementalSlides: true
       ratio: "16:9"
 ---
 
@@ -39,7 +39,7 @@ Data cleaning remains a last resort option that can be at first minimized by:
  
  * .large[__Good training for the data enumerator__] and detailed [question hints](https://xlsform.org/en/#hints) so the enumerators fills correctly the questionnaire
  
- * .large[__Sufficient data collection quality monitoring__] to identify, prevent and cure issues early on. This can be done through [High Frequency Check](https://unhcr.github.io/HighFrequencyChecks/docs/). This should help to  flag Straightlining / Patterned Responses when an enumerator is using the same answer option ("B") over and over (for instance  for at least five rows in a grid)...  
+ * .large[__Sufficient data collection quality monitoring__] to identify, prevent and cure issues early on. This can be done through [High Frequency Check](https://unhcr.github.io/HighFrequencyChecks/docs/). This should help to early on flag Straightlining / Patterned Responses if one enumerator uses for instance the same answer option ("B") over and over (as an example for at least five rows in a grid)...  
  
  
  .bg-blue[
@@ -68,10 +68,31 @@ In order to guide this selection phase, data experts, in collaboration with the 
   *  Always, Check for missing data (NA) or "%of respondent who answered" that you cannot confidently explain
  
   *  Check unanswered questions, that corresponds to unused skip logic in the questionnaire: For instance, did a person who was never displaced answer displacement-related questions? Were employment-related answers provided for a toddler?
+
+---
+
+### Variable cleaning
+
+  * System variables ( precise date) and  Section timestamps
+
+  *  Removing direct identifiers such as: 
+    
+       *   Name and surname
+
+       *    Document number (passport, national ID, driving license, etc.)
+
+       *   Address or other precise geographic information
+
+       *    GPS coordinates
+
+       *    Telephone number
+
+.large[Fix them] by setting the concerned variable as `identifier` in the `anonymise` column the `xlsform`:
+
  
 ---
 
-## Situation when you will still need minimum cleaning a priori
+## Situation when you will still need minimum record cleaning a priori
 
 Whatever is quality of form design, enumerator training and data collection quality monitoring, there will be still cases where cleaning will involve removing entire records:
 
@@ -79,9 +100,21 @@ Whatever is quality of form design, enumerator training and data collection qual
  
  * Remove duplicate respondent ID based on the original sample list
  
+---
+
+## Clean based on time
+
+
  * Remove from the dataset records before or at specific dates
  
+.large[Fix them] by setting within the `xlsform`:
+
+  * Starting date of the data collection in the `clean` column  / `start` row 
+  * Ending date of the data collection in the `clean` column  / `End` row  
+ 
  * Remove from the dataset  records when interview duration appears as outliers, either too long or too short, aka "speed responses" 
+
+ 
  
  
 ---
@@ -113,8 +146,17 @@ In other cases, cleaning will involve `recoding` some variables
 
 ## Outliers for numerical questions
 
+ * Outliers: values significantly different from others
 
- After reviewing the first exploration report, set up the maximum accepted standard deviation
+ * Outliers should be removed or modified only if they are (clearly) wrong values
+
+ * Common outlier definition: observations three standard deviations from the mean
+ 
+
+.large[identify outliers] by looking at histograms, boxplots and scatter plots from the exploration report
+
+
+.large[Fix them] by setting the maximum accepted standard deviation for the variable in the `clean` column of the `xlsform`
  
  
 
@@ -236,7 +278,7 @@ class: inverse, center, middle
 
 # TIME TO PRACTISE ON YOUR OWN! 
 
-### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **10 minutes! **] 
 
  
 ```{r echo=FALSE}

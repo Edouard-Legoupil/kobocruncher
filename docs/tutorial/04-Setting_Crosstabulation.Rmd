@@ -94,12 +94,11 @@ The function [kobo_cruncher](https://edouard-legoupil.github.io/kobocruncher/ref
  
 
 ---
-
 class: inverse, center, middle
 
 # TIME TO PRACTISE ON YOUR OWN! 
 
-### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **10 minutes! **] 
 
  
 ```{r echo=FALSE}
@@ -111,6 +110,8 @@ countdown::countdown(minutes = 10,
                      # Fanfare when it's over
                      play_sound = TRUE)
 ```
+
+
 
 Open your xlsform and fill in the .large[disaggregation] column, save and knit again your report
  

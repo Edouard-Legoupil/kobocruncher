@@ -54,7 +54,7 @@ Ideally try to summarize the initial wording:
 ## Other issues to fix when relabeling
 
 
-In case of .large[__skip logic questions__], the original label will not be self-explanatory as it refers to a previous questions. In such, you need to rephrase explicitly the condition in the variable label.
+In case of .large[__skip logic questions__], the original label will not be self-explanatory as it refers to a previous questions. In such, you need to rephrase explicitly the condition in the variable label. Based on the initial version of the exploration report, check carefully the __response rate in the chart caption__ for each question to identify the one where the label sould explicity mention the question relevance.
  
  
 Reword the label so that they appear .large[__as simple statement__] rather then in an interrogative form, for instance
@@ -186,7 +186,7 @@ In the column `hint`, you will find the orginal hint. You can also re-adjust the
 
 ## Ordinal variables
 
-By default, charts will be generated and order by frequencies
+By default, categorical charts will be generated and order by frequencies...
 
 BUT some variables are ordinal... for instance likert questions:
 
@@ -198,7 +198,7 @@ BUT some variables are ordinal... for instance likert questions:
  
  * Very unsafe
 
-In order to get those variables correctly represented, fill in the order column within the choices worksheet
+In order to get those variables correctly represented, fill in the `order` column within the `choices` worksheet of the expanded `xlsform`
 
 ---
 
@@ -216,10 +216,11 @@ class: inverse, center, middle
 
 # TIME TO PRACTISE ON YOUR OWN! 
 
-###  .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **10 minutes! **] 
 
+ 
 ```{r echo=FALSE}
-countdown::countdown(minutes = 5,
+countdown::countdown(minutes = 10,
                      seconds = 0,
                      margin = "5%",
                      font_size = "8em",

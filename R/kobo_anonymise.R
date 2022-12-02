@@ -38,7 +38,7 @@ kobo_anonymise <- function(datalist,
                        dico) {
 
 #   1 - load the indicators, 
-  indicator <- as.data.frame(dico[4])  
+  indicator <- as.data.frame(dico[[4]])  
 #   2 - append the one from inidcatoradd if any,
   
 #   3 - apply the indicator, i.e. do the calculation,

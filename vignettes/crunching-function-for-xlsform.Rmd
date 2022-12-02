@@ -36,10 +36,10 @@ and `system.file()` to read it in your examples.
 ```{r examples-kobo_data}
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # MainFrame
-datalist[1]
+datalist[["main"]]
 # Second Frame - based on presence of repeat within the form, aka nested or
 # hierarchical data structure, etc... 
-datalist[2]  
+datalist[["members"]]
 ```
 
 ## Extend the xlsform to add instructions for the analysis plan
@@ -58,25 +58,43 @@ Now we can extend the xlsform that was used to document key next steps in the da
 ```{r examples-kobo_dico}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # Survey
-questions <- as.data.frame(dico[1])
+questions <- as.data.frame(dico[[1]])
 knitr::kable(utils::head(questions, 10))
 # Choices
-responses <- as.data.frame(dico[2])
+responses <- as.data.frame(dico[[2]])
 knitr::kable(utils::head(responses, 10))
 # Settings
-metadata <- as.data.frame(dico[3])
+metadata <- as.data.frame(dico[[3]])
 knitr::kable(utils::head(metadata, 10))
 # Report ToC
-toc <- as.data.frame(dico[4])
+toc <- as.data.frame(dico[[4]])
 knitr::kable(utils::head(toc, 10))
 # Indicator
-indicator <- as.data.frame(dico[5])
+indicator <- as.data.frame(dico[[5]])
 knitr::kable(utils::head(indicator, 10))
 ```
 
 # Data Processing
 
-## Cleaning
+## Clean time
+
+    
+
+  
+
+```{r example-kobo_clean_time}
+# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+# nrow(datalist[[1]])
+# datalist <- kobo_clean_time(datalist,
+#                             startdatacollectiondate = "2022-10-25",
+#                             enddatacollectiondate = "2022-10-29",
+#                             standardeviation = 25)
+# nrow(datalist[[1]])
+```
+
+  
+
+## Cleaning categories
 
  to do....
 
@@ -171,7 +189,6 @@ table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
  to do....
 
 
-
 ```{r examples-kobo_anonymise}
 # dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
@@ -252,10 +269,10 @@ plot_select_one(datalist = datalist,
               var = "profile.country",
               showcode = TRUE)
 
-plot_select_one(datalist = datalist,
-              dico = dico, 
-              var = "profile.countryerror",
-              showcode = TRUE)
+# plot_select_one(datalist = datalist,
+#               dico = dico, 
+#               var = "profile.countryerror",
+#               showcode = TRUE)
 ```
 
 ## Plotting Select multiple variable
@@ -271,11 +288,11 @@ plot_select_multiple(datalist = datalist,
               showcode = TRUE
             )
 
-plot_select_multiple(datalist = datalist,
-              dico = dico, 
-              var = "profile.reason1",
-              showcode = TRUE
-            )
+# plot_select_multiple(datalist = datalist,
+#               dico = dico, 
+#               var = "profile.reason1",
+#               showcode = TRUE
+#             )
 
 ```
 

@@ -11,7 +11,7 @@
 #' label_varhint(dico = dico, 
 #'               x ="profile.country")
 label_varhint <- function(dico, x) {
-  as.data.frame(dico[1]) |>
+  as.data.frame(dico[[1]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(hint)
 }

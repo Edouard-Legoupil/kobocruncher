@@ -49,6 +49,8 @@
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' @param xlsformpathout path to save the xlsform file with newly added indicators
 #' 
+#' @importFrom purrr modify_at
+#' 
 #' @export  
 
 #' @examples
@@ -119,7 +121,7 @@ kobo_indicator <- function(datalist,
                        indicatoradd = NULL) {
 
 #   1 - load the indicators ---->
-indicator <- as.data.frame(dico[5])  
+indicator <- as.data.frame(dico[[5]])  
 if(!'type' %in% names(indicator)) indicator <- indicator |> tibble::add_column(type = NA)
 if(!'name' %in% names(indicator)) indicator <- indicator |> tibble::add_column(name = NA)
 if(!'label' %in% names(indicator)) indicator <- indicator |> tibble::add_column(label = NA)
@@ -198,7 +200,7 @@ indicator <- indicator[ ,c("type","name","label", "hint",
     
     
 # 6 - rebuild the plan if indicators are allocated to chapter, subchapter ---->
-    variables <- as.data.frame(dico[1])
+    variables <- as.data.frame(dico[[1]])
     if (  nrow(as.data.frame(variables)|> dplyr::filter(! is.na(chapter)))  > 1 ) {
       
       

@@ -4,6 +4,7 @@
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' 
 #' @importFrom tidyselect matches
+#' @importFrom purrr map_chr accumulate2
 #' 
 #' @return A "kobodico" S3 class object (list) formatted to the specifications of "kobocruncher".
 #' @export
@@ -11,19 +12,19 @@
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' # Survey
-#' questions <- as.data.frame(dico[1])
+#' questions <- as.data.frame(dico[[1]])
 #' knitr::kable(utils::head(questions, 10))
 #' # Choices
-#' responses <- as.data.frame(dico[2])
+#' responses <- as.data.frame(dico[[2]])
 #' knitr::kable(utils::head(responses, 10))
 #' # Settings
-#' metadata <- as.data.frame(dico[3])
+#' metadata <- as.data.frame(dico[[3]])
 #' knitr::kable(utils::head(metadata, 10))
 #' # Report ToC
-#' toc <- as.data.frame(dico[4])
+#' toc <- as.data.frame(dico[[4]])
 #' knitr::kable(utils::head(toc, 10))
 #' # Indicator
-#' indicator <- as.data.frame(dico[5])
+#' indicator <- as.data.frame(dico[[5]])
 #' knitr::kable(utils::head(indicator, 10))
 kobo_dico <- function(xlsformpath) {
    survey <- readxl::read_excel(xlsformpath,   
@@ -43,7 +44,7 @@ kobo_dico <- function(xlsformpath) {
                                        "begin repeat" = "begin_repeat" ,
                                        "end repeat"   ="end_repeat")) |>
     
-    ## spearate the type
+    ## separate the type
     tidyr::separate(type, 
                         into = c("type", "list_name"), 
                         sep = " ",
@@ -54,40 +55,38 @@ kobo_dico <- function(xlsformpath) {
     #dplyr::filter(!(is.na(label))) |>
     dplyr::filter(!(is.na(type))) |>
     
-    # capturing repeat
+   # capturing repeat, group and rebuilding full name
     dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
                                                   function (repeatvar, type, name) {
                                                     if (type  == "begin_repeat")  c(repeatvar, name)
                                                     else if (type  == "end_repeat") utils::head(repeatvar, -1)
                                                     else repeatvar
-                                                  }, .init = character()) |> utils::tail(-1),
+                                                  }, .init = character()) |> utils::tail(-1) ,  
                   ##Apply a function to each element of a list 
                   repeatvar = purrr::map_chr(repeatvar,
                                              stringr::str_c, 
                                              collapse = ".") ,
-                  name = dplyr::case_when(repeatvar == "" ~ name,
-                                          type == "begin_repeat"~ repeatvar,
-                                          TRUE ~ stringr::str_c(repeatvar, name, sep = "."))) |>
-                 
-    
-      # capturing Group
-      dplyr::mutate(scope = purrr::accumulate2(type, name,
-                                               function (scope, 
-                                                         type, 
-                                                         name) {
-                                                 if (type == "begin_group") 
-                                                    c(scope, name)
-                                                    else if (type == "end_group") utils::head(scope, -1)
-                                                 else scope
-                                               }, .init = character()) |> utils::tail(-1),
-                    ##Apply a function to each element of a list 
-                    scope = purrr::map_chr(scope, 
-                                           stringr::str_c, 
-                                           collapse = "."),         
-                    
-                    name = dplyr::case_when(scope == "" ~ name,
-                                            type == "begin_group" ~ scope,
-                                            TRUE ~ stringr::str_c(scope, name, sep = "."))) 
+                  
+                  ## Build the scope
+                  scope = purrr::accumulate2(type, name,
+                                             function (scope, 
+                                                       type, 
+                                                       name ) {
+                                               
+                    ## Rebuild variable name based potential combination of sequence   
+                    if (type == "begin_group")  c(scope, name )
+                    else if (type == "begin_repeat")  c(scope, name )
+                    else if (type  == "end_group") utils::head(scope, -1)
+                    else if (type  == "end_repeat") utils::head(scope, -1)
+                    else scope
+                         }, .init = character()) |> 
+                      utils::tail(-1) ,
+                  ##Apply a function to each element of a list 
+                  scope = purrr::map_chr(scope,
+                                         stringr::str_c,
+                                         collapse = ".") ,
+                  name =  dplyr::if_else(scope == "", name, paste0(scope,".",name)  ) ,
+                  repeatvar = dplyr::if_else(repeatvar == "", "main", repeatvar  )) 
   
   
   ## Fix when we have calculate variable - either numeric or select_one
@@ -252,11 +251,11 @@ kobo_dico <- function(xlsformpath) {
      
      
      
-    dico <- list( variables, 
-                  modalities,
-                  settings,
-                  plan,
-                  indicator)
+    dico <- list( variables = variables, 
+                  modalities = modalities,
+                  settings = settings,
+                  plan = plan,
+                  indicator = indicator)
     class(dico) <- "kobodico" # assigns a "kobodico" class to the list. Helpful for later on. 
     ## Build dico object as list with both variables and modalities
     return(dico )

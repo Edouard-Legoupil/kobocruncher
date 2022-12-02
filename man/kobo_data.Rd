@@ -18,8 +18,8 @@ Data loading
 \examples{
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # MainFrame
-datalist[1]
+datalist[["main"]]
 # Second Frame - based on presence of repeat within the form, aka nested or
 # hierarchical data structure, etc... 
-datalist[2]  
+datalist[["members"]]
 }

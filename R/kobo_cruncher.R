@@ -21,14 +21,14 @@ kobo_cruncher <- function(datalist = datalist,
                           dico = dico) {
   
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
-  questions <- as.data.frame(dico[4])
-  disaggregation <-  c(as.data.frame(dico[1]) |> 
+  questions <- as.data.frame(dico[[4]])
+  disaggregation <-  c(as.data.frame(dico[[1]]) |> 
                         dplyr::filter( !(is.na(disaggregation))) |>
                         dplyr::pull(name) )
   
-  correlate <-   c(as.data.frame(dico[1]) |> 
+  correlate <-   c(as.data.frame(dico[[1]]) |> 
                    dplyr::filter( !(is.na(correlate))) |>
                    dplyr::pull(name))
   
@@ -36,14 +36,14 @@ kobo_cruncher <- function(datalist = datalist,
   ## If disaggregation not included in the function argument then use what's set up in the analysis plan
   if (  length(disaggregation) == 1 ) { 
     if (  disaggregation == "" ) { 
-      disaggregation <- as.data.frame(dico[1]) |> 
+      disaggregation <- as.data.frame(dico[[1]]) |> 
         dplyr::filter( !(is.na(disaggregation))) |>
         dplyr::pull(name) } }
   
 
   # If correlate not included in the function argument then use what's set up in the analysis plan
   if (length(correlate) ==1) {
-    if (correlate == "") { correlate <- as.data.frame(dico[1])|> 
+    if (correlate == "") { correlate <- as.data.frame(dico[[1]])|> 
       dplyr::filter( !(is.na(correlate))) |>
       dplyr::pull(name) }}
   

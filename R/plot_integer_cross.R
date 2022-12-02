@@ -32,7 +32,7 @@ plot_integer_cross <- function(datalist = datalist,
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -56,8 +56,12 @@ plot_integer_cross <- function(datalist = datalist,
   
   if ( is.nan(rr) | is.nan(rr2) ) {
     cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
+    return(invisible())
+    
   } else if (  ! (identical(data,data2))  ) {
     # nothing to do - the variable are not in the same frame
+    return(invisible())
+    
     } else {
   
   ## Writing report
@@ -66,7 +70,7 @@ plot_integer_cross <- function(datalist = datalist,
       if( showcode == TRUE) {
         cat(paste0(label_varname(dico = dico,
                                                    x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
+                                      "  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
     
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
@@ -93,7 +97,9 @@ plot_integer_cross <- function(datalist = datalist,
     
    return(p) #  print(p)
     
-    } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
+  } else { 
+    cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n"))
+    return(invisible())}
   # cat("\n\n")
   }
 }

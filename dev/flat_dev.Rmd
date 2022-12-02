@@ -53,20 +53,20 @@ form <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
 
 kobo_data <- function(datapath) {
    # cat(readxl::excel_sheets(datapath ))
-    datalist <- lapply(readxl::excel_sheets(datapath ), function(x) readxl::read_excel(datapath , sheet = x))  
+  
+  datalist <- lapply(readxl::excel_sheets(datapath ), function(x) readxl::read_excel(datapath , sheet = x))  
+  
+  # Get sheet names
+  sheet_names <- readxl::excel_sheets(datapath)  
+  ## rename the first sheet as name
+  sheet_names[1] <- "main"
+  # Rename list elements
+  names(datalist) <- sheet_names  
     
     ## In case we do not have the right group separator!
     datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("/", ".", colnames(y)); y})
     
-    ## Recent kobo export append a counter in the export when there's a unique vaiable
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_001", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_002", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_003", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_004", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_005", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_006", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_007", "", colnames(y)); y})
-    # datalist <- lapply(datalist, function(y) {colnames(y) <- gsub("_008", "", colnames(y)); y})
+     
     #names(datalist) <- readxl::excel_sheets(datapath )
     
    ## Rebuild  a single key var - parent_index between the main frames and nested ones.. assume a single level of nesting
@@ -85,10 +85,10 @@ kobo_data <- function(datapath) {
 ```{r examples-kobo_data}
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # MainFrame
-datalist[1]
+datalist[["main"]]
 # Second Frame - based on presence of repeat within the form, aka nested or
 # hierarchical data structure, etc... 
-datalist[2]  
+datalist[["members"]]
 ```
 
 ```{r tests-kobo_data}
@@ -551,6 +551,7 @@ kobo_prepare_form <- function(xlsformpath,
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' 
 #' @importFrom tidyselect matches
+#' @importFrom purrr map_chr accumulate2
 #' 
 #' @return A "kobodico" S3 class object (list) formatted to the specifications of "kobocruncher".
 #' @export
@@ -573,7 +574,7 @@ kobo_dico <- function(xlsformpath) {
                                        "begin repeat" = "begin_repeat" ,
                                        "end repeat"   ="end_repeat")) |>
     
-    ## spearate the type
+    ## separate the type
     tidyr::separate(type, 
                         into = c("type", "list_name"), 
                         sep = " ",
@@ -584,40 +585,38 @@ kobo_dico <- function(xlsformpath) {
     #dplyr::filter(!(is.na(label))) |>
     dplyr::filter(!(is.na(type))) |>
     
-    # capturing repeat
+   # capturing repeat, group and rebuilding full name
     dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
                                                   function (repeatvar, type, name) {
                                                     if (type  == "begin_repeat")  c(repeatvar, name)
                                                     else if (type  == "end_repeat") utils::head(repeatvar, -1)
                                                     else repeatvar
-                                                  }, .init = character()) |> utils::tail(-1),
+                                                  }, .init = character()) |> utils::tail(-1) ,  
                   ##Apply a function to each element of a list 
                   repeatvar = purrr::map_chr(repeatvar,
                                              stringr::str_c, 
                                              collapse = ".") ,
-                  name = dplyr::case_when(repeatvar == "" ~ name,
-                                          type == "begin_repeat"~ repeatvar,
-                                          TRUE ~ stringr::str_c(repeatvar, name, sep = "."))) |>
-                 
-    
-      # capturing Group
-      dplyr::mutate(scope = purrr::accumulate2(type, name,
-                                               function (scope, 
-                                                         type, 
-                                                         name) {
-                                                 if (type == "begin_group") 
-                                                    c(scope, name)
-                                                    else if (type == "end_group") utils::head(scope, -1)
-                                                 else scope
-                                               }, .init = character()) |> utils::tail(-1),
-                    ##Apply a function to each element of a list 
-                    scope = purrr::map_chr(scope, 
-                                           stringr::str_c, 
-                                           collapse = "."),         
-                    
-                    name = dplyr::case_when(scope == "" ~ name,
-                                            type == "begin_group" ~ scope,
-                                            TRUE ~ stringr::str_c(scope, name, sep = "."))) 
+                  
+                  ## Build the scope
+                  scope = purrr::accumulate2(type, name,
+                                             function (scope, 
+                                                       type, 
+                                                       name ) {
+                                               
+                    ## Rebuild variable name based potential combination of sequence   
+                    if (type == "begin_group")  c(scope, name )
+                    else if (type == "begin_repeat")  c(scope, name )
+                    else if (type  == "end_group") utils::head(scope, -1)
+                    else if (type  == "end_repeat") utils::head(scope, -1)
+                    else scope
+                         }, .init = character()) |> 
+                      utils::tail(-1) ,
+                  ##Apply a function to each element of a list 
+                  scope = purrr::map_chr(scope,
+                                         stringr::str_c,
+                                         collapse = ".") ,
+                  name =  dplyr::if_else(scope == "", name, paste0(scope,".",name)  ) ,
+                  repeatvar = dplyr::if_else(repeatvar == "", "main", repeatvar  )) 
   
   
   ## Fix when we have calculate variable - either numeric or select_one
@@ -782,11 +781,11 @@ kobo_dico <- function(xlsformpath) {
      
      
      
-    dico <- list( variables, 
-                  modalities,
-                  settings,
-                  plan,
-                  indicator)
+    dico <- list( variables = variables, 
+                  modalities = modalities,
+                  settings = settings,
+                  plan = plan,
+                  indicator = indicator)
     class(dico) <- "kobodico" # assigns a "kobodico" class to the list. Helpful for later on. 
     ## Build dico object as list with both variables and modalities
     return(dico )
@@ -798,25 +797,103 @@ kobo_dico <- function(xlsformpath) {
 ```{r examples-kobo_dico}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # Survey
-questions <- as.data.frame(dico[1])
+questions <- as.data.frame(dico[[1]])
 knitr::kable(utils::head(questions, 10))
 # Choices
-responses <- as.data.frame(dico[2])
+responses <- as.data.frame(dico[[2]])
 knitr::kable(utils::head(responses, 10))
 # Settings
-metadata <- as.data.frame(dico[3])
+metadata <- as.data.frame(dico[[3]])
 knitr::kable(utils::head(metadata, 10))
 # Report ToC
-toc <- as.data.frame(dico[4])
+toc <- as.data.frame(dico[[4]])
 knitr::kable(utils::head(toc, 10))
 # Indicator
-indicator <- as.data.frame(dico[5])
+indicator <- as.data.frame(dico[[5]])
 knitr::kable(utils::head(indicator, 10))
 ```
 
 # Data Processing
 
-## Cleaning
+
+## Clean time
+    
+```{r function-kobo_clean_time}
+#' Apply cleaning based on date and interview duration
+#' 
+#' Use metadata end & stat to apply automatic cleaning. 
+#' The functions removes not only the 
+#' main table but also the nested one
+#' 
+
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param startdatacollectiondate date when data collection started
+#' @param enddatacollectiondate date when data collection ended
+#' @param standardeviation number in minutes defining the accepted standard 
+#'         deviation for the duration of the interview - for instance + or - 20 minutes
+#' 
+#' 
+#' @return datalist An object of the "datalist" class as defined in kobocruncher
+#' 
+#' @export
+# kobo_clean_time <- function(datalist, 
+#                             startdatacollectiondate,
+#                             enddatacollectiondate,
+#                             standardeviation){
+#     
+#     ## Open the master frame and perform the calculation and filters
+#     ds <- datalist[[1]]  |>
+#           ## reformat data
+#           dplyr::mutate( start = dplyr::if_else(nchar(start) == 29,
+#                                 substr(start,0,23) ,
+#                                 start)) |>
+#           dplyr::mutate( start = stringi::stri_datetime_format(strptime(start ,
+#                                       "%Y-%m-%dT%H:%M:%OS"))) |>
+#       
+#       
+#           dplyr::mutate( end = dplyr::if_else(nchar(end) == 29,
+#                                 substr(end,0,23) ,
+#                                 end)) |>
+#           dplyr::mutate( end = stringi::stri_datetime_format(strptime(end ,
+#                                       "%Y-%m-%dT%H:%M:%OS"))) |>
+#           dplyr::mutate( duration = difftime(end, 
+#                                         start,  
+#                                         units = "secs") / 60) |>
+#           ## Apply filter on start and end data collection date
+#           dplyr::filter( as.Date(start) > as.Date(startdatacollectiondate))|>
+#           dplyr::filter( as.Date(start) < as.Date(enddatacollectiondate)) 
+#     
+#     ### Get values for Average and Standard Deviation for the interview duration 
+# 
+#     ## Now remove all orphans records from nested frame
+#     
+#     
+#         
+#         
+# 
+#   return(datalist)
+#   
+#     
+# }
+```
+  
+```{r example-kobo_clean_time}
+# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
+# nrow(datalist[[1]])
+# datalist <- kobo_clean_time(datalist,
+#                             startdatacollectiondate = "2022-10-25",
+#                             enddatacollectiondate = "2022-10-29",
+#                             standardeviation = 25)
+# nrow(datalist[[1]])
+```
+  
+```{r tests-kobo_clean_time}
+#test_that("kobo_clean_time works", {   expect_true(inherits(kobo_clean_time, "function"))})
+```
+
+
+
+## Cleaning categories
 
  to do....
 
@@ -853,7 +930,7 @@ kobo_clean <- function(datalist,
                        indicatoradd = NULL) {
 
 #   1 - load the variables, 
-  var <- as.data.frame(dico[1])  
+  var <- as.data.frame(dico[[1]])  
 #   2 - append the one from inidcatoradd if any,
   
 #   3 - apply the indicator, i.e. do the calculation,
@@ -937,6 +1014,8 @@ Indicator calculation
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' @param xlsformpathout path to save the xlsform file with newly added indicators
 #' 
+#' @importFrom purrr modify_at
+#' 
 #' @export  
 
 kobo_indicator <- function(datalist,
@@ -946,7 +1025,7 @@ kobo_indicator <- function(datalist,
                        indicatoradd = NULL) {
 
 #   1 - load the indicators ---->
-indicator <- as.data.frame(dico[5])  
+indicator <- as.data.frame(dico[[5]])  
 if(!'type' %in% names(indicator)) indicator <- indicator |> tibble::add_column(type = NA)
 if(!'name' %in% names(indicator)) indicator <- indicator |> tibble::add_column(name = NA)
 if(!'label' %in% names(indicator)) indicator <- indicator |> tibble::add_column(label = NA)
@@ -1025,7 +1104,7 @@ indicator <- indicator[ ,c("type","name","label", "hint",
     
     
 # 6 - rebuild the plan if indicators are allocated to chapter, subchapter ---->
-    variables <- as.data.frame(dico[1])
+    variables <- as.data.frame(dico[[1]])
     if (  nrow(as.data.frame(variables)|> dplyr::filter(! is.na(chapter)))  > 1 ) {
       
       
@@ -1161,7 +1240,6 @@ table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
 
  to do....
 
-
 ```{r function-kobo_anonymise}
 #' @title Assess Statistical disclosure risk based on an intrusions scenario
 #' 
@@ -1191,7 +1269,7 @@ kobo_anonymise <- function(datalist,
                        dico) {
 
 #   1 - load the indicators, 
-  indicator <- as.data.frame(dico[4])  
+  indicator <- as.data.frame(dico[[4]])  
 #   2 - append the one from inidcatoradd if any,
   
 #   3 - apply the indicator, i.e. do the calculation,
@@ -1235,14 +1313,14 @@ kobo_frame <- function(datalist,
                        var) {
   
   ## Identify the right frame number
-  dataframen <- as.data.frame(dico[1]) |>
+  dataframen <- as.data.frame(dico[[1]]) |>
                   dplyr::filter(name == var) |>
-                  dplyr::pull(dataframe)  
+                  dplyr::pull(repeatvar)  
   ## Pull the data
-  data  <-  datalist[dataframen] |>
+  data  <-  datalist[[dataframen]] |>
               as.data.frame()
   
-## get correct id whether the frmae is nested one or not.. 
+## get correct id whether the frame is nested one or not.. 
 if ("_id" %in% colnames(data)) { data$X_id <-  data$`_id` } else {  }
 if ("_index" %in% colnames(data)) { data$X_id <-  data$`_index` } else {  }
 if ("X_index" %in% colnames(data)) { data$X_id <-  data$X_index  } else { }
@@ -1283,7 +1361,7 @@ knitr::kable(utils::head(data,5))
 #' @export
 
 label_varname <- function(dico, x) {
-  as.data.frame( dico[1]) |>
+  as.data.frame( dico[[1]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(label)
 }
@@ -1313,7 +1391,7 @@ label_varname(dico = dico,
 #' @export
 
 label_varhint <- function(dico, x) {
-  as.data.frame(dico[1]) |>
+  as.data.frame(dico[[1]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(hint)
 }
@@ -1347,12 +1425,12 @@ label_varhint(dico = dico,
 
 label_choiceset <- function(dico,
                             x) {
-  lname <- as.data.frame(dico[1]) |>
+  lname <- as.data.frame(dico[[1]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(list_name)
   
   dict <- 
-    as.data.frame(dico[2]) |>
+    as.data.frame(dico[[2]]) |>
     dplyr::filter(list_name == lname) |> 
     (\(x) purrr::set_names(x$label, x$name))()
   
@@ -1416,7 +1494,7 @@ plot_select_one <- function(datalist  ,
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
  
   data <- kobo_frame(datalist = datalist,
@@ -1428,6 +1506,9 @@ plot_select_one <- function(datalist  ,
   
   if ( is.nan(rr)) {
     cat(paste0("\n <strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
+   # return(invisible(NULL))
+     return(invisible())
+    
   } else {
   
   ## Put a condition in case there's no record
@@ -1464,7 +1545,7 @@ plot_select_one <- function(datalist  ,
   ## Writing code instruction in report
   if( showcode == TRUE) { cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),
+                                      
                                       "`plot_select_one(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}  else {}
   
     
@@ -1509,7 +1590,11 @@ plot_select_one <- function(datalist  ,
     
    return(p) #  print(p)
     
-  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
+  } else { 
+    cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) 
+      #return(invisible(NULL))
+      return(invisible())
+    }
   # cat("\n\n")
   }
 }  
@@ -1525,10 +1610,10 @@ plot_select_one(datalist = datalist,
               var = "profile.country",
               showcode = TRUE)
 
-plot_select_one(datalist = datalist,
-              dico = dico, 
-              var = "profile.countryerror",
-              showcode = TRUE)
+# plot_select_one(datalist = datalist,
+#               dico = dico, 
+#               var = "profile.countryerror",
+#               showcode = TRUE)
 ```
 
 ```{r tests-plot_select_one}
@@ -1564,7 +1649,7 @@ plot_select_multiple <- function(datalist = datalist,
   requireNamespace("dplyr")
   
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -1577,6 +1662,9 @@ plot_select_multiple <- function(datalist = datalist,
   
   if ( is.nan(rr)) {
     cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
+    #return(invisible(NULL))
+      return(invisible())
+    
   } else {
   
   ## If not empty
@@ -1613,7 +1701,7 @@ plot_select_multiple <- function(datalist = datalist,
     if( showcode == TRUE) {
       cat(paste0(label_varname(dico = dico,
                                                    x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_multiple(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}   else {} 
+                                      "  `plot_select_multiple(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}   else {} 
     
     require(ggplot2)
     ## Plot
@@ -1660,7 +1748,11 @@ plot_select_multiple <- function(datalist = datalist,
     
     #plot_select_multiple_cross(var,   by_var)
     
-  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
+  } else { 
+    cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) 
+      return(invisible())
+    #return(invisible(NULL))
+    }
   # cat("\n\n")
     
   }  
@@ -1679,11 +1771,11 @@ plot_select_multiple(datalist = datalist,
               showcode = TRUE
             )
 
-plot_select_multiple(datalist = datalist,
-              dico = dico, 
-              var = "profile.reason1",
-              showcode = TRUE
-            )
+# plot_select_multiple(datalist = datalist,
+#               dico = dico, 
+#               var = "profile.reason1",
+#               showcode = TRUE
+#             )
 
 ```
 
@@ -1718,7 +1810,7 @@ plot_integer <- function(datalist = datalist,
   requireNamespace("ggplot2") 
   requireNamespace("dplyr")
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
    
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -1731,6 +1823,8 @@ plot_integer <- function(datalist = datalist,
   # cat("\n\n")
  if ( is.nan(rr)) {
     cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
+      return(invisible())
+     #return(invisible(NULL))
   } else {
   
   ## Writing report
@@ -1739,7 +1833,7 @@ plot_integer <- function(datalist = datalist,
       if( showcode == TRUE) {
         cat(paste0(label_varname(dico = dico,
                                                    x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
+                                      "  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
     
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
@@ -1764,7 +1858,11 @@ plot_integer <- function(datalist = datalist,
     
    return(p) #  print(p)
     
-    } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
+  } else { 
+    cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n"))
+      return(invisible())
+    #return(invisible(NULL))  
+    }
   # cat("\n\n")
   }
 }
@@ -1819,9 +1917,9 @@ plot_text <- function(datalist = datalist,
   requireNamespace("dplyr")
   requireNamespace("SnowballC")
   requireNamespace("ggplot2")
-  require("ggplot2")
+ # require("ggplot2")
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -1836,6 +1934,9 @@ plot_text <- function(datalist = datalist,
   rr <- mean(!is.na(data[[var]]))
    if ( is.nan(rr)) {
     cat(paste0("\n <strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
+     #return(as.character(""))
+     return(invisible())
+     
   } else { 
       
   require("tm")
@@ -1880,7 +1981,7 @@ plot_text <- function(datalist = datalist,
         if( showcode == TRUE) {
           cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_text(datalist = datalist, dico = dico, \"", var, "\")`  \n\n"))}   else {}
+                                      "  `plot_text(datalist = datalist, dico = dico, \"", var, "\")`  \n\n"))}   else {}
       
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :
@@ -1921,7 +2022,10 @@ plot_text <- function(datalist = datalist,
       return(p1)
       
     
-  } else { cat("<strong style=\"color:#0072BC;\">No significant text for this specific question!</strong>\n\n")}
+    } else { 
+      cat(paste0("<strong style=\"color:#0072BC;\">No significant text for the  question: </strong>\n\n", var))}
+      return(invisible())
+      #return(invisible(NULL))
   
   # cat("\n\n")
   }
@@ -1977,111 +2081,173 @@ plot_select_one_cross <- function(datalist = datalist,
   
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
-  ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  ## Get default data source name
+  if (is.null(datasource)) {
+    datasource <- as.character(dico[[3]]$form_title)
+  }
   
   data <- kobo_frame(datalist = datalist,
-                   dico = dico,
-                   var = var  )
+                     dico = dico,
+                     var = var)
   
   data2 <- kobo_frame(datalist = datalist,
-                   dico = dico,
-                   var = by_var   )
+                      dico = dico,
+                      var = by_var)
   
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   rr2 <- mean(!is.na(data2[[by_var]]))
   ## Writing report
   # cat("\n")
- # cat(paste("####", label_varname(var)))
+  # cat(paste("####", label_varname(var)))
   #cat(paste("#### Variable: ", var))
   
-  if ( is.nan(rr) | is.nan(rr2) ) {
-    cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
-  } else if (  ! (identical(data,data2))  ) {
+  if (is.nan(rr) | is.nan(rr2)) {
+    cat(
+      paste0(
+        "<strong style=\"color:#0072BC;\">The variable from the form called: ",
+        var,
+        " or ",
+        by_var,
+        " could not be identified in the dataset</strong>\n\n"
+      )
+    )
+      return(invisible())
+    #return(invisible(NULL))
+    
+  } else if (!(identical(data, data2))) {
     # nothing to do - the variable are not in the same frame
-    } else {
-  
-  ## Put a condition in case there's no record
-  if (rr != 0 & ! (is.nan(rr)) ) { 
-    if(by_var != "") {
-      if( by_var != var ) {
-        
+     cat("")
+      return(invisible())
+     #return(invisible(NULL))
+  } else {
+    ## Put a condition in case there's no record
+    if (rr != 0 & !(is.nan(rr))) {
+      if (by_var != "") {
+        if (by_var != var) {
           ## Writing code instruction in report
-          if( showcode == TRUE) { 
-            cat(paste0( label_varname(dico = dico,
-                                                   x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_select_one_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}     else {}
-
-      cnts1 <- data |>
-        ## keep only the variable we need
-        tidyr::drop_na(tidyselect::all_of(c(var,by_var))) 
-      
-      ## Need to check that there's actually a proper intersection in the response... 
-      if(nrow(cnts1) == 0) {
-        
-         cat(paste0("<strong style=\"color:#0072BC;\">There is not intersection between the answers from the variables from the form called: ",var," or ", by_var, " in the dataset</strong>\n\n"))
+          if (showcode == TRUE) {
+            cat(
+              paste0(
+                label_varname(dico = dico,
+                              x = var),
+                "\n",
+                "  `plot_select_one_cross(datalist = datalist, dico = dico, \"",
+                var,
+                "\",\"",
+                by_var,
+                "\")` \n\n "
+              )
+            )
+          }     else {
+          }
+          
+          cnts1 <- data |>
+            ## keep only the variable we need
+            tidyr::drop_na(tidyselect::all_of(c(var, by_var)))
+          
+          ## Need to check that there's actually a proper intersection in the response...
+          if (nrow(cnts1) == 0) {
+            cat(
+              paste0(
+                "<strong style=\"color:#0072BC;\">There is not intersection between the answers from the variables from the form called: ",
+                var,
+                " or ",
+                by_var,
+                " in the dataset</strong>\n\n"
+              )
+            )
+          } else {
+            cnts <- cnts1 |>
+              # Lump together factor levels into "other"
+              dplyr::count(
+                x := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
+                y := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5)
+              ) |>
+              dplyr::mutate(p = n / sum(n)) |>
+              dplyr::group_by(y) |>
+              dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
+                            pcum = n / cumsum)
+            
+            ## plot
+            require(ggplot2)
+            p <- ggplot2::ggplot(cnts,
+                                 aes(x = pcum,
+                                     y = x)) +
+              geom_col(fill = "#0072BC") +
+              #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
+              ## Position label differently in the bar in white - outside bar in black
+              geom_label(
+                data =   function(x)
+                  subset(x, pcum < max(pcum) / 1.5),
+                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                hjust = -0.1 ,
+                vjust = 0.5,
+                colour = "black",
+                fill = NA,
+                label.size = NA,
+                size = 5
+              ) +
+              geom_label(
+                data =   function(x)
+                  subset(x, pcum >= max(pcum) / 1.5),
+                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                hjust = 1.1 ,
+                vjust = 0.5,
+                colour = "white",
+                fill = NA,
+                label.size = NA,
+                size = 5
+              ) +
+              scale_x_continuous(labels = scales::label_percent()) +
+              facet_wrap(~ y ,
+                         nrow = 3  ,
+                         labeller = as_labeller(function(x)
+                           label_choiceset(dico = dico,
+                                           x = by_var)(x))) +
+              scale_y_discrete(
+                labels = function(x) {
+                  label_choiceset(dico = dico,
+                                  x = var)(x) |>
+                    stringr::str_wrap(40)
+                }
+              ) +
+              coord_cartesian(clip = "off") +
+              labs(
+                x = NULL,
+                y = NULL,
+                title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
+                subtitle = stringr::str_wrap(paste0(
+                  "Crossed by ", label_varname(dico = dico, x = by_var)
+                ), 90),
+                caption = glue::glue(
+                  "Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
+                )
+              ) +
+              theme_minimal(base_size = 24) +
+              geom_vline(xintercept = 0,
+                         size = 1.1,
+                         colour = "#333333") +
+              theme(
+                panel.grid.major.x  = element_line(color = "#cbcbcb"),
+                panel.grid.major.y  = element_blank(),
+                panel.grid.minor = element_blank()
+              ) +
+              theme(plot.title.position = "plot")
+            
+            return(p) #  print(p)
+          }
+        }
       } else {
-      
-      cnts <- cnts1 |>  
-        # Lump together factor levels into "other"
-        dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
-                     y := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
-        dplyr::mutate(p = n/sum(n)) |>
-        dplyr::group_by(y) |>
-        dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                      pcum = n / cumsum)  
-       
-       ## plot
-       require(ggplot2)
-       p <- ggplot2::ggplot(cnts, 
-                  aes(x= pcum, 
-                      y = x)) +
-        geom_col(fill = "#0072BC") +
-        #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
-        ## Position label differently in the bar in white - outside bar in black
-        geom_label( data =   function(x) subset(x, pcum < max(pcum) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                    hjust = -0.1 ,
-                    vjust = 0.5, 
-                    colour = "black", 
-                    fill = NA, 
-                    label.size = NA,
-                    size = 5   ) +  
-        geom_label( data =   function(x) subset(x, pcum >= max(pcum) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                    hjust = 1.1 ,
-                    vjust = 0.5, 
-                    colour = "white", 
-                    fill = NA, 
-                    label.size = NA, 
-                    size = 5   ) +   
-        scale_x_continuous(labels = scales::label_percent()) +
-        facet_wrap( ~ y ,  nrow = 3  ,
-                      labeller = as_labeller(function(x) label_choiceset(dico = dico,
-                                                                      x = by_var)(x))
-          ) +
-          scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
-                                                            x = var)(x) |>
-              stringr::str_wrap(40)}) +
-        coord_cartesian(clip = "off") +
-        labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico, x = by_var)), 90),
-             caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-        theme_minimal( base_size = 24) +  
-        geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
-        theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
-                 panel.grid.major.y  = element_blank(), 
-                 panel.grid.minor = element_blank()    ) +
-        theme(plot.title.position = "plot")
-
-       return(p) #  print(p)
+         cat("")
+         #return(invisible(NULL))
+         return(invisible())
       }
-      }
-    } else { }
-  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
-  # cat("\n\n")
+    } else {
+      cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>", var,  "\n\n" ) )
+      return(invisible())
+    }
+    # cat("\n\n")
   }
 }
 
@@ -2146,123 +2312,178 @@ plot_select_multiple_cross <- function(datalist = datalist,
   
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
-  ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  ## Get default data source name
+  if (is.null(datasource)) {
+    datasource <- as.character(dico[[3]]$form_title)
+  }
   
   data <- kobo_frame(datalist = datalist,
-                   dico = dico,
-                   var = var  )
+                     dico = dico,
+                     var = var)
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   nr <- sum(!is.na(data[[var]]))
   
-   data2 <- kobo_frame(datalist = datalist,
-                   dico = dico,
-                   var = by_var   )
+  data2 <- kobo_frame(datalist = datalist,
+                      dico = dico,
+                      var = by_var)
   
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   rr2 <- mean(!is.na(data2[[by_var]]))
   ## Writing report
   # cat("\n")
- # cat(paste("####", label_varname(var)))
+  # cat(paste("####", label_varname(var)))
   #cat(paste("#### Variable: ", var))
   
-  if ( is.nan(rr) | is.nan(rr2) ) {
-    cat(paste0("<strong style=\"color:#0072BC;\">The variables from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
-  } else if (  ! (identical(data,data2))  ) {
+  if (is.nan(rr) | is.nan(rr2)) {
+    cat(
+      paste0(
+        "<strong style=\"color:#0072BC;\">The variables from the form called: ",
+        var,
+        " or ",
+        by_var,
+        " could not be identified in the dataset</strong>\n\n"
+      )
+    )
+  } else if (!(identical(data, data2))) {
     # nothing to do - the variable are not in the same frame
-    } else {
-  
-  ## Writing report
-  if (rr != 0 & ! (is.nan(rr))  ) { 
+    cat("")
+    return(invisible())
     
-    if(by_var != "") {
-      if( by_var != var ) {
-        
+  } else {
+    ## Writing report
+    if (rr != 0 & !(is.nan(rr))) {
+      if (by_var != "") {
+        if (by_var != var) {
           ## Writing code instruction in report
-          if( showcode == TRUE) {
-             cat(paste0(label_varname(dico = dico,
-                                                   x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"), "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))}   else {}
-
-        
-      cntscross1 <- data |>
-        ## keep only the variable we need 
-        tidyr::drop_na( tidyselect::all_of(c(var,by_var)))
-      
-      ## Need to check that there's actually a proper intersection in the response... 
-      if(nrow(cntscross1) == 0) {
-        
-         cat(paste0("<strong style=\"color:#0072BC;\">There is not intersection between the answers from the variables from the form called: ",var," or ", by_var, " in the dataset</strong>\n\n"))
+          if (showcode == TRUE) {
+            cat(
+              paste0(
+                label_varname(dico = dico,
+                              x = var),
+                "\n",
+                "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"",
+                var,
+                "\",\"",
+                by_var,
+                "\")` \n\n "
+              )
+            )
+          }   else {
+          }
+          
+          
+          cntscross1 <- data |>
+            ## keep only the variable we need
+            tidyr::drop_na(tidyselect::all_of(c(var, by_var)))
+          
+          ## Need to check that there's actually a proper intersection in the response...
+          if (nrow(cntscross1) == 0) {
+            cat(
+              paste0(
+                "<strong style=\"color:#0072BC;\">There is not intersection between the answers from the variables from the form called: ",
+                var,
+                " or ",
+                by_var,
+                " in the dataset</strong>\n\n"
+              )
+            )
+          } else {
+            cntscross <- cntscross1 |>
+              ## Separate the var with select_multiple
+              tidyr::separate_rows(.data[[var]], sep = " ") |>
+              # Lump together factor levels into "other"
+              dplyr::distinct(
+                `X_id`,!!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),!!by_var := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5)
+              ) |>
+              # Lump together factor levels into "other"
+              dplyr::count(x := .data[[var]],
+                           y := .data[[by_var]]) |>
+              dplyr::mutate(p = n / sum(n)) |>
+              dplyr::group_by(y) |>
+              dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
+                            pcum = n / cumsum)
+            ##plot
+            
+            require(ggplot2)
+            p <- ggplot2::ggplot(cntscross,
+                                 aes(x = pcum,
+                                     y = x)) +
+              geom_col(fill = "#0072BC") +
+              #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
+              ## Position label differently in the bar in white - outside bar in black
+              geom_label(
+                data =   function(x)
+                  subset(x, pcum < max(pcum) / 1.5),
+                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                hjust = -0.1 ,
+                vjust = 0.5,
+                colour = "black",
+                fill = NA,
+                label.size = NA,
+                size = 5
+              ) +
+              geom_label(
+                data =   function(x)
+                  subset(x, pcum >= max(pcum) / 1.5),
+                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                hjust = 1.1 ,
+                vjust = 0.5,
+                colour = "white",
+                fill = NA,
+                label.size = NA,
+                size = 5
+              ) +
+              scale_x_continuous(labels = scales::label_percent()) +
+              facet_wrap(~ y ,
+                         nrow = 3,
+                         labeller = as_labeller(function(x)
+                           label_choiceset(dico = dico,
+                                           x = by_var)(x))) +
+              scale_y_discrete(
+                labels = function(x) {
+                  label_choiceset(dico = dico,
+                                  x = var)(x) |>
+                    stringr::str_wrap(40)
+                }
+              ) +
+              coord_cartesian(clip = "off") +
+              labs(
+                x = NULL,
+                y = NULL,
+                title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
+                subtitle = stringr::str_wrap(paste0(
+                  "Crossed by ", label_varname(dico = dico,  x = by_var)
+                ), 90),
+                caption = glue::glue(
+                  "Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
+                )
+              ) +
+              theme_minimal(base_size = 24) +
+              geom_vline(xintercept = 0,
+                         size = 1.1,
+                         colour = "#333333") +
+              theme(
+                panel.grid.major.x  = element_line(color = "#cbcbcb"),
+                panel.grid.major.y  = element_blank(),
+                panel.grid.minor = element_blank()
+              ) +
+              theme(plot.title.position = "plot")
+            
+            return(p) #  print(p)
+          }
+          
+        }
       } else {
-      
-      cntscross <- cntscross1 |>
-        ## Separate the var with select_multiple 
-        tidyr::separate_rows(.data[[var]], sep = " ") |>
-        # Lump together factor levels into "other"
-        dplyr::distinct(`X_id`, 
-                 !!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
-                 !!by_var := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5) ) |>
-        # Lump together factor levels into "other"
-        dplyr::count(x := .data[[var]],
-                     y := .data[[by_var]] ) |>
-        dplyr::mutate(p = n/sum(n)) |>
-        dplyr::group_by(y) |>
-        dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                      pcum = n / cumsum)  
-      ##plot
-      
-       require(ggplot2)
-       p <- ggplot2::ggplot(cntscross, 
-                  aes(x= pcum, 
-                      y = x)) +
-        geom_col(fill = "#0072BC") +
-        #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
-        ## Position label differently in the bar in white - outside bar in black
-        geom_label( data =   function(x) subset(x, pcum < max(pcum) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                    hjust = -0.1 ,
-                    vjust = 0.5, 
-                    colour = "black", 
-                    fill = NA, 
-                    label.size = NA, 
-                    size = 5   ) +  
-        geom_label( data =   function(x) subset(x, pcum >= max(pcum) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                    hjust = 1.1 ,
-                    vjust = 0.5, 
-                    colour = "white", 
-                    fill = NA, 
-                    label.size = NA, 
-                    size = 5   ) +   
-        scale_x_continuous(labels = scales::label_percent()) +
-        facet_wrap( ~ y ,  nrow = 3,
-                    labeller = as_labeller(function(x) label_choiceset(dico = dico,
-                                                         x= by_var)(x))
-                    ) +
-        scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
-                                                          x = var)(x) |>
-            stringr::str_wrap(40)}) +
-        coord_cartesian(clip = "off") +
-        labs(x = NULL, y = NULL,
-             title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
-             subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico,  x = by_var)), 90),
-             caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-        theme_minimal( base_size = 24) +  
-        geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
-        theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
-               panel.grid.major.y  = element_blank(), 
-               panel.grid.minor = element_blank()    ) +
-        theme(plot.title.position = "plot")
-      
-      return(p) #  print(p)
+        
+          return(invisible())
       }
-       
-    }   
-    } else { }
-  } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
-  # cat("\n\n")
+    } else {
+      cat( paste0( "<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n"))
+      return(invisible())
+    }
+    # cat("\n\n")
     
   }
 }
@@ -2315,7 +2536,7 @@ plot_integer_cross <- function(datalist = datalist,
   requireNamespace("ggplot2")
   requireNamespace("dplyr")
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
   data <- kobo_frame(datalist = datalist,
                    dico = dico,
@@ -2339,8 +2560,12 @@ plot_integer_cross <- function(datalist = datalist,
   
   if ( is.nan(rr) | is.nan(rr2) ) {
     cat(paste0("<strong style=\"color:#0072BC;\">The variable from the form called: ",var," or ", by_var, " could not be identified in the dataset</strong>\n\n"))
+    return(invisible())
+    
   } else if (  ! (identical(data,data2))  ) {
     # nothing to do - the variable are not in the same frame
+    return(invisible())
+    
     } else {
   
   ## Writing report
@@ -2349,7 +2574,7 @@ plot_integer_cross <- function(datalist = datalist,
       if( showcode == TRUE) {
         cat(paste0(label_varname(dico = dico,
                                                    x = var), "\n",
-                                      fontawesome::fa("far fa-copy", fill ="grey"),"  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
+                                      "  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
     
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
@@ -2376,7 +2601,9 @@ plot_integer_cross <- function(datalist = datalist,
     
    return(p) #  print(p)
     
-    } else { cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n")) }
+  } else { 
+    cat(paste0("<strong style=\"color:#0072BC;\"> No recorded answers for the question: </strong>",var,"\n\n"))
+    return(invisible())}
   # cat("\n\n")
   }
 }
@@ -2428,7 +2655,7 @@ plot_correlation <- function(datalist = datalist,
                              showcode = FALSE) {
   
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
   ## verify they are in the same frame
   frame1 <- kobo_frame(datalist = datalist,
@@ -2479,7 +2706,7 @@ plot_correlation <- function(datalist = datalist,
             
             ## Writing code instruction in report
             if( showcode == TRUE) {
-              cat(paste0("\n ", label_varname(dico = dico, x = var), "\n", fontawesome::fa("far fa-copy", fill ="grey"),
+              cat(paste0("\n ", label_varname(dico = dico, x = var), "\n", 
                          " `plot_correlation(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))} else {}
               
 
@@ -2643,7 +2870,7 @@ plot_likert <- function(datalist = datalist,
                         showcode = FALSE) {
  
    ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   require(dplyr)
   require(ggplot2)
   require(likert)
@@ -2651,25 +2878,25 @@ plot_likert <- function(datalist = datalist,
   
    ## Writing code instruction in report
     if( showcode == TRUE) {
-      cat(paste0( fontawesome::fa("far fa-copy", fill ="grey"),
+      cat(paste0( 
          " `plot_likert(datalist = datalist, dico = dico,  scopei =  \"", 
          scopei, "\",   list_namei =  \"", 
          list_namei, "\",  dataframei =  \"", 
          dataframei, "\")` \n\n "))} else {}
              
-   labelgroup <- as.data.frame(dico[1]) |>
+   labelgroup <- as.data.frame(dico[[1]]) |>
             dplyr::filter( name  %in%  c(scopei)) |>
             dplyr::select( label) |>
             dplyr::pull()
           
-    nlevel_likert <- as.data.frame(dico[2]) |>
+    nlevel_likert <- as.data.frame(dico[[2]]) |>
             dplyr::filter( list_name ==   list_namei) |>
             dplyr::select( name, label)  |>
             dplyr::distinct() 
     labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
           
     ##  Subsetting data - checking levels - and applying label
-    var <- as.data.frame(dico[1]) |>
+    var <- as.data.frame(dico[[1]]) |>
                  dplyr::filter( list_name ==  list_namei &
                                 scope == scopei  &
                                 dataframe == dataframei  &
@@ -2800,14 +3027,14 @@ plot_header <- function(dico = dico,
   ## getting header levels
   lvl <- stringr::str_count(var, "\\.")
   
-  label <- as.data.frame(dico[1]) |>
+  label <- as.data.frame(dico[[1]]) |>
            dplyr::filter(name == var) |>
           ## Filter down in case the same var name was given to end group or repat... 
            dplyr::filter(! (type %in% c("end_group", "end_repeat")) ) |>
            dplyr::pull(label)
 
   ## In case the header comes from chapter   
-  lbchap <- as.data.frame(dico[4]) |>
+  lbchap <- as.data.frame(dico[[4]]) |>
             dplyr::filter(name == var) |>
             dplyr::pull(label)
 
@@ -2821,11 +3048,17 @@ plot_header <- function(dico = dico,
   hdr <- stringr::str_c(strrep("#", 1+lvl), " ", title, sep = "")
   
   ## Now Printing the headers
-  cat("---\n")
+  #head <- paste0("\n --- \n \n \n", hdr,"\n\n" )
+  
+  cat("------\n")
   cat("\n\n")
   cat("\n")
   cat(hdr)
   cat("\n\n")
+  #return(head)
+  #return( as.character(""))
+  return(invisible())
+   #return(invisible(NULL))
 }
 
 ```
@@ -2860,14 +3093,14 @@ kobo_cruncher <- function(datalist = datalist,
                           dico = dico) {
   
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
-  questions <- as.data.frame(dico[4])
-  disaggregation <-  c(as.data.frame(dico[1]) |> 
+  questions <- as.data.frame(dico[[4]])
+  disaggregation <-  c(as.data.frame(dico[[1]]) |> 
                         dplyr::filter( !(is.na(disaggregation))) |>
                         dplyr::pull(name) )
   
-  correlate <-   c(as.data.frame(dico[1]) |> 
+  correlate <-   c(as.data.frame(dico[[1]]) |> 
                    dplyr::filter( !(is.na(correlate))) |>
                    dplyr::pull(name))
   
@@ -2875,14 +3108,14 @@ kobo_cruncher <- function(datalist = datalist,
   ## If disaggregation not included in the function argument then use what's set up in the analysis plan
   if (  length(disaggregation) == 1 ) { 
     if (  disaggregation == "" ) { 
-      disaggregation <- as.data.frame(dico[1]) |> 
+      disaggregation <- as.data.frame(dico[[1]]) |> 
         dplyr::filter( !(is.na(disaggregation))) |>
         dplyr::pull(name) } }
   
 
   # If correlate not included in the function argument then use what's set up in the analysis plan
   if (length(correlate) ==1) {
-    if (correlate == "") { correlate <- as.data.frame(dico[1])|> 
+    if (correlate == "") { correlate <- as.data.frame(dico[[1]])|> 
       dplyr::filter( !(is.na(correlate))) |>
       dplyr::pull(name) }}
   
@@ -3003,13 +3236,13 @@ kobo_likert <- function(datalist = datalist,
                           dico = dico) {
   
   ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
   require(dplyr)
   ## Check the frequency of list_name within each group,
   ## Filter the combination of list and group where we have more than 3 occurrences
   # not taking in account when the appearance is not "label"
-  grouplikert <- as.data.frame(dico[1]) |>
+  grouplikert <- as.data.frame(dico[[1]]) |>
     dplyr::filter( type ==  "select_one") |>
     dplyr::filter( appearance !=  "label") |>
     dplyr::group_by( scope, list_name, dataframe) |>

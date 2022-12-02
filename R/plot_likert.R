@@ -45,7 +45,7 @@ plot_likert <- function(datalist = datalist,
                         showcode = FALSE) {
  
    ## Get default data source name 
-  if( is.null(datasource)) {datasource <- as.character(  dico[3][[1]]$form_title ) }
+  if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   require(dplyr)
   require(ggplot2)
   require(likert)
@@ -53,25 +53,25 @@ plot_likert <- function(datalist = datalist,
   
    ## Writing code instruction in report
     if( showcode == TRUE) {
-      cat(paste0( fontawesome::fa("far fa-copy", fill ="grey"),
+      cat(paste0( 
          " `plot_likert(datalist = datalist, dico = dico,  scopei =  \"", 
          scopei, "\",   list_namei =  \"", 
          list_namei, "\",  dataframei =  \"", 
          dataframei, "\")` \n\n "))} else {}
              
-   labelgroup <- as.data.frame(dico[1]) |>
+   labelgroup <- as.data.frame(dico[[1]]) |>
             dplyr::filter( name  %in%  c(scopei)) |>
             dplyr::select( label) |>
             dplyr::pull()
           
-    nlevel_likert <- as.data.frame(dico[2]) |>
+    nlevel_likert <- as.data.frame(dico[[2]]) |>
             dplyr::filter( list_name ==   list_namei) |>
             dplyr::select( name, label)  |>
             dplyr::distinct() 
     labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
           
     ##  Subsetting data - checking levels - and applying label
-    var <- as.data.frame(dico[1]) |>
+    var <- as.data.frame(dico[[1]]) |>
                  dplyr::filter( list_name ==  list_namei &
                                 scope == scopei  &
                                 dataframe == dataframei  &
