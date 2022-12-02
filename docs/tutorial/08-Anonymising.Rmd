@@ -307,7 +307,7 @@ To do so:
 
 ## What will you get then?
 
-Once you regenerate the report, the function Kobo_anonymise will be automatically generated and output some information about statistical disclosure risk of your dataset
+Once you regenerate the report, the function `Kobo_anonymise` will automatically output some information about statistical disclosure risks for your dataset
 
  * Key metrics
  
@@ -316,11 +316,11 @@ Once you regenerate the report, the function Kobo_anonymise will be automaticall
 
  .bg-blue[
 
-Those measurement will automatically appear in the report. Obviously a revision of the intrusion scenerio or removing certain variable for a recoded version will change the metrics
+Those measurement will automatically appear in the report. Obviously a revision of the intrusion scenario or removing certain variable for a recoded version will change the metrics
 
 Some automatic recoding and variable removing will be applied to the data and used in the rest of the data exploration 
 
-A new version of the dataset will be save in the data folder and can be uploaded to RIDL for broade data sharing.
+A new version of the dataset will be save in the data folder and can be uploaded to RIDL for __internal data sharing__ (recall that external data sharing is managed through corporate data curation).
 
 ]   
   
