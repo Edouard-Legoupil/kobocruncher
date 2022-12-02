@@ -18,8 +18,8 @@ Presentations / tutorials for a one day training workshop are accessible here:
   *  [04-Setting Crosstabulation](tutorial/04-Setting_Crosstabulation.html)  
   *  [05-Searching Asssociation](tutorial/05-Searching_Asssociation.html)  
   *  [06-Cleaning and Indicator Calculation](tutorial/06-Cleaning_and_Indicator_calculation.html)  
-  *  [07-Anonymising](tutorial/07-Anonymising.html)  
-  *  [08-Weighting](tutorial/08-Weighting.html)   
+  *  [07-Weighting](tutorial/07-Weighting.html)   
+  *  [08-Anonymising](tutorial/08-Anonymising.html)  
   *  [09-Publishing](tutorial/09-Publishing.html)  
 
 ## Install

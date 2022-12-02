@@ -1,0 +1,128 @@
+---
+title: "Survey Data Analysis with Kobocruncher"
+subtitle: "Session 7 - Weighting"
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](06-Cleaning_and_Indicator_calculation.html) -- [Link to Next Session](08-Anonymising.html)  "
+date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
+output:
+  unhcrdown::html_slides:
+    self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = TRUE
+)
+library(tidyverse)
+library(unhcrthemes)
+library(fontawesome)
+```
+
+
+## Review of sampling designs
+
+These features can be combined to form one design
+
+ *  __Simple random sampling__: every unit has the same chance of being selected
+      *   Without replacement: units can only be selected once
+      *   With replacement: units can be selected more than once
+
+ *  __Systematic sampling__: sample n individuals from a ordered list and sampling individuals at an interval with a random starting point
+
+ *  __Probability proportional to size__: probability of selection is proportional to "size"
+
+ *  __Stratified sampling__: divide population into mutually exclusive subgroups (strata). Randomly sample within each stratum
+
+ *  __Clustered sampling__: divide population into mutually exclusive subgroups (clusters). Randomly sample clusters and then individuals within clusters
+
+---
+
+## Determining the design
+
+Look at documentation associated with the analysis file
+
+Keywords to look for: methodology, design, analysis guide, technical documentation
+
+Documentation will indicate the variables needed to specify the design. Look for:
+
+ *  weight (almost always)
+ *  strata and/or clusters/PSUs. Sometimes pseudo-strata and pseudo-cluster OR
+ *  replicate weights (this is used instead of strata/clusters for analysis)
+ *  might also see finite population correction or population sizes
+
+---
+
+##  Syntax for common designs
+
+
+
+```{r eval=FALSE, include=TRUE}
+# simple random sample (SRS)
+apisrs %>% as_survey_design(fpc = fpc)
+# stratified sample
+apistrat %>% as_survey_design(strata = stype, weights = pw)
+# one-stage cluster sample
+apiclus1 %>% as_survey_design(ids = dnum, weights = pw, fpc = fpc)
+# two-stage cluster sample, weights computed from pop size
+apiclus2 %>% as_survey_design(ids = c(dnum, snum), fpc = c(fpc1, fpc2))
+# stratified, cluster design
+apistrat %>% as_survey_design(ids = dnum, strata = stype, weights =pw, nest = TRUE)
+```
+
+
+---
+class: inverse, center, middle
+
+# TIME TO PRACTISE ON YOUR OWN! 
+
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **5 minutes! **] 
+
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+ - Open again locally and fill in the anonymisation column
+ 
+ - Regenerate the report and check the results
+ 
+
+Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 
+ 
+---
+class: inverse, center, middle
+
+
+
+### .large[.white[`r fontawesome::fa("fas fa-clock"  )  `] **Let's take a break! **] 
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 10,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+
+
+__Next session__:   
+
+
+[08-Anonymising In order to provide other people to work with the data, a first level of data anonymisation should be implemented](08-Anonymising.html)
+

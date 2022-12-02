@@ -229,8 +229,11 @@ Afternoon with data cleaning, indicator calculations and basic anonymisation
 ## Afternoon session: 
 
   *  [06-Cleaning_and_Indicator_calculation](06-Cleaning_and_Indicator_calculation.html) after reviewing the first iteration of the reports, we can identify potential data quality issue to fix and create calculated variable and indicator 
-  *  [07-Anonymising](07-Anonymising.html) In order to provide other people to work with the data, a first level of data anonymisation should be implemented
-  *  [08-Weighting](08-Weighting.html) If the data was created through a probabilistic selection sampling approach, then we can apply weighting to the data before and regenerate the report so that those weights are reflected
+
+  *  [07-Weighting](07-Weighting.html) If the data was created through a probabilistic selection sampling approach, then we can apply weighting to the data before and regenerate the report so that those weights are reflected
+  
+  *  [08-Anonymising](08-Anonymising.html) In order to provide other people to work with the data, a first level of data anonymisation should be implemented
+  
   *  [09-Publishing](9-Publishing.html) The final stage of the process implies to facilitate both the interpretation of the data and the creation of data story telling content 
 
 ???
