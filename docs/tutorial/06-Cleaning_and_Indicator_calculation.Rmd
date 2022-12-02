@@ -55,17 +55,19 @@ https://dimewiki.worldbank.org/Data_Cleaning
 
 ---
 
-## Go through your initial exploration report to identify issues
+## Cleaning is the most time consuming task: go through your initial exploration report to identify issues!
 
 In order to guide this selection phase, data experts, in collaboration with the data analysis group, can use the following elements:
  
   *  For numeric value, check the frequency distributions of each variable to average, deviation, including outlier and oddities
  
   *  For categorical variables, check for unexpected values: any weird results based on common sense expectations
+  
+  * Use cross-tabulation to verify potential illogical combination of answers (for instance "pregnant men"... )
  
   *  Use correlation analysis to check for potential contradictions in respondents answers to different questions for identified associations (chi-square)
  
-  *  Always, Check for missing data (NA) or "%of respondent who answered" that you cannot confidently explain
+  *  Always, Check for missing data (NA) or "%of respondent who answered" (in the chart caption) that you cannot confidently explain
  
   *  Check unanswered questions, that corresponds to unused skip logic in the questionnaire: For instance, did a person who was never displaced answer displacement-related questions? Were employment-related answers provided for a toddler?
 
