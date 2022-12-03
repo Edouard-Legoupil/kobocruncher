@@ -216,6 +216,47 @@ Error bars give a .large[__general idea of how precise a measurement is__], or c
 ]
 
 
+???
+Example of standard deviation, standard error and confidence interval
+library(ggplot2)
+library(dplyr)
+
+
+data <- iris %>% select(Species, Sepal.Length) # Data
+ 
+
+my_sum <- data %>%
+  group_by(Species) %>%
+  summarise( # Calculates mean, sd, se and IC
+    n=n(),
+    mean=mean(Sepal.Length),
+    sd=sd(Sepal.Length) # sd amount of dispersion of the variable. Calculated as the root square of the variance
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%  # se: standard deviation of the vector sampling distribution
+  mutate( ic= se * qt( (1-0.05)/2 + .5,
+                       n-1)# ic: defined so that there is a specified probability that a value lies within i
+          ) 
+ 
+
+ggplot(my_sum) +
+  geom_bar( aes(x=Species, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Species, ymin=mean-sd, ymax=mean+sd), width=0.4, colour="orange", alpha=0.9, size=1.5) +# Standard deviation
+  ggtitle("using standard deviation")
+ 
+
+ggplot(my_sum) +
+  geom_bar( aes(x=Species, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Species, ymin=mean-se, ymax=mean+se), width=0.4, colour="orange", alpha=0.9, size=1.5) +# Standard Error
+  ggtitle("using standard error")
+ 
+# Confidence Interval
+ggplot(my_sum) +
+  geom_bar( aes(x=Species, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Species, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("using confidence interval")
+  
+  
+
 ---
 class: inverse, center, middle
 

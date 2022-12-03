@@ -183,6 +183,16 @@ Implementing all the step above is challenging :
 
 ![alt text](../../inst/workflow.png)
 
+
+???
+
+History of the package: started from some script, then script turned into functions, then functions turned into a package, then package designed with notebook template
+
+Results is first addressing my personnal need to quickly process survey data in a reproducible way
+
+I am not a stastician nor a programmer, all the code is fairly simple and quite documented so that anyone can look at it... 
+
+
 ---
 
 ## You do not need to be an expert as soon as you follow recipes. 

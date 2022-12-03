@@ -59,37 +59,41 @@ https://dimewiki.worldbank.org/Data_Cleaning
 
 In order to guide this selection phase, data experts, in collaboration with the data analysis group, can use the following elements:
  
-  *  For numeric value, check the frequency distributions of each variable to average, deviation, including outlier and oddities
+  *  For numeric value, check the .large[__frequency distributions__] of each variable to average, deviation, including outlier and oddities
  
-  *  For categorical variables, check for unexpected values: any weird results based on common sense expectations
+  *  For categorical variables, check for .large[__unexpected values__]: any weird results based on common sense expectations
   
-  * Use cross-tabulation to verify potential illogical combination of answers (for instance "pregnant men"... )
+  * Use cross-tabulation to verify potential .large[__illogical combination__] of answers (for instance "pregnant men"... )
  
-  *  Use correlation analysis to check for potential contradictions in respondents answers to different questions for identified associations (chi-square)
+  *  Use correlation analysis to check for potential .large[__contradictions__] in respondents answers to different questions for identified associations (chi-square)
  
-  *  Always, Check for missing data (NA) or "%of respondent who answered" (in the chart caption) that you cannot confidently explain
+  *  Always, Check for .large[__missing data__] (NA) or "%of respondent who answered" (in the chart caption) that you cannot confidently explain
  
-  *  Check unanswered questions, that corresponds to unused skip logic in the questionnaire: For instance, did a person who was never displaced answer displacement-related questions? Were employment-related answers provided for a toddler?
+  *  Check unanswered questions, that corresponds to .large[__unused skip logic__] in the questionnaire: For instance, did a person who was never displaced answer displacement-related questions? Were employment-related answers provided for a toddler?
 
 ---
 
-### Variable cleaning
+## Variables cleaning
+
+Cleaning involves cleaning records (rows) and variable (columns). 
+
+Cleaning variables is relevant for a few situations: 
 
   * System variables ( precise date) and  Section timestamps
 
-  *  Removing direct identifiers such as: 
+  *  Removing .large[__direct identifiers__] such as: 
     
        *   Name and surname
 
-       *    Document number (passport, national ID, driving license, etc.)
+       *   Document number (passport, national ID, driving license, etc.)
 
        *   Address or other precise geographic information
 
-       *    GPS coordinates
+       *   GPS coordinates, if collected during face to face interviews. In some situation, it's possible to at least decrease the accuracy of the coordinates (removing digit)....
 
-       *    Telephone number
+       *   Telephone number
 
-.large[Fix them] by setting the concerned variable as `identifier` in the `anonymise` column the `xlsform`:
+.large[Fix them] by setting the concerned variable as `identifier` in the `anonymise` column the `xlsform`: see session [08-Anonymising](08-Anonymising.html)
 
  
 ---
@@ -101,6 +105,11 @@ Whatever is quality of form design, enumerator training and data collection qual
  * Remove from the dataset records where no consent were obtained and/or more broadly one a specific filter/condition (where the respondent do not meet certain criteria or data from an unreliable enumerator identified during data collection quality monitoring...
  
  * Remove duplicate respondent ID based on the original sample list
+ 
+  * Often survey includes nested tables (aka `repeat`), so if you remove records from the main table, you need to remove linked records in the nested tables
+ 
+ 
+kobo_remove will remove records based on a specific  
  
 ---
 
@@ -117,21 +126,12 @@ Whatever is quality of form design, enumerator training and data collection qual
  * Remove from the dataset  records when interview duration appears as outliers, either too long or too short, aka "speed responses" 
 
  
- 
- 
----
 
-## How to set up filters on the data
-
- * Often survey includes nested tables (aka `repeat`), so if you remove records from the main table, you need to remove linked records in the nested tables
-
-
- 
 ---
 
 ## Situation when you will still need minimum cleaning a posteriori
  
-In other cases, cleaning will involve `recoding` some variables 
+In other cases, cleaning will involve .large[`recoding`] some variables: 
  
  
  1. Recode un-explainable .large[__outliers for numerical questions__]. An example of this would be if you asked how much water one person use in a day and someone answered that they use 1000 liters, while the second largest usage reported is 150 liters.
@@ -179,7 +179,7 @@ In the exploratory report, those are plotted with a word cloud
 
 ---
 
-## New calculated variables use case
+## Use case for new calculated variables 
  
  
  * filters on specific criteria
@@ -219,58 +219,152 @@ In kobocruncher, this is done with [kobo_indicator](https://edouard-legoupil.git
  
 ---
 
-## Create a filters on specific criteria 
+## Create a new variable based on a combination of specific criteria 
+
+
+.pull-lef[
+
+When adding a new indicator a few elements should be provided:
+
+ * Name and Label for the new variable: ideally name should be consice and meaningful (less than 12 characters) and label for any regula label should be less than 80 characters
+ 
+ * Type: a calculated variable will be either of type `select_one` or `numeric`. Documenting the indicator type will allow the indicator to be crunched automatically
+ 
+ * list_name and list_label are the labeling for the response options in case the indicator is of type `select_one`. This will allow for automatic relablling for charting 
+ 
+ * dataframe: you need to document to what frame the new indicator will be calculated. Basically for most household survey, this will be either the household (aka the first frame, named main per default and referenced as `datalist[[\"main\"]]` ) or the frame for individuals (for intance if,within the repeat of xlsform,  the frame was named  members, `datalist[[\"members\"]]`)
+ 
+ * Calculation: this is the complex part. Calculation should be defined as an R statement using data manipulation functions. In order to build the statement you will need to identify the correct variable name and response name. 
+
+
+
+
+]
+.pull-right[
 
 ```{r eval=FALSE, include=TRUE}
-dplyr::if_else(datalist[1]$variable =="criteria", "yes","no")
+indicatoradd <- c(  name =  "inColombia",
+                    label = "Is from Colombia",
+                    type = "select_one",
+                    dataframe = "datalist[[\"main\"]]",
+                    
+calculation = "dplyr::if_else(datalist[[\"main\"]]$variable ==\"criteria\",
+                                   \"yes\",\"no\")"
+                    )
+
+## then we add our indicators and expand
+expanded  <- kobo_indicator(datalist = datalist,
+                    dico = dico,
+                 indicatoradd = indicatoradd ,
+                 xlsformpath = xlsformpath,
+                 xlsformpathout = xlsformpathout)
+
+
+
 ```
+
+]
+
+
+---
+
+## The key data manipulation verbs for indicator calculations
+
+
+ * `dplyr::mutate()` used to create a new variable
+ 
+  * `dplyr::filter()` Extract rows that meet logical criteria- for instance when you want to extract the information from the head of household from the nested information and append it to the household information 
+
+  * `dplyr::if_else()` & `dplyr::case_when()` used to apply a specific condition (if) or multiplace condition (case) in order to create a calculated variable
+  
+  * `dplyr::group_by()`,  `dplyr::summarise()` & `dplyr::ungroup()` are used to perform aggregation and calculation (count, sum) based on specific group
+  
+  * `dplyr::left_join()` used to merge information from 2 frames, for instance on one side the information available at household level and the one on individual level
+
+???
+
+https://posit.co/wp-content/uploads/2022/10/data-transformation-1.pdf 
+https://posit.co/wp-content/uploads/2022/10/tidyr.pdf
+
+
+
 
 ---
 
 ## Ratio between 2 numeric variable 
 
+.pull-lef[
+
+]
+.pull-right[
+
 ```{r eval=FALSE, include=TRUE}
 datalist[1]$varnum1 / datalist[1]$varnum2
 ```
 
+]
  
 ---
 
 ## Calculation on date 
 
+.pull-lef[
+
+]
+.pull-right[
+
 ```{r eval=FALSE, include=TRUE}
 lubridate::interval( datalist[1]$datetocheck, lubridate::today()) %/% months(1)
 ```
 
+]
  
 ---
 
 ## Discretization of numeric variable according to quintile 
 
+.pull-lef[
+
+]
+.pull-right[
+
 ```{r eval=FALSE, include=TRUE}
 Hmisc::cut2(datalist[1]$varnum, g =5)
 ```
 
+]
  
 ---
 
 ## Discretization of numeric variable according to fixed break 
 
+
+.pull-lef[
+
 for instance case size from integer to categoric
+]
+.pull-right[
 
 ```{r eval=FALSE, include=TRUE}
 cut(datalist[1]$casesize, breaks = c(0, 1, 2, 3,5,30), labels = c("Case.size.1", "Case.size.2", "Case.size.3", "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)
 ```
 
+]
  
 ---
 
 ## Aggregate variable from nested frame (aka within repeat) to parent table 
 
+.pull-lef[
+
+]
+.pull-right[
+
 ```{r eval=FALSE, include=TRUE}
 datalist[2] |> dplyr::select( members.sex, parent_index) |> tidyr::gather( parent_index, members.sex) |> dplyr::count(parent_index, members.sex) |> tidyr::spread(members.sex, n, fill = 0) |> dplyr::select( female)
 ```
 
+]
 
 
 
