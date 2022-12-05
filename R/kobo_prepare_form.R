@@ -172,39 +172,38 @@ kobo_prepare_form <- function(xlsformpath,
     survey$label.lenght <- nchar(survey$label)
     ## add the full name that will be used by functions
     survey$fullname <- survey |> 
-      # capturing repeat
-      dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
-                                  function (repeatvar, type, name) {
-                                    if (type  == "begin_repeat")  c(repeatvar, name)
-                                   else if (type  == "end_repeat") utils::head(repeatvar, -1)
-                                   else repeatvar
-                                            }, .init = character()) |> utils::tail(-1),
-                    ##Apply a function to each element of a list 
-                    repeatvar = purrr::map_chr(repeatvar,
-                                  stringr::str_c, 
-                                             collapse = ".") ,
-                    name = dplyr::case_when(repeatvar == "" ~ name,
-                                  type == "begin_repeat"~ repeatvar,
-                                  TRUE ~ stringr::str_c(repeatvar, name, sep = "."))) |>
-      
-      # capturing Group
-      dplyr::mutate(scope = purrr::accumulate2(type, name,
-                                             function (scope, 
-                                                       type, 
-                                                       name) {
-                                           if (type == "begin_group") 
-                                                   c(scope, name)
-                                                 else if (type == "end_group") utils::head(scope, -1)
-                                                 else scope
-                                               }, .init = character()) |> utils::tail(-1),
-                    ##Apply a function to each element of a list 
-                    scope = purrr::map_chr(scope, 
-                                           stringr::str_c, 
-                                           collapse = "."),         
-                    
-                    name = dplyr::case_when(scope == "" ~ name,
-                                            type == "begin_group" ~ scope,
-                                            TRUE ~ stringr::str_c(scope, name, sep = "."))) |>
+       # capturing repeat, group and rebuilding full name
+          dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
+                                                        function (repeatvar, type, name) {
+                                                          if (type  == "begin_repeat")  c(repeatvar, name)
+                                                          else if (type  == "end_repeat") utils::head(repeatvar, -1)
+                                                          else repeatvar
+                                                        }, .init = character()) |> utils::tail(-1) ,  
+                        ##Apply a function to each element of a list 
+                        repeatvar = purrr::map_chr(repeatvar,
+                                                   stringr::str_c, 
+                                                   collapse = ".") ,
+                        
+                        ## Build the scope
+                        scope = purrr::accumulate2(type, name,
+                                                   function (scope, 
+                                                             type, 
+                                                             name ) {
+                                                     
+                          ## Rebuild variable name based potential combination of sequence   
+                          if (type == "begin_group")  c(scope, name )
+                          else if (type == "begin_repeat")  c(scope, name )
+                          else if (type  == "end_group") utils::head(scope, -1)
+                          else if (type  == "end_repeat") utils::head(scope, -1)
+                          else scope
+                               }, .init = character()) |> 
+                            utils::tail(-1) ,
+                        ##Apply a function to each element of a list 
+                        scope = purrr::map_chr(scope,
+                                               stringr::str_c,
+                                               collapse = ".") ,
+                        name =  dplyr::if_else(scope == "", name, paste0(scope,".",name)  ) ,
+                        repeatvar = dplyr::if_else(repeatvar == "", "main", repeatvar  ))  |>
                     dplyr::pull(name)
     if ("labelQ" %in% colnames(survey)) {    } else {  survey$labelQ <- survey$label }
     if ("hintQ" %in% colnames(survey)) {    } else { survey$hintQ <- survey$hint}
@@ -347,7 +346,7 @@ kobo_prepare_form <- function(xlsformpath,
         name = character(),
         label = character(),
         hint = character(),
-        dataframe = character(),
+        repeatvar = character(),
         calculation = character(),
         chapter = character(),
         subchapter = character(),
@@ -366,7 +365,7 @@ kobo_prepare_form <- function(xlsformpath,
         if ("name" %in% colnames(indicator)) {   } else {    indicator$name <- ""   }
         if ("label" %in% colnames(indicator)) {   } else {    indicator$label <- ""   }
         if ("hint" %in% colnames(indicator)) {   } else {    indicator$hint <- ""   }
-        if ("dataframe" %in% colnames(indicator)) { } else { indicator$dataframe <- ""   }
+        if ("repeatvar" %in% colnames(indicator)) { } else { indicator$repeatvar <- ""   }
         if ("calculation" %in% colnames(indicator)) { } else { indicator$calculation <- ""   }
         if ("chapter" %in% colnames(indicator)) { } else { indicator$chapter <- ""   }
         if ("subchapter" %in% colnames(indicator)) { } else { indicator$subchapter <- ""   }
@@ -379,7 +378,7 @@ kobo_prepare_form <- function(xlsformpath,
         if ("mappoly" %in% colnames(indicator)) {    } else { indicator$mappoly <- ""}
 
     indicator <- indicator[ ,c("type","name","label", "hint",
-                               "dataframe", "calculation",
+                               "repeatvar", "calculation",
                                "chapter","subchapter", "disaggregation", "correlate",
                                 "cluster", "predict", "score", "mappoint", "mappoly")]
     sheetname <- "indicator"
@@ -390,7 +389,6 @@ kobo_prepare_form <- function(xlsformpath,
 
     
     
-    cat("\n******************** Summary of the Analysis Plan *********************\n \n")
     ### Saving final ######################################    
     if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
     openxlsx::saveWorkbook(wb, xlsformpathout)
@@ -399,27 +397,7 @@ kobo_prepare_form <- function(xlsformpath,
     
     
     
-    
-    
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-    ## get a summary of what we have
-    ## Check Variable lenght
-    # if( length(survey$label) )
-    ## Do we have chapters? If yes how many?
-    ## Do we have anonymisation instructions? If yes, is it correctly set? How many direct identifiers, key variables, sensitive variables
-    ## Do we have cleaning instructions? Are they set up for the select_ variable
-    ## Do we have disaggregation instructions (yes)? -- Should Are they set up for the select_one variable
-    ## Do we have correlate instructions  (yes)? Are they set up for the select_one variable       
-    ## Do we have cluster instructions  (yes)? Are they set up for the select_one variable 
-    ## Do we have predict instructions  (one unique target, at least 2 predictor)? Are they set up for the select_one variable 
-    ## Do we have mappoint, mappoly (yes)? Are they set up for the select_one variable 
+
     
     
     

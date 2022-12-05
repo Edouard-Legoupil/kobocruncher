@@ -62,7 +62,7 @@ plot_select_one <- function(datalist  ,
     dplyr::mutate(p = n/sum(n))
   
   
-  listvar <- as.data.frame(dico[[1]]) |>
+  listvar <- as.data.frame(dico[["variables"]]) |>
              dplyr::filter( name ==var ) |>
              dplyr::pull(list_name)
   

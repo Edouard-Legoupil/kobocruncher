@@ -9,7 +9,7 @@ plot_likert(
   dico = dico,
   scopei,
   list_namei,
-  dataframei,
+  repeatvari,
   datasource = NULL,
   showcode = FALSE
 )
@@ -23,7 +23,7 @@ plot_likert(
 
 \item{list_namei}{name of the likert option list}
 
-\item{dataframei}{name of the frame within the dataset where to look for the data}
+\item{repeatvari}{name of the frame within the dataset where to look for the data}
 
 \item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform}
 
@@ -41,7 +41,7 @@ plot_likert(datalist = datalistlikert,
             dico = dicolikert,
             datasource = NULL,
             scopei =  "group_ei8jz33",
-            dataframei =   "1",
+            repeatvari =   "main",
             ## getting the list_name and corresponding label
             list_namei = "yk0td68" 
           )

@@ -270,39 +270,38 @@ kobo_prepare_form <- function(xlsformpath,
     survey$label.lenght <- nchar(survey$label)
     ## add the full name that will be used by functions
     survey$fullname <- survey |> 
-      # capturing repeat
-      dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
-                                  function (repeatvar, type, name) {
-                                    if (type  == "begin_repeat")  c(repeatvar, name)
-                                   else if (type  == "end_repeat") utils::head(repeatvar, -1)
-                                   else repeatvar
-                                            }, .init = character()) |> utils::tail(-1),
-                    ##Apply a function to each element of a list 
-                    repeatvar = purrr::map_chr(repeatvar,
-                                  stringr::str_c, 
-                                             collapse = ".") ,
-                    name = dplyr::case_when(repeatvar == "" ~ name,
-                                  type == "begin_repeat"~ repeatvar,
-                                  TRUE ~ stringr::str_c(repeatvar, name, sep = "."))) |>
-      
-      # capturing Group
-      dplyr::mutate(scope = purrr::accumulate2(type, name,
-                                             function (scope, 
-                                                       type, 
-                                                       name) {
-                                           if (type == "begin_group") 
-                                                   c(scope, name)
-                                                 else if (type == "end_group") utils::head(scope, -1)
-                                                 else scope
-                                               }, .init = character()) |> utils::tail(-1),
-                    ##Apply a function to each element of a list 
-                    scope = purrr::map_chr(scope, 
-                                           stringr::str_c, 
-                                           collapse = "."),         
-                    
-                    name = dplyr::case_when(scope == "" ~ name,
-                                            type == "begin_group" ~ scope,
-                                            TRUE ~ stringr::str_c(scope, name, sep = "."))) |>
+       # capturing repeat, group and rebuilding full name
+          dplyr::mutate(repeatvar  = purrr::accumulate2(type, name,
+                                                        function (repeatvar, type, name) {
+                                                          if (type  == "begin_repeat")  c(repeatvar, name)
+                                                          else if (type  == "end_repeat") utils::head(repeatvar, -1)
+                                                          else repeatvar
+                                                        }, .init = character()) |> utils::tail(-1) ,  
+                        ##Apply a function to each element of a list 
+                        repeatvar = purrr::map_chr(repeatvar,
+                                                   stringr::str_c, 
+                                                   collapse = ".") ,
+                        
+                        ## Build the scope
+                        scope = purrr::accumulate2(type, name,
+                                                   function (scope, 
+                                                             type, 
+                                                             name ) {
+                                                     
+                          ## Rebuild variable name based potential combination of sequence   
+                          if (type == "begin_group")  c(scope, name )
+                          else if (type == "begin_repeat")  c(scope, name )
+                          else if (type  == "end_group") utils::head(scope, -1)
+                          else if (type  == "end_repeat") utils::head(scope, -1)
+                          else scope
+                               }, .init = character()) |> 
+                            utils::tail(-1) ,
+                        ##Apply a function to each element of a list 
+                        scope = purrr::map_chr(scope,
+                                               stringr::str_c,
+                                               collapse = ".") ,
+                        name =  dplyr::if_else(scope == "", name, paste0(scope,".",name)  ) ,
+                        repeatvar = dplyr::if_else(repeatvar == "", "main", repeatvar  ))  |>
                     dplyr::pull(name)
     if ("labelQ" %in% colnames(survey)) {    } else {  survey$labelQ <- survey$label }
     if ("hintQ" %in% colnames(survey)) {    } else { survey$hintQ <- survey$hint}
@@ -445,7 +444,7 @@ kobo_prepare_form <- function(xlsformpath,
         name = character(),
         label = character(),
         hint = character(),
-        dataframe = character(),
+        repeatvar = character(),
         calculation = character(),
         chapter = character(),
         subchapter = character(),
@@ -464,7 +463,7 @@ kobo_prepare_form <- function(xlsformpath,
         if ("name" %in% colnames(indicator)) {   } else {    indicator$name <- ""   }
         if ("label" %in% colnames(indicator)) {   } else {    indicator$label <- ""   }
         if ("hint" %in% colnames(indicator)) {   } else {    indicator$hint <- ""   }
-        if ("dataframe" %in% colnames(indicator)) { } else { indicator$dataframe <- ""   }
+        if ("repeatvar" %in% colnames(indicator)) { } else { indicator$repeatvar <- ""   }
         if ("calculation" %in% colnames(indicator)) { } else { indicator$calculation <- ""   }
         if ("chapter" %in% colnames(indicator)) { } else { indicator$chapter <- ""   }
         if ("subchapter" %in% colnames(indicator)) { } else { indicator$subchapter <- ""   }
@@ -477,7 +476,7 @@ kobo_prepare_form <- function(xlsformpath,
         if ("mappoly" %in% colnames(indicator)) {    } else { indicator$mappoly <- ""}
 
     indicator <- indicator[ ,c("type","name","label", "hint",
-                               "dataframe", "calculation",
+                               "repeatvar", "calculation",
                                "chapter","subchapter", "disaggregation", "correlate",
                                 "cluster", "predict", "score", "mappoint", "mappoly")]
     sheetname <- "indicator"
@@ -488,7 +487,6 @@ kobo_prepare_form <- function(xlsformpath,
 
     
     
-    cat("\n******************** Summary of the Analysis Plan *********************\n \n")
     ### Saving final ######################################    
     if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
     openxlsx::saveWorkbook(wb, xlsformpathout)
@@ -497,27 +495,7 @@ kobo_prepare_form <- function(xlsformpath,
     
     
     
-    
-    
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-      # if(!( levels(as.factor(survey$ )) %in% c(""))) {stop("Not correctly Set up: ")  }
-    ## get a summary of what we have
-    ## Check Variable lenght
-    # if( length(survey$label) )
-    ## Do we have chapters? If yes how many?
-    ## Do we have anonymisation instructions? If yes, is it correctly set? How many direct identifiers, key variables, sensitive variables
-    ## Do we have cleaning instructions? Are they set up for the select_ variable
-    ## Do we have disaggregation instructions (yes)? -- Should Are they set up for the select_one variable
-    ## Do we have correlate instructions  (yes)? Are they set up for the select_one variable       
-    ## Do we have cluster instructions  (yes)? Are they set up for the select_one variable 
-    ## Do we have predict instructions  (one unique target, at least 2 predictor)? Are they set up for the select_one variable 
-    ## Do we have mappoint, mappoly (yes)? Are they set up for the select_one variable 
+
     
     
     
@@ -621,40 +599,7 @@ kobo_dico <- function(xlsformpath) {
   
   ## Fix when we have calculate variable - either numeric or select_one
   
-  ## Add dataframe number
-  ## Counter..
-  variables$dataframenew <- 0
-  for (i in 2:nrow(variables)){
-    #i <- 10
-    #cat( variables[i, c("repeatvar")] )
-    if (variables[i, c("repeatvar")] != variables[i-1, c("repeatvar")] &
-        variables[i, c("repeatvar")] !="" ) {
-      variables[i, c("dataframenew")] <- 1
-    } else{
-      variables[i, c("dataframenew")] <- 0
-    }
-  }
-   ## Counter..
-  variables$dataframecount <- 1
-  for (i in 2:nrow(variables)){  
-    if (variables[i, c("repeatvar")] != "") {
-      variables[i, c("dataframecount")] <- variables[i-1, c("dataframecount")] + variables[i, c("dataframenew")]
-    } else{
-      variables[i, c("dataframecount")] <- variables[i-1, c("dataframecount")]
-    }
-    
-  }
-   ## Framenumber
-  variables$dataframe <- 1
-  for (i in 2:nrow(variables)){  
-    if (variables[i, c("repeatvar")] != "") {
-          variables[i, c("dataframe")] <- variables[i, c("dataframecount")] 
-        } else{
-          variables[i, c("dataframe")] <- 1
-        }
-   }
-  variables$dataframecount <- NULL
-  variables$dataframenew <- NULL
+  
   
     if ("chapter" %in% colnames(variables)) { } else {  variables$chapter <- NA  }
     if ("subchapter" %in% colnames( variables)) { } else {  variables$subchapter <- NA   }
@@ -743,7 +688,7 @@ kobo_dico <- function(xlsformpath) {
             name = character(),
             label = character(),
             hint = character(),
-            dataframe = character(),
+            repeatvar = character(),
             calculation = character(),
             chapter = character(),
             subchapter = character(),
@@ -762,7 +707,7 @@ kobo_dico <- function(xlsformpath) {
         if ("name" %in% colnames(indicator)) {   } else {    indicator$name <- ""   }
         if ("label" %in% colnames(indicator)) {   } else {    indicator$label <- ""   }
         if ("hint" %in% colnames(indicator)) {   } else {    indicator$hint <- ""   }
-        if ("dataframe" %in% colnames(indicator)) { } else { indicator$dataframe <- ""   }
+        if ("repeatvar" %in% colnames(indicator)) { } else { indicator$repeatvar <- ""   }
         if ("calculation" %in% colnames(indicator)) { } else { indicator$calculation <- ""   }
         if ("chapter" %in% colnames(indicator)) { } else { indicator$chapter <- ""   }
         if ("subchapter" %in% colnames(indicator)) { } else { indicator$subchapter <- ""   }
@@ -775,7 +720,7 @@ kobo_dico <- function(xlsformpath) {
         if ("mappoly" %in% colnames(indicator)) {    } else { indicator$mappoly <- ""}
     
         indicator <- indicator[ ,c("type","name","label", "hint",
-                                   "dataframe", "calculation",
+                                   "repeatvar", "calculation",
                                    "chapter","subchapter", "disaggregation", "correlate",
                                     "cluster", "predict", "score", "mappoint", "mappoly")]
      
@@ -788,6 +733,23 @@ kobo_dico <- function(xlsformpath) {
                   indicator = indicator)
     class(dico) <- "kobodico" # assigns a "kobodico" class to the list. Helpful for later on. 
     ## Build dico object as list with both variables and modalities
+    
+     
+    #cat("\n******************** Summary of the Analysis Plan *********************\n \n")
+    ## get a summary of what we have to inform user
+    ## Check Variable lenght
+    # if( length(survey$label) )
+    ## Do we have chapters? If yes how many?
+    ## Do we have anonymisation instructions? If yes, is it correctly set? How many direct identifiers, key variables, sensitive variables
+    ## Do we have cleaning instructions? Are they set up for the select_ variable
+    ## Do we have disaggregation instructions (yes)? -- Should Are they set up for the select_one variable
+    ## Do we have correlate instructions  (yes)? Are they set up for the select_one variable       
+    ## Do we have cluster instructions  (yes)? Are they set up for the select_one variable 
+    ## Do we have predict instructions  (one unique target, at least 2 predictor)? Are they set up for the select_one variable 
+    ## Do we have mappoint, mappoly (yes)? Are they set up for the select_one variable 
+    
+    
+    
     return(dico )
 }
 
@@ -797,21 +759,25 @@ kobo_dico <- function(xlsformpath) {
 ```{r examples-kobo_dico}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # Survey
-questions <- as.data.frame(dico[[1]])
+questions <- as.data.frame(dico[["variables"]])
 knitr::kable(utils::head(questions, 10))
 # Choices
-responses <- as.data.frame(dico[[2]])
+responses <- as.data.frame(dico[["modalities"]])
 knitr::kable(utils::head(responses, 10))
 # Settings
-metadata <- as.data.frame(dico[[3]])
+metadata <- as.data.frame(dico[["settings"]])
 knitr::kable(utils::head(metadata, 10))
 # Report ToC
-toc <- as.data.frame(dico[[4]])
+toc <- as.data.frame(dico[["plan"]])
 knitr::kable(utils::head(toc, 10))
 # Indicator
-indicator <- as.data.frame(dico[[5]])
+indicator <- as.data.frame(dico[["indicator"]])
 knitr::kable(utils::head(indicator, 10))
 ```
+
+
+
+
 
 # Data Processing
 
@@ -930,7 +896,7 @@ kobo_clean <- function(datalist,
                        indicatoradd = NULL) {
 
 #   1 - load the variables, 
-  var <- as.data.frame(dico[[1]])  
+  var <- as.data.frame(dico[["variables"]])  
 #   2 - append the one from inidcatoradd if any,
   
 #   3 - apply the indicator, i.e. do the calculation,
@@ -1015,6 +981,10 @@ Indicator calculation
 #' @param xlsformpathout path to save the xlsform file with newly added indicators
 #' 
 #' @importFrom purrr modify_at
+#' @importFrom dplyr mutate distinct
+#' @importFrom tidyselect everything 
+#' 
+#' @return expanded object that includes both the expanded dico and datalist
 #' 
 #' @export  
 
@@ -1030,7 +1000,7 @@ if(!'type' %in% names(indicator)) indicator <- indicator |> tibble::add_column(t
 if(!'name' %in% names(indicator)) indicator <- indicator |> tibble::add_column(name = NA)
 if(!'label' %in% names(indicator)) indicator <- indicator |> tibble::add_column(label = NA)
 if(!'hint' %in% names(indicator)) indicator <- indicator |> tibble::add_column(hint = NA)
-if(!'dataframe' %in% names(indicator)) indicator <- indicator |> tibble::add_column(dataframe = NA)
+if(!'repeatvar' %in% names(indicator)) indicator <- indicator |> tibble::add_column(repeatvar = NA)
 if(!'calculation' %in% names(indicator)) indicator <- indicator |> tibble::add_column(calculation = NA)
 if(!'chapter' %in% names(indicator)) indicator <- indicator |> tibble::add_column(chapter = NA)
 if(!'subchapter' %in% names(indicator)) indicator <- indicator |> tibble::add_column(subchapter = NA)
@@ -1043,43 +1013,78 @@ if(!'mappoint' %in% names(indicator)) indicator <- indicator |> tibble::add_colu
 if(!'mappoly' %in% names(indicator)) indicator <- indicator |> tibble::add_column(mappoly  = NA)
     
 indicator <- indicator[ ,c("type","name","label", "hint",
-                               "dataframe", "calculation",
+                               "repeatvar", "calculation",
                                "chapter","subchapter", "disaggregation", "correlate",
-                               "cluster", "predict", "score", "mappoint", "mappoly")]
+                               "cluster", "predict", "score", "mappoint", "mappoly")] %>%
+            dplyr::mutate(across(tidyselect::everything(), as.character))
     
   #   2 - append the one from inidicatoradd if any---->
   if( ! (is.null(indicatoradd) )) {
-  ## todo check the structure of indicatoradd...   
-    indicatoradd <- as.data.frame(t(indicatoradd))
-    if( nrow(indicatoradd)>0) {
-      indicator <-  dplyr::bind_rows(indicator, indicatoradd )
-    }
-  }
+    
+  ## todo check the structure of indicatoradd...  
+    
+    ## If only one indicator got added
+    if (class(indicatoradd ) ==  "character") {
+       indicatoradded <- as.data.frame(t(indicatoradd)) |> 
+                         dplyr::select ( - tidyselect::starts_with("labels.") ) }
+    
+    
+    ## If multiples indicators got added  
+    if (class(indicatoradd ) ==  "list") {
+        indicatoradded <- as.data.frame(t(indicatoradd[[1]])) |> 
+                         dplyr::select ( - tidyselect::starts_with("labels.") ) 
+        for (i in 2:length(indicatoradd)) {
+          #print(indicatoradd[[i]])
+          indicatoradded <- dplyr::bind_rows(indicatoradded,
+                                             as.data.frame(t(indicatoradd[[i]] )) |> 
+                                  dplyr::select ( - tidyselect::starts_with("labels.") ))  }
+       }
+    
+    ## Now get everything together - the one from the log and the new one..
+    if( nrow(indicatoradded)>0) {
+      indicator <-  dplyr::bind_rows(indicator, indicatoradded )
+        }
+      }
+  
+    ## To do get the modalities variable aka labels.. to add in the dico modalites for relabeling...
+
+
+    ### Remove duplicate in case a user add an indicator that was already in the xlsform
+     indicator  <- indicator |>
+                    dplyr::distinct()
   
     #   3 - apply the indicator, i.e. do the calculation ---->
   if(nrow(indicator) == 0 ){
     
      cat("no calculated indicators has been defined... \n") 
     } else {
-     ## Sanitize indicator name
-    indicator$name <- gsub( "\\.|/|\\-|\\(|\\)|\"|\\s" , "" , indicator$name )
-
-
-    
+      
     for (i in 1:nrow(indicator)) {
       # i <- 1
-      var_name <- paste0(indicator[i, "name"])
-      frame_name <- paste0(indicator[i, "dataframe"])
+      var_name <- paste0(indicator[i, "name"])    
+      
+      ## Sanitize indicator name in case there's a pb and inform the user...
+      indicator[i, "name"] <- gsub( "\\.|/|\\-|\\(|\\)|\"|\\s" , "" , var_name )
+      if(var_name != paste0(indicator[i, "name"]) ){ cat( paste0("The indicator name got sanitized from ", 
+                                                                  var_name , " to ", 
+                                                                  paste0(indicator[i, "name"])  ))}
+      
+      var_name <- paste0(indicator[i, "name"]) 
+      label_name <- paste0(indicator[i, "label"])
+      repeatvar_name <- paste0(indicator[i, "repeatvar"])
       calc_name <- paste0(indicator[i, "calculation"])
      # cat( paste0(var_name, " - frame: ", frame_name," - calc: ", calc_name, "\n"))
-      eval(parse(text=paste0("datalist[[",
-                             frame_name, 
-                             "]]$", 
-                             var_name, " <- ",
-                             calc_name, "") ))
+      indicrun <- parse(text=paste0("datalist[[\"",
+                                    repeatvar_name ,
+                                    "\"]]$",
+                                    var_name, " <- ",
+                                    calc_name, "") )
+      cat(paste0("\n ### Executing Command for: ",label_name," \n", indicrun, "\n"))
+      ## Will throw and error in case of pb
+      eval(indicrun)
     }
 
-# 4 - re-save all the working indicator definition within the extended xlsform  ---->
+# 4 - Now re-save all the working indicator definition within the extended xlsform  ---->
     wb <- openxlsx::loadWorkbook(xlsformpath)
     sheetname <- "indicator"
     ## In case the indicator worksheet has not been added, do it now
@@ -1093,18 +1098,17 @@ indicator <- indicator[ ,c("type","name","label", "hint",
     
     hdr.rows <- 1
     openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(indicator), gridExpand = TRUE) 
-    # if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
-    # openxlsx::saveWorkbook(wb, xlsformpathout)
+    if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
+        openxlsx::saveWorkbook(wb, xlsformpathout)
 
 # 5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting ---->
-    indicator$dataframe <- as.numeric(indicator$dataframe)
     dico <- dico |>
-          purrr::modify_at(1, ~ dplyr::bind_rows(dico[[1]], indicator ))  
+          purrr::modify_at(1, ~ dplyr::bind_rows(dico[["variables"]], indicator ))  
    #View( dico1[[1]])
     
     
 # 6 - rebuild the plan if indicators are allocated to chapter, subchapter ---->
-    variables <- as.data.frame(dico[[1]])
+    variables <- as.data.frame(dico[["variables"]])
     if (  nrow(as.data.frame(variables)|> dplyr::filter(! is.na(chapter)))  > 1 ) {
       
       
@@ -1164,7 +1168,8 @@ indicator <- indicator[ ,c("type","name","label", "hint",
     
     }
     
-  return(expanded <- list (dico, datalist))
+  return(expanded <- list (dico= dico, 
+                           datalist= datalist))
 }
 
 ```
@@ -1179,18 +1184,18 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 
 ## Check if we add no indicator
 expanded  <- kobo_indicator(datalist = datalist,
-                    dico = dico,
-                 indicatoradd = NULL ,
-                 xlsformpath = xlsformpath,
-                 xlsformpathout = xlsformpathout)
+                            dico = dico,
+                            indicatoradd = NULL ,
+                            xlsformpath = xlsformpath,
+                            xlsformpathout = xlsformpathout)
 
 
 ## Example 1: Simple dummy filter
 indicatoradd <- c(  name =  "inColombia",
                     type = "select_one",
                     label = "Is from Colombia",
-                    dataframe = "1",
-                    calculation = "dplyr::if_else(datalist[[1]]$profile.country ==\"COL\", \"yes\",\"no\")")
+                    repeatvar = "main",
+                    calculation = "dplyr::if_else(datalist[[\"main\"]]$profile.country ==\"COL\", \"yes\",\"no\")")
 
 expanded  <- kobo_indicator(datalist = datalist,
                     dico = dico,
@@ -1198,34 +1203,36 @@ expanded  <- kobo_indicator(datalist = datalist,
                  xlsformpath = xlsformpath,
                  xlsformpathout = xlsformpathout)
 ## Replace existing
-dico <- expanded[[1]]
-datalist <- expanded[[2]]
+dico <- expanded[["dico"]]
+datalist <- expanded[["datalist"]]
 
 ## Check my new indicator
 table(datalist[[1]]$inColombia, useNA = "ifany")
 
 
 
-## Example 2: calculation on nested elements
-indicatoradd <- c(  name =  "hasfemalemembers",
+## Example 2: calculation on nested elements and build an indicator list
+indicatoradd2 <- c(  name =  "hasfemalemembers",
               type = "select_one",
               label = "HH has female members ",
-              dataframe = "1",
-              calculation = "datalist[[2]] |>
+              repeatvar = "main",
+              calculation = "datalist[[\"members\"]] |>
                             dplyr::select( members.sex, parent_index) |>
                             tidyr::gather(  parent_index, members.sex) |>
                             dplyr::count(parent_index, members.sex) |>
                             tidyr::spread(members.sex, n, fill = 0)  |>
                            dplyr::select( female)")
 
+indicatorall <- list(indicatoradd, indicatoradd2  ) 
+
 expanded  <- kobo_indicator(datalist = datalist,
                     dico = dico,
-                 indicatoradd = indicatoradd ,
+                 indicatoradd = indicatorall ,
                  xlsformpath = xlsformpath,
                  xlsformpathout = xlsformpathout)
 ## Replace existing
-dico <- expanded[[1]]
-datalist <- expanded[[2]]
+dico <- expanded[["dico"]]
+datalist <- expanded[["datalist"]]
 
 
 ## Check my new indicator
@@ -1233,10 +1240,46 @@ table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
  
 ```
 
-
+## Weight the dataset
+    
+```{r function-kobo_weight}
+#' Weight the dataset
+#' 
+#' In the absence of  survey data weighting, there's a risk over or under-represent certain demographic segments compared to their true level in the whole population.
+#' 
+#' The use of weights in survey analysis compensates for this differential representation, thus producing estimates that relate to the target population.
+#' Weights vary due to differential sampling rates because of oversampling and because response and coverage rates vary across sub populations (specifically hard-to-reach demographic groups). The term weighting refers to the  different amounts of load or emphasis we give to each individual survey response. Responses from a type of person who is very rare will get greater emphasis in the final results. In contrast, respondents who represent common types of people will be de-emphasized. 
+#' Weighting are also important for the anonymization process
+#' 
+#' This functions perform the following:
+#'  * look for element in the dico object that starts with weight_
+#'  * Check the structure of this weight and identify what type of weight it is
+#'    (cluster or strata)
+#'  * transform each related frame into a survey object  
+#'  * inform user about the weighting that is applied
+#'  
+#' @param datalist An object of the "datalist" class as defined in kobocruncher 
+#' @param dico An object of the "kobodico" class format as defined in kobocruncher
+#' 
+#' @return datalist with applied weight
+#' 
+#' @export
+# kobo_weight <- function(){
+#     
+# }
+```
+  
+```{r example-kobo_weight}
+#kobo_weight()
+```
+  
+```{r tests-kobo_weight}
+#test_that("kobo_weight works", {   expect_true(inherits(kobo_weight, "function")) })
+```
+  
  
 
-## Anonymisation
+## Assess Disclosure Risk
 
  to do....
 
@@ -1313,7 +1356,7 @@ kobo_frame <- function(datalist,
                        var) {
   
   ## Identify the right frame number
-  dataframen <- as.data.frame(dico[[1]]) |>
+  dataframen <- as.data.frame(dico[["variables"]]) |>
                   dplyr::filter(name == var) |>
                   dplyr::pull(repeatvar)  
   ## Pull the data
@@ -1361,7 +1404,7 @@ knitr::kable(utils::head(data,5))
 #' @export
 
 label_varname <- function(dico, x) {
-  as.data.frame( dico[[1]]) |>
+  as.data.frame( dico[["variables"]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(label)
 }
@@ -1391,7 +1434,7 @@ label_varname(dico = dico,
 #' @export
 
 label_varhint <- function(dico, x) {
-  as.data.frame(dico[[1]]) |>
+  as.data.frame(dico[["variables"]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(hint)
 }
@@ -1425,7 +1468,7 @@ label_varhint(dico = dico,
 
 label_choiceset <- function(dico,
                             x) {
-  lname <- as.data.frame(dico[[1]]) |>
+  lname <- as.data.frame(dico[["variables"]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(list_name)
   
@@ -1521,7 +1564,7 @@ plot_select_one <- function(datalist  ,
     dplyr::mutate(p = n/sum(n))
   
   
-  listvar <- as.data.frame(dico[[1]]) |>
+  listvar <- as.data.frame(dico[["variables"]]) |>
              dplyr::filter( name ==var ) |>
              dplyr::pull(list_name)
   
@@ -2846,7 +2889,7 @@ plot_correlation(datalist = datalist,
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param scopei group in which the likert frame are
 #' @param list_namei name of the likert option list
-#' @param dataframei name of the frame within the dataset where to look for the data
+#' @param repeatvari name of the frame within the dataset where to look for the data
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' 
@@ -2865,7 +2908,7 @@ plot_likert <- function(datalist = datalist,
                         dico = dico,
                         scopei,
                         list_namei,
-                        dataframei,
+                        repeatvari,
                         datasource = NULL,
                         showcode = FALSE) {
  
@@ -2881,10 +2924,10 @@ plot_likert <- function(datalist = datalist,
       cat(paste0( 
          " `plot_likert(datalist = datalist, dico = dico,  scopei =  \"", 
          scopei, "\",   list_namei =  \"", 
-         list_namei, "\",  dataframei =  \"", 
-         dataframei, "\")` \n\n "))} else {}
+         list_namei, "\",  repeatvari =  \"", 
+         repeatvari, "\")` \n\n "))} else {}
              
-   labelgroup <- as.data.frame(dico[[1]]) |>
+   labelgroup <- as.data.frame(dico[["variables"]]) |>
             dplyr::filter( name  %in%  c(scopei)) |>
             dplyr::select( label) |>
             dplyr::pull()
@@ -2896,10 +2939,10 @@ plot_likert <- function(datalist = datalist,
     labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
           
     ##  Subsetting data - checking levels - and applying label
-    var <- as.data.frame(dico[[1]]) |>
+    var <- as.data.frame(dico[["variables"]]) |>
                  dplyr::filter( list_name ==  list_namei &
                                 scope == scopei  &
-                                dataframe == dataframei  &
+                                repeatvar == repeatvari  &
                                 appearance !="label" )
     ## Just in case with have the first one being appearance label
     data <-kobo_frame(datalist = datalist, dico = dico, var = var[2, c("name")])
@@ -2981,7 +3024,7 @@ plot_likert(datalist = datalistlikert,
             dico = dicolikert,
             datasource = NULL,
             scopei =  "group_ei8jz33",
-            dataframei =   "1",
+            repeatvari =   "main",
             ## getting the list_name and corresponding label
             list_namei = "yk0td68" 
           )
@@ -3027,7 +3070,7 @@ plot_header <- function(dico = dico,
   ## getting header levels
   lvl <- stringr::str_count(var, "\\.")
   
-  label <- as.data.frame(dico[[1]]) |>
+  label <- as.data.frame(dico[["variables"]]) |>
            dplyr::filter(name == var) |>
           ## Filter down in case the same var name was given to end group or repat... 
            dplyr::filter(! (type %in% c("end_group", "end_repeat")) ) |>
@@ -3096,11 +3139,11 @@ kobo_cruncher <- function(datalist = datalist,
   if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
   questions <- as.data.frame(dico[[4]])
-  disaggregation <-  c(as.data.frame(dico[[1]]) |> 
+  disaggregation <-  c(as.data.frame(dico[["variables"]]) |> 
                         dplyr::filter( !(is.na(disaggregation))) |>
                         dplyr::pull(name) )
   
-  correlate <-   c(as.data.frame(dico[[1]]) |> 
+  correlate <-   c(as.data.frame(dico[["variables"]]) |> 
                    dplyr::filter( !(is.na(correlate))) |>
                    dplyr::pull(name))
   
@@ -3108,14 +3151,14 @@ kobo_cruncher <- function(datalist = datalist,
   ## If disaggregation not included in the function argument then use what's set up in the analysis plan
   if (  length(disaggregation) == 1 ) { 
     if (  disaggregation == "" ) { 
-      disaggregation <- as.data.frame(dico[[1]]) |> 
+      disaggregation <- as.data.frame(dico[["variables"]]) |> 
         dplyr::filter( !(is.na(disaggregation))) |>
         dplyr::pull(name) } }
   
 
   # If correlate not included in the function argument then use what's set up in the analysis plan
   if (length(correlate) ==1) {
-    if (correlate == "") { correlate <- as.data.frame(dico[[1]])|> 
+    if (correlate == "") { correlate <- as.data.frame(dico[["variables"]])|> 
       dplyr::filter( !(is.na(correlate))) |>
       dplyr::pull(name) }}
   
@@ -3242,10 +3285,10 @@ kobo_likert <- function(datalist = datalist,
   ## Check the frequency of list_name within each group,
   ## Filter the combination of list and group where we have more than 3 occurrences
   # not taking in account when the appearance is not "label"
-  grouplikert <- as.data.frame(dico[[1]]) |>
+  grouplikert <- as.data.frame(dico[["variables"]]) |>
     dplyr::filter( type ==  "select_one") |>
     dplyr::filter( appearance !=  "label") |>
-    dplyr::group_by( scope, list_name, dataframe) |>
+    dplyr::group_by( scope, list_name, repeatvar) |>
     dplyr::summarise( cnt= dplyr::n() )|>
     dplyr::filter( cnt >= 2)
   
@@ -3256,7 +3299,7 @@ kobo_likert <- function(datalist = datalist,
        for (i in 1:nrow(grouplikert)  ) {
           ## getting the group and corresponding label
           scopei <-   as.character(grouplikert[i, c("scope")])
-          dataframei <-   as.character(grouplikert[i, c("dataframe")])
+          repeatvari <-   as.character(grouplikert[i, c("repeatvar")])
           ## geting the list_name and corresponding label
           list_namei <- as.character( grouplikert[i, c("list_name")])
           
@@ -3264,7 +3307,7 @@ kobo_likert <- function(datalist = datalist,
                       datasource = datasource,
                       dico = dico,
                       scopei =  scopei,
-                      dataframei =  dataframei,
+                      repeatvari =  repeatvari,
                       list_namei = list_namei,
                       showcode = TRUE)) 
   

@@ -12,19 +12,19 @@
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' # Survey
-#' questions <- as.data.frame(dico[[1]])
+#' questions <- as.data.frame(dico[["variables"]])
 #' knitr::kable(utils::head(questions, 10))
 #' # Choices
-#' responses <- as.data.frame(dico[[2]])
+#' responses <- as.data.frame(dico[["modalities"]])
 #' knitr::kable(utils::head(responses, 10))
 #' # Settings
-#' metadata <- as.data.frame(dico[[3]])
+#' metadata <- as.data.frame(dico[["settings"]])
 #' knitr::kable(utils::head(metadata, 10))
 #' # Report ToC
-#' toc <- as.data.frame(dico[[4]])
+#' toc <- as.data.frame(dico[["plan"]])
 #' knitr::kable(utils::head(toc, 10))
 #' # Indicator
-#' indicator <- as.data.frame(dico[[5]])
+#' indicator <- as.data.frame(dico[["indicator"]])
 #' knitr::kable(utils::head(indicator, 10))
 kobo_dico <- function(xlsformpath) {
    survey <- readxl::read_excel(xlsformpath,   
@@ -91,40 +91,7 @@ kobo_dico <- function(xlsformpath) {
   
   ## Fix when we have calculate variable - either numeric or select_one
   
-  ## Add dataframe number
-  ## Counter..
-  variables$dataframenew <- 0
-  for (i in 2:nrow(variables)){
-    #i <- 10
-    #cat( variables[i, c("repeatvar")] )
-    if (variables[i, c("repeatvar")] != variables[i-1, c("repeatvar")] &
-        variables[i, c("repeatvar")] !="" ) {
-      variables[i, c("dataframenew")] <- 1
-    } else{
-      variables[i, c("dataframenew")] <- 0
-    }
-  }
-   ## Counter..
-  variables$dataframecount <- 1
-  for (i in 2:nrow(variables)){  
-    if (variables[i, c("repeatvar")] != "") {
-      variables[i, c("dataframecount")] <- variables[i-1, c("dataframecount")] + variables[i, c("dataframenew")]
-    } else{
-      variables[i, c("dataframecount")] <- variables[i-1, c("dataframecount")]
-    }
-    
-  }
-   ## Framenumber
-  variables$dataframe <- 1
-  for (i in 2:nrow(variables)){  
-    if (variables[i, c("repeatvar")] != "") {
-          variables[i, c("dataframe")] <- variables[i, c("dataframecount")] 
-        } else{
-          variables[i, c("dataframe")] <- 1
-        }
-   }
-  variables$dataframecount <- NULL
-  variables$dataframenew <- NULL
+  
   
     if ("chapter" %in% colnames(variables)) { } else {  variables$chapter <- NA  }
     if ("subchapter" %in% colnames( variables)) { } else {  variables$subchapter <- NA   }
@@ -213,7 +180,7 @@ kobo_dico <- function(xlsformpath) {
             name = character(),
             label = character(),
             hint = character(),
-            dataframe = character(),
+            repeatvar = character(),
             calculation = character(),
             chapter = character(),
             subchapter = character(),
@@ -232,7 +199,7 @@ kobo_dico <- function(xlsformpath) {
         if ("name" %in% colnames(indicator)) {   } else {    indicator$name <- ""   }
         if ("label" %in% colnames(indicator)) {   } else {    indicator$label <- ""   }
         if ("hint" %in% colnames(indicator)) {   } else {    indicator$hint <- ""   }
-        if ("dataframe" %in% colnames(indicator)) { } else { indicator$dataframe <- ""   }
+        if ("repeatvar" %in% colnames(indicator)) { } else { indicator$repeatvar <- ""   }
         if ("calculation" %in% colnames(indicator)) { } else { indicator$calculation <- ""   }
         if ("chapter" %in% colnames(indicator)) { } else { indicator$chapter <- ""   }
         if ("subchapter" %in% colnames(indicator)) { } else { indicator$subchapter <- ""   }
@@ -245,7 +212,7 @@ kobo_dico <- function(xlsformpath) {
         if ("mappoly" %in% colnames(indicator)) {    } else { indicator$mappoly <- ""}
     
         indicator <- indicator[ ,c("type","name","label", "hint",
-                                   "dataframe", "calculation",
+                                   "repeatvar", "calculation",
                                    "chapter","subchapter", "disaggregation", "correlate",
                                     "cluster", "predict", "score", "mappoint", "mappoly")]
      
@@ -258,6 +225,23 @@ kobo_dico <- function(xlsformpath) {
                   indicator = indicator)
     class(dico) <- "kobodico" # assigns a "kobodico" class to the list. Helpful for later on. 
     ## Build dico object as list with both variables and modalities
+    
+     
+    #cat("\n******************** Summary of the Analysis Plan *********************\n \n")
+    ## get a summary of what we have to inform user
+    ## Check Variable lenght
+    # if( length(survey$label) )
+    ## Do we have chapters? If yes how many?
+    ## Do we have anonymisation instructions? If yes, is it correctly set? How many direct identifiers, key variables, sensitive variables
+    ## Do we have cleaning instructions? Are they set up for the select_ variable
+    ## Do we have disaggregation instructions (yes)? -- Should Are they set up for the select_one variable
+    ## Do we have correlate instructions  (yes)? Are they set up for the select_one variable       
+    ## Do we have cluster instructions  (yes)? Are they set up for the select_one variable 
+    ## Do we have predict instructions  (one unique target, at least 2 predictor)? Are they set up for the select_one variable 
+    ## Do we have mappoint, mappoly (yes)? Are they set up for the select_one variable 
+    
+    
+    
     return(dico )
 }
 

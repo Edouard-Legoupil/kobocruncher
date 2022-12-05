@@ -27,10 +27,10 @@ kobo_likert <- function(datalist = datalist,
   ## Check the frequency of list_name within each group,
   ## Filter the combination of list and group where we have more than 3 occurrences
   # not taking in account when the appearance is not "label"
-  grouplikert <- as.data.frame(dico[[1]]) |>
+  grouplikert <- as.data.frame(dico[["variables"]]) |>
     dplyr::filter( type ==  "select_one") |>
     dplyr::filter( appearance !=  "label") |>
-    dplyr::group_by( scope, list_name, dataframe) |>
+    dplyr::group_by( scope, list_name, repeatvar) |>
     dplyr::summarise( cnt= dplyr::n() )|>
     dplyr::filter( cnt >= 2)
   
@@ -41,7 +41,7 @@ kobo_likert <- function(datalist = datalist,
        for (i in 1:nrow(grouplikert)  ) {
           ## getting the group and corresponding label
           scopei <-   as.character(grouplikert[i, c("scope")])
-          dataframei <-   as.character(grouplikert[i, c("dataframe")])
+          repeatvari <-   as.character(grouplikert[i, c("repeatvar")])
           ## geting the list_name and corresponding label
           list_namei <- as.character( grouplikert[i, c("list_name")])
           
@@ -49,7 +49,7 @@ kobo_likert <- function(datalist = datalist,
                       datasource = datasource,
                       dico = dico,
                       scopei =  scopei,
-                      dataframei =  dataframei,
+                      repeatvari =  repeatvari,
                       list_namei = list_namei,
                       showcode = TRUE)) 
   

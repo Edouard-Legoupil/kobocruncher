@@ -20,7 +20,7 @@ kobo_frame <- function(datalist,
                        var) {
   
   ## Identify the right frame number
-  dataframen <- as.data.frame(dico[[1]]) |>
+  dataframen <- as.data.frame(dico[["variables"]]) |>
                   dplyr::filter(name == var) |>
                   dplyr::pull(repeatvar)  
   ## Pull the data

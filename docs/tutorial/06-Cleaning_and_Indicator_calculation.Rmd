@@ -232,7 +232,7 @@ When adding a new indicator a few elements should be provided:
  
  * list_name and list_label are the labeling for the response options in case the indicator is of type `select_one`. This will allow for automatic relablling for charting 
  
- * dataframe: you need to document to what frame the new indicator will be calculated. Basically for most household survey, this will be either the household (aka the first frame, named main per default and referenced as `datalist[[\"main\"]]` ) or the frame for individuals (for intance if,within the repeat of xlsform,  the frame was named  members, `datalist[[\"members\"]]`)
+ * repeatvar: you need to document to what frame the new indicator will be calculated. Basically for most household survey, this will be either the household (aka the first frame, named main per default and referenced as `datalist[[\"main\"]]` ) or the frame for individuals (for intance if,within the repeat of xlsform,  the frame was named  members, `datalist[[\"members\"]]`)
  
  * Calculation: this is the complex part. Calculation should be defined as an R statement using data manipulation functions. In order to build the statement you will need to identify the correct variable name and response name. 
 
@@ -246,8 +246,7 @@ When adding a new indicator a few elements should be provided:
 indicatoradd <- c(  name =  "inColombia",
                     label = "Is from Colombia",
                     type = "select_one",
-                    dataframe = "datalist[[\"main\"]]",
-                    
+                    repeatvar = "datalist[[\"main\"]]",
 calculation = "dplyr::if_else(datalist[[\"main\"]]$variable ==\"criteria\",
                                    \"yes\",\"no\")"
                     )
@@ -258,7 +257,8 @@ expanded  <- kobo_indicator(datalist = datalist,
                  indicatoradd = indicatoradd ,
                  xlsformpath = xlsformpath,
                  xlsformpathout = xlsformpathout)
-
+dico <- expanded[["dico"]]
+datalist <- expanded[["datalist"]]
 
 
 ```
@@ -299,7 +299,15 @@ https://posit.co/wp-content/uploads/2022/10/tidyr.pdf
 .pull-right[
 
 ```{r eval=FALSE, include=TRUE}
-datalist[1]$varnum1 / datalist[1]$varnum2
+
+indicatoradd <- c(  name =  "ratio",
+                    label = "Ratio varnum1 on varnum2",
+                    type = "numeric",
+                    repeatvar = "datalist[[\"main\"]]",
+        calculation = "datalist[[\"main\"]]varnum1 /
+                        datalist[[\"main\"]]varnum2"
+                            )
+ 
 ```
 
 ]
@@ -314,7 +322,16 @@ datalist[1]$varnum1 / datalist[1]$varnum2
 .pull-right[
 
 ```{r eval=FALSE, include=TRUE}
-lubridate::interval( datalist[1]$datetocheck, lubridate::today()) %/% months(1)
+
+indicatoradd <- c(  name =  "duration",
+                    label = "Difference between today and datetocheck",
+                    type = "numeric",
+                    repeatvar = "datalist[[\"main\"]]",
+        calculation = "lubridate::interval( datalist[[\"main\"]]$datetocheck,
+                        lubridate::today()) %/% months(1)"
+                            )
+
+
 ```
 
 ]
@@ -329,6 +346,15 @@ lubridate::interval( datalist[1]$datetocheck, lubridate::today()) %/% months(1)
 .pull-right[
 
 ```{r eval=FALSE, include=TRUE}
+
+indicatoradd <- c(  name =  "varnum_cat",
+                    label = "Difference between today and datetocehck",
+                    type = "numeric",
+                    repeatvar = "datalist[[\"main\"]]",
+        calculation = "lubridate::interval( datalist[[\"main\"]]$datetocheck,
+                        lubridate::today()) %/% months(1)"
+                            )
+
 Hmisc::cut2(datalist[1]$varnum, g =5)
 ```
 

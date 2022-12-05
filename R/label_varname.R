@@ -12,7 +12,7 @@
 #'               x ="profile.country")
 #' 
 label_varname <- function(dico, x) {
-  as.data.frame( dico[[1]]) |>
+  as.data.frame( dico[["variables"]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(label)
 }

@@ -24,6 +24,9 @@ kobo_indicator(
 \item{indicatoradd}{a list containing all key information to add a calculated
 indicator within the analysis plan}
 }
+\value{
+expanded object that includes both the expanded dico and datalist
+}
 \description{
 The function goes through steps:
 1 - load the indicators,
@@ -68,18 +71,18 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 
 ## Check if we add no indicator
 expanded  <- kobo_indicator(datalist = datalist,
-                    dico = dico,
-                 indicatoradd = NULL ,
-                 xlsformpath = xlsformpath,
-                 xlsformpathout = xlsformpathout)
+                            dico = dico,
+                            indicatoradd = NULL ,
+                            xlsformpath = xlsformpath,
+                            xlsformpathout = xlsformpathout)
 
 
 ## Example 1: Simple dummy filter
 indicatoradd <- c(  name =  "inColombia",
                     type = "select_one",
                     label = "Is from Colombia",
-                    dataframe = "1",
-                    calculation = "dplyr::if_else(datalist[[1]]$profile.country ==\"COL\", \"yes\",\"no\")")
+                    repeatvar = "main",
+                    calculation = "dplyr::if_else(datalist[[\"main\"]]$profile.country ==\"COL\", \"yes\",\"no\")")
 
 expanded  <- kobo_indicator(datalist = datalist,
                     dico = dico,
@@ -87,34 +90,36 @@ expanded  <- kobo_indicator(datalist = datalist,
                  xlsformpath = xlsformpath,
                  xlsformpathout = xlsformpathout)
 ## Replace existing
-dico <- expanded[[1]]
-datalist <- expanded[[2]]
+dico <- expanded[["dico"]]
+datalist <- expanded[["datalist"]]
 
 ## Check my new indicator
 table(datalist[[1]]$inColombia, useNA = "ifany")
 
 
 
-## Example 2: calculation on nested elements
-indicatoradd <- c(  name =  "hasfemalemembers",
+## Example 2: calculation on nested elements and build an indicator list
+indicatoradd2 <- c(  name =  "hasfemalemembers",
               type = "select_one",
               label = "HH has female members ",
-              dataframe = "1",
-              calculation = "datalist[[2]] |>
+              repeatvar = "main",
+              calculation = "datalist[[\"members\"]] |>
                             dplyr::select( members.sex, parent_index) |>
                             tidyr::gather(  parent_index, members.sex) |>
                             dplyr::count(parent_index, members.sex) |>
                             tidyr::spread(members.sex, n, fill = 0)  |>
                            dplyr::select( female)")
 
+indicatorall <- list(indicatoradd, indicatoradd2  ) 
+
 expanded  <- kobo_indicator(datalist = datalist,
                     dico = dico,
-                 indicatoradd = indicatoradd ,
+                 indicatoradd = indicatorall ,
                  xlsformpath = xlsformpath,
                  xlsformpathout = xlsformpathout)
 ## Replace existing
-dico <- expanded[[1]]
-datalist <- expanded[[2]]
+dico <- expanded[["dico"]]
+datalist <- expanded[["datalist"]]
 
 
 ## Check my new indicator

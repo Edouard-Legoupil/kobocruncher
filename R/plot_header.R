@@ -22,7 +22,7 @@ plot_header <- function(dico = dico,
   ## getting header levels
   lvl <- stringr::str_count(var, "\\.")
   
-  label <- as.data.frame(dico[[1]]) |>
+  label <- as.data.frame(dico[["variables"]]) |>
            dplyr::filter(name == var) |>
           ## Filter down in case the same var name was given to end group or repat... 
            dplyr::filter(! (type %in% c("end_group", "end_repeat")) ) |>

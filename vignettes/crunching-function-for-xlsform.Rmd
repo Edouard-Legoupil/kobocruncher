@@ -58,19 +58,19 @@ Now we can extend the xlsform that was used to document key next steps in the da
 ```{r examples-kobo_dico}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # Survey
-questions <- as.data.frame(dico[[1]])
+questions <- as.data.frame(dico[["variables"]])
 knitr::kable(utils::head(questions, 10))
 # Choices
-responses <- as.data.frame(dico[[2]])
+responses <- as.data.frame(dico[["modalities"]])
 knitr::kable(utils::head(responses, 10))
 # Settings
-metadata <- as.data.frame(dico[[3]])
+metadata <- as.data.frame(dico[["settings"]])
 knitr::kable(utils::head(metadata, 10))
 # Report ToC
-toc <- as.data.frame(dico[[4]])
+toc <- as.data.frame(dico[["plan"]])
 knitr::kable(utils::head(toc, 10))
 # Indicator
-indicator <- as.data.frame(dico[[5]])
+indicator <- as.data.frame(dico[["indicator"]])
 knitr::kable(utils::head(indicator, 10))
 ```
 
@@ -127,18 +127,18 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 
 ## Check if we add no indicator
 expanded  <- kobo_indicator(datalist = datalist,
-                    dico = dico,
-                 indicatoradd = NULL ,
-                 xlsformpath = xlsformpath,
-                 xlsformpathout = xlsformpathout)
+                            dico = dico,
+                            indicatoradd = NULL ,
+                            xlsformpath = xlsformpath,
+                            xlsformpathout = xlsformpathout)
 
 
 ## Example 1: Simple dummy filter
 indicatoradd <- c(  name =  "inColombia",
                     type = "select_one",
                     label = "Is from Colombia",
-                    dataframe = "1",
-                    calculation = "dplyr::if_else(datalist[[1]]$profile.country ==\"COL\", \"yes\",\"no\")")
+                    repeatvar = "main",
+                    calculation = "dplyr::if_else(datalist[[\"main\"]]$profile.country ==\"COL\", \"yes\",\"no\")")
 
 expanded  <- kobo_indicator(datalist = datalist,
                     dico = dico,
@@ -146,34 +146,36 @@ expanded  <- kobo_indicator(datalist = datalist,
                  xlsformpath = xlsformpath,
                  xlsformpathout = xlsformpathout)
 ## Replace existing
-dico <- expanded[[1]]
-datalist <- expanded[[2]]
+dico <- expanded[["dico"]]
+datalist <- expanded[["datalist"]]
 
 ## Check my new indicator
 table(datalist[[1]]$inColombia, useNA = "ifany")
 
 
 
-## Example 2: calculation on nested elements
-indicatoradd <- c(  name =  "hasfemalemembers",
+## Example 2: calculation on nested elements and build an indicator list
+indicatoradd2 <- c(  name =  "hasfemalemembers",
               type = "select_one",
               label = "HH has female members ",
-              dataframe = "1",
-              calculation = "datalist[[2]] |>
+              repeatvar = "main",
+              calculation = "datalist[[\"members\"]] |>
                             dplyr::select( members.sex, parent_index) |>
                             tidyr::gather(  parent_index, members.sex) |>
                             dplyr::count(parent_index, members.sex) |>
                             tidyr::spread(members.sex, n, fill = 0)  |>
                            dplyr::select( female)")
 
+indicatorall <- list(indicatoradd, indicatoradd2  ) 
+
 expanded  <- kobo_indicator(datalist = datalist,
                     dico = dico,
-                 indicatoradd = indicatoradd ,
+                 indicatoradd = indicatorall ,
                  xlsformpath = xlsformpath,
                  xlsformpathout = xlsformpathout)
 ## Replace existing
-dico <- expanded[[1]]
-datalist <- expanded[[2]]
+dico <- expanded[["dico"]]
+datalist <- expanded[["datalist"]]
 
 
 ## Check my new indicator
@@ -181,10 +183,23 @@ table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
  
 ```
 
+## Weight the dataset
+
+    
+
+  
+
+```{r example-kobo_weight}
+#kobo_weight()
+```
+
+  
+
+  
  
 
 
-## Anonymisation
+## Assess Disclosure Risk
 
  to do....
 
@@ -395,7 +410,7 @@ plot_likert(datalist = datalistlikert,
             dico = dicolikert,
             datasource = NULL,
             scopei =  "group_ei8jz33",
-            dataframei =   "1",
+            repeatvari =   "main",
             ## getting the list_name and corresponding label
             list_namei = "yk0td68" 
           )

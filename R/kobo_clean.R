@@ -41,7 +41,7 @@ kobo_clean <- function(datalist,
                        indicatoradd = NULL) {
 
 #   1 - load the variables, 
-  var <- as.data.frame(dico[[1]])  
+  var <- as.data.frame(dico[["variables"]])  
 #   2 - append the one from inidcatoradd if any,
   
 #   3 - apply the indicator, i.e. do the calculation,

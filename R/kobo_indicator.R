@@ -50,6 +50,10 @@
 #' @param xlsformpathout path to save the xlsform file with newly added indicators
 #' 
 #' @importFrom purrr modify_at
+#' @importFrom dplyr mutate distinct
+#' @importFrom tidyselect everything 
+#' 
+#' @return expanded object that includes both the expanded dico and datalist
 #' 
 #' @export  
 
@@ -62,18 +66,18 @@
 #' 
 #' ## Check if we add no indicator
 #' expanded  <- kobo_indicator(datalist = datalist,
-#'                     dico = dico,
-#'                  indicatoradd = NULL ,
-#'                  xlsformpath = xlsformpath,
-#'                  xlsformpathout = xlsformpathout)
+#'                             dico = dico,
+#'                             indicatoradd = NULL ,
+#'                             xlsformpath = xlsformpath,
+#'                             xlsformpathout = xlsformpathout)
 #' 
 #' 
 #' ## Example 1: Simple dummy filter
 #' indicatoradd <- c(  name =  "inColombia",
 #'                     type = "select_one",
 #'                     label = "Is from Colombia",
-#'                     dataframe = "1",
-#'                     calculation = "dplyr::if_else(datalist[[1]]$profile.country ==\"COL\", \"yes\",\"no\")")
+#'                     repeatvar = "main",
+#'                     calculation = "dplyr::if_else(datalist[[\"main\"]]$profile.country ==\"COL\", \"yes\",\"no\")")
 #' 
 #' expanded  <- kobo_indicator(datalist = datalist,
 #'                     dico = dico,
@@ -81,34 +85,36 @@
 #'                  xlsformpath = xlsformpath,
 #'                  xlsformpathout = xlsformpathout)
 #' ## Replace existing
-#' dico <- expanded[[1]]
-#' datalist <- expanded[[2]]
+#' dico <- expanded[["dico"]]
+#' datalist <- expanded[["datalist"]]
 #' 
 #' ## Check my new indicator
 #' table(datalist[[1]]$inColombia, useNA = "ifany")
 #' 
 #' 
 #' 
-#' ## Example 2: calculation on nested elements
-#' indicatoradd <- c(  name =  "hasfemalemembers",
+#' ## Example 2: calculation on nested elements and build an indicator list
+#' indicatoradd2 <- c(  name =  "hasfemalemembers",
 #'               type = "select_one",
 #'               label = "HH has female members ",
-#'               dataframe = "1",
-#'               calculation = "datalist[[2]] |>
+#'               repeatvar = "main",
+#'               calculation = "datalist[[\"members\"]] |>
 #'                             dplyr::select( members.sex, parent_index) |>
 #'                             tidyr::gather(  parent_index, members.sex) |>
 #'                             dplyr::count(parent_index, members.sex) |>
 #'                             tidyr::spread(members.sex, n, fill = 0)  |>
 #'                            dplyr::select( female)")
 #' 
+#' indicatorall <- list(indicatoradd, indicatoradd2  ) 
+#' 
 #' expanded  <- kobo_indicator(datalist = datalist,
 #'                     dico = dico,
-#'                  indicatoradd = indicatoradd ,
+#'                  indicatoradd = indicatorall ,
 #'                  xlsformpath = xlsformpath,
 #'                  xlsformpathout = xlsformpathout)
 #' ## Replace existing
-#' dico <- expanded[[1]]
-#' datalist <- expanded[[2]]
+#' dico <- expanded[["dico"]]
+#' datalist <- expanded[["datalist"]]
 #' 
 #' 
 #' ## Check my new indicator
@@ -126,7 +132,7 @@ if(!'type' %in% names(indicator)) indicator <- indicator |> tibble::add_column(t
 if(!'name' %in% names(indicator)) indicator <- indicator |> tibble::add_column(name = NA)
 if(!'label' %in% names(indicator)) indicator <- indicator |> tibble::add_column(label = NA)
 if(!'hint' %in% names(indicator)) indicator <- indicator |> tibble::add_column(hint = NA)
-if(!'dataframe' %in% names(indicator)) indicator <- indicator |> tibble::add_column(dataframe = NA)
+if(!'repeatvar' %in% names(indicator)) indicator <- indicator |> tibble::add_column(repeatvar = NA)
 if(!'calculation' %in% names(indicator)) indicator <- indicator |> tibble::add_column(calculation = NA)
 if(!'chapter' %in% names(indicator)) indicator <- indicator |> tibble::add_column(chapter = NA)
 if(!'subchapter' %in% names(indicator)) indicator <- indicator |> tibble::add_column(subchapter = NA)
@@ -139,43 +145,78 @@ if(!'mappoint' %in% names(indicator)) indicator <- indicator |> tibble::add_colu
 if(!'mappoly' %in% names(indicator)) indicator <- indicator |> tibble::add_column(mappoly  = NA)
     
 indicator <- indicator[ ,c("type","name","label", "hint",
-                               "dataframe", "calculation",
+                               "repeatvar", "calculation",
                                "chapter","subchapter", "disaggregation", "correlate",
-                               "cluster", "predict", "score", "mappoint", "mappoly")]
+                               "cluster", "predict", "score", "mappoint", "mappoly")] %>%
+            dplyr::mutate(across(tidyselect::everything(), as.character))
     
   #   2 - append the one from inidicatoradd if any---->
   if( ! (is.null(indicatoradd) )) {
-  ## todo check the structure of indicatoradd...   
-    indicatoradd <- as.data.frame(t(indicatoradd))
-    if( nrow(indicatoradd)>0) {
-      indicator <-  dplyr::bind_rows(indicator, indicatoradd )
-    }
-  }
+    
+  ## todo check the structure of indicatoradd...  
+    
+    ## If only one indicator got added
+    if (class(indicatoradd ) ==  "character") {
+       indicatoradded <- as.data.frame(t(indicatoradd)) |> 
+                         dplyr::select ( - tidyselect::starts_with("labels.") ) }
+    
+    
+    ## If multiples indicators got added  
+    if (class(indicatoradd ) ==  "list") {
+        indicatoradded <- as.data.frame(t(indicatoradd[[1]])) |> 
+                         dplyr::select ( - tidyselect::starts_with("labels.") ) 
+        for (i in 2:length(indicatoradd)) {
+          #print(indicatoradd[[i]])
+          indicatoradded <- dplyr::bind_rows(indicatoradded,
+                                             as.data.frame(t(indicatoradd[[i]] )) |> 
+                                  dplyr::select ( - tidyselect::starts_with("labels.") ))  }
+       }
+    
+    ## Now get everything together - the one from the log and the new one..
+    if( nrow(indicatoradded)>0) {
+      indicator <-  dplyr::bind_rows(indicator, indicatoradded )
+        }
+      }
+  
+    ## To do get the modalities variable aka labels.. to add in the dico modalites for relabeling...
+
+
+    ### Remove duplicate in case a user add an indicator that was already in the xlsform
+     indicator  <- indicator |>
+                    dplyr::distinct()
   
     #   3 - apply the indicator, i.e. do the calculation ---->
   if(nrow(indicator) == 0 ){
     
      cat("no calculated indicators has been defined... \n") 
     } else {
-     ## Sanitize indicator name
-    indicator$name <- gsub( "\\.|/|\\-|\\(|\\)|\"|\\s" , "" , indicator$name )
-
-
-    
+      
     for (i in 1:nrow(indicator)) {
       # i <- 1
-      var_name <- paste0(indicator[i, "name"])
-      frame_name <- paste0(indicator[i, "dataframe"])
+      var_name <- paste0(indicator[i, "name"])    
+      
+      ## Sanitize indicator name in case there's a pb and inform the user...
+      indicator[i, "name"] <- gsub( "\\.|/|\\-|\\(|\\)|\"|\\s" , "" , var_name )
+      if(var_name != paste0(indicator[i, "name"]) ){ cat( paste0("The indicator name got sanitized from ", 
+                                                                  var_name , " to ", 
+                                                                  paste0(indicator[i, "name"])  ))}
+      
+      var_name <- paste0(indicator[i, "name"]) 
+      label_name <- paste0(indicator[i, "label"])
+      repeatvar_name <- paste0(indicator[i, "repeatvar"])
       calc_name <- paste0(indicator[i, "calculation"])
      # cat( paste0(var_name, " - frame: ", frame_name," - calc: ", calc_name, "\n"))
-      eval(parse(text=paste0("datalist[[",
-                             frame_name, 
-                             "]]$", 
-                             var_name, " <- ",
-                             calc_name, "") ))
+      indicrun <- parse(text=paste0("datalist[[\"",
+                                    repeatvar_name ,
+                                    "\"]]$",
+                                    var_name, " <- ",
+                                    calc_name, "") )
+      cat(paste0("\n ### Executing Command for: ",label_name," \n", indicrun, "\n"))
+      ## Will throw and error in case of pb
+      eval(indicrun)
     }
 
-# 4 - re-save all the working indicator definition within the extended xlsform  ---->
+# 4 - Now re-save all the working indicator definition within the extended xlsform  ---->
     wb <- openxlsx::loadWorkbook(xlsformpath)
     sheetname <- "indicator"
     ## In case the indicator worksheet has not been added, do it now
@@ -189,18 +230,17 @@ indicator <- indicator[ ,c("type","name","label", "hint",
     
     hdr.rows <- 1
     openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(indicator), gridExpand = TRUE) 
-    # if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
-    # openxlsx::saveWorkbook(wb, xlsformpathout)
+    if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
+        openxlsx::saveWorkbook(wb, xlsformpathout)
 
 # 5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting ---->
-    indicator$dataframe <- as.numeric(indicator$dataframe)
     dico <- dico |>
-          purrr::modify_at(1, ~ dplyr::bind_rows(dico[[1]], indicator ))  
+          purrr::modify_at(1, ~ dplyr::bind_rows(dico[["variables"]], indicator ))  
    #View( dico1[[1]])
     
     
 # 6 - rebuild the plan if indicators are allocated to chapter, subchapter ---->
-    variables <- as.data.frame(dico[[1]])
+    variables <- as.data.frame(dico[["variables"]])
     if (  nrow(as.data.frame(variables)|> dplyr::filter(! is.na(chapter)))  > 1 ) {
       
       
@@ -260,6 +300,7 @@ indicator <- indicator[ ,c("type","name","label", "hint",
     
     }
     
-  return(expanded <- list (dico, datalist))
+  return(expanded <- list (dico= dico, 
+                           datalist= datalist))
 }
 

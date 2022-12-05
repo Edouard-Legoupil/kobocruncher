@@ -9,7 +9,7 @@
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param scopei group in which the likert frame are
 #' @param list_namei name of the likert option list
-#' @param dataframei name of the frame within the dataset where to look for the data
+#' @param repeatvari name of the frame within the dataset where to look for the data
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' 
@@ -32,7 +32,7 @@
 #'             dico = dicolikert,
 #'             datasource = NULL,
 #'             scopei =  "group_ei8jz33",
-#'             dataframei =   "1",
+#'             repeatvari =   "main",
 #'             ## getting the list_name and corresponding label
 #'             list_namei = "yk0td68" 
 #'           )
@@ -40,7 +40,7 @@ plot_likert <- function(datalist = datalist,
                         dico = dico,
                         scopei,
                         list_namei,
-                        dataframei,
+                        repeatvari,
                         datasource = NULL,
                         showcode = FALSE) {
  
@@ -56,10 +56,10 @@ plot_likert <- function(datalist = datalist,
       cat(paste0( 
          " `plot_likert(datalist = datalist, dico = dico,  scopei =  \"", 
          scopei, "\",   list_namei =  \"", 
-         list_namei, "\",  dataframei =  \"", 
-         dataframei, "\")` \n\n "))} else {}
+         list_namei, "\",  repeatvari =  \"", 
+         repeatvari, "\")` \n\n "))} else {}
              
-   labelgroup <- as.data.frame(dico[[1]]) |>
+   labelgroup <- as.data.frame(dico[["variables"]]) |>
             dplyr::filter( name  %in%  c(scopei)) |>
             dplyr::select( label) |>
             dplyr::pull()
@@ -71,10 +71,10 @@ plot_likert <- function(datalist = datalist,
     labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
           
     ##  Subsetting data - checking levels - and applying label
-    var <- as.data.frame(dico[[1]]) |>
+    var <- as.data.frame(dico[["variables"]]) |>
                  dplyr::filter( list_name ==  list_namei &
                                 scope == scopei  &
-                                dataframe == dataframei  &
+                                repeatvar == repeatvari  &
                                 appearance !="label" )
     ## Just in case with have the first one being appearance label
     data <-kobo_frame(datalist = datalist, dico = dico, var = var[2, c("name")])
