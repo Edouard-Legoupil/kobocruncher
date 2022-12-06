@@ -59,31 +59,34 @@ library("kobocruncher")
 datapath <- here::here(params$datafolder, params$data)
 xlsformpath <- here::here(params$datafolder, params$form) 
 
-########################################
-## The 2 lines below are for the demo ##
-########################################
+######################################################
+##  Uncomment the 2 lines below to display the demo ##
+######################################################
 # Add # to comment them after once you have set up your report parameters..
-#datapath <- system.file("data.xlsx", package = "kobocruncher")
-#xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
-
-
+# datapath <- system.file("data.xlsx", package = "kobocruncher")
+# xlsformpath <-  system.file("sample_xlsform.xlsx", package = "kobocruncher")
 ```
 
 # Analysis Plan 
 
-```{r analysis_plan}
-## Let's extract the analysis plan from the xlsform - or extend the current one
-kobo_prepare_form(xlsformpath = xlsformpath ,
-                 xlsformpathout =  here::here(params$datafolder, params$form)  ,
-                 label_language = params$language ) 
+```{r extend_xlsform}
+## Let's extend the xlsform !! Uncomment the below 
+#### you only need to do this once when you start your analysis !!!
+## Pay attention to the language parameter!
+# kobo_prepare_form(xlsformpath = xlsformpath ,
+#                  xlsformpathout =  here::here(params$datafolder, params$form)  ,
+#                  label_language = params$language ) 
 ```
 
 
 ```{r load_data_get_plan}
 #######
 datalist <- kobo_data(datapath = datapath )
+## Let's extract the analysis plan from the xlsform - or extend the current one
 dico <- kobo_dico(xlsformpath = xlsformpath)
-questions <- as.data.frame(dico[4])
+### Uncomment if you want to review
+# allvar <- as.data.frame(dico[["variables"]])
+# plan <- as.data.frame(dico[["plan"]])
 ```
 
 
@@ -92,22 +95,39 @@ questions <- as.data.frame(dico[4])
 ```
 
 
-```{r anonymize_data}
-## In case it set up in your Below is an initial statistical disclosure risk 
-```
 
-```{r Indicator_calculation}
+```{r Indicator_calculation, message=FALSE, warning=FALSE}
 ## When iterating during the initial data exploration, you may create here calculated variables
 # This step is also called : Feature engineering, i.e. the process of creating new features from existing ones.
 # Newly engineered features often generate valuable insights.
+
+## See an example below with minimum info to document
+# indicatoradd <- c(  name =  "HH07_cat",
+#                     label = "Age groups",
+#                     type = "select_one",
+#                     repeatvar = "S1",
+#                     calculation = "cut(datalist[[\"S1\"]]$group_Part1.S1.HH07,
+#                     breaks = c(-1, 4, 17, 59, Inf))"
+# )
+
 expanded  <- kobo_indicator(datalist = datalist,
                     dico = dico,
-                 indicatoradd = NULL ,
-                 xlsformpath = xlsformpath,
-                 xlsformpathout = xlsformpath)
-## Replace existing
-dico <- expanded[[1]]
-datalist <- expanded[[2]]
+              # replace as needed with indicatoradd = indicatoradd
+                    indicatoradd = NULL ,  
+                    xlsformpath = xlsformpath,
+                    xlsformpathout = xlsformpath)
+## Replace existing with expanded
+dico <- expanded[["dico"]]
+datalist <- expanded[["datalist"]]
+```
+
+
+```{r weight_data}
+## When iterating during the initial data exploration, you may add here specific cleaning steps 
+```
+
+```{r disclosure_risk}
+## In case it set up in your Below is an initial statistical disclosure risk 
 ```
 
 # Automatic Exploration
@@ -133,24 +153,13 @@ kobo_likert(datalist = datalist,
 ```
 
 
-```{r}
-## In case the ridl parameters is set, the below will get the data from the ckan container 
-url <- paste0("https://ridl.unhcr.org/dataset/",params$ridl )
-## Time to archive your work once done!!
-namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
-if( params$publish == "yes"){
-  kobo_ridl(ridl = params$datafolder,
-                      datafolder = params$datafolder,
-                      form = params$dataform,
-                      name =  namethisfile ,
-                      republish = params$republish,
-                      visibility =  params$visibility,
-                      stage = params$stage) }
-```
+
+
+
 
 ## Annex: Crunching step
 
-This data crunching report allows to quickly explore the results of the survey published in [RIDL](`r url `). It can be regenerated as needed based on the analysis plan you did set up. The objective of this report is to allow to quickly identify potential patterns in your dataset. A quick screening of this initial report should allow to select the most meaningful graphs.
+This data crunching report allows to quickly explore the results of the survey published in [RIDL](`r paste0("https://ridl.unhcr.org/dataset/",params$ridl ) `). It can be regenerated as needed based on the analysis plan you did set up. The objective of this report is to allow to quickly identify potential patterns in your dataset. A quick screening of this initial report should allow to select the most meaningful graphs.
 
 The crunching process produces a lot of visuals. Therefore it is key to carefully select the most relevant visual that will be presented for potential interpretation in the next step. To do so, you simply copy-paste the short syntax in a second notebook to generate as powerpoint presentation. A typical data interpretation session shall not last more than 2hours and include more than 60 visuals to look at in order to keep participants with a good focus level.
  
@@ -185,3 +194,21 @@ The report can be regenerated as needed by:
   *  revising the data cleansing based on the cleaning log;   
  
   *  appending calculated indicators to your data frame to reshape variable - also called feature engineering. 
+
+
+
+
+```{r publication_in_ridl}
+
+url <- paste0("https://ridl.unhcr.org/dataset/",params$ridl )
+## Time to archive your work once done!!
+namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
+if( params$publish == "yes"){
+  kobo_ridl(ridl = params$datafolder,
+                      datafolder = params$datafolder,
+                      form = params$dataform,
+                      name =  namethisfile ,
+                      republish = params$republish,
+                      visibility =  params$visibility,
+                      stage = params$stage) }
+```
