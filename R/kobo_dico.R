@@ -179,6 +179,7 @@ kobo_dico <- function(xlsformpath) {
             type = character(),
             name = character(),
             label = character(),
+            list_name = character(),
             hint = character(),
             repeatvar = character(),
             calculation = character(),
@@ -198,6 +199,7 @@ kobo_dico <- function(xlsformpath) {
         if ("type" %in% colnames(indicator)) {   } else {    indicator$type <- ""   }
         if ("name" %in% colnames(indicator)) {   } else {    indicator$name <- ""   }
         if ("label" %in% colnames(indicator)) {   } else {    indicator$label <- ""   }
+        if ("list_name" %in% colnames(indicator)) {   } else {    indicator$list_name <- ""   }
         if ("hint" %in% colnames(indicator)) {   } else {    indicator$hint <- ""   }
         if ("repeatvar" %in% colnames(indicator)) { } else { indicator$repeatvar <- ""   }
         if ("calculation" %in% colnames(indicator)) { } else { indicator$calculation <- ""   }
@@ -211,7 +213,7 @@ kobo_dico <- function(xlsformpath) {
         if ("mappoint" %in% colnames(indicator)) {    } else { indicator$mappoint <- ""}
         if ("mappoly" %in% colnames(indicator)) {    } else { indicator$mappoly <- ""}
     
-        indicator <- indicator[ ,c("type","name","label", "hint",
+        indicator <- indicator[ ,c("type","name","label", "list_name", "hint",
                                    "repeatvar", "calculation",
                                    "chapter","subchapter", "disaggregation", "correlate",
                                     "cluster", "predict", "score", "mappoint", "mappoly")]

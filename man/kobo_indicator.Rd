@@ -9,7 +9,8 @@ kobo_indicator(
   dico,
   xlsformpath,
   xlsformpathout,
-  indicatoradd = NULL
+  indicatoradd = NULL,
+  showcode = FALSE
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ kobo_indicator(
 
 \item{indicatoradd}{a list containing all key information to add a calculated
 indicator within the analysis plan}
+
+\item{showcode}{display the code}
 }
 \value{
 expanded object that includes both the expanded dico and datalist

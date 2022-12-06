@@ -52,7 +52,7 @@ plot_header <- function(dico = dico,
   cat("\n\n")
   #return(head)
   #return( as.character(""))
-  return(invisible())
+  return( cat(""))
    #return(invisible(NULL))
 }
 

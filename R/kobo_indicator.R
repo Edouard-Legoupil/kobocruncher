@@ -48,9 +48,10 @@
 #'                indicator within the analysis plan
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' @param xlsformpathout path to save the xlsform file with newly added indicators
+#' @param showcode display the code
 #' 
 #' @importFrom purrr modify_at
-#' @importFrom dplyr mutate distinct
+#' @importFrom dplyr mutate distinct filter
 #' @importFrom tidyselect everything 
 #' 
 #' @return expanded object that includes both the expanded dico and datalist
@@ -124,13 +125,15 @@ kobo_indicator <- function(datalist,
                        dico, 
                        xlsformpath,
                        xlsformpathout,
-                       indicatoradd = NULL) {
+                       indicatoradd = NULL,
+                        showcode = FALSE) {
 
 #   1 - load the indicators ---->
-indicator <- as.data.frame(dico[[5]])  
+indicator <- as.data.frame(dico[["indicator"]])  
 if(!'type' %in% names(indicator)) indicator <- indicator |> tibble::add_column(type = NA)
 if(!'name' %in% names(indicator)) indicator <- indicator |> tibble::add_column(name = NA)
 if(!'label' %in% names(indicator)) indicator <- indicator |> tibble::add_column(label = NA)
+if(!'list_name' %in% names(indicator)) indicator <- indicator |> tibble::add_column(list_name = NA)
 if(!'hint' %in% names(indicator)) indicator <- indicator |> tibble::add_column(hint = NA)
 if(!'repeatvar' %in% names(indicator)) indicator <- indicator |> tibble::add_column(repeatvar = NA)
 if(!'calculation' %in% names(indicator)) indicator <- indicator |> tibble::add_column(calculation = NA)
@@ -144,7 +147,7 @@ if(!'score' %in% names(indicator)) indicator <- indicator |> tibble::add_column(
 if(!'mappoint' %in% names(indicator)) indicator <- indicator |> tibble::add_column(mappoint  = NA)
 if(!'mappoly' %in% names(indicator)) indicator <- indicator |> tibble::add_column(mappoly  = NA)
     
-indicator <- indicator[ ,c("type","name","label", "hint",
+indicator <- indicator[ ,c("type","name","label", "list_name", "hint",
                                "repeatvar", "calculation",
                                "chapter","subchapter", "disaggregation", "correlate",
                                "cluster", "predict", "score", "mappoint", "mappoly")] %>%
@@ -185,7 +188,7 @@ indicator <- indicator[ ,c("type","name","label", "hint",
      indicator  <- indicator |>
                     dplyr::distinct()
   
-    #   3 - apply the indicator, i.e. do the calculation ---->
+    #   3 - apply all the indicators, i.e. do the calculation ---->
   if(nrow(indicator) == 0 ){
     
      cat("no calculated indicators has been defined... \n") 
@@ -211,7 +214,11 @@ indicator <- indicator[ ,c("type","name","label", "hint",
                                     "\"]]$",
                                     var_name, " <- ",
                                     calc_name, "") )
-      cat(paste0("\n ### Executing Command for: ",label_name," \n", indicrun, "\n"))
+      
+        ## Writing code instruction in report
+       if( showcode == TRUE) { 
+         cat(paste0("\n ### Executing Command for: ",label_name," \n", indicrun, "\n"))}  else {}
+  
       ## Will throw and error in case of pb
       eval(indicrun)
     }
@@ -235,7 +242,12 @@ indicator <- indicator[ ,c("type","name","label", "hint",
 
 # 5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting ---->
     dico <- dico |>
-          purrr::modify_at(1, ~ dplyr::bind_rows(dico[["variables"]], indicator ))  
+          purrr::modify_at(1, ~ dplyr::bind_rows(dico[["variables"]], indicator ))
+    
+    # avoid duplicate 
+    dico[["variables"]] <- dico[["variables"]]  |> dplyr::distinct()
+    ## and also replace the indicator registry...
+    dico[["indicator"]] <- indicator
    #View( dico1[[1]])
     
     
@@ -289,14 +301,18 @@ indicator <- indicator[ ,c("type","name","label", "hint",
         dplyr::mutate(  name= dplyr::case_when(
           name == "labelchapter" ~ labelchapter ,
           TRUE ~ name) ) |>
-        dplyr::select( type, label,name) )
+        dplyr::select( type, label,name) ) 
       
     } else { 
       dico <- dico |>
         purrr::modify_at(4, ~  as.data.frame(variables) |>
         dplyr::select(type, label,name)|>
-        dplyr::filter( ! type  %in% c("note",  "end_group") ))
+        dplyr::filter( ! type  %in% c("note",  "end_group") )) 
     }
+    
+    dico[["plan"]]  <- dico[["plan"]]    |>
+          ## Remove all components without label in case subchapter are not defined
+          dplyr::filter( ! (is.na(label)))
     
     }
     
