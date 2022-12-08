@@ -75,7 +75,7 @@ plot_likert <- function(datalist = datalist,
                  dplyr::filter( list_name ==  list_namei &
                                 scope == scopei  &
                                 repeatvar == repeatvari  &
-                                appearance !="label" )
+                                appearance != "label" )
     ## Just in case with have the first one being appearance label
     data <-kobo_frame(datalist = datalist, dico = dico, var = var[2, c("name")])
       

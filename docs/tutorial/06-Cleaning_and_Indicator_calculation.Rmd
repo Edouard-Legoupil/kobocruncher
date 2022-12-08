@@ -109,7 +109,9 @@ Whatever is quality of form design, enumerator training and data collection qual
   * Often survey includes nested tables (aka `repeat`), so if you remove records from the main table, you need to remove linked records in the nested tables
  
  
-kobo_remove will remove records based on a specific  
+`kobo_remove` will remove records based on a specific filter. For instance if you want to remove all the records from the enumerator edouard (assuming I have a variable called `enumerator` where the enumerator name is recorded)
+
+> kobo_remove( datalist = datalist, filter( datalist[["main]]$numerator == "edouard"))
  
 ---
 
@@ -169,9 +171,31 @@ In other cases, cleaning will involve .large[`recoding`] some variables:
  
 
 
-Often, categorical questions include an "or other" variables and this option might be mis-used
+Often, categorical questions include an `or other` variables and this option might be mis-used. In the exploratory report, those are plotted with a word cloud
 
-In the exploratory report, those are plotted with a word cloud
+.large[Fix them] by setting the  `clean` column of the `xlsform`. For instance, first question `shelter` includes an option `other` which trigger a subsequent text question `shelter_other`
+
+.pull-left[
+
+  * If you want to clean the badly categorized `other` from `shelter`, on the row `shelter_other` in te column  `clean`, insert 
+   
+   > shelter == "other"
+   
+.bg-blue[
+This will create automatically an additional cleaning log in xlsform called `clean_shelter_other` where the first column is the original value and the second column is the cleaned value. You can then manually edit the second column and the next time you will run `kobo_clean`, __the 'other' value__ will be automatically replaced by the value from your cleaning log if different from the original value
+]
+]
+.pull-right[
+   
+  * If you want to adjust the current categorized  from `shelter`, on the row `shelter` in te column  `clean`, insert 
+   
+  > shelter
+
+.bg-blue[  
+This will create automatically an additional cleaning log in xlsform called `clean_shelter` where the first column is the original value and the second column is the cleaned value. You can then manually edit the second column and the next time you will run `kobo_clean`, __all values_ will be automatically replaced by the values from your cleaning log if different from the original value  
+]
+]
+ 
 
 
 
@@ -348,14 +372,13 @@ indicatoradd <- c(  name =  "duration",
 ```{r eval=FALSE, include=TRUE}
 
 indicatoradd <- c(  name =  "varnum_cat",
-                    label = "Difference between today and datetocehck",
-                    type = "numeric",
+                    label = "Discretise the varnum into quintile",
+                    type = "select_one",
                     repeatvar = "datalist[[\"main\"]]",
-        calculation = "lubridate::interval( datalist[[\"main\"]]$datetocheck,
-                        lubridate::today()) %/% months(1)"
+        calculation = "Hmisc::cut2(datalist[1]$varnum, g =5)"
                             )
 
-Hmisc::cut2(datalist[1]$varnum, g =5)
+
 ```
 
 ]
@@ -372,7 +395,22 @@ for instance case size from integer to categoric
 .pull-right[
 
 ```{r eval=FALSE, include=TRUE}
-cut(datalist[1]$casesize, breaks = c(0, 1, 2, 3,5,30), labels = c("Case.size.1", "Case.size.2", "Case.size.3", "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)
+
+indicatoradd <- c(  name =  "varnum_cat",
+                    label = "Discretise the varnum into fixed break",
+                    type = "select_one",
+                    repeatvar = "datalist[[\"main\"]]",
+        calculation = "cut(datalist[1]$casesize, 
+                              breaks = c(0, 1, 2, 3,5,30),
+                             labels = c(\"Case.size.1\", 
+                                        \"Case.size.2\", 
+                                        \"Case.size.3\", 
+                                        \"Case.size.4.5\", 
+                                        \"Case.size.6.or.more\" ),
+                         include.lowest=TRUE)"
+                            )
+
+
 ```
 
 ]
@@ -387,6 +425,21 @@ cut(datalist[1]$casesize, breaks = c(0, 1, 2, 3,5,30), labels = c("Case.size.1",
 .pull-right[
 
 ```{r eval=FALSE, include=TRUE}
+
+indicatoradd <- c(  name =  "vnumber_femala_HH",
+                    label = "Number of female in the household",
+                    hint = "this indicator counts the number of females 
+                            as registered in the household roster"
+                    type = "integer",
+                    repeatvar = "datalist[[\"main\"]]",
+        calculation = "datalist[2] |> 
+                       dplyr::select( members.sex, parent_index) |> 
+                       tidyr::gather( parent_index, members.sex) |> 
+                       dplyr::count(parent_index, members.sex) |> 
+                       tidyr::spread(members.sex, n, fill = 0) |> 
+                       dplyr::select( female)"
+                            )
+
 datalist[2] |> dplyr::select( members.sex, parent_index) |> tidyr::gather( parent_index, members.sex) |> dplyr::count(parent_index, members.sex) |> tidyr::spread(members.sex, n, fill = 0) |> dplyr::select( female)
 ```
 

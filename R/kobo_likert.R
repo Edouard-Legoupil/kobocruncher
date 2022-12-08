@@ -30,6 +30,10 @@ kobo_likert <- function(datalist = datalist,
   grouplikert <- as.data.frame(dico[["variables"]]) |>
     dplyr::filter( type ==  "select_one") |>
     dplyr::filter( appearance !=  "label") |>
+    
+    ## Just include the var that are also in the plan
+    dplyr::filter(name %in% dico[["plan"]]$name ) |>
+    
     dplyr::group_by( scope, list_name, repeatvar) |>
     dplyr::summarise( cnt= dplyr::n() )|>
     dplyr::filter( cnt >= 2)

@@ -863,9 +863,9 @@ knitr::kable(utils::head(indicator, 10))
 
 
 
-## Cleaning categories
+## Cleaning categories & outliers
 
- to do....
+ 
 
 
 ```{r function-kobo_clean}
@@ -896,14 +896,12 @@ knitr::kable(utils::head(indicator, 10))
 #' @export
 
 kobo_clean <- function(datalist,
-                       dico, 
-                       indicatoradd = NULL) {
+                       dico) {
 
-#   1 - load the variables, 
-  var <- as.data.frame(dico[["variables"]])  
-#   2 - append the one from inidcatoradd if any,
+  # detect cleaning instructions  
+  var <- as.data.frame(dico[["variables"]])   
   
-#   3 - apply the indicator, i.e. do the calculation,
+  
 #   4 - re-save all the working indicator definition within the extended xlsform  
 #   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
 #   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
@@ -2245,42 +2243,31 @@ plot_select_one_cross <- function(datalist = datalist,
               dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
                             pcum = n / cumsum)
             
+          #  cnts$y <- label_choiceset(dico = dico,x= by_var)(cnts$y)
+            
             ## plot
             require(ggplot2)
-            p <- ggplot2::ggplot(cnts,
-                                 aes(x = pcum,
-                                     y = x)) +
+            p <- ggplot2::ggplot(cnts, aes(x = pcum,  y = x)) +
               geom_col(fill = "#0072BC") +
-              #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
-              ## Position label differently in the bar in white - outside bar in black
               geom_label(
-                data =   function(x)
-                  subset(x, pcum < max(pcum) / 1.5),
+                data =   function(x)  subset(x, pcum < max(pcum) / 1.5),
                 aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                hjust = -0.1 ,
-                vjust = 0.5,
-                colour = "black",
-                fill = NA,
-                label.size = NA,
-                size = 5
-              ) +
-              geom_label(
-                data =   function(x)
-                  subset(x, pcum >= max(pcum) / 1.5),
+                hjust = -0.1 , vjust = 0.5,
+                colour = "black", fill = NA,
+                label.size = NA, size = 5 ) +
+              geom_label( data =   function(x)subset(x, pcum >= max(pcum) / 1.5),
                 aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                hjust = 1.1 ,
-                vjust = 0.5,
-                colour = "white",
-                fill = NA,
-                label.size = NA,
-                size = 5
-              ) +
+                hjust = 1.1 ,  vjust = 0.5,
+                colour = "white", fill = NA,
+                label.size = NA,  size = 5  ) +
               scale_x_continuous(labels = scales::label_percent()) +
-              facet_wrap(~ y ,
-                         nrow = 3  ,
-                         labeller = as_labeller(function(x)
-                           label_choiceset(dico = dico,
-                                           x = by_var)(x))) +
+              facet_wrap(~ y , nrow = 3 # ,
+                         # labeller = #glue::glue('{
+                         #   as_labeller(function(x)
+                         #   label_choiceset(dico = dico,
+                         #                   x = by_var)(x) ) 
+                         # #  } ')
+                         ) +
               scale_y_discrete(
                 labels = function(x) {
                   label_choiceset(dico = dico,
@@ -2976,7 +2963,7 @@ plot_likert <- function(datalist = datalist,
                  dplyr::filter( list_name ==  list_namei &
                                 scope == scopei  &
                                 repeatvar == repeatvari  &
-                                appearance !="label" )
+                                appearance != "label" )
     ## Just in case with have the first one being appearance label
     data <-kobo_frame(datalist = datalist, dico = dico, var = var[2, c("name")])
       
@@ -3321,6 +3308,10 @@ kobo_likert <- function(datalist = datalist,
   grouplikert <- as.data.frame(dico[["variables"]]) |>
     dplyr::filter( type ==  "select_one") |>
     dplyr::filter( appearance !=  "label") |>
+    
+    ## Just include the var that are also in the plan
+    dplyr::filter(name %in% dico[["plan"]]$name ) |>
+    
     dplyr::group_by( scope, list_name, repeatvar) |>
     dplyr::summarise( cnt= dplyr::n() )|>
     dplyr::filter( cnt >= 2)
