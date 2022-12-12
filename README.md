@@ -1,13 +1,13 @@
-# kobocruncher
+# {kobocruncher}
 An organized workflow generating 'Rmd' files from an extended 'xlsform' questionnaire structure to facilitate survey data crunching. 
 
-`kobocruncher` support organised data analysis workflow, to conduct data discovery and analysis for data collected through  [KoboToolbox](https://www.kobotoolbox.org/), [ODK](https://opendatakit.org/), [ONA](https://ona.io/home/) or any __[xlsform](http://xlsform.org)__ compliant data collection platform.
+`{kobocruncher}` support organised data analysis workflow, to conduct data discovery and analysis for data collected through  [KoboToolbox](https://www.kobotoolbox.org/), [ODK](https://opendatakit.org/), [ONA](https://ona.io/home/) or any __[xlsform](http://xlsform.org)__ compliant data collection platform.
 
 This package first builds on the capacity of [UNHCR Kobo server](http://kobo.unhcr.org) but it can also be used from any structured dataset. It comes as a companion tool to the [Integrated Framework for Household Survey](https://unhcr.github.io/Integrated-framework-household-survey).
 
 ## Tutorial 
 
-`kobocruncher` aims at helping [humanitarian data analysts](https://humanitarian-user-group.github.io/) to focus in data interpretation by saving the time needed to quickly generate the graphs and charts required to discover insights from a dataset. It also ensure analysis __reproducibility__ through a separation of the analysis configuration and the analysis process. The package allows to account for sample weights and hierarchical dataset structure (both capacities that are not available through the default [reporting engine](http://support.kobotoolbox.org/articles/2847676-viewing-and-creating-custom-reports) or the [excel-analyzer](http://support.kobotoolbox.org/articles/592387-using-the-excel-analyzer)).  
+`{kobocruncher}` aims at helping [humanitarian data analysts](https://humanitarian-user-group.github.io/) to focus in data interpretation by saving the time needed to quickly generate the graphs and charts required to discover insights from a dataset. It also ensure analysis __reproducibility__ through a separation of the analysis configuration and the analysis process. The package allows to account for sample weights and hierarchical dataset structure (both capacities that are not available through the default [reporting engine](http://support.kobotoolbox.org/articles/2847676-viewing-and-creating-custom-reports) or the [excel-analyzer](http://support.kobotoolbox.org/articles/592387-using-the-excel-analyzer)).  
 
 Presentations / tutorials for a one day training workshop are accessible here:
 
@@ -30,7 +30,7 @@ install.packages("devtools")
 devtools::install_github('vidonne/unhcrdown')
 devtools::install_github('vidonne/unhcrthemes')
 devtools::install_github('galalH/riddle')
-## Now get kobocruncher
+## Now get {kobocruncher}
 devtools::install_github("edouard-legoupil/kobocruncher")  
 ```  
 
@@ -42,7 +42,7 @@ Contributions to the packages are welcome. Please read first the [contribution g
 
 The package falls into the category of Automatic Data Exploration package (see an [extensive review here](https://github.com/mstaniak/autoEDA-resources)) and mostly act as a __wrapper__ for different specialized packages from the [tidyverse](https://www.tidyverse.org/) . 
 
-Compare to those packages, `kobocruncher` provides:  
+Compare to those packages, `{kobocruncher}` provides:  
 
  * An integration of all the data processing stages, not only visualization
 
