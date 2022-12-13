@@ -37,14 +37,12 @@
 #' 
 #'  
 kobo_clean <- function(datalist,
-                       dico, 
-                       indicatoradd = NULL) {
+                       dico) {
 
-#   1 - load the variables, 
-  var <- as.data.frame(dico[["variables"]])  
-#   2 - append the one from inidcatoradd if any,
+  # detect cleaning instructions  
+  var <- as.data.frame(dico[["variables"]])   
   
-#   3 - apply the indicator, i.e. do the calculation,
+  
 #   4 - re-save all the working indicator definition within the extended xlsform  
 #   5 - bind the new indicators in the dictionary in order to use the kobo_frame() function for further plotting 
 #   6 - rebuild the plan if indicators are allocated to chapter, subchapter 

@@ -166,12 +166,12 @@ In other cases, cleaning will involve .large[`recoding`] some variables:
 
 ---
 
-## Recode categories, treat "or other" choices
+## Recode categories and/or treat "or other" choices
 
  
 
 
-Often, categorical questions include an `or other` variables and this option might be mis-used. In the exploratory report, those are plotted with a word cloud
+Often, categorical questions include an `or other` variables and this option might be mis-used. In the exploratory report, those are plotted with a word cloud. You may also have categories you would like to merge.
 
 .large[Fix them] by setting the  `clean` column of the `xlsform`. For instance, first question `shelter` includes an option `other` which trigger a subsequent text question `shelter_other`
 
@@ -192,7 +192,7 @@ This will create automatically an additional cleaning log in xlsform called `cle
   > shelter
 
 .bg-blue[  
-This will create automatically an additional cleaning log in xlsform called `clean_shelter` where the first column is the original value and the second column is the cleaned value. You can then manually edit the second column and the next time you will run `kobo_clean`, __all values_ will be automatically replaced by the values from your cleaning log if different from the original value  
+This will create automatically an additional cleaning log in xlsform called `clean_shelter` where the first column is the original value and the second column is the cleaned value. You can then manually edit the second column and the next time you will run `kobo_clean`, __all values__ will be automatically replaced by the values from your cleaning log if different from the original value  
 ]
 ]
  

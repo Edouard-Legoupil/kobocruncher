@@ -108,8 +108,9 @@ plot_select_one_cross <- function(datalist = datalist,
           
           cnts1 <- data |>
             ## keep only the variable we need
+            #tidyselect::all_of(c(var, by_var)) |>
             tidyr::drop_na(tidyselect::all_of(c(var, by_var)))
-          
+
           ## Need to check that there's actually a proper intersection in the response...
           if (nrow(cnts1) == 0) {
             cat(
@@ -131,44 +132,35 @@ plot_select_one_cross <- function(datalist = datalist,
               dplyr::mutate(p = n / sum(n)) |>
               dplyr::group_by(y) |>
               dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                            pcum = n / cumsum)
+                            pcum = n / cumsum) |>
+              ## Relabel
+              dplyr::mutate( y0 = label_choiceset(dico = dico,x= by_var)(y) ) |>
+              ## Create better label for the facet
+              dplyr::mutate( y1 = paste0(y0, " (",cumsum, " records)") )
             
             ## plot
             require(ggplot2)
-            p <- ggplot2::ggplot(cnts,
-                                 aes(x = pcum,
-                                     y = x)) +
+            p <- ggplot2::ggplot(cnts, aes(x = pcum,  y = x)) +
               geom_col(fill = "#0072BC") +
-              #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
-              ## Position label differently in the bar in white - outside bar in black
               geom_label(
-                data =   function(x)
-                  subset(x, pcum < max(pcum) / 1.5),
+                data =   function(x)  subset(x, pcum < max(pcum) / 1.5),
                 aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                hjust = -0.1 ,
-                vjust = 0.5,
-                colour = "black",
-                fill = NA,
-                label.size = NA,
-                size = 5
-              ) +
-              geom_label(
-                data =   function(x)
-                  subset(x, pcum >= max(pcum) / 1.5),
+                hjust = -0.1 , vjust = 0.5,
+                colour = "black", fill = NA,
+                label.size = NA, size = 5 ) +
+              geom_label( data =   function(x)subset(x, pcum >= max(pcum) / 1.5),
                 aes(label = scales::label_percent(accuracy = .01)(pcum)),
-                hjust = 1.1 ,
-                vjust = 0.5,
-                colour = "white",
-                fill = NA,
-                label.size = NA,
-                size = 5
-              ) +
+                hjust = 1.1 ,  vjust = 0.5,
+                colour = "white", fill = NA,
+                label.size = NA,  size = 5  ) +
               scale_x_continuous(labels = scales::label_percent()) +
-              facet_wrap(~ y ,
-                         nrow = 3  ,
-                         labeller = as_labeller(function(x)
-                           label_choiceset(dico = dico,
-                                           x = by_var)(x))) +
+              facet_wrap(~ y1 , nrow = 3 # ,
+                         # labeller = #glue::glue('{
+                         #   as_labeller(function(x)
+                         #   label_choiceset(dico = dico,
+                         #                   x = by_var)(x) ) 
+                         # #  } ')
+                         ) +
               scale_y_discrete(
                 labels = function(x) {
                   label_choiceset(dico = dico,

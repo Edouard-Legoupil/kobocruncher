@@ -944,36 +944,6 @@ Indicator calculation
 #'        kobo_frame() function for further plotting 
 #'   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
 #'   
-#'   Example of calculations:
-#'   
-#'   1. Create a filters on specific criteria
-#'   'dplyr::if_else(datalist[[1]]$variable =="criteria", "yes","no")'
-#'   
-#'   
-#'   2. Ratio between 2 numeric variable
-#'   'datalist[[1]]$varnum1 / datalist[[1]]$varnum2'
-#'   
-#'   
-#'   3. Calculation on date - month between data and now calculated in months
-#'   'lubridate::interval( datalist[[1]]$datetocheck, 
-#'                         lubridate::today()) %/%  months(1)'
-#'   
-#'   4. Discretization of numeric variable according to quintile
-#'   'Hmisc::cut2(datalist[[1]]$varnum, g =5)'
-#'   
-#'   5. Discretization of numeric variable according to fixed break - 
-#'   for instance case size from integer to categoric
-#'   'cut(datalist[[1]]$casesize, breaks = c(0, 1, 2, 3,5,30), 
-#'   labels = c("Case.size.1", "Case.size.2", "Case.size.3", 
-#'   "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
-#'   
-#'   6. Aggregate variable from nested frame (aka within repeat) to parent table
-#'   'datalist[[2]] |>
-#'       dplyr::select( members.sex, parent_index) |>
-#'       tidyr::gather(  parent_index, members.sex) |>
-#'       dplyr::count(parent_index, members.sex) |>
-#'       tidyr::spread(members.sex, n, fill = 0)  |>
-#'       dplyr::select( female)'
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
@@ -1255,6 +1225,37 @@ datalist <- expanded[["datalist"]]
 
 ## Check my new indicator
 table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
+
+#   Example of calculations:
+#   
+#   1. Create a filters on specific criteria
+#   'dplyr::if_else(datalist[["main"]]$variable =="criteria", "yes","no")'
+#   
+#   
+#   2. Ratio between 2 numeric variable
+#   'datalist[["main"]]$varnum1 / datalist[["main"]]$varnum2'
+#   
+#   
+#   3. Calculation on date - month between data and now calculated in months
+#   'lubridate::interval( datalist[["main"]]$datetocheck, 
+#                         lubridate::today()) %/%  months(1)'
+#   
+#   4. Discretization of numeric variable according to quintile
+#   'Hmisc::cut2(datalist[["main"]]$varnum, g =5)'
+#   
+#   5. Discretization of numeric variable according to fixed break - 
+#   for instance case size from integer to categoric
+#   'cut(datalist[["main"]]$casesize, breaks = c(0, 1, 2, 3,5,30), 
+#   labels = c("Case.size.1", "Case.size.2", "Case.size.3", 
+#   "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
+#   
+#   6. Aggregate variable from nested frame (aka within repeat) to parent table
+#   'datalist[["members"]] |>
+#       dplyr::select( members.sex, parent_index) |>
+#       tidyr::gather(  parent_index, members.sex) |>
+#       dplyr::count(parent_index, members.sex) |>
+#       tidyr::spread(members.sex, n, fill = 0)  |>
+#       dplyr::select( female)'
  
 ```
 
@@ -1872,6 +1873,8 @@ plot_select_multiple(datalist = datalist,
 #' 
 #' @importFrom   ggplot2 theme element_line element_blank element_text aes labs
 #'             theme_minimal geom_hline
+#' @importFrom datawizard skewness kurtosis
+#' @importFrom stats IQR             
 #' 
 #' @export
 
@@ -1890,7 +1893,7 @@ plot_integer <- function(datalist = datalist,
                    dico = dico,
                    var = var  )
   ## Cast just in case...
-  data[[var]] <- as.integer(data[[var]])
+  data[[var]] <- as.numeric(data[[var]])
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   # cat("---\n")
@@ -1909,6 +1912,19 @@ plot_integer <- function(datalist = datalist,
                                                    x = var), "\n",
                                       "  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
     
+    
+     info <- paste0("Mean: ", round(mean(data[[var]]),2) ,
+                    ", Standard Deviation: ",round(sd(data[[var]]),2) ,
+                    ", Coefficient of Variation: ",round( sd(data[[var]]) / mean(data[[var]]) * 100 ,2) ,
+                    ", Skewness: ",round(datawizard::skewness(data[[var]]),2) ,
+                    " and Kurtosis: ",round(datawizard::kurtosis(data[[var]]),2), ".")
+     ## Detect potential outliers based on Interquartile Range
+     iqr <- stats::IQR(data[[var]], na.rm = T)
+     infoIQR <- dplyr::if_else ( iqr >= 1.349,
+        paste0("Interquartile Range is ", round(iqr,2), " which suggests that there is no outlier"),
+        paste0("Interquartile Range is ", round(iqr,2), " which suggests that there are outliers"))
+                 
+    
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
       ggplot2::geom_histogram(aes( x= .data[[var]]), 
@@ -1921,10 +1937,10 @@ plot_integer <- function(datalist = datalist,
            title = stringr::str_wrap(label_varname(dico = dico, x = var), 90), 
            subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
                      stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
-           caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+           caption = stringr::str_wrap(glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource} - {info} - {infoIQR}")), 100) +
   
       theme_minimal( base_size = 24) +
-      geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
+     # geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
            panel.grid.major.x  = element_blank(), 
            panel.grid.minor = element_blank()    ) +
@@ -2218,8 +2234,9 @@ plot_select_one_cross <- function(datalist = datalist,
           
           cnts1 <- data |>
             ## keep only the variable we need
+            #tidyselect::all_of(c(var, by_var)) |>
             tidyr::drop_na(tidyselect::all_of(c(var, by_var)))
-          
+
           ## Need to check that there's actually a proper intersection in the response...
           if (nrow(cnts1) == 0) {
             cat(
@@ -2241,9 +2258,11 @@ plot_select_one_cross <- function(datalist = datalist,
               dplyr::mutate(p = n / sum(n)) |>
               dplyr::group_by(y) |>
               dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                            pcum = n / cumsum)
-            
-          #  cnts$y <- label_choiceset(dico = dico,x= by_var)(cnts$y)
+                            pcum = n / cumsum) |>
+              ## Relabel
+              dplyr::mutate( y0 = label_choiceset(dico = dico,x= by_var)(y) ) |>
+              ## Create better label for the facet
+              dplyr::mutate( y1 = paste0(y0, " (",cumsum, " records)") )
             
             ## plot
             require(ggplot2)
@@ -2261,7 +2280,7 @@ plot_select_one_cross <- function(datalist = datalist,
                 colour = "white", fill = NA,
                 label.size = NA,  size = 5  ) +
               scale_x_continuous(labels = scales::label_percent()) +
-              facet_wrap(~ y , nrow = 3 # ,
+              facet_wrap(~ y1 , nrow = 3 # ,
                          # labeller = #glue::glue('{
                          #   as_labeller(function(x)
                          #   label_choiceset(dico = dico,
@@ -2441,6 +2460,9 @@ plot_select_multiple_cross <- function(datalist = datalist,
             ## keep only the variable we need
             tidyr::drop_na(tidyselect::all_of(c(var, by_var)))
           
+         ## Apply the labels  
+         cntscross1[,by_var] <- label_choiceset(dico = dico, x = by_var)(cntscross1[,by_var] )
+          
           ## Need to check that there's actually a proper intersection in the response...
           if (nrow(cntscross1) == 0) {
             cat(
@@ -2466,7 +2488,12 @@ plot_select_multiple_cross <- function(datalist = datalist,
               dplyr::mutate(p = n / sum(n)) |>
               dplyr::group_by(y) |>
               dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                            pcum = n / cumsum)
+                            pcum = n / cumsum)|>
+              ## Relabel
+              dplyr::mutate( y0 = label_choiceset(dico = dico,x= by_var)(y) ) |>
+              ## Create better label for the facet
+              dplyr::mutate( y1 = paste0(y0, " (",cumsum, " records)") )
+            
             ##plot
             
             require(ggplot2)
@@ -2499,11 +2526,12 @@ plot_select_multiple_cross <- function(datalist = datalist,
                 size = 5
               ) +
               scale_x_continuous(labels = scales::label_percent()) +
-              facet_wrap(~ y ,
+              facet_wrap(~ y1 ,
                          nrow = 3,
-                         labeller = as_labeller(function(x)
-                           label_choiceset(dico = dico,
-                                           x = by_var)(x))) +
+                         # labeller = as_labeller(function(x)
+                         #   label_choiceset(dico = dico,
+                         #                   x = by_var)(x))
+                         ) +
               scale_y_discrete(
                 labels = function(x) {
                   label_choiceset(dico = dico,
@@ -2781,6 +2809,7 @@ plot_correlation <- function(datalist = datalist,
                                 dplyr::mutate(intense =  abs(Freq))
                  maxcor <- max( abs(cormat$Freq)) + 40
                  mincor <- min( abs(cormat$Freq))
+                 
                  p <- ggplot2::ggplot(
                       data = cormat,
                       mapping = ggplot2::aes_string(x = "formula.target",
@@ -3081,38 +3110,52 @@ plot_likert(datalist = datalistlikert,
 #' 
 #' @param dico path to the xlsform file used to colllect the data
 #' @param var name of the variable to display
+#' 
+#' @importFrom stringr str_count str_c
+#' @importFrom dplyr filter pull
+#' @importFrom glue glue
+#' 
+#' @return text formatted as markdown
+#' 
 #' @export
 
 plot_header <- function(dico = dico,
                             var) {
-  
-  requireNamespace("dplyr")
+  #browser()
   ## getting header levels
   lvl <- stringr::str_count(var, "\\.")
   
   label <- as.data.frame(dico[["variables"]]) |>
-           dplyr::filter(name == var) |>
-          ## Filter down in case the same var name was given to end group or repat... 
-           dplyr::filter(! (type %in% c("end_group", "end_repeat")) ) |>
-           dplyr::pull(label)
-
-  ## In case the header comes from chapter   
+    dplyr::filter(name == var) |>
+    ## Filter down in case the same var name was given to end group or repat...
+    dplyr::filter(!type %in% c("end_group", "end_repeat")) |>
+    dplyr::pull(label)
+  
+  ## In case the header comes from chapter
   lbchap <- as.data.frame(dico[[4]]) |>
-            dplyr::filter(name == var) |>
-            dplyr::pull(label)
-
-  if(identical(label, character(0)) ) 
-    {title <- glue::glue("{lbchap}") } else {
-      if(is.na(label)) { title <- glue::glue("({var})") } else 
-      { title <- label} 
-   } 
+    dplyr::filter(name == var) |>
+    dplyr::pull(label)
+  
+  if (identical(label, character(0)))
+  {
+    title <- glue::glue("{lbchap}")
+  } else {
+    if (is.na(label)) {
+      title <- glue::glue("({var})")
+    } else
+    {
+      title <- label
+    }
+  }
   
   # Join multiple strings into a single string.
-  hdr <- stringr::str_c(strrep("#", 1+lvl), " ", title, sep = "")
+  hdr <- stringr::str_c(strrep("#", 1 + lvl), " ", title, sep = "")
   
   ## Now Printing the headers
   #head <- paste0("\n --- \n \n \n", hdr,"\n\n" )
-  
+  #header <- 
+  #sprintf("------\n\n\n\n%s\n", hdr)
+  #return(header)
   cat("------\n")
   cat("\n\n")
   cat("\n")
@@ -3120,8 +3163,9 @@ plot_header <- function(dico = dico,
   cat("\n\n")
   #return(head)
   #return( as.character(""))
-  return( cat(""))
-   #return(invisible(NULL))
+  #return( cat(""))
+  #return(hdr)
+  #return(invisible(NULL))
 }
 
 ```
@@ -3130,13 +3174,39 @@ plot_header <- function(dico = dico,
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 
 plot_header( dico = dico, 
-              var = "profile")
+              var = "profile.profile")
+
+# class(plot_header( dico = dico, 
+#               var = "profile.profile"))
+# 
+dput(plot_header( dico = dico,
+              var = "profile.profile"))
+# 
+message(plot_header( dico = dico, 
+               var = "profile.profile"))
+
+cat(plot_header( dico = dico, 
+               var = "profile.profile"))
+
+print(plot_header( dico = dico, 
+              var = "profile.profile"),
+      useSource = FALSE)
+
 ```
 
 ```{r tests-plot_header}
-# test_that("plot_header works", {
-# 
-# })
+test_that("plot_header works", {
+  
+  dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
+  check <- plot_header( dico = dico,   var = "profile")
+  expect_true(inherits(plot_header, "function"))
+  # expect_error(plot_header( dico = dico,   var = ""), " ")
+  # expect_type(check, "list")
+  # expect_identical(    check,  )
+  
+  
+  
+})
 ```
 
 # Report generation
@@ -3187,10 +3257,10 @@ kobo_cruncher <- function(datalist = datalist,
       type <-  questions[ i, c("type")]
       name <- questions[ i, c("name")]
       
-      ## Univariate analysis ######
-      if (type == "begin_group") print(plot_header(dico = dico, 
-                                               var = name))
+      if (type == "begin_group") { cat(plot_header(dico = dico,
+                                               var = name)) }
       
+      ## Univariate analysis ######
       if (type == "select_one") print(plot_select_one(datalist = datalist, 
                                                 dico = dico,
                                                 var = name,  

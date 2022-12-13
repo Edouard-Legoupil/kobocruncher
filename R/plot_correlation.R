@@ -96,6 +96,7 @@ plot_correlation <- function(datalist = datalist,
                                 dplyr::mutate(intense =  abs(Freq))
                  maxcor <- max( abs(cormat$Freq)) + 40
                  mincor <- min( abs(cormat$Freq))
+                 
                  p <- ggplot2::ggplot(
                       data = cormat,
                       mapping = ggplot2::aes_string(x = "formula.target",

@@ -39,31 +39,6 @@ The function goes through steps:
 5 - bind the new indicators in the dictionary in order to use the
 kobo_frame() function for further plotting
 6 - rebuild the plan if indicators are allocated to chapter, subchapter
-
-Example of calculations:
-\enumerate{
-\item Create a filters on specific criteria
-'dplyr::if_else(datalist[\link{1}]$variable =="criteria", "yes","no")'
-\item Ratio between 2 numeric variable
-'datalist[\link{1}]$varnum1 / datalist[\link{1}]$varnum2'
-\item Calculation on date - month between data and now calculated in months
-'lubridate::interval( datalist[\link{1}]$datetocheck,
-lubridate::today()) \%/\%  months(1)'
-\item Discretization of numeric variable according to quintile
-'Hmisc::cut2(datalist[\link{1}]$varnum, g =5)'
-\item Discretization of numeric variable according to fixed break -
-for instance case size from integer to categoric
-'cut(datalist[\link{1}]$casesize, breaks = c(0, 1, 2, 3,5,30),
-labels = c("Case.size.1", "Case.size.2", "Case.size.3",
-"Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
-\item Aggregate variable from nested frame (aka within repeat) to parent table
-'datalist[\link{2}] |>
-dplyr::select( members.sex, parent_index) |>
-tidyr::gather(  parent_index, members.sex) |>
-dplyr::count(parent_index, members.sex) |>
-tidyr::spread(members.sex, n, fill = 0)  |>
-dplyr::select( female)'
-}
 }
 \examples{
 xlsformpath <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
@@ -127,5 +102,36 @@ datalist <- expanded[["datalist"]]
 
 ## Check my new indicator
 table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
+
+#   Example of calculations:
+#   
+#   1. Create a filters on specific criteria
+#   'dplyr::if_else(datalist[["main"]]$variable =="criteria", "yes","no")'
+#   
+#   
+#   2. Ratio between 2 numeric variable
+#   'datalist[["main"]]$varnum1 / datalist[["main"]]$varnum2'
+#   
+#   
+#   3. Calculation on date - month between data and now calculated in months
+#   'lubridate::interval( datalist[["main"]]$datetocheck, 
+#                         lubridate::today()) \%/\%  months(1)'
+#   
+#   4. Discretization of numeric variable according to quintile
+#   'Hmisc::cut2(datalist[["main"]]$varnum, g =5)'
+#   
+#   5. Discretization of numeric variable according to fixed break - 
+#   for instance case size from integer to categoric
+#   'cut(datalist[["main"]]$casesize, breaks = c(0, 1, 2, 3,5,30), 
+#   labels = c("Case.size.1", "Case.size.2", "Case.size.3", 
+#   "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
+#   
+#   6. Aggregate variable from nested frame (aka within repeat) to parent table
+#   'datalist[["members"]] |>
+#       dplyr::select( members.sex, parent_index) |>
+#       tidyr::gather(  parent_index, members.sex) |>
+#       dplyr::count(parent_index, members.sex) |>
+#       tidyr::spread(members.sex, n, fill = 0)  |>
+#       dplyr::select( female)'
  
 }

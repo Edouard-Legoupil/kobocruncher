@@ -11,36 +11,6 @@
 #'        kobo_frame() function for further plotting 
 #'   6 - rebuild the plan if indicators are allocated to chapter, subchapter 
 #'   
-#'   Example of calculations:
-#'   
-#'   1. Create a filters on specific criteria
-#'   'dplyr::if_else(datalist[[1]]$variable =="criteria", "yes","no")'
-#'   
-#'   
-#'   2. Ratio between 2 numeric variable
-#'   'datalist[[1]]$varnum1 / datalist[[1]]$varnum2'
-#'   
-#'   
-#'   3. Calculation on date - month between data and now calculated in months
-#'   'lubridate::interval( datalist[[1]]$datetocheck, 
-#'                         lubridate::today()) %/%  months(1)'
-#'   
-#'   4. Discretization of numeric variable according to quintile
-#'   'Hmisc::cut2(datalist[[1]]$varnum, g =5)'
-#'   
-#'   5. Discretization of numeric variable according to fixed break - 
-#'   for instance case size from integer to categoric
-#'   'cut(datalist[[1]]$casesize, breaks = c(0, 1, 2, 3,5,30), 
-#'   labels = c("Case.size.1", "Case.size.2", "Case.size.3", 
-#'   "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
-#'   
-#'   6. Aggregate variable from nested frame (aka within repeat) to parent table
-#'   'datalist[[2]] |>
-#'       dplyr::select( members.sex, parent_index) |>
-#'       tidyr::gather(  parent_index, members.sex) |>
-#'       dplyr::count(parent_index, members.sex) |>
-#'       tidyr::spread(members.sex, n, fill = 0)  |>
-#'       dplyr::select( female)'
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
@@ -120,6 +90,37 @@
 #' 
 #' ## Check my new indicator
 #' table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
+#' 
+#' #   Example of calculations:
+#' #   
+#' #   1. Create a filters on specific criteria
+#' #   'dplyr::if_else(datalist[["main"]]$variable =="criteria", "yes","no")'
+#' #   
+#' #   
+#' #   2. Ratio between 2 numeric variable
+#' #   'datalist[["main"]]$varnum1 / datalist[["main"]]$varnum2'
+#' #   
+#' #   
+#' #   3. Calculation on date - month between data and now calculated in months
+#' #   'lubridate::interval( datalist[["main"]]$datetocheck, 
+#' #                         lubridate::today()) %/%  months(1)'
+#' #   
+#' #   4. Discretization of numeric variable according to quintile
+#' #   'Hmisc::cut2(datalist[["main"]]$varnum, g =5)'
+#' #   
+#' #   5. Discretization of numeric variable according to fixed break - 
+#' #   for instance case size from integer to categoric
+#' #   'cut(datalist[["main"]]$casesize, breaks = c(0, 1, 2, 3,5,30), 
+#' #   labels = c("Case.size.1", "Case.size.2", "Case.size.3", 
+#' #   "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
+#' #   
+#' #   6. Aggregate variable from nested frame (aka within repeat) to parent table
+#' #   'datalist[["members"]] |>
+#' #       dplyr::select( members.sex, parent_index) |>
+#' #       tidyr::gather(  parent_index, members.sex) |>
+#' #       dplyr::count(parent_index, members.sex) |>
+#' #       tidyr::spread(members.sex, n, fill = 0)  |>
+#' #       dplyr::select( female)'
 #'  
 kobo_indicator <- function(datalist,
                        dico, 

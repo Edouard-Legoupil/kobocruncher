@@ -13,6 +13,7 @@ BugReports: https://github.com/Edouard-Legoupil/kobocruncher/issues
 Imports: 
     cowplot,
     data.table,
+    datawizard,
     dplyr,
     forcats,
     ggplot2,

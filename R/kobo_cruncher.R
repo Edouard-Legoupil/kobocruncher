@@ -52,10 +52,10 @@ kobo_cruncher <- function(datalist = datalist,
       type <-  questions[ i, c("type")]
       name <- questions[ i, c("name")]
       
-      ## Univariate analysis ######
-      if (type == "begin_group") print(plot_header(dico = dico, 
-                                               var = name))
+      if (type == "begin_group") { cat(plot_header(dico = dico,
+                                               var = name)) }
       
+      ## Univariate analysis ######
       if (type == "select_one") print(plot_select_one(datalist = datalist, 
                                                 dico = dico,
                                                 var = name,  

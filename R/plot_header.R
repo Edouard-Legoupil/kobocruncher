@@ -8,43 +8,74 @@
 #' 
 #' @param dico path to the xlsform file used to colllect the data
 #' @param var name of the variable to display
+#' 
+#' @importFrom stringr str_count str_c
+#' @importFrom dplyr filter pull
+#' @importFrom glue glue
+#' 
+#' @return text formatted as markdown
+#' 
 #' @export
 
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' 
 #' plot_header( dico = dico, 
-#'               var = "profile")
+#'               var = "profile.profile")
+#' 
+#' # class(plot_header( dico = dico, 
+#' #               var = "profile.profile"))
+#' # 
+#' dput(plot_header( dico = dico,
+#'               var = "profile.profile"))
+#' # 
+#' message(plot_header( dico = dico, 
+#'                var = "profile.profile"))
+#' 
+#' cat(plot_header( dico = dico, 
+#'                var = "profile.profile"))
+#' 
+#' print(plot_header( dico = dico, 
+#'               var = "profile.profile"),
+#'       useSource = FALSE)
+#' 
 plot_header <- function(dico = dico,
                             var) {
-  
-  requireNamespace("dplyr")
+  #browser()
   ## getting header levels
   lvl <- stringr::str_count(var, "\\.")
   
   label <- as.data.frame(dico[["variables"]]) |>
-           dplyr::filter(name == var) |>
-          ## Filter down in case the same var name was given to end group or repat... 
-           dplyr::filter(! (type %in% c("end_group", "end_repeat")) ) |>
-           dplyr::pull(label)
-
-  ## In case the header comes from chapter   
+    dplyr::filter(name == var) |>
+    ## Filter down in case the same var name was given to end group or repat...
+    dplyr::filter(!type %in% c("end_group", "end_repeat")) |>
+    dplyr::pull(label)
+  
+  ## In case the header comes from chapter
   lbchap <- as.data.frame(dico[[4]]) |>
-            dplyr::filter(name == var) |>
-            dplyr::pull(label)
-
-  if(identical(label, character(0)) ) 
-    {title <- glue::glue("{lbchap}") } else {
-      if(is.na(label)) { title <- glue::glue("({var})") } else 
-      { title <- label} 
-   } 
+    dplyr::filter(name == var) |>
+    dplyr::pull(label)
+  
+  if (identical(label, character(0)))
+  {
+    title <- glue::glue("{lbchap}")
+  } else {
+    if (is.na(label)) {
+      title <- glue::glue("({var})")
+    } else
+    {
+      title <- label
+    }
+  }
   
   # Join multiple strings into a single string.
-  hdr <- stringr::str_c(strrep("#", 1+lvl), " ", title, sep = "")
+  hdr <- stringr::str_c(strrep("#", 1 + lvl), " ", title, sep = "")
   
   ## Now Printing the headers
   #head <- paste0("\n --- \n \n \n", hdr,"\n\n" )
-  
+  #header <- 
+  #sprintf("------\n\n\n\n%s\n", hdr)
+  #return(header)
   cat("------\n")
   cat("\n\n")
   cat("\n")
@@ -52,7 +83,8 @@ plot_header <- function(dico = dico,
   cat("\n\n")
   #return(head)
   #return( as.character(""))
-  return( cat(""))
-   #return(invisible(NULL))
+  #return( cat(""))
+  #return(hdr)
+  #return(invisible(NULL))
 }
 

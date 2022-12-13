@@ -4,7 +4,7 @@
 \alias{kobo_clean}
 \title{Apply cleaning to selected variables within the xlsform}
 \usage{
-kobo_clean(datalist, dico, indicatoradd = NULL)
+kobo_clean(datalist, dico)
 }
 \arguments{
 \item{datalist}{An object of the "datalist" class as defined in kobocruncher}

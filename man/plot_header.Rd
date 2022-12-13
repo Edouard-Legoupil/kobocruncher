@@ -11,6 +11,9 @@ plot_header(dico = dico, var)
 
 \item{var}{name of the variable to display}
 }
+\value{
+text formatted as markdown
+}
 \description{
 Function to add headings within the crunching report -
 Headings are by defaults the groups defined in the xlsform -
@@ -20,5 +23,22 @@ but can be replaced within the analysis plan by chapter and subchapter
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 
 plot_header( dico = dico, 
-              var = "profile")
+              var = "profile.profile")
+
+# class(plot_header( dico = dico, 
+#               var = "profile.profile"))
+# 
+dput(plot_header( dico = dico,
+              var = "profile.profile"))
+# 
+message(plot_header( dico = dico, 
+               var = "profile.profile"))
+
+cat(plot_header( dico = dico, 
+               var = "profile.profile"))
+
+print(plot_header( dico = dico, 
+              var = "profile.profile"),
+      useSource = FALSE)
+
 }

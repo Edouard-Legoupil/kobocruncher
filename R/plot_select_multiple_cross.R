@@ -102,6 +102,9 @@ plot_select_multiple_cross <- function(datalist = datalist,
             ## keep only the variable we need
             tidyr::drop_na(tidyselect::all_of(c(var, by_var)))
           
+         ## Apply the labels  
+         cntscross1[,by_var] <- label_choiceset(dico = dico, x = by_var)(cntscross1[,by_var] )
+          
           ## Need to check that there's actually a proper intersection in the response...
           if (nrow(cntscross1) == 0) {
             cat(
@@ -127,7 +130,12 @@ plot_select_multiple_cross <- function(datalist = datalist,
               dplyr::mutate(p = n / sum(n)) |>
               dplyr::group_by(y) |>
               dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                            pcum = n / cumsum)
+                            pcum = n / cumsum)|>
+              ## Relabel
+              dplyr::mutate( y0 = label_choiceset(dico = dico,x= by_var)(y) ) |>
+              ## Create better label for the facet
+              dplyr::mutate( y1 = paste0(y0, " (",cumsum, " records)") )
+            
             ##plot
             
             require(ggplot2)
@@ -160,11 +168,12 @@ plot_select_multiple_cross <- function(datalist = datalist,
                 size = 5
               ) +
               scale_x_continuous(labels = scales::label_percent()) +
-              facet_wrap(~ y ,
+              facet_wrap(~ y1 ,
                          nrow = 3,
-                         labeller = as_labeller(function(x)
-                           label_choiceset(dico = dico,
-                                           x = by_var)(x))) +
+                         # labeller = as_labeller(function(x)
+                         #   label_choiceset(dico = dico,
+                         #                   x = by_var)(x))
+                         ) +
               scale_y_discrete(
                 labels = function(x) {
                   label_choiceset(dico = dico,

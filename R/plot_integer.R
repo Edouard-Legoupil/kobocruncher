@@ -9,6 +9,8 @@
 #' 
 #' @importFrom   ggplot2 theme element_line element_blank element_text aes labs
 #'             theme_minimal geom_hline
+#' @importFrom datawizard skewness kurtosis
+#' @importFrom stats IQR             
 #' 
 #' @export
 
@@ -35,7 +37,7 @@ plot_integer <- function(datalist = datalist,
                    dico = dico,
                    var = var  )
   ## Cast just in case...
-  data[[var]] <- as.integer(data[[var]])
+  data[[var]] <- as.numeric(data[[var]])
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   # cat("---\n")
@@ -54,6 +56,19 @@ plot_integer <- function(datalist = datalist,
                                                    x = var), "\n",
                                       "  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
     
+    
+     info <- paste0("Mean: ", round(mean(data[[var]]),2) ,
+                    ", Standard Deviation: ",round(sd(data[[var]]),2) ,
+                    ", Coefficient of Variation: ",round( sd(data[[var]]) / mean(data[[var]]) * 100 ,2) ,
+                    ", Skewness: ",round(datawizard::skewness(data[[var]]),2) ,
+                    " and Kurtosis: ",round(datawizard::kurtosis(data[[var]]),2), ".")
+     ## Detect potential outliers based on Interquartile Range
+     iqr <- stats::IQR(data[[var]], na.rm = T)
+     infoIQR <- dplyr::if_else ( iqr >= 1.349,
+        paste0("Interquartile Range is ", round(iqr,2), " which suggests that there is no outlier"),
+        paste0("Interquartile Range is ", round(iqr,2), " which suggests that there are outliers"))
+                 
+    
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
       ggplot2::geom_histogram(aes( x= .data[[var]]), 
@@ -66,10 +81,10 @@ plot_integer <- function(datalist = datalist,
            title = stringr::str_wrap(label_varname(dico = dico, x = var), 90), 
            subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
                      stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
-           caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+           caption = stringr::str_wrap(glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource} - {info} - {infoIQR}")), 100) +
   
       theme_minimal( base_size = 24) +
-      geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
+     # geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
       theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
            panel.grid.major.x  = element_blank(), 
            panel.grid.minor = element_blank()    ) +
