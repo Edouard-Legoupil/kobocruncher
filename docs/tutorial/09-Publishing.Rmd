@@ -27,10 +27,24 @@ library(fontawesome)
 
 
 
+Dissemination only happens once __Actionable recommendations__ have been generated
+
 ![https://www.jips.org/jips-publication/joint-analysis-guide-2021/](../../inst/jips.png)
 
 ???
 
+
+---
+
+## Joint Data Interpretation
+
+Actionable recommendations can be generated only with a collaborative process! - People sitting together and discussion how to interpret the data in relation with they key programmatic assumptions in order to __transform information into evidence__
+
+
+
+![https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305](../../inst/joint.png)
+
+???
 
 
 
@@ -39,17 +53,26 @@ library(fontawesome)
 ## Agree to disagree
 
 
+.pull-left[
+Implement [story telling techniques](https://www.unhcr.org/innovation/wp-content/uploads/2019/04/Innovation18-19-WebApril2019.pdf#pag=23) - A good __data story__ is a way to communicate valuable insights and assign meaning and context to data . The narrative shall have a hook, momentum, or a captivating purpose. 
+
+Finding such narrative structure is therefore a prerequisite. 
+
+The narrative should either reinforce what readers knows or reveal what they don’t
+ 
+]
+
+.pull-right[
+
 
 ![https://www.instagram.com/p/CLmsp_AhLen/](../../inst/garcia.png)
-
----
-
-## Joint Data Interpretation
-
-
-![https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305](../../inst/joint.png)
+]
 
 ???
+
+that otherwise lives as numbers in an Excel spreadsheet
+
+. Such stories can be categorized according to the four main narrative frames below, each of them being linked to programs design or implementation. The presented data shall reflect the operation context to 
 
 
 
@@ -82,15 +105,11 @@ Start from assumptions and associate to them graphs from crunching output in ord
 
 ]
 
---- 
 
-## Building Publication-Tailored Content 
 
-Having refugee and displacement topics in major news channel is key to retain public attention and consequently fundraising. Though in the recent years, the topic of refugees and displacement has tended to enter the list of overly saturated topics. Journalists, publications, and the public want to know the core message as quickly as possible and press release on institutional website do not get maximum audience. Instead of pitching content to publishers post-completion, bringing publishers into content development and ensuring that it will be appealing to their audience from the start has a lot of advantages: Ideas are vetted by the publishing partner (they may have ideas to share as well), content is designed for the publication’s aesthetic and/or preferences, the publisher provides feedback on content iterations, content is typically co-branded.
-
-In order to bring the potential publishers in the content creation, it requires to pro-actively identify and reach out to them. It might also be necessary to offer some exclusivity as publishers want content their competitors don’t have. As a result, Publication-Tailored content approach greatly increases the likelihood of getting published and reaching out to a larger audience, leveraging the time and energy investment and resulting in more traffic to UNHCR regular communication channel. Continued collaboration with publishers can also change the partnership approach as the same entity can then proactively start asking for high-quality and free content to help support their stories.
 
 ---
+
 
 ## Get more for less effort: Divisible Content Strategy
 
@@ -112,17 +131,43 @@ Nowadays, the average consumer attention span is less than 10 sec. Long reports 
 
 
 
+---
+
+## Use microsite
+
+A microsite is a single web-page or a small cluster of web pages that exist separate from the organization main website and is used for specific campaign. To this regard a microsite can have its own domain or unique URL and a different and distinctive branding. Microsite can typically be built to highlight content from joint study and research process, following a data collection exercise.
+
+Well designed microsite allows to reduce cognitive load, i.e. the amount of working memory resources used to process a piece of information. The better designed is a message the more chances, people will retain it. In order to do that: 
+
+ * Highlight the main __call to action__ in the  microsite subtitle 
+ 
+ * Start with the main __recommendations__ to ensure the readers does not need to wait 10 minutes of reading to find out what the report message is... if not, drop out risk are high.... 
+ 
+ * Aim to be __minimalistic__: The [ideal length of an article](https://torquemag.io/2018/04/optimal-content-length/) should be between 1500 and 2500 characters, taking an average 7 minutes to read. 
+
+ * Have a 2 or 3 main __top level chapters__ max - avoid presenting content in too many chapter to minimize the cognitive cost for reader to absorb the content.  
+
+ * Minimize __overwhelming effects__ by avoiding putting [too many numbers](https://www.unhcr.org/innovation/wp-content/uploads/2018/02/InnovationYearInReview2017_web.pdf#page=21) to avoid [psychic numbing](https://www.arithmeticofcompassion.org/psychic-numbing)
+ 
+???
+
+https://github.com/unhcr-americas/ageingonthemove/edit/main/README.md 
 
 
+
+ * [Desperate journeys](https://www.unhcr.org/desperatejourneys/)
+ * [Families on the run](https://familiesontherun.org/)
+ * [Her Turn](https://www.unhcr.org/herturn/)
+ * [Stepping Up](https://www.unhcr.org/steppingup/)
+ * [Home Visit Report](https://unhcr-jordan.github.io/home-visit-report)
 
 ---
 
 
 
-## Publication Tips
+## Publication Tips 1/2
 
-
-.pull-left[
+ 
  1. Each chapter from the report should behave as an independent article. Reports to be shared through usual publication approach on http://data.unhcr.org . Potentially an EPUB version (for people using e-readers) of the report, in addition of the PDF version can be offered.
 
  2. The full report can be shared within existing platform and sub-articles can be shared in parallel within blogging platform like Medium4 or pre-identified publication partner.
@@ -134,9 +179,12 @@ Nowadays, the average consumer attention span is less than 10 sec. Long reports 
  5. Charts should be self-explanatory in order to be engaging. This implies to have both a title (with same constraint that a headline, less than 80 char) and sub-title that should act as a short interpretation hint. Chart items should be concise (less than 40 characters). There should be a chart caption stating the reference and date of the data collection as well as the number of observations and confidence interval. A good chart shall deliver a clear message in less than 10 seconds, it is therefore key to adopt a minimalist design.
 
  6. Content shall include integrated social media sharing tools (like “Click to Tweet”) in order to make it easy for readers to share interesting information within the content. Shareable content shall include systematically one graphic from the article as it acts as a powerful micro-content, i.e. teaser for the main story.
-]
 
-.pull-right[
+---
+
+
+
+## Publication Tips 1/2
 
 
  7. Content shall systematically include a call to action at the end of each article, direct the audience to take the next action: link to donate, link to the full report, link to the most recent appeal or link to subscribe to mailing list.
@@ -148,9 +196,18 @@ Nowadays, the average consumer attention span is less than 10 sec. Long reports 
  9.  Notify subscribers once by email, a day after the piece has gone live. This gives some lead time to get the social share numbers up, which increases the chances that others will share.
 
  10. An editorial calendar and media plan should be established in advance so a human story and a Briefing Note can accompany the release of each report
-]
+ 
+
+---
 
 
+## Building Publication-Tailored Content 
+
+Having refugee and displacement topics in major news channel is key to retain public attention and consequently fundraising.
+
+Though in the recent years, the topic of refugees and displacement has tended to enter the list of overly saturated topics. Journalists, publications, and the public want to know the core message as quickly as possible and press release on institutional website do not get maximum audience. Instead of pitching content to publishers post-completion, __bringing publishers into content development__ and ensuring that it will be appealing to their audience from the start has a lot of advantages: Ideas are vetted by the publishing partner (they may have ideas to share as well), content is designed for the publication’s aesthetic and/or preferences, the publisher provides feedback on content iterations, content is typically co-branded.
+
+In order to bring the potential journalist and publishers in the content creation, it requires to __pro-actively identify and reach out to them__. As a result, Publication-Tailored content approach greatly increases the likelihood of getting published and reaching out to a larger audience, leveraging the time and energy investment and resulting in more traffic to UNHCR regular communication channel. Continued collaboration with publishers can also change the partnership approach as the same entity can then proactively start asking for high-quality and free content to help support their stories.
 
 
 
