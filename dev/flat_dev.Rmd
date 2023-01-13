@@ -786,9 +786,9 @@ knitr::kable(utils::head(indicator, 10))
 # Data Processing
 
 
-## Clean time
+## Clean rows - apply a filter
     
-```{r function-kobo_clean_time}
+```{r function-kobo_clean_rows}
 #' Apply cleaning based on date and interview duration
 #' 
 #' Use metadata end & stat to apply automatic cleaning. 
@@ -806,7 +806,7 @@ knitr::kable(utils::head(indicator, 10))
 #' @return datalist An object of the "datalist" class as defined in kobocruncher
 #' 
 #' @export
-# kobo_clean_time <- function(datalist, 
+# kobo_clean_rows <- function(datalist, 
 #                             startdatacollectiondate,
 #                             enddatacollectiondate,
 #                             standardeviation){
@@ -847,35 +847,35 @@ knitr::kable(utils::head(indicator, 10))
 # }
 ```
   
-```{r example-kobo_clean_time}
+```{r example-kobo_clean_rows}
 # datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # nrow(datalist[[1]])
-# datalist <- kobo_clean_time(datalist,
+# datalist <- kobo_clean_rows(datalist,
 #                             startdatacollectiondate = "2022-10-25",
 #                             enddatacollectiondate = "2022-10-29",
 #                             standardeviation = 25)
 # nrow(datalist[[1]])
 ```
   
-```{r tests-kobo_clean_time}
-#test_that("kobo_clean_time works", {   expect_true(inherits(kobo_clean_time, "function"))})
+```{r tests-kobo_clean_rows}
+#test_that("kobo_clean_rows works", {   expect_true(inherits(kobo_clean_rows, "function"))})
 ```
 
 
 
-## Cleaning categories & outliers
+## Cleaning values: categories & outliers
 
  
 
 
-```{r function-kobo_clean}
+```{r function-kobo_clean_values}
 #' @title Apply cleaning to selected variables within the xlsform
 #' 
 #' @description Basic data cleaning is often required. This functions covers tow use cases:
 #'  Use Case 1 - Need to re-categorize the modalities for a select_one or select_multiple 
 #'  Use case 2-  Need to re-encode one variable based on a cleaned open text question
 #'  
-#'  To address those situation, the kobo_clean function is building, if not set-up,  a cleaning log 
+#'  To address those situation, the kobo_clean_values function is building, if not set-up,  a cleaning log 
 #'  for all the variables where the clean cell is not empty within the extended xlsform.
 #'  
 #'  The cleaning log has only 3 columns: variable - old value - new value
@@ -895,7 +895,7 @@ knitr::kable(utils::head(indicator, 10))
 #' 
 #' @export
 
-kobo_clean <- function(datalist,
+kobo_clean_values <- function(datalist,
                        dico) {
 
   # detect cleaning instructions  
@@ -914,11 +914,11 @@ kobo_clean <- function(datalist,
 ```
 
 
-```{r examples-kobo_clean}
+```{r examples-kobo_clean_values}
 # dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # 
-# kobo_clean(datalist = datalist,
+# kobo_clean_values(datalist = datalist,
 #                    dico = dico,
 #                 indicatoradd = indicatoradd   )
 
@@ -1047,7 +1047,12 @@ indicator <- indicator[ ,c("type","name","label", "list_name", "hint",
       var_name <- paste0(indicator[i, "name"]) 
       label_name <- paste0(indicator[i, "label"])
       repeatvar_name <- paste0(indicator[i, "repeatvar"])
-      calc_name <- paste0(indicator[i, "calculation"])
+      
+      ## Bug fix specific to window - linebreak are not well recognised..
+      # calc_name <- paste0(indicator[i, "calculation"])
+      calc_name <-stringr::str_replace_all( paste0(indicator[i, "calculation"]), "[\r\n]" , "\n")
+      
+      
      # cat( paste0(var_name, " - frame: ", frame_name," - calc: ", calc_name, "\n"))
       indicrun <- parse(text=paste0("datalist[[\"",
                                     repeatvar_name ,
@@ -1059,7 +1064,7 @@ indicator <- indicator[ ,c("type","name","label", "list_name", "hint",
        if( showcode == TRUE) { 
          cat(paste0("\n ### Executing Command for: ",label_name," \n", indicrun, "\n"))}  else {}
   
-      ## Will throw and error in case of pb
+      ## Will throw and error in case of pb -- to do - add bettter error catching to inform users.. 
       eval(indicrun)
     }
 

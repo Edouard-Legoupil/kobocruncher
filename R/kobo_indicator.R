@@ -208,7 +208,12 @@ indicator <- indicator[ ,c("type","name","label", "list_name", "hint",
       var_name <- paste0(indicator[i, "name"]) 
       label_name <- paste0(indicator[i, "label"])
       repeatvar_name <- paste0(indicator[i, "repeatvar"])
-      calc_name <- paste0(indicator[i, "calculation"])
+      
+      ## Bug fix specific to window - linebreak are not well recognised..
+      # calc_name <- paste0(indicator[i, "calculation"])
+      calc_name <-stringr::str_replace_all( paste0(indicator[i, "calculation"]), "[\r\n]" , "\n")
+      
+      
      # cat( paste0(var_name, " - frame: ", frame_name," - calc: ", calc_name, "\n"))
       indicrun <- parse(text=paste0("datalist[[\"",
                                     repeatvar_name ,
@@ -220,7 +225,7 @@ indicator <- indicator[ ,c("type","name","label", "list_name", "hint",
        if( showcode == TRUE) { 
          cat(paste0("\n ### Executing Command for: ",label_name," \n", indicrun, "\n"))}  else {}
   
-      ## Will throw and error in case of pb
+      ## Will throw and error in case of pb -- to do - add bettter error catching to inform users.. 
       eval(indicrun)
     }
 

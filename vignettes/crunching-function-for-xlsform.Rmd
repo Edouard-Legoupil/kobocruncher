@@ -76,16 +76,16 @@ knitr::kable(utils::head(indicator, 10))
 
 # Data Processing
 
-## Clean time
+## Clean rows - apply a filter
 
     
 
   
 
-```{r example-kobo_clean_time}
+```{r example-kobo_clean_rows}
 # datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # nrow(datalist[[1]])
-# datalist <- kobo_clean_time(datalist,
+# datalist <- kobo_clean_rows(datalist,
 #                             startdatacollectiondate = "2022-10-25",
 #                             enddatacollectiondate = "2022-10-29",
 #                             standardeviation = 25)
@@ -94,17 +94,17 @@ knitr::kable(utils::head(indicator, 10))
 
   
 
-## Cleaning categories
+## Cleaning values: categories & outliers
 
- to do....
+ 
 
 
 
-```{r examples-kobo_clean}
+```{r examples-kobo_clean_values}
 # dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 # 
-# kobo_clean(datalist = datalist,
+# kobo_clean_values(datalist = datalist,
 #                    dico = dico,
 #                 indicatoradd = indicatoradd   )
 
@@ -180,6 +180,37 @@ datalist <- expanded[["datalist"]]
 
 ## Check my new indicator
 table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
+
+#   Example of calculations:
+#   
+#   1. Create a filters on specific criteria
+#   'dplyr::if_else(datalist[["main"]]$variable =="criteria", "yes","no")'
+#   
+#   
+#   2. Ratio between 2 numeric variable
+#   'datalist[["main"]]$varnum1 / datalist[["main"]]$varnum2'
+#   
+#   
+#   3. Calculation on date - month between data and now calculated in months
+#   'lubridate::interval( datalist[["main"]]$datetocheck, 
+#                         lubridate::today()) %/%  months(1)'
+#   
+#   4. Discretization of numeric variable according to quintile
+#   'Hmisc::cut2(datalist[["main"]]$varnum, g =5)'
+#   
+#   5. Discretization of numeric variable according to fixed break - 
+#   for instance case size from integer to categoric
+#   'cut(datalist[["main"]]$casesize, breaks = c(0, 1, 2, 3,5,30), 
+#   labels = c("Case.size.1", "Case.size.2", "Case.size.3", 
+#   "Case.size.4.5", "Case.size.6.or.more" ), include.lowest=TRUE)'
+#   
+#   6. Aggregate variable from nested frame (aka within repeat) to parent table
+#   'datalist[["members"]] |>
+#       dplyr::select( members.sex, parent_index) |>
+#       tidyr::gather(  parent_index, members.sex) |>
+#       dplyr::count(parent_index, members.sex) |>
+#       tidyr::spread(members.sex, n, fill = 0)  |>
+#       dplyr::select( female)'
  
 ```
 
@@ -438,7 +469,24 @@ plot_likert(datalist = datalistlikert,
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 
 plot_header( dico = dico, 
-              var = "profile")
+              var = "profile.profile")
+
+# class(plot_header( dico = dico, 
+#               var = "profile.profile"))
+# 
+dput(plot_header( dico = dico,
+              var = "profile.profile"))
+# 
+message(plot_header( dico = dico, 
+               var = "profile.profile"))
+
+cat(plot_header( dico = dico, 
+               var = "profile.profile"))
+
+print(plot_header( dico = dico, 
+              var = "profile.profile"),
+      useSource = FALSE)
+
 ```
 
 # Report generation
