@@ -1,6 +1,6 @@
 Package: kobocruncher
 Title: A Metapackage For Survey Data Crunching
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
     person("Edouard", "Legoupil", , "legoupil@unhcr.org", role = c("aut", "cre")),
     person("Hisham", "Galal", , "galalh@unhcr.org", role = "aut")

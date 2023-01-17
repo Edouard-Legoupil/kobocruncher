@@ -25,13 +25,14 @@ Presentations / tutorials for a one day training workshop are accessible here:
 ## Install
 
 ```{r}
-install.packages("devtools")
+install.packages("pak")
+
 ### Install Key unhcRverse packages in order to get the corporate style & brand
-devtools::install_github('vidonne/unhcrdown')
-devtools::install_github('vidonne/unhcrthemes')
-devtools::install_github('galalH/riddle')
+pak::pkg_install('vidonne/unhcrdown')
+pak::pkg_install('vidonne/unhcrthemes')
+pak::pkg_install('galalH/riddle')
 ## Now get {kobocruncher}
-devtools::install_github("edouard-legoupil/kobocruncher")  
+pak::pkg_install("edouard-legoupil/kobocruncher")  
 ```  
 
 ## Contributing

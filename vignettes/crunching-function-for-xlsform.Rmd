@@ -76,42 +76,6 @@ knitr::kable(utils::head(indicator, 10))
 
 # Data Processing
 
-## Clean rows - apply a filter
-
-    
-
-  
-
-```{r example-kobo_clean_rows}
-# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-# nrow(datalist[[1]])
-# datalist <- kobo_clean_rows(datalist,
-#                             startdatacollectiondate = "2022-10-25",
-#                             enddatacollectiondate = "2022-10-29",
-#                             standardeviation = 25)
-# nrow(datalist[[1]])
-```
-
-  
-
-## Cleaning values: categories & outliers
-
- 
-
-
-
-```{r examples-kobo_clean_values}
-# dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
-# datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-# 
-# kobo_clean_values(datalist = datalist,
-#                    dico = dico,
-#                 indicatoradd = indicatoradd   )
-
-
- 
-```
-
 ## Indicator Calculation
 
 Indicator calculation 

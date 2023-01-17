@@ -3,8 +3,6 @@
 export("%>%")
 export(app_kobocruncher)
 export(kobo_anonymise)
-export(kobo_clean)
-export(kobo_clean_values)
 export(kobo_cruncher)
 export(kobo_data)
 export(kobo_dico)
