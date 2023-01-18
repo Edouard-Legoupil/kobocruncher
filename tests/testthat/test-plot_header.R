@@ -8,7 +8,4 @@ test_that("plot_header works", {
   # expect_error(plot_header( dico = dico,   var = ""), " ")
   # expect_type(check, "list")
   # expect_identical(    check,  )
-  
-  
-  
 })

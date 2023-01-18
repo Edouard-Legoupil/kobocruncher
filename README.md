@@ -22,7 +22,7 @@ Presentations / tutorials for a one day training workshop are accessible here:
   *  [08-Anonymising](tutorial/08-Anonymising.html)  
   *  [09-Publishing](tutorial/09-Publishing.html)  
 
-## Install
+## Install and configure authentication token
 
 ```{r}
 install.packages("pak")
@@ -30,10 +30,24 @@ install.packages("pak")
 ### Install Key unhcRverse packages in order to get the corporate style & brand
 pak::pkg_install('vidonne/unhcrdown')
 pak::pkg_install('vidonne/unhcrthemes')
-pak::pkg_install('galalH/riddle')
+pak::pkg_install('edouard-legoupil/riddle')
 ## Now get {kobocruncher}
 pak::pkg_install("edouard-legoupil/kobocruncher")  
 ```  
+
+The `{riddle}` package is used to ensure integration with UNHCR Data Repository](https://ridl.unhcr.org).
+It requires you to add your __API token__ and store it for further use. 
+The easiest way to do that is to store your API token in your `.Renviron` file which 
+is automatically read by R on startup.
+
+You can retrieve your `API TOKEN` in your [user page](https://ridl.unhcr.org/user/).
+
+![api_token_img](https://raw.githubusercontent.com/Edouard-Legoupil/riddle/main/inst/token.png)
+
+To use the package, you’ll need to store your RIDL API token in the `RIDL_API_TOKEN` environment variable. 
+The easiest way to do that is by calling `usethis::edit_r_environ()` and adding the line
+`RIDL_API_TOKEN=xxxxx` to the file before saving and restarting your R session.
+
 
 ## Contributing
 

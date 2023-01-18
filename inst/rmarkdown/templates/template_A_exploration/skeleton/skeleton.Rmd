@@ -13,8 +13,7 @@ params:
   language: "" ## Check what you have in your xlsform - ::english (en) -or ::french (fr) or ::spanish (es)
   datasource: "Study name reference" ## String used in caption for all your charts
   ridl: "ridlproject" ## Name of the ridl project where you data is documented and archived
-  publish: "no" ## put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl c
-  republish: "no"
+  publish: "no" ## put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl dataset
   visibility: "public"
   stage: "exploration_initial" ## you may change this to exploration_advanced if you configuring many 
 ---
@@ -199,16 +198,13 @@ The report can be regenerated as needed by:
 
 
 ```{r publication_in_ridl}
-
-url <- paste0("https://ridl.unhcr.org/dataset/",params$ridl )
 ## Time to archive your work once done!!
 namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
 if( params$publish == "yes"){
-  kobo_ridl(ridl = params$datafolder,
-                      datafolder = params$datafolder,
-                      form = params$dataform,
-                      name =  namethisfile ,
-                      republish = params$republish,
-                      visibility =  params$visibility,
-                      stage = params$stage) }
+  kobo_ridl(ridl = params$ridl,
+            datafolder = params$datafolder,
+            form = params$form,
+            namethisfile =  namethisfile ,
+            visibility =  params$visibility,
+            stage = params$stage) }
 ```

@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">kobocruncher</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1269,38 +1269,15 @@ steps in the data preparation.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co">### Example used for each template </span></span>
+<span><span class="co">## Time to archive your work once done!!</span></span>
 <span><span class="co"># namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  </span></span>
-<span><span class="co">### template_1_exploration</span></span>
 <span><span class="co"># if( params$publish == "yes"){</span></span>
-<span><span class="co">#   kobo_ridl(ridl = params$ridl, </span></span>
-<span><span class="co">#                       datafolder = params$datafolder, </span></span>
-<span><span class="co">#                       form = params$form,</span></span>
-<span><span class="co">#                       name =  namethisfile,</span></span>
-<span><span class="co">#                       republish = params$republish, </span></span>
-<span><span class="co">#                       visibility =  params$visibility,</span></span>
-<span><span class="co">#                       stage = params$stage) }</span></span>
-<span></span>
-<span><span class="co">### template_2_interpretation </span></span>
-<span></span>
-<span><span class="co"># if( params$publish == "yes"){</span></span>
-<span><span class="co">#   kobo_ridl(ridl = params$ridl, </span></span>
-<span><span class="co">#                       datafolder = params$datafolder, </span></span>
-<span><span class="co">#                       form = params$form,</span></span>
-<span><span class="co">#                       name =  namethisfile,</span></span>
-<span><span class="co">#                       republish = params$republish,</span></span>
-<span><span class="co">#                       visibility =  params$visibility,</span></span>
-<span><span class="co">#                       stage = "interpretation_prez") }</span></span>
-<span></span>
-<span><span class="co">### template_3_dissemination </span></span>
-<span></span>
-<span><span class="co"># if( params$publish == "yes"){</span></span>
-<span><span class="co">#  kobo_ridl(ridl = params$ridl, </span></span>
-<span><span class="co">#                       datafolder = params$datafolder, </span></span>
-<span><span class="co">#                       form = params$form,</span></span>
-<span><span class="co">#                       name =  namethisfile,</span></span>
-<span><span class="co">#                       republish = params$republish,</span></span>
-<span><span class="co">#                       visibility =  params$visibility,</span></span>
-<span><span class="co">#                       stage = "dissemination_story") }</span></span>
+<span><span class="co">#   kobo_ridl(ridl = params$ridl,</span></span>
+<span><span class="co">#             datafolder = params$datafolder,</span></span>
+<span><span class="co">#             form = params$form,</span></span>
+<span><span class="co">#             namethisfile =  namethisfile ,</span></span>
+<span><span class="co">#             visibility =  params$visibility,</span></span>
+<span><span class="co">#             stage = params$stage) }</span></span>
 <span></span>
 <span> </span></code></pre></div>
 </div>

@@ -1,6 +1,6 @@
 Package: kobocruncher
 Title: A Metapackage For Survey Data Crunching
-Version: 0.2.2
+Version: 0.2.3
 Authors@R: c(
     person("Edouard", "Legoupil", , "legoupil@unhcr.org", role = c("aut", "cre")),
     person("Hisham", "Galal", , "galalh@unhcr.org", role = "aut")
@@ -20,12 +20,14 @@ Imports:
     ggwordcloud,
     glue,
     here,
+    httr,
     jsonlite,
     likert,
     magrittr,
     openxlsx,
     purrr,
     readxl,
+    riddle,
     rmarkdown,
     scales,
     shiny,
@@ -48,6 +50,7 @@ VignetteBuilder:
     knitr
 Remotes: 
     vidonne/unhcrdown
+    edouard-legoupil/riddle
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

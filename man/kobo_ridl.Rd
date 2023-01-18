@@ -8,8 +8,7 @@ kobo_ridl(
   ridl,
   datafolder,
   form,
-  name_of_this_file,
-  republish = "no",
+  namethisfile,
   visibility = "public",
   stage = "explo_initial"
 )
@@ -21,13 +20,10 @@ kobo_ridl(
 
 \item{form}{names of the file with the analysis plan}
 
-\item{name_of_this_file}{all files are archived based on the name of notebook you created.
+\item{namethisfile}{all files are archived based on the name of notebook you created.
 The function automatically get the name of the notebook where it is run from,
 using
 basename(rstudioapi::getSourceEditorContext()$path )}
-
-\item{republish}{"yes" or "no" Used in order to overwrite. default is "no
-an existing ridl resource if required}
 
 \item{visibility}{can be  "public" per default or set to private for obscure reasons..}
 
@@ -43,53 +39,46 @@ an existing ridl resource if required}
 nothing all analysis files are added as a resources
 }
 \description{
-RIDL is UNHCR instance of a CKAN server. It is designed to keep track and document dataset within an organisation.
-It can also be used to conveniently publish your generated report and save the work you did on a notebook
-As you have been working on the data, you want to keep track of it and save your work in a place where it can be useful for other people.
+RIDL is UNHCR instance of a CKAN server and is accessible for UNHCR staff at
+https://ridl.unhcr.org . It is designed to keep track and
+document dataset within an organisation.
 }
 \details{
-The function saves as resource within the  the RIDL container you used to get the data from :
+You conveniently archive there your generated report and save
+the work you did on a notebook: As you have been working on the data, you want
+to keep track of it and save your work in a place where it can be useful for
+other people and avaialble for peer review and quality assessment.
+
+The function saves within the  the RIDL container you used to get the data
+from the following resources:
 \itemize{
 \item the generated report
 \item the analysis plan, aka the extended  xlsform used to record relabeling, clean, indicator creation, question grouping, exploration settings
 \item the source notebook
 }
+
+The function behavior is the following -
+\enumerate{
+\item Get metadata from the RIDL dataset
+\item check if the resources to be uploaded is already shared based on the name
+\item if already there update, if not create
+}
+
+The function relies on   # install.packages("pak")
+# pak::pkg_install("edouard-legoupil/riddle")
 }
 \examples{
 
 ### Example used for each template 
+## Time to archive your work once done!!
 # namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
-### template_1_exploration
 # if( params$publish == "yes"){
-#   kobo_ridl(ridl = params$ridl, 
-#                       datafolder = params$datafolder, 
-#                       form = params$form,
-#                       name =  namethisfile,
-#                       republish = params$republish, 
-#                       visibility =  params$visibility,
-#                       stage = params$stage) }
-
-### template_2_interpretation 
-
-# if( params$publish == "yes"){
-#   kobo_ridl(ridl = params$ridl, 
-#                       datafolder = params$datafolder, 
-#                       form = params$form,
-#                       name =  namethisfile,
-#                       republish = params$republish,
-#                       visibility =  params$visibility,
-#                       stage = "interpretation_prez") }
-
-### template_3_dissemination 
-
-# if( params$publish == "yes"){
-#  kobo_ridl(ridl = params$ridl, 
-#                       datafolder = params$datafolder, 
-#                       form = params$form,
-#                       name =  namethisfile,
-#                       republish = params$republish,
-#                       visibility =  params$visibility,
-#                       stage = "dissemination_story") }
+#   kobo_ridl(ridl = params$ridl,
+#             datafolder = params$datafolder,
+#             form = params$form,
+#             namethisfile =  namethisfile ,
+#             visibility =  params$visibility,
+#             stage = params$stage) }
 
  
 }

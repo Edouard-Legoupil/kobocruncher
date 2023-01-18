@@ -30,7 +30,7 @@
     
     <a class="navbar-brand me-2" href="index.html">kobocruncher</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,16 +113,22 @@
 </ul>
 </div>
 <div class="section level2">
-<h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
+<h2 id="install-and-configure-authentication-token">Install and configure authentication token<a class="anchor" aria-label="anchor" href="#install-and-configure-authentication-token"></a>
 </h2>
 <pre class="{r}"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">### Install Key unhcRverse packages in order to get the corporate style &amp; brand</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">'vidonne/unhcrdown'</span><span class="op">)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">'vidonne/unhcrthemes'</span><span class="op">)</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">'galalH/riddle'</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">'edouard-legoupil/riddle'</span><span class="op">)</span></span>
 <span><span class="co">## Now get {kobocruncher}</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"edouard-legoupil/kobocruncher"</span><span class="op">)</span>  </span></code></pre>
+<p>The <a href="https://edouard-legoupil.github.io/riddle/" class="external-link">riddle</a> package is used to ensure integration with UNHCR Data Repository](<a href="https://ridl.unhcr.org" class="external-link uri">https://ridl.unhcr.org</a>). It requires you to add your <strong>API token</strong> and store it for further use. The easiest way to do that is to store your API token in your <code>.Renviron</code> file which is automatically read by R on startup.</p>
+<p>You can retrieve your <code>API TOKEN</code> in your <a href="https://ridl.unhcr.org/user/" class="external-link">user page</a>.</p>
+<div class="figure">
+<img src="https://raw.githubusercontent.com/Edouard-Legoupil/riddle/main/inst/token.png" alt=""><p class="caption">api_token_img</p>
+</div>
+<p>To use the package, you’ll need to store your RIDL API token in the <code>RIDL_API_TOKEN</code> environment variable. The easiest way to do that is by calling <code><a href="https://usethis.r-lib.org/reference/edit.html" class="external-link">usethis::edit_r_environ()</a></code> and adding the line <code>RIDL_API_TOKEN=xxxxx</code> to the file before saving and restarting your R session.</p>
 </div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
