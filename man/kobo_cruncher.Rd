@@ -4,14 +4,26 @@
 \alias{kobo_cruncher}
 \title{Crunch all variables according to the analysis plan}
 \usage{
-kobo_cruncher(datalist = datalist, datasource = NULL, dico = dico)
+kobo_cruncher(
+  datalist = datalist,
+  datasource = NULL,
+  dico = dico,
+  n = 5,
+  n_by = 5
+)
 }
 \arguments{
 \item{datalist}{An object of the "datalist" class as defined in kobocruncher}
 
-\item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform}
+\item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsfor}
 
-\item{dico}{path to the xlsform file used to colllect the data}
+\item{dico}{path to the xlsform file used to collect the data}
+
+\item{n}{if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+forcats::fct_lump_n()}
+
+\item{n_by}{if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
+forcats::fct_lump_n()}
 }
 \description{
 Crunch all variables according to the analysis plan

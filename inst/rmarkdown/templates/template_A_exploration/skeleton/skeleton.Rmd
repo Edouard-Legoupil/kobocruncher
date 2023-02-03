@@ -134,7 +134,10 @@ datalist <- expanded[["datalist"]]
 ```{r cruncher, results='asis' }
 kobo_cruncher(datalist = datalist,
               dico = dico,
-              datasource = params$datasource)
+              datasource = params$datasource,
+              n = 5, ## setting the default options lumping.. 
+              n_by = 5 ## setting the default options lumping for cross tabulation.. 
+              )
 ```
 
 
@@ -199,8 +202,9 @@ The report can be regenerated as needed by:
 
 ```{r publication_in_ridl}
 ## Time to archive your work once done!!
-namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
+
 if( params$publish == "yes"){
+  namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
   kobo_ridl(ridl = params$ridl,
             datafolder = params$datafolder,
             form = params$form,

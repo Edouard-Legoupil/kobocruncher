@@ -7,12 +7,17 @@
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
-#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform
+#' @param n if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
+#' @param n_by if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
 #' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous
 #'            scale_y_discrete coord_cartesian labs theme_minimal 
 #'            geom_vline theme element_line element_blank facet_wrap as_labeller 
+#' @importFrom tidyr separate_rows drop_na          
 #' @importFrom data.table :=  
 #' 
 #' @export
@@ -20,17 +25,26 @@
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-#' 
 #' plot_select_multiple_cross(datalist = datalist,
 #'               dico = dico, 
 #'               var = "profile.reason",
 #'               by_var = "location",
+#'               showcode = TRUE)
+#' 
+#' ## test lumping
+#' plot_select_multiple_cross(datalist = datalist,
+#'               dico = dico, 
+#'               var = "profile.reason",
+#'               by_var = "location",
+#'               n = 4, 
 #'               showcode = TRUE)
 plot_select_multiple_cross <- function(datalist = datalist,
                                        dico = dico,
                                        var, 
                                        by_var , 
                                        datasource = NULL,
+                                       n = NULL,
+                                       n_by = NULL,
                                        showcode = FALSE) {
   
   
@@ -54,7 +68,7 @@ plot_select_multiple_cross <- function(datalist = datalist,
   
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
-  rr2 <- mean(!is.na(data2[[by_var]]))
+  rr2 <- mean(!is.na(data2[[by_var]])) 
   ## Writing report
   # cat("\n")
   # cat(paste("####", label_varname(var)))
@@ -80,23 +94,6 @@ plot_select_multiple_cross <- function(datalist = datalist,
     if (rr != 0 & !(is.nan(rr))) {
       if (by_var != "") {
         if (by_var != var) {
-          ## Writing code instruction in report
-          if (showcode == TRUE) {
-            cat(
-              paste0(
-                label_varname(dico = dico,
-                              x = var),
-                "\n",
-                "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"",
-                var,
-                "\",\"",
-                by_var,
-                "\")` \n\n "
-              )
-            )
-          }   else {
-          }
-          
           
           cntscross1 <- data |>
             ## keep only the variable we need
@@ -117,27 +114,64 @@ plot_select_multiple_cross <- function(datalist = datalist,
               )
             )
           } else {
-            cntscross <- cntscross1 |>
-              ## Separate the var with select_multiple
-              tidyr::separate_rows(.data[[var]], sep = " ") |>
-              # Lump together factor levels into "other"
-              dplyr::distinct(
-                `X_id`,!!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),!!by_var := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5)
-              ) |>
-              # Lump together factor levels into "other"
-              dplyr::count(x := .data[[var]],
-                           y := .data[[by_var]]) |>
-              dplyr::mutate(p = n / sum(n)) |>
-              dplyr::group_by(y) |>
-              dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                            pcum = n / cumsum)|>
-              ## Relabel
-              dplyr::mutate( y0 = label_choiceset(dico = dico,x= by_var)(y) ) |>
-              ## Create better label for the facet
-              dplyr::mutate( y1 = paste0(y0, " (",cumsum, " records)") )
+             ## Lumping 
+            nlev <-  nrow(dplyr::distinct(tidyr::separate_rows(as.data.frame(data[[var]]), `data[[var]]`, sep = " ")))
+             ## Set the value for n if not set up -
+             if( is.null(n)) { n1 = nlev}  else { n1 = n} 
             
+            ## the by_var is a simple select_one
+            nlev_by <-  nlevels( as.factor(data[[by_var]]) )
+             ## Set the value for n_by if not set up -
+             if( is.null(n_by)) { n_by1 = nlev_by}  else { n_by1 = n_by} 
+            
+           ## Compute tabulation
+          cntscross <- cntscross1 |>
+            ## Separate the var with select_multiple
+            tidyr::separate_rows(.data[[var]], sep = " ") |>
+            dplyr::group_by(.data[[var]], .data[[by_var]], X_id ) |>
+            dplyr::summarise(n = dplyr::n()) |>
+            dplyr::mutate(p = n/nr)  |>
+            ## Lump together factor levels into "other"
+            dplyr::mutate(x = forcats::fct_lump_n( .data[[var]],
+                                                   n = as.integer(n1),
+                                                   w = p,
+                                                   other_level = paste0("Other ",
+                                                                        nlev  - n1,
+                                                                        " response options automatically lumped") )) |>
+            ## Lump together factor levels into "other"
+            dplyr::mutate(y = forcats::fct_lump_n( .data[[by_var]],
+                                                   n = as.integer(n_by1),
+                                                   w = p,
+                                                   other_level = paste0("Other ",
+                                                                        nlev_by  - n_by1,
+                                                                        " response options automatically lumped") )) |>
+            ## let's summarize again after lumping
+            dplyr::group_by(x, y , X_id) |>
+            dplyr::summarise(n = sum(n, na.rm = TRUE)) |>
+            dplyr::mutate(p = n/nr)  |>
+            ## Now adding numbers by facet
+            dplyr::group_by(y) |>
+            dplyr::mutate(rec = dplyr::n_distinct(X_id) ) |>
+            ## Relabel
+            dplyr::mutate( y0 = label_choiceset(dico = dico,x= by_var)(y) ) |>
+            ## Create better label for the facet
+            dplyr::mutate( y1 = paste0(y0, " (", rec , " records)") ) |>
+            ## let's summarize again
+            dplyr::group_by(x, y1, rec) |>
+            dplyr::summarise(n = sum(n, na.rm = TRUE)) |>
+            dplyr::mutate(pcum = n / rec  )
+            
+          ## Writing code instruction in report
+          if (showcode == TRUE) {
+            cat( paste0( label_varname(dico = dico,  x = var), "\n",
+                "  `plot_select_multiple_cross(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       by_var = \"", by_var, "\",
+                       datasource = params$datasource,
+                       n = ", n1, ",
+                       n_by = ",n_by1, " )` \n\n "))  }   else {} 
             ##plot
-            
             require(ggplot2)
             p <- ggplot2::ggplot(cntscross,
                                  aes(x = pcum,
@@ -200,7 +234,8 @@ plot_select_multiple_cross <- function(datalist = datalist,
               theme(
                 panel.grid.major.x  = element_line(color = "#cbcbcb"),
                 panel.grid.major.y  = element_blank(),
-                panel.grid.minor = element_blank()
+                panel.grid.minor = element_blank(),
+                axis.title.y = element_text( size = 8)
               ) +
               theme(plot.title.position = "plot")
             

@@ -30,4 +30,9 @@ label_choiceset(dico = dico,
 data$profile.occupation
 label_choiceset(dico = dico, 
                 x="profile.occupation")(data$profile.occupation)
+
+
+label_choiceset(dico = dico, 
+                x="profile.occupation")(data$profile.occupation)
+
 }

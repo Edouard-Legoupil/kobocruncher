@@ -9,6 +9,7 @@ plot_select_multiple(
   dico = dico,
   var,
   datasource = NULL,
+  n = NULL,
   showcode = FALSE
 )
 }
@@ -20,6 +21,9 @@ plot_select_multiple(
 \item{var}{name of the variable to display}
 
 \item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform}
+
+\item{n}{if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+forcats::fct_lump_n()}
 
 \item{showcode}{display the code}
 }
@@ -34,6 +38,16 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 plot_select_multiple(datalist = datalist,
               dico = dico, 
               var = "profile.reason",
+              datasource = NULL,
+              showcode = TRUE
+            )
+
+## Displaying the usage of the lumping option..
+plot_select_multiple(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason",
+              n = 5,
+             datasource = NULL,
               showcode = TRUE
             )
 

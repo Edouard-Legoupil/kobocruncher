@@ -4,7 +4,14 @@
 \alias{plot_select_one}
 \title{Plotting Select one variable}
 \usage{
-plot_select_one(datalist, dico, var, datasource = NULL, showcode = FALSE)
+plot_select_one(
+  datalist,
+  dico,
+  var,
+  datasource = NULL,
+  n = NULL,
+  showcode = FALSE
+)
 }
 \arguments{
 \item{datalist}{An object of the "datalist" class as defined in kobocruncher}
@@ -14,6 +21,9 @@ plot_select_one(datalist, dico, var, datasource = NULL, showcode = FALSE)
 \item{var}{name of the variable to display}
 
 \item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform}
+
+\item{n}{if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+forcats::fct_lump_n()}
 
 \item{showcode}{display the code}
 }
@@ -27,6 +37,12 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 plot_select_one(datalist = datalist,
               dico = dico, 
               var = "profile.country",
+              showcode = TRUE)
+## Exmaple with lumping
+plot_select_one(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              n = 1,
               showcode = TRUE)
 
 # plot_select_one(datalist = datalist,

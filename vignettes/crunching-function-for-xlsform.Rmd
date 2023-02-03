@@ -81,7 +81,6 @@ knitr::kable(utils::head(indicator, 10))
 Indicator calculation 
 
 
-
 ```{r examples-kobo_indicator}
 xlsformpath <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
 xlsformpathout <- "sample_xlsform_withindic.xlsx"
@@ -190,13 +189,9 @@ table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
 
   
 
-  
- 
-
-
 ## Assess Disclosure Risk
 
- to do....
+to do....
 
 
 ```{r examples-kobo_anonymise}
@@ -262,6 +257,11 @@ label_choiceset(dico = dico,
 data$profile.occupation
 label_choiceset(dico = dico, 
                 x="profile.occupation")(data$profile.occupation)
+
+
+label_choiceset(dico = dico, 
+                x="profile.occupation")(data$profile.occupation)
+
 ```
 
 # Plotting Functions
@@ -277,6 +277,12 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 plot_select_one(datalist = datalist,
               dico = dico, 
               var = "profile.country",
+              showcode = TRUE)
+## Exmaple with lumping
+plot_select_one(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              n = 1,
               showcode = TRUE)
 
 # plot_select_one(datalist = datalist,
@@ -295,6 +301,16 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 plot_select_multiple(datalist = datalist,
               dico = dico, 
               var = "profile.reason",
+              datasource = NULL,
+              showcode = TRUE
+            )
+
+## Displaying the usage of the lumping option..
+plot_select_multiple(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason",
+              n = 5,
+             datasource = NULL,
               showcode = TRUE
             )
 
@@ -349,6 +365,8 @@ plot_select_one_cross(datalist = datalist,
               dico = dico, 
               var = "profile.country",
               by_var = "members.sex",
+              n = 5,
+              n_by = 5,
               showcode = TRUE
               )
 
@@ -359,11 +377,18 @@ plot_select_one_cross(datalist = datalist,
 ```{r examples-plot_select_multiple_cross}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-
 plot_select_multiple_cross(datalist = datalist,
               dico = dico, 
               var = "profile.reason",
               by_var = "location",
+              showcode = TRUE)
+
+## test lumping
+plot_select_multiple_cross(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason",
+              by_var = "location",
+              n = 4, 
               showcode = TRUE)
 ```
 
@@ -562,19 +587,42 @@ See a more detailed presentation of that step here: https://www.youtube.com/watc
 
 ```
 
-## Report Template C for Dissemination and Data Story Telling Template
+## Report Template C for Note taking
 
-The last template can be used to take note of the data interpretation session.
+The third template can be used  in a similar way than the presentation template. It will generate a  word document in order to take note.
 
-It will generate a PDF or an paginated HTML page
+An automatic table of content is generated but might required to be refreshed after the word document creation
 
 
-```{r template_3_dissemination}
+
+```{r template_3_note}
 #' Report Template 3 for Dissemination and Data Story Telling Template
 #' The last template can be used to take note of the data interpretation session. 
 #' It will generate a PDF or an paginated HTML page
 # usethis::use_rmarkdown_template(
-#   template_name = "template_3_dissemination",
+#   template_name = "template_C_notes",
+#   template_dir = NULL,
+#   template_description = "Note taking",
+#   template_create_dir = TRUE
+# )
+
+
+
+```
+
+## Report Template D for Dissemination and Data Story Telling Template
+
+The last template can be used to build the final report. It includes some instructions and guidance on how to organize the content to increase your audience
+
+It will generate a PDF or an paginated HTML page
+
+
+```{r template_4_dissemination}
+#' Report Template 3 for Dissemination and Data Story Telling Template
+#' The last template can be used to take note of the data interpretation session. 
+#' It will generate a PDF or an paginated HTML page
+# usethis::use_rmarkdown_template(
+#   template_name = "template_D_dissemination",
 #   template_dir = NULL,
 #   template_description = "Data brief and Story Telling",
 #   template_create_dir = TRUE

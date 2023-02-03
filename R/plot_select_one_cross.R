@@ -8,6 +8,10 @@
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param n if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
+#' @param n_by if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
 #' @importFrom ggplot2 aes  geom_col geom_label 
@@ -33,6 +37,8 @@
 #'               dico = dico, 
 #'               var = "profile.country",
 #'               by_var = "members.sex",
+#'               n = 5,
+#'               n_by = 5,
 #'               showcode = TRUE
 #'               )
 #' 
@@ -41,6 +47,8 @@ plot_select_one_cross <- function(datalist = datalist,
                             var, 
                             by_var , 
                             datasource = NULL,
+                            n = NULL,
+                            n_by = NULL,
                             showcode = FALSE) {
   
   requireNamespace("ggplot2")
@@ -61,6 +69,11 @@ plot_select_one_cross <- function(datalist = datalist,
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   rr2 <- mean(!is.na(data2[[by_var]]))
+  
+  
+  nr <- sum(!is.na(data[[var]]))
+  nr2 <- sum(!is.na(data2[[by_var]]))
+  
   ## Writing report
   # cat("\n")
   # cat(paste("####", label_varname(var)))
@@ -89,23 +102,6 @@ plot_select_one_cross <- function(datalist = datalist,
     if (rr != 0 & !(is.nan(rr))) {
       if (by_var != "") {
         if (by_var != var) {
-          ## Writing code instruction in report
-          if (showcode == TRUE) {
-            cat(
-              paste0(
-                label_varname(dico = dico,
-                              x = var),
-                "\n",
-                "  `plot_select_one_cross(datalist = datalist, dico = dico, \"",
-                var,
-                "\",\"",
-                by_var,
-                "\")` \n\n "
-              )
-            )
-          }     else {
-          }
-          
           cnts1 <- data |>
             ## keep only the variable we need
             #tidyselect::all_of(c(var, by_var)) |>
@@ -123,20 +119,56 @@ plot_select_one_cross <- function(datalist = datalist,
               )
             )
           } else {
-            cnts <- cnts1 |>
+              ## Set the value for n if not set up -
+              if( is.null(n)) { n1 = nlevels( as.factor(data[[var]]) )} else { n1 = n} 
+              ## Set the value for n_by if not set up -
+              if( is.null(n_by)) { n_by1 = nlevels( as.factor(data[[by_var]]) )} else { n_by1 = n_by} 
+            
+             cnts <- cnts1 |> 
+              dplyr::group_by(.data[[var]], .data[[by_var]] ) |>
+              dplyr::summarise(n = dplyr::n()) |>
+              dplyr::mutate(p = n/nr) |>
               # Lump together factor levels into "other"
-              dplyr::count(
-                x := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
-                y := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5)
+              dplyr::mutate(
+                x = as.character(forcats::fct_lump_n(factor(.data[[var]]), 
+                                         n = n1,
+                                         w = p,
+                                         other_level = paste0("Other ",
+                                    nlevels( as.factor(data[[var]]))-n1,
+                                    " response options automatically lumped")) ),
+                y = as.character(forcats::fct_lump_n(factor(.data[[by_var]]), 
+                                         n = n_by1,
+                                         w = p,
+                                         other_level = paste0("Other ",
+                                    nlevels( as.factor(data[[by_var]]))-n_by1,
+                                    " response options automatically lumped")))
               ) |>
-              dplyr::mutate(p = n / sum(n)) |>
+              ## let's summarize again after lumping 
+              dplyr::group_by(x, y ) |>
+              dplyr::summarise(n = sum(n, na.rm = TRUE)) |>
+              dplyr::mutate(p = n/nr) |>
+               
+              ## Now  counting records per facet..
               dplyr::group_by(y) |>
               dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
                             pcum = n / cumsum) |>
               ## Relabel
-              dplyr::mutate( y0 = label_choiceset(dico = dico,x= by_var)(y) ) |>
+              dplyr::mutate( y0 = label_choiceset(dico = dico, x= by_var)(y) ) |>
               ## Create better label for the facet
               dplyr::mutate( y1 = paste0(y0, " (",cumsum, " records)") )
+             
+             
+          ## Writing code instruction in report
+          if (showcode == TRUE) {
+            cat( paste0( label_varname(dico = dico, x = var),  "\n",
+                "  `plot_select_one_cross(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       by_var = \"", by_var, "\",
+                       datasource = params$datasource,
+                       n = ", n1, ",
+                       n_by = ",n_by1, " )` \n\n "))  }   else {} 
+             
             
             ## plot
             require(ggplot2)
@@ -206,5 +238,4 @@ plot_select_one_cross <- function(datalist = datalist,
     # cat("\n\n")
   }
 }
-
 

@@ -3,8 +3,12 @@
 #' @title Crunch all variables according to the analysis plan 
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
-#' @param dico path to the xlsform file used to colllect the data
-#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param dico path to the xlsform file used to collect the data
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsfor
+#' @param n if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
+#' @param n_by if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
 #' @export
  
 #' @examples
@@ -18,7 +22,9 @@
 #' 
 kobo_cruncher <- function(datalist = datalist, 
                           datasource = NULL,
-                          dico = dico) {
+                          dico = dico,
+                          n = 5,
+                          n_by = 5) {
   
   ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
@@ -60,12 +66,14 @@ kobo_cruncher <- function(datalist = datalist,
                                                 dico = dico,
                                                 var = name,  
                                                 datasource = datasource,
+                                                n = n,
                                                 showcode = TRUE))
       
       if (type == "select_multiple") print(plot_select_multiple(datalist = datalist,
                                                           dico = dico, 
                                                           var = name,  
                                                           datasource = datasource,
+                                                          n = n,
                                                           showcode = TRUE))
       
       if (type %in% c("numeric", "integer", "range")) print(plot_integer(datalist = datalist, 
@@ -90,6 +98,8 @@ kobo_cruncher <- function(datalist = datalist,
                                   var = name, 
                                   by_var = disag, 
                                   datasource = datasource,
+                                  n = n,
+                                  n_by = n_by,
                                   showcode = TRUE)) }
       }
       if (type == "select_multiple" &  length(disaggregation)>=1 ) {
@@ -100,6 +110,8 @@ kobo_cruncher <- function(datalist = datalist,
                                   var = name, 
                                   by_var = disag,
                                   datasource = datasource,
+                                  n = n,
+                                  n_by = n_by,
                                   showcode = TRUE)) }
       }
       if (type %in% c("numeric", "integer") &  length(disaggregation)>=1 ) {

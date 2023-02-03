@@ -100,7 +100,10 @@ plot_text <- function(datalist = datalist,
         if( showcode == TRUE) {
           cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
-                                      "  `plot_text(datalist = datalist, dico = dico, \"", var, "\")`  \n\n"))}   else {}
+                                      "  `plot_text(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       datasource = params$datasource)` \n\n "))  }   else {} 
       
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :

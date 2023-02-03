@@ -1,7 +1,7 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 9 - Publishing"
-author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](08-Anonymising.html)   "
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](09-Interpreting.html)   "
 date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
@@ -25,87 +25,7 @@ library(unhcrthemes)
 library(fontawesome)
 ```
 
-
-
-Dissemination only happens once __Actionable recommendations__ have been generated
-
-![https://www.jips.org/jips-publication/joint-analysis-guide-2021/](../../inst/jips.png)
-
-???
-
-
----
-
-## Joint Data Interpretation
-
-Actionable recommendations can be generated only with a collaborative process! - People sitting together and discussion how to interpret the data in relation with they key programmatic assumptions in order to __transform information into evidence__
-
-
-
-![https://www.youtube.com/watch?v=0jE-Y7g88K4&feature=youtu.be&t=2305](../../inst/joint.png)
-
-???
-
-
-
----
-
-## Agree to disagree
-
-
-.pull-left[
-Implement [story telling techniques](https://www.unhcr.org/innovation/wp-content/uploads/2019/04/Innovation18-19-WebApril2019.pdf#pag=23) - A good __data story__ is a way to communicate valuable insights and assign meaning and context to data . The narrative shall have a hook, momentum, or a captivating purpose. 
-
-Finding such narrative structure is therefore a prerequisite. 
-
-The narrative should either reinforce what readers knows or reveal what they don’t
  
-]
-
-.pull-right[
-
-
-![https://www.instagram.com/p/CLmsp_AhLen/](../../inst/garcia.png)
-]
-
-???
-
-that otherwise lives as numbers in an Excel spreadsheet
-
-. Such stories can be categorized according to the four main narrative frames below, each of them being linked to programs design or implementation. The presented data shall reflect the operation context to 
-
-
-
----
-
-## Engage with technical expert before sessions
-
-
-.pull-left[
-
-Request each focal point from multifunctional team to share their programmatic assumptions
-
- * What do they assume about the population?
-
- * What do they see as the most critical need?
-
- * One slide to be prepared and shared per expert with a list of their assumptions
-]
-.pull-right[
-
-Start from assumptions and associate to them graphs from crunching output in order to give foundation for potential data stories according to narrative frames:
-
- * Shed light on a previously unexplored topic
-
- * Introduce an interesting angle
-
- * Provide useful suggestions to solve a problem
-
- * Disprove an hypothesis / debunk a widely held belief in terms of programmatic assumption
-
-]
-
-
 
 
 ---

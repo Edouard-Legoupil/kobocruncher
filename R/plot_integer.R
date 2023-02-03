@@ -54,7 +54,10 @@ plot_integer <- function(datalist = datalist,
       if( showcode == TRUE) {
         cat(paste0(label_varname(dico = dico,
                                                    x = var), "\n",
-                                      "  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
+                                      "  `plot_integer(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       datasource = params$datasource)` \n\n "))  }   else {}  
     
     
      info <- paste0("Mean: ", round(mean(data[[var]]),2) ,

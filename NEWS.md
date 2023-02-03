@@ -1,4 +1,18 @@
-# kobocruncher 0.1.0
+# kobocruncher 0.2.4
+
+ * Added template in word
+ 
+ * Reviewed the ridl connection using  `edouard-legoupil/riddle` - package peer reviewed..
+ 
+ * added a parameters in the plotting functions for lumping together under other
+ 
+ * updated the tutorial to better explain the transition between exploration and presentation
+ 
+ * updated superseeded `separate_rows` from {tidyr} with  `separate_longer_delim`   
+
+ 
+
+# kobocruncher 0.2.0
 
  * Major re-factoring / simplification of the previous [koboloader package](https://unhcr.github.io/koboloadeR/docs/) - nurtured by Hisham Galal !! Standard Reports are now available as a basic Rmd template rather than a function that would write down the Rmd directly... 
  

@@ -40,12 +40,12 @@ extrafont::loadfonts(quiet=TRUE)
 library("tidyverse")
 library("kobocruncher")
 library("officedown")
-library(unhcrthemes)
-library(ggplot2)
-library(rvg)
-library(tidyverse)
-library(scales)
-library(lubridate)
+library("unhcrthemes")
+library("ggplot2")
+library("rvg")
+library("tidyverse")
+library("scales")
+library("lubridate")
 
 # turn off the automatic use of showtext functionality, so that the dml function can works properly
 showtext::showtext_auto(FALSE) 
@@ -71,22 +71,71 @@ The Joint Data Interpretation allows to make sense of the data.
 The interpretation can make use of the "__Protection Risk Equation__" Analysis (See [Protection Gap Framework for Analysis](https://www.unhcr.org/50aa57ad9.pdf)) to look at 1) Harmful, discriminatory and/or protective contextual factors, 2) Current threats to the population, 3) Rights violations and abuses, 4) Threat effect on the population and 5) Existing capacities to address protection threats .
 
  
+---
+
+# Demo of different charts
+
+
+<!--
+Note that in this template it is key to use 
+-> p
+dml(ggobj = p, fonts = list(serif = 'Lato'))
+
+The function dml will convert your ggplot object into an editable vector for powerpoint
+
+-->
 
 ---
 
-```{r ph=officer::ph_location_fullsize()}
-## here you can paste selected charts from the intial exploration phase...
-plot_select_one(datalist = datalist, dico = dico, "location")-> p
+## Slide with `plot_select_one`
+
+```{r layout='Title and Content', ph=officer::ph_location_type(type="body")}
+## here you can paste selected charts from the initial exploration phase...
+plot_select_one(datalist = datalist,
+                dico = dico, 
+                "location",
+                datasource = params$datasource  )-> p
 dml(ggobj = p, fonts = list(serif = 'Lato'))
 ```
 
 
+---
+
+## Slide with `plot_select_multiple`
+
+```{r layout='Title and Content', ph=officer::ph_location_type(type="body")}
+## here you can paste selected charts from the initial exploration phase...
+plot_select_multiple(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason",
+                datasource = params$datasource) -> p
+dml(ggobj = p, fonts = list(serif = 'Lato'))
+```
+
 
 ---
 
-```{r ph=officer::ph_location_fullsize()}
-## here you can paste selected charts from the intial exploration phase...
- plot_integer(datalist = datalist, dico = dico, "members.age") -> p
+## Slide with `plot_integer`
+
+```{r layout='Title and Content', ph=officer::ph_location_type(type="body")}
+## here you can paste selected charts from the initial exploration phase...
+plot_integer(datalist = datalist, 
+              dico = dico, 
+              "members.age",
+              datasource = params$datasource) -> p
+dml(ggobj = p, fonts = list(serif = 'Lato'))
+```
+
+---
+
+## Slide with `plot_text`
+
+```{r layout='Title and Content', ph=officer::ph_location_type(type="body")}
+## here you can paste selected charts from the initial exploration phase...
+plot_text(datalist = datalist,
+              dico = dico, 
+              var = "profile.occupation",
+              datasource = params$datasource) -> p
 dml(ggobj = p, fonts = list(serif = 'Lato'))
 ```
 
@@ -119,9 +168,9 @@ Content of the right column.
 
 
 ```{r}
-## Time to archive your work once done!!
-namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
+## Time to archive your work once done!! 
 if( params$publish == "yes"){
+  namethisfile = basename(rstudioapi::getSourceEditorContext()$path ) 
   kobo_ridl(ridl = params$ridl,
             datafolder = params$datafolder,
             form = params$form,

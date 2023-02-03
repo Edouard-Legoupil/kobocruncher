@@ -510,7 +510,6 @@ kobo_prepare_form <- function(xlsformpath,
 
 ```
 
-
 ```{r examples-kobo_prepare_form}
 # kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
 #                   xlsformpathout = "form_with_plan.xlsx",
@@ -522,7 +521,6 @@ kobo_prepare_form <- function(xlsformpath,
 # 
 # })
 ```
-
 
 ## Prepare data dictionnary
 
@@ -759,7 +757,6 @@ kobo_dico <- function(xlsformpath) {
 
 ```
 
-
 ```{r examples-kobo_dico}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 # Survey
@@ -779,17 +776,11 @@ indicator <- as.data.frame(dico[["indicator"]])
 knitr::kable(utils::head(indicator, 10))
 ```
 
-
-
-
-
 # Data Processing
-
 
 ## Indicator Calculation
 
 Indicator calculation 
-
 
 ```{r function-kobo_indicator}
 #' @title Apply existing documented indicators and add new ones
@@ -1026,7 +1017,6 @@ indicator <- indicator[ ,c("type","name","label", "list_name", "hint",
 
 ```
 
-
 ```{r examples-kobo_indicator}
 xlsformpath <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
 xlsformpathout <- "sample_xlsform_withindic.xlsx"
@@ -1159,12 +1149,10 @@ table(datalist[[1]]$hasfemalemembers, useNA = "ifany")
 ```{r tests-kobo_weight}
 #test_that("kobo_weight works", {   expect_true(inherits(kobo_weight, "function")) })
 ```
-  
- 
 
 ## Assess Disclosure Risk
 
- to do....
+to do....
 
 ```{r function-kobo_anonymise}
 #' @title Assess Statistical disclosure risk based on an intrusions scenario
@@ -1279,7 +1267,6 @@ kobo_frame <- function(datalist,
 
 ```
 
-
 ```{r examples-kobo_frame}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
@@ -1350,7 +1337,6 @@ label_varhint(dico = dico,
 # })
 ```
 
-
 ## Get all the choices labels options for a specific variable
 
 ```{r function-label_choiceset}
@@ -1396,6 +1382,11 @@ label_choiceset(dico = dico,
 data$profile.occupation
 label_choiceset(dico = dico, 
                 x="profile.occupation")(data$profile.occupation)
+
+
+label_choiceset(dico = dico, 
+                x="profile.occupation")(data$profile.occupation)
+
 ```
 
 ```{r tests-label_choiceset}
@@ -1417,6 +1408,8 @@ label_choiceset(dico = dico,
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param n if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
 #' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous scale_y_discrete coord_cartesian labs theme_minimal geom_vline theme element_line element_blank
@@ -1428,6 +1421,7 @@ plot_select_one <- function(datalist  ,
                             dico  ,
                             var,
                             datasource = NULL,
+                            n = NULL, 
                             showcode = FALSE) {
 
   requireNamespace("ggplot2")
@@ -1442,6 +1436,8 @@ plot_select_one <- function(datalist  ,
   
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
+  ## get number of non NA response
+  nr <- sum(!is.na(data[[var]]))
   
   if ( is.nan(rr)) {
     cat(paste0("\n <strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
@@ -1452,12 +1448,28 @@ plot_select_one <- function(datalist  ,
   
   ## Put a condition in case there's no record
   if (rr != 0  & ! (is.nan(rr)) ) {
+    
+    
+  ## Set the value for n if not set up -
+  if( is.null(n)) { n1 = nlevels( as.factor(data[[var]]) )} else { n1 = n}
   
   cnts <- data |>
     tidyr::drop_na(tidyselect::all_of(var)) |>
+    dplyr::group_by(.data[[var]]) |>
+    #dplyr::summarise(n = dplyr::n()) |>
+    dplyr::count(x := .data[[var]]) |>
+    dplyr::mutate(p = n/nr) |>
     # Lump together factor levels into "other"
-    dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5)) |>
-    dplyr::mutate(p = n/sum(n))
+    dplyr::mutate(x = forcats::fct_lump_n( x,    
+                                         n = as.integer(n1),
+                                         w = p,
+                     other_level = paste0("Other ",
+                              nlev  - n1,
+                              " response options automatically lumped") )) |>
+    dplyr::group_by(x) |>
+    dplyr::summarise( n = sum(n, na.rm = TRUE),
+                      p = n/nr)
+  
   
   
   listvar <- as.data.frame(dico[["variables"]]) |>
@@ -1485,7 +1497,11 @@ plot_select_one <- function(datalist  ,
   if( showcode == TRUE) { cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
                                       
-                                      "`plot_select_one(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}  else {}
+     "`plot_select_one(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       datasource = params$datasource,
+                       n = ",n1, ")` \n\n ")) }  else {}
   
     
     ## plot
@@ -1548,6 +1564,12 @@ plot_select_one(datalist = datalist,
               dico = dico, 
               var = "profile.country",
               showcode = TRUE)
+## Exmaple with lumping
+plot_select_one(datalist = datalist,
+              dico = dico, 
+              var = "profile.country",
+              n = 1,
+              showcode = TRUE)
 
 # plot_select_one(datalist = datalist,
 #               dico = dico, 
@@ -1572,9 +1594,13 @@ plot_select_one(datalist = datalist,
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param n if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
 #' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous scale_y_discrete coord_cartesian labs theme_minimal geom_vline theme element_line element_blank
+#' @importFrom tidyr separate_rows  drop_na
+#' 
 #' @importFrom data.table :=  
 #' @export
 
@@ -1582,6 +1608,7 @@ plot_select_multiple <- function(datalist = datalist,
                                  dico = dico,
                                  var, 
                                  datasource = NULL,
+                                 n = NULL,
                                  showcode = FALSE) {
   
   requireNamespace("ggplot2")
@@ -1609,15 +1636,27 @@ plot_select_multiple <- function(datalist = datalist,
   ## If not empty
   if (rr != 0 & ! (is.nan(rr)) ) {    
   
+  ## Count number of levels 
+    nlev <-  nrow(dplyr::distinct(tidyr::separate_rows(as.data.frame(data[[var]]), `data[[var]]`, sep = " ")))
+  ##  Set the value for n if not set up -
+  if( is.null(n)) { n1 = nlev } else { n1 = n} 
+  
+    
   cnts <- data |>
     tidyr::drop_na(tidyselect::all_of(var)) |>
     tidyr::separate_rows(.data[[var]], sep = " ") |>
-    ## Check if we have _id -  
-    
-    # Lump together factor levels into "other"
-    dplyr::distinct(`X_id`, !!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5)) |>
     dplyr::count(x := .data[[var]]) |>
-    dplyr::mutate(p = n/nr)
+    dplyr::mutate(p = n/nr) |> 
+    # Lump together factor levels into "other"
+    dplyr::mutate(x = forcats::fct_lump_n( x,    
+                                         n = as.integer(n1),
+                                         w = p,
+                     other_level = paste0("Other ",
+                              nlev  - n1,
+                              " response options automatically lumped") )) |>
+    dplyr::group_by(x) |>
+    dplyr::summarise( n = sum(n, na.rm = TRUE),
+                      p = n/nr)
   
   ## Manage situation if ordinal variable (i.e. order is set in choices)
   if (any(!is.na(dplyr::filter(dico[[2]], list_name == var)$order))) {
@@ -1638,9 +1677,13 @@ plot_select_multiple <- function(datalist = datalist,
     
     ## Writing code instruction in report
     if( showcode == TRUE) {
-      cat(paste0(label_varname(dico = dico,
-                                                   x = var), "\n",
-                                      "  `plot_select_multiple(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}   else {} 
+      cat(paste0(label_varname(dico = dico, x = var),
+                 "\n",
+        "  `plot_select_multiple(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       datasource = params$datasource,
+                       n = ",n1, ")` \n\n "))  }   else {} 
     
     require(ggplot2)
     ## Plot
@@ -1707,6 +1750,16 @@ datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocrunche
 plot_select_multiple(datalist = datalist,
               dico = dico, 
               var = "profile.reason",
+              datasource = NULL,
+              showcode = TRUE
+            )
+
+## Displaying the usage of the lumping option..
+plot_select_multiple(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason",
+              n = 5,
+             datasource = NULL,
               showcode = TRUE
             )
 
@@ -1774,7 +1827,10 @@ plot_integer <- function(datalist = datalist,
       if( showcode == TRUE) {
         cat(paste0(label_varname(dico = dico,
                                                    x = var), "\n",
-                                      "  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
+                                      "  `plot_integer(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       datasource = params$datasource)` \n\n "))  }   else {}  
     
     
      info <- paste0("Mean: ", round(mean(data[[var]]),2) ,
@@ -1935,7 +1991,10 @@ plot_text <- function(datalist = datalist,
         if( showcode == TRUE) {
           cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
-                                      "  `plot_text(datalist = datalist, dico = dico, \"", var, "\")`  \n\n"))}   else {}
+                                      "  `plot_text(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       datasource = params$datasource)` \n\n "))  }   else {} 
       
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :
@@ -2016,6 +2075,10 @@ plot_text(datalist = datalist,
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param n if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
+#' @param n_by if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
 #' @importFrom ggplot2 aes  geom_col geom_label 
@@ -2031,6 +2094,8 @@ plot_select_one_cross <- function(datalist = datalist,
                             var, 
                             by_var , 
                             datasource = NULL,
+                            n = NULL,
+                            n_by = NULL,
                             showcode = FALSE) {
   
   requireNamespace("ggplot2")
@@ -2051,6 +2116,11 @@ plot_select_one_cross <- function(datalist = datalist,
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
   rr2 <- mean(!is.na(data2[[by_var]]))
+  
+  
+  nr <- sum(!is.na(data[[var]]))
+  nr2 <- sum(!is.na(data2[[by_var]]))
+  
   ## Writing report
   # cat("\n")
   # cat(paste("####", label_varname(var)))
@@ -2079,23 +2149,6 @@ plot_select_one_cross <- function(datalist = datalist,
     if (rr != 0 & !(is.nan(rr))) {
       if (by_var != "") {
         if (by_var != var) {
-          ## Writing code instruction in report
-          if (showcode == TRUE) {
-            cat(
-              paste0(
-                label_varname(dico = dico,
-                              x = var),
-                "\n",
-                "  `plot_select_one_cross(datalist = datalist, dico = dico, \"",
-                var,
-                "\",\"",
-                by_var,
-                "\")` \n\n "
-              )
-            )
-          }     else {
-          }
-          
           cnts1 <- data |>
             ## keep only the variable we need
             #tidyselect::all_of(c(var, by_var)) |>
@@ -2113,20 +2166,56 @@ plot_select_one_cross <- function(datalist = datalist,
               )
             )
           } else {
-            cnts <- cnts1 |>
+              ## Set the value for n if not set up -
+              if( is.null(n)) { n1 = nlevels( as.factor(data[[var]]) )} else { n1 = n} 
+              ## Set the value for n_by if not set up -
+              if( is.null(n_by)) { n_by1 = nlevels( as.factor(data[[by_var]]) )} else { n_by1 = n_by} 
+            
+             cnts <- cnts1 |> 
+              dplyr::group_by(.data[[var]], .data[[by_var]] ) |>
+              dplyr::summarise(n = dplyr::n()) |>
+              dplyr::mutate(p = n/nr) |>
               # Lump together factor levels into "other"
-              dplyr::count(
-                x := forcats::fct_lump_n(factor(.data[[var]]), n = 5),
-                y := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5)
+              dplyr::mutate(
+                x = as.character(forcats::fct_lump_n(factor(.data[[var]]), 
+                                         n = n1,
+                                         w = p,
+                                         other_level = paste0("Other ",
+                                    nlevels( as.factor(data[[var]]))-n1,
+                                    " response options automatically lumped")) ),
+                y = as.character(forcats::fct_lump_n(factor(.data[[by_var]]), 
+                                         n = n_by1,
+                                         w = p,
+                                         other_level = paste0("Other ",
+                                    nlevels( as.factor(data[[by_var]]))-n_by1,
+                                    " response options automatically lumped")))
               ) |>
-              dplyr::mutate(p = n / sum(n)) |>
+              ## let's summarize again after lumping 
+              dplyr::group_by(x, y ) |>
+              dplyr::summarise(n = sum(n, na.rm = TRUE)) |>
+              dplyr::mutate(p = n/nr) |>
+               
+              ## Now  counting records per facet..
               dplyr::group_by(y) |>
               dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
                             pcum = n / cumsum) |>
               ## Relabel
-              dplyr::mutate( y0 = label_choiceset(dico = dico,x= by_var)(y) ) |>
+              dplyr::mutate( y0 = label_choiceset(dico = dico, x= by_var)(y) ) |>
               ## Create better label for the facet
               dplyr::mutate( y1 = paste0(y0, " (",cumsum, " records)") )
+             
+             
+          ## Writing code instruction in report
+          if (showcode == TRUE) {
+            cat( paste0( label_varname(dico = dico, x = var),  "\n",
+                "  `plot_select_one_cross(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       by_var = \"", by_var, "\",
+                       datasource = params$datasource,
+                       n = ", n1, ",
+                       n_by = ",n_by1, " )` \n\n "))  }   else {} 
+             
             
             ## plot
             require(ggplot2)
@@ -2197,7 +2286,6 @@ plot_select_one_cross <- function(datalist = datalist,
   }
 }
 
-
 ```
 
 ```{r examples-plot_select_one_cross}
@@ -2215,6 +2303,8 @@ plot_select_one_cross(datalist = datalist,
               dico = dico, 
               var = "profile.country",
               by_var = "members.sex",
+              n = 5,
+              n_by = 5,
               showcode = TRUE
               )
 
@@ -2238,12 +2328,17 @@ plot_select_one_cross(datalist = datalist,
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param by_var variable to use for cross tabulation
-#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform
+#' @param n if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
+#' @param n_by if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
 #' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous
 #'            scale_y_discrete coord_cartesian labs theme_minimal 
 #'            geom_vline theme element_line element_blank facet_wrap as_labeller 
+#' @importFrom tidyr separate_rows drop_na          
 #' @importFrom data.table :=  
 #' 
 #' @export
@@ -2253,6 +2348,8 @@ plot_select_multiple_cross <- function(datalist = datalist,
                                        var, 
                                        by_var , 
                                        datasource = NULL,
+                                       n = NULL,
+                                       n_by = NULL,
                                        showcode = FALSE) {
   
   
@@ -2276,7 +2373,7 @@ plot_select_multiple_cross <- function(datalist = datalist,
   
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
-  rr2 <- mean(!is.na(data2[[by_var]]))
+  rr2 <- mean(!is.na(data2[[by_var]])) 
   ## Writing report
   # cat("\n")
   # cat(paste("####", label_varname(var)))
@@ -2302,23 +2399,6 @@ plot_select_multiple_cross <- function(datalist = datalist,
     if (rr != 0 & !(is.nan(rr))) {
       if (by_var != "") {
         if (by_var != var) {
-          ## Writing code instruction in report
-          if (showcode == TRUE) {
-            cat(
-              paste0(
-                label_varname(dico = dico,
-                              x = var),
-                "\n",
-                "  `plot_select_multiple_cross(datalist = datalist, dico = dico, \"",
-                var,
-                "\",\"",
-                by_var,
-                "\")` \n\n "
-              )
-            )
-          }   else {
-          }
-          
           
           cntscross1 <- data |>
             ## keep only the variable we need
@@ -2339,27 +2419,64 @@ plot_select_multiple_cross <- function(datalist = datalist,
               )
             )
           } else {
-            cntscross <- cntscross1 |>
-              ## Separate the var with select_multiple
-              tidyr::separate_rows(.data[[var]], sep = " ") |>
-              # Lump together factor levels into "other"
-              dplyr::distinct(
-                `X_id`,!!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5),!!by_var := forcats::fct_lump_n(factor(.data[[by_var]]), n = 5)
-              ) |>
-              # Lump together factor levels into "other"
-              dplyr::count(x := .data[[var]],
-                           y := .data[[by_var]]) |>
-              dplyr::mutate(p = n / sum(n)) |>
-              dplyr::group_by(y) |>
-              dplyr::mutate(cumsum = max(cumsum(as.numeric(n))),
-                            pcum = n / cumsum)|>
-              ## Relabel
-              dplyr::mutate( y0 = label_choiceset(dico = dico,x= by_var)(y) ) |>
-              ## Create better label for the facet
-              dplyr::mutate( y1 = paste0(y0, " (",cumsum, " records)") )
+             ## Lumping 
+            nlev <-  nrow(dplyr::distinct(tidyr::separate_rows(as.data.frame(data[[var]]), `data[[var]]`, sep = " ")))
+             ## Set the value for n if not set up -
+             if( is.null(n)) { n1 = nlev}  else { n1 = n} 
             
+            ## the by_var is a simple select_one
+            nlev_by <-  nlevels( as.factor(data[[by_var]]) )
+             ## Set the value for n_by if not set up -
+             if( is.null(n_by)) { n_by1 = nlev_by}  else { n_by1 = n_by} 
+            
+           ## Compute tabulation
+          cntscross <- cntscross1 |>
+            ## Separate the var with select_multiple
+            tidyr::separate_rows(.data[[var]], sep = " ") |>
+            dplyr::group_by(.data[[var]], .data[[by_var]], X_id ) |>
+            dplyr::summarise(n = dplyr::n()) |>
+            dplyr::mutate(p = n/nr)  |>
+            ## Lump together factor levels into "other"
+            dplyr::mutate(x = forcats::fct_lump_n( .data[[var]],
+                                                   n = as.integer(n1),
+                                                   w = p,
+                                                   other_level = paste0("Other ",
+                                                                        nlev  - n1,
+                                                                        " response options automatically lumped") )) |>
+            ## Lump together factor levels into "other"
+            dplyr::mutate(y = forcats::fct_lump_n( .data[[by_var]],
+                                                   n = as.integer(n_by1),
+                                                   w = p,
+                                                   other_level = paste0("Other ",
+                                                                        nlev_by  - n_by1,
+                                                                        " response options automatically lumped") )) |>
+            ## let's summarize again after lumping
+            dplyr::group_by(x, y , X_id) |>
+            dplyr::summarise(n = sum(n, na.rm = TRUE)) |>
+            dplyr::mutate(p = n/nr)  |>
+            ## Now adding numbers by facet
+            dplyr::group_by(y) |>
+            dplyr::mutate(rec = dplyr::n_distinct(X_id) ) |>
+            ## Relabel
+            dplyr::mutate( y0 = label_choiceset(dico = dico,x= by_var)(y) ) |>
+            ## Create better label for the facet
+            dplyr::mutate( y1 = paste0(y0, " (", rec , " records)") ) |>
+            ## let's summarize again
+            dplyr::group_by(x, y1, rec) |>
+            dplyr::summarise(n = sum(n, na.rm = TRUE)) |>
+            dplyr::mutate(pcum = n / rec  )
+            
+          ## Writing code instruction in report
+          if (showcode == TRUE) {
+            cat( paste0( label_varname(dico = dico,  x = var), "\n",
+                "  `plot_select_multiple_cross(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       by_var = \"", by_var, "\",
+                       datasource = params$datasource,
+                       n = ", n1, ",
+                       n_by = ",n_by1, " )` \n\n "))  }   else {} 
             ##plot
-            
             require(ggplot2)
             p <- ggplot2::ggplot(cntscross,
                                  aes(x = pcum,
@@ -2422,7 +2539,8 @@ plot_select_multiple_cross <- function(datalist = datalist,
               theme(
                 panel.grid.major.x  = element_line(color = "#cbcbcb"),
                 panel.grid.major.y  = element_blank(),
-                panel.grid.minor = element_blank()
+                panel.grid.minor = element_blank(),
+                axis.title.y = element_text( size = 8)
               ) +
               theme(plot.title.position = "plot")
             
@@ -2449,11 +2567,18 @@ plot_select_multiple_cross <- function(datalist = datalist,
 ```{r examples-plot_select_multiple_cross}
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-
 plot_select_multiple_cross(datalist = datalist,
               dico = dico, 
               var = "profile.reason",
               by_var = "location",
+              showcode = TRUE)
+
+## test lumping
+plot_select_multiple_cross(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason",
+              by_var = "location",
+              n = 4, 
               showcode = TRUE)
 ```
 
@@ -2527,9 +2652,12 @@ plot_integer_cross <- function(datalist = datalist,
   if (rr != 0 & ! (is.nan(rr)) ) { 
       ## Writing code instruction in report
       if( showcode == TRUE) {
-        cat(paste0(label_varname(dico = dico,
-                                                   x = var), "\n",
-                                      "  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
+        cat(paste0(label_varname(dico = dico, x = var), "\n",
+                   "  `plot_integer_cross(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       by_var = \"", by_var, "\",
+                       datasource = params$datasource )` \n\n "))  }   else {} 
     
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
@@ -3078,13 +3206,19 @@ test_that("plot_header works", {
 #' @title Crunch all variables according to the analysis plan 
 #' 
 #' @param datalist An object of the "datalist" class as defined in kobocruncher 
-#' @param dico path to the xlsform file used to colllect the data
-#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param dico path to the xlsform file used to collect the data
+#' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsfor
+#' @param n if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
+#' @param n_by if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
 #' @export
  
 kobo_cruncher <- function(datalist = datalist, 
                           datasource = NULL,
-                          dico = dico) {
+                          dico = dico,
+                          n = 5,
+                          n_by = 5) {
   
   ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
@@ -3126,12 +3260,14 @@ kobo_cruncher <- function(datalist = datalist,
                                                 dico = dico,
                                                 var = name,  
                                                 datasource = datasource,
+                                                n = n,
                                                 showcode = TRUE))
       
       if (type == "select_multiple") print(plot_select_multiple(datalist = datalist,
                                                           dico = dico, 
                                                           var = name,  
                                                           datasource = datasource,
+                                                          n = n,
                                                           showcode = TRUE))
       
       if (type %in% c("numeric", "integer", "range")) print(plot_integer(datalist = datalist, 
@@ -3156,6 +3292,8 @@ kobo_cruncher <- function(datalist = datalist,
                                   var = name, 
                                   by_var = disag, 
                                   datasource = datasource,
+                                  n = n,
+                                  n_by = n_by,
                                   showcode = TRUE)) }
       }
       if (type == "select_multiple" &  length(disaggregation)>=1 ) {
@@ -3166,6 +3304,8 @@ kobo_cruncher <- function(datalist = datalist,
                                   var = name, 
                                   by_var = disag,
                                   datasource = datasource,
+                                  n = n,
+                                  n_by = n_by,
                                   showcode = TRUE)) }
       }
       if (type %in% c("numeric", "integer") &  length(disaggregation)>=1 ) {
@@ -3408,17 +3548,17 @@ kobo_ridl <- function(ridl,
       name = nameanalysisplan,
       description = paste0("Analysis Plan to use with: ", stage,"_", name,"_", ridl,"_", time,
                            ". Built using kobocruncher "),
-      format = "xlsx",
+      format = ".xlsx",
       version = (curversion + 1),
       visibility =  visibility,
-      #file_type = "script",
-      file_type = "other",
-      # script_dependencies= "kobocruncher",
-      # script_instructions= "This excel file contains all specific metedata 
-      #        to relabel the original data, to group variable for automatic data 
-      #         exploration and to create calculated variables ",
-      # script_software= "R",
-      # source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
+    # file_type = "other",
+      file_type = "script",
+      script_dependencies= "kobocruncher",
+      script_instructions= "This excel file contains all specific metedata
+             to relabel the original data, to group variable for automatic data
+              exploration and to create calculated variables ",
+      script_software= "R",
+      source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
       ## Revise here based on the name from your crunching report
       upload =  httr::upload_file(here::here(datafolder, form))
     )
@@ -3432,16 +3572,16 @@ kobo_ridl <- function(ridl,
       name = nameanalysisplan,
       description = paste0("Analysis Plan to use with: ", stage,"_", name,"_", ridl,"_", time,
                            ". Built using kobocruncher "),
-      format = "xlsx",
+      format = ".xlsx",
       visibility =  visibility,
-      #file_type = "script",
-      file_type = "other",
-      # script_dependencies= "kobocruncher",
-      # script_instructions= "This excel file contains all specific metedata 
-      #        to relabel the original data, to group variable for automatic data 
-      #         exploration and to create calculated variables ",
-      # script_software= "R",
-      # source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
+   #  file_type = "other",
+      file_type = "script",
+      script_dependencies= "kobocruncher",
+      script_instructions= "This excel file contains all specific metedata
+             to relabel the original data, to group variable for automatic data
+              exploration and to create calculated variables ",
+      script_software= "R",
+      source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
       ## Revise here based on the name from your crunching report
       upload =  httr::upload_file(here::here(datafolder, form))
     )
@@ -3471,15 +3611,15 @@ kobo_ridl <- function(ridl,
                                                         format = "Rmd",
                                                         version = (curversion + 1),
                                                         visibility =  visibility,
-                                                        #file_type = "script",
-                                                        file_type = "other",
-                                           #              script_dependencies= "kobocruncher",
-                                           #              script_instructions= "Use the data and the analysis
-                                           # plan documented in the report parameters and
-                                           # available within this RIDL dataset ",
-                                           #              script_software= "R",
-                                           #              source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
-                                                        ## Revise here based on the name from your crunching report
+                                           #             file_type = "other",
+                                           file_type = "script",
+                                                        script_dependencies= "kobocruncher",
+                                                        script_instructions= "Use the data and the analysis
+                                           plan documented in the report parameters and
+                                           available within this RIDL dataset ",
+                                                        script_software= "R",
+                                                        source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
+                                           # Revise here based on the name from your crunching report
                                                         upload = httr::upload_file(here::here(namethisfile))
     )
     
@@ -3494,14 +3634,14 @@ kobo_ridl <- function(ridl,
                                                                              " report. Built using kobocruncher "),
                                                         format = "Rmd",
                                                         visibility =  visibility,
-                                                        #file_type = "script",
-                                                        file_type = "other",
-                                           #              script_dependencies= "kobocruncher",
-                                           #              script_instructions= "Use the data and the analysis
-                                           # plan documented in the report parameters and
-                                           # available within this RIDL dataset ",
-                                           #              script_software= "R",
-                                           #              source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
+                                            #            file_type = "other",
+                                           file_type = "script",
+                                                        script_dependencies= "kobocruncher",
+                                                        script_instructions= "Use the data and the analysis
+                                           plan documented in the report parameters and
+                                           available within this RIDL dataset ",
+                                                        script_software= "R",
+                                                        source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
                                                         ## Revise here based on the name from your crunching report
                                                         upload = httr::upload_file(here::here(namethisfile))
     )
@@ -3702,18 +3842,40 @@ See a more detailed presentation of that step here: https://www.youtube.com/watc
 
 ```
 
-## Report Template C for Dissemination and Data Story Telling Template
+## Report Template C for Note taking
 
-The last template can be used to take note of the data interpretation session.
+The third template can be used  in a similar way than the presentation template. It will generate a  word document in order to take note.
 
-It will generate a PDF or an paginated HTML page
+An automatic table of content is generated but might required to be refreshed after the word document creation
 
-```{r template_3_dissemination}
+
+```{r template_3_note}
 #' Report Template 3 for Dissemination and Data Story Telling Template
 #' The last template can be used to take note of the data interpretation session. 
 #' It will generate a PDF or an paginated HTML page
 # usethis::use_rmarkdown_template(
-#   template_name = "template_3_dissemination",
+#   template_name = "template_C_notes",
+#   template_dir = NULL,
+#   template_description = "Note taking",
+#   template_create_dir = TRUE
+# )
+
+
+
+```
+
+## Report Template D for Dissemination and Data Story Telling Template
+
+The last template can be used to build the final report. It includes some instructions and guidance on how to organize the content to increase your audience
+
+It will generate a PDF or an paginated HTML page
+
+```{r template_4_dissemination}
+#' Report Template 3 for Dissemination and Data Story Telling Template
+#' The last template can be used to take note of the data interpretation session. 
+#' It will generate a PDF or an paginated HTML page
+# usethis::use_rmarkdown_template(
+#   template_name = "template_D_dissemination",
 #   template_dir = NULL,
 #   template_description = "Data brief and Story Telling",
 #   template_create_dir = TRUE

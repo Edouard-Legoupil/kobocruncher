@@ -318,8 +318,9 @@ Highlight the reasons for why there are information gaps, i.e., limited access p
 
 ```{r}
 ## Time to archive your work once done!!
-namethisfile = basename(rstudioapi::getSourceEditorContext()$path )  
+ 
 if( params$publish == "yes"){
+  namethisfile = basename(rstudioapi::getSourceEditorContext()$path ) 
   kobo_ridl(ridl = params$datafolder,
                       datafolder = params$datafolder,
                       form = params$dataform,

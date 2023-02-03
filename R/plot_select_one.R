@@ -6,6 +6,8 @@
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param n if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
 #' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous scale_y_discrete coord_cartesian labs theme_minimal geom_vline theme element_line element_blank
@@ -21,6 +23,12 @@
 #'               dico = dico, 
 #'               var = "profile.country",
 #'               showcode = TRUE)
+#' ## Exmaple with lumping
+#' plot_select_one(datalist = datalist,
+#'               dico = dico, 
+#'               var = "profile.country",
+#'               n = 1,
+#'               showcode = TRUE)
 #' 
 #' # plot_select_one(datalist = datalist,
 #' #               dico = dico, 
@@ -30,6 +38,7 @@ plot_select_one <- function(datalist  ,
                             dico  ,
                             var,
                             datasource = NULL,
+                            n = NULL, 
                             showcode = FALSE) {
 
   requireNamespace("ggplot2")
@@ -44,6 +53,8 @@ plot_select_one <- function(datalist  ,
   
   ## get response rate: rr
   rr <- mean(!is.na(data[[var]]))
+  ## get number of non NA response
+  nr <- sum(!is.na(data[[var]]))
   
   if ( is.nan(rr)) {
     cat(paste0("\n <strong style=\"color:#0072BC;\">The variable from the form called: ",var," could not be identified in the dataset</strong>\n\n"))
@@ -54,12 +65,28 @@ plot_select_one <- function(datalist  ,
   
   ## Put a condition in case there's no record
   if (rr != 0  & ! (is.nan(rr)) ) {
+    
+    
+  ## Set the value for n if not set up -
+  if( is.null(n)) { n1 = nlevels( as.factor(data[[var]]) )} else { n1 = n}
   
   cnts <- data |>
     tidyr::drop_na(tidyselect::all_of(var)) |>
+    dplyr::group_by(.data[[var]]) |>
+    #dplyr::summarise(n = dplyr::n()) |>
+    dplyr::count(x := .data[[var]]) |>
+    dplyr::mutate(p = n/nr) |>
     # Lump together factor levels into "other"
-    dplyr::count(x := forcats::fct_lump_n(factor(.data[[var]]), n = 5)) |>
-    dplyr::mutate(p = n/sum(n))
+    dplyr::mutate(x = forcats::fct_lump_n( x,    
+                                         n = as.integer(n1),
+                                         w = p,
+                     other_level = paste0("Other ",
+                              nlev  - n1,
+                              " response options automatically lumped") )) |>
+    dplyr::group_by(x) |>
+    dplyr::summarise( n = sum(n, na.rm = TRUE),
+                      p = n/nr)
+  
   
   
   listvar <- as.data.frame(dico[["variables"]]) |>
@@ -87,7 +114,11 @@ plot_select_one <- function(datalist  ,
   if( showcode == TRUE) { cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
                                       
-                                      "`plot_select_one(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}  else {}
+     "`plot_select_one(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       datasource = params$datasource,
+                       n = ",n1, ")` \n\n ")) }  else {}
   
     
     ## plot

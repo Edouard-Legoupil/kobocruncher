@@ -10,6 +10,8 @@ plot_select_one_cross(
   var,
   by_var,
   datasource = NULL,
+  n = NULL,
+  n_by = NULL,
   showcode = FALSE
 )
 }
@@ -23,6 +25,12 @@ plot_select_one_cross(
 \item{by_var}{variable to use for cross tabulation}
 
 \item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform}
+
+\item{n}{if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+forcats::fct_lump_n()}
+
+\item{n_by}{if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
+forcats::fct_lump_n()}
 
 \item{showcode}{display the code}
 }
@@ -44,6 +52,8 @@ plot_select_one_cross(datalist = datalist,
               dico = dico, 
               var = "profile.country",
               by_var = "members.sex",
+              n = 5,
+              n_by = 5,
               showcode = TRUE
               )
 

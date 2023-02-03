@@ -372,4 +372,4 @@ __Next session__:
 
 
 
-[09-Publishing The final stage of the process implies to facilitate both the interpretation of the data and the creation of data story telling content ](9-Publishing.html) 
+[09-Interpreting Once data are ready, time comes to facilitate  the interpretation of the data  ](9-Interpreting.html) 

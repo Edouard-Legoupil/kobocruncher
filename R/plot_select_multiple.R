@@ -7,9 +7,13 @@
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var name of the variable to display
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
+#' @param n if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+#'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
 #' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous scale_y_discrete coord_cartesian labs theme_minimal geom_vline theme element_line element_blank
+#' @importFrom tidyr separate_rows  drop_na
+#' 
 #' @importFrom data.table :=  
 #' @export
 
@@ -21,6 +25,16 @@
 #' plot_select_multiple(datalist = datalist,
 #'               dico = dico, 
 #'               var = "profile.reason",
+#'               datasource = NULL,
+#'               showcode = TRUE
+#'             )
+#' 
+#' ## Displaying the usage of the lumping option..
+#' plot_select_multiple(datalist = datalist,
+#'               dico = dico, 
+#'               var = "profile.reason",
+#'               n = 5,
+#'              datasource = NULL,
 #'               showcode = TRUE
 #'             )
 #' 
@@ -34,6 +48,7 @@ plot_select_multiple <- function(datalist = datalist,
                                  dico = dico,
                                  var, 
                                  datasource = NULL,
+                                 n = NULL,
                                  showcode = FALSE) {
   
   requireNamespace("ggplot2")
@@ -61,15 +76,27 @@ plot_select_multiple <- function(datalist = datalist,
   ## If not empty
   if (rr != 0 & ! (is.nan(rr)) ) {    
   
+  ## Count number of levels 
+    nlev <-  nrow(dplyr::distinct(tidyr::separate_rows(as.data.frame(data[[var]]), `data[[var]]`, sep = " ")))
+  ##  Set the value for n if not set up -
+  if( is.null(n)) { n1 = nlev } else { n1 = n} 
+  
+    
   cnts <- data |>
     tidyr::drop_na(tidyselect::all_of(var)) |>
     tidyr::separate_rows(.data[[var]], sep = " ") |>
-    ## Check if we have _id -  
-    
-    # Lump together factor levels into "other"
-    dplyr::distinct(`X_id`, !!var := forcats::fct_lump_n(factor(.data[[var]]), n = 5)) |>
     dplyr::count(x := .data[[var]]) |>
-    dplyr::mutate(p = n/nr)
+    dplyr::mutate(p = n/nr) |> 
+    # Lump together factor levels into "other"
+    dplyr::mutate(x = forcats::fct_lump_n( x,    
+                                         n = as.integer(n1),
+                                         w = p,
+                     other_level = paste0("Other ",
+                              nlev  - n1,
+                              " response options automatically lumped") )) |>
+    dplyr::group_by(x) |>
+    dplyr::summarise( n = sum(n, na.rm = TRUE),
+                      p = n/nr)
   
   ## Manage situation if ordinal variable (i.e. order is set in choices)
   if (any(!is.na(dplyr::filter(dico[[2]], list_name == var)$order))) {
@@ -90,9 +117,13 @@ plot_select_multiple <- function(datalist = datalist,
     
     ## Writing code instruction in report
     if( showcode == TRUE) {
-      cat(paste0(label_varname(dico = dico,
-                                                   x = var), "\n",
-                                      "  `plot_select_multiple(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}   else {} 
+      cat(paste0(label_varname(dico = dico, x = var),
+                 "\n",
+        "  `plot_select_multiple(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       datasource = params$datasource,
+                       n = ",n1, ")` \n\n "))  }   else {} 
     
     require(ggplot2)
     ## Plot

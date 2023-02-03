@@ -10,6 +10,8 @@ plot_select_multiple_cross(
   var,
   by_var,
   datasource = NULL,
+  n = NULL,
+  n_by = NULL,
   showcode = FALSE
 )
 }
@@ -24,6 +26,12 @@ plot_select_multiple_cross(
 
 \item{datasource}{name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform}
 
+\item{n}{if not NULL, lumps all levels except for the n most frequent (or least frequent if n < 0) - cf
+forcats::fct_lump_n()}
+
+\item{n_by}{if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
+forcats::fct_lump_n()}
+
 \item{showcode}{display the code}
 }
 \description{
@@ -32,10 +40,17 @@ Note that if the column order is set in the xlsform choice part, the variable wi
 \examples{
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
-
 plot_select_multiple_cross(datalist = datalist,
               dico = dico, 
               var = "profile.reason",
               by_var = "location",
+              showcode = TRUE)
+
+## test lumping
+plot_select_multiple_cross(datalist = datalist,
+              dico = dico, 
+              var = "profile.reason",
+              by_var = "location",
+              n = 4, 
               showcode = TRUE)
 }

@@ -129,17 +129,17 @@ kobo_ridl <- function(ridl,
       name = nameanalysisplan,
       description = paste0("Analysis Plan to use with: ", stage,"_", name,"_", ridl,"_", time,
                            ". Built using kobocruncher "),
-      format = "xlsx",
+      format = ".xlsx",
       version = (curversion + 1),
       visibility =  visibility,
-      #file_type = "script",
-      file_type = "other",
-      # script_dependencies= "kobocruncher",
-      # script_instructions= "This excel file contains all specific metedata 
-      #        to relabel the original data, to group variable for automatic data 
-      #         exploration and to create calculated variables ",
-      # script_software= "R",
-      # source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
+    # file_type = "other",
+      file_type = "script",
+      script_dependencies= "kobocruncher",
+      script_instructions= "This excel file contains all specific metedata
+             to relabel the original data, to group variable for automatic data
+              exploration and to create calculated variables ",
+      script_software= "R",
+      source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
       ## Revise here based on the name from your crunching report
       upload =  httr::upload_file(here::here(datafolder, form))
     )
@@ -153,16 +153,16 @@ kobo_ridl <- function(ridl,
       name = nameanalysisplan,
       description = paste0("Analysis Plan to use with: ", stage,"_", name,"_", ridl,"_", time,
                            ". Built using kobocruncher "),
-      format = "xlsx",
+      format = ".xlsx",
       visibility =  visibility,
-      #file_type = "script",
-      file_type = "other",
-      # script_dependencies= "kobocruncher",
-      # script_instructions= "This excel file contains all specific metedata 
-      #        to relabel the original data, to group variable for automatic data 
-      #         exploration and to create calculated variables ",
-      # script_software= "R",
-      # source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
+   #  file_type = "other",
+      file_type = "script",
+      script_dependencies= "kobocruncher",
+      script_instructions= "This excel file contains all specific metedata
+             to relabel the original data, to group variable for automatic data
+              exploration and to create calculated variables ",
+      script_software= "R",
+      source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
       ## Revise here based on the name from your crunching report
       upload =  httr::upload_file(here::here(datafolder, form))
     )
@@ -192,15 +192,15 @@ kobo_ridl <- function(ridl,
                                                         format = "Rmd",
                                                         version = (curversion + 1),
                                                         visibility =  visibility,
-                                                        #file_type = "script",
-                                                        file_type = "other",
-                                           #              script_dependencies= "kobocruncher",
-                                           #              script_instructions= "Use the data and the analysis
-                                           # plan documented in the report parameters and
-                                           # available within this RIDL dataset ",
-                                           #              script_software= "R",
-                                           #              source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
-                                                        ## Revise here based on the name from your crunching report
+                                           #             file_type = "other",
+                                           file_type = "script",
+                                                        script_dependencies= "kobocruncher",
+                                                        script_instructions= "Use the data and the analysis
+                                           plan documented in the report parameters and
+                                           available within this RIDL dataset ",
+                                                        script_software= "R",
+                                                        source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
+                                           # Revise here based on the name from your crunching report
                                                         upload = httr::upload_file(here::here(namethisfile))
     )
     
@@ -215,14 +215,14 @@ kobo_ridl <- function(ridl,
                                                                              " report. Built using kobocruncher "),
                                                         format = "Rmd",
                                                         visibility =  visibility,
-                                                        #file_type = "script",
-                                                        file_type = "other",
-                                           #              script_dependencies= "kobocruncher",
-                                           #              script_instructions= "Use the data and the analysis
-                                           # plan documented in the report parameters and
-                                           # available within this RIDL dataset ",
-                                           #              script_software= "R",
-                                           #              source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
+                                            #            file_type = "other",
+                                           file_type = "script",
+                                                        script_dependencies= "kobocruncher",
+                                                        script_instructions= "Use the data and the analysis
+                                           plan documented in the report parameters and
+                                           available within this RIDL dataset ",
+                                                        script_software= "R",
+                                                        source_code_repo= "https://edouard-legoupil.github.io/kobocruncher",
                                                         ## Revise here based on the name from your crunching report
                                                         upload = httr::upload_file(here::here(namethisfile))
     )

@@ -68,9 +68,12 @@ plot_integer_cross <- function(datalist = datalist,
   if (rr != 0 & ! (is.nan(rr)) ) { 
       ## Writing code instruction in report
       if( showcode == TRUE) {
-        cat(paste0(label_varname(dico = dico,
-                                                   x = var), "\n",
-                                      "  `plot_integer(datalist = datalist, dico = dico, \"", var, "\")` \n\n "))}    else {}
+        cat(paste0(label_varname(dico = dico, x = var), "\n",
+                   "  `plot_integer_cross(datalist = datalist, 
+                       dico = dico, 
+                       var = \"", var, "\",
+                       by_var = \"", by_var, "\",
+                       datasource = params$datasource )` \n\n "))  }   else {} 
     
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
