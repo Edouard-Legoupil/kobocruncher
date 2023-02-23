@@ -22,6 +22,10 @@
 #' 
 #' @export
 
+# prefixer::import_from(fun = plot_select_multiple_cross)
+
+
+
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
@@ -46,10 +50,7 @@ plot_select_multiple_cross <- function(datalist = datalist,
                                        n = NULL,
                                        n_by = NULL,
                                        showcode = FALSE) {
-  
-  
-  requireNamespace("ggplot2")
-  requireNamespace("dplyr")
+
   ## Get default data source name
   if (is.null(datasource)) {
     datasource <- as.character(dico[[3]]$form_title)
@@ -132,14 +133,14 @@ plot_select_multiple_cross <- function(datalist = datalist,
             dplyr::summarise(n = dplyr::n()) |>
             dplyr::mutate(p = n/nr)  |>
             ## Lump together factor levels into "other"
-            dplyr::mutate(x = forcats::fct_lump_n( .data[[var]],
+            dplyr::mutate(x = forcats::fct_lump_n( as.factor(.data[[var]]) ,
                                                    n = as.integer(n1),
                                                    w = p,
                                                    other_level = paste0("Other ",
                                                                         nlev  - n1,
                                                                         " response options automatically lumped") )) |>
             ## Lump together factor levels into "other"
-            dplyr::mutate(y = forcats::fct_lump_n( .data[[by_var]],
+            dplyr::mutate(y = forcats::fct_lump_n( as.factor(.data[[by_var]] ),
                                                    n = as.integer(n_by1),
                                                    w = p,
                                                    other_level = paste0("Other ",
@@ -164,25 +165,19 @@ plot_select_multiple_cross <- function(datalist = datalist,
           ## Writing code instruction in report
           if (showcode == TRUE) {
             cat( paste0( label_varname(dico = dico,  x = var), "\n",
-                "  `plot_select_multiple_cross(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       by_var = \"", by_var, "\",
-                       datasource = params$datasource,
-                       n = ", n1, ",
-                       n_by = ",n_by1, " )` \n\n "))  }   else {} 
+     "`plot_select_multiple_cross(datalist, dico, var=\"", var, "\", by_var=\"", by_var, "\", datasource=params$datasource, n=", n1, ", n_by=",n_by1, " )` \n\n "))  }   else {} 
             ##plot
             require(ggplot2)
             p <- ggplot2::ggplot(cntscross,
-                                 aes(x = pcum,
+                                 ggplot2::aes(x = pcum,
                                      y = x)) +
-              geom_col(fill = "#0072BC") +
+              ggplot2::geom_col(fill = "#0072BC") +
               #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
               ## Position label differently in the bar in white - outside bar in black
-              geom_label(
+              ggplot2::geom_label(
                 data =   function(x)
                   subset(x, pcum < max(pcum) / 1.5),
-                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                ggplot2::aes(label = scales::label_percent(accuracy = .01)(pcum)),
                 hjust = -0.1 ,
                 vjust = 0.5,
                 colour = "black",
@@ -190,10 +185,10 @@ plot_select_multiple_cross <- function(datalist = datalist,
                 label.size = NA,
                 size = 5
               ) +
-              geom_label(
+              ggplot2::geom_label(
                 data =   function(x)
                   subset(x, pcum >= max(pcum) / 1.5),
-                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                ggplot2::aes(label = scales::label_percent(accuracy = .01)(pcum)),
                 hjust = 1.1 ,
                 vjust = 0.5,
                 colour = "white",
@@ -201,22 +196,22 @@ plot_select_multiple_cross <- function(datalist = datalist,
                 label.size = NA,
                 size = 5
               ) +
-              scale_x_continuous(labels = scales::label_percent()) +
-              facet_wrap(~ y1 ,
+              ggplot2::scale_x_continuous(labels = scales::label_percent()) +
+              ggplot2::facet_wrap(~ y1 ,
                          nrow = 3,
                          # labeller = as_labeller(function(x)
                          #   label_choiceset(dico = dico,
                          #                   x = by_var)(x))
                          ) +
-              scale_y_discrete(
+              ggplot2::scale_y_discrete(
                 labels = function(x) {
                   label_choiceset(dico = dico,
                                   x = var)(x) |>
                     stringr::str_wrap(40)
                 }
               ) +
-              coord_cartesian(clip = "off") +
-              labs(
+              ggplot2::coord_cartesian(clip = "off") +
+              ggplot2::labs(
                 x = NULL,
                 y = NULL,
                 title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
@@ -224,20 +219,20 @@ plot_select_multiple_cross <- function(datalist = datalist,
                   "Crossed by ", label_varname(dico = dico,  x = by_var)
                 ), 90),
                 caption = glue::glue(
-                  "Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
+                  "Multiple choice, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
                 )
               ) +
-              theme_minimal(base_size = 24) +
-              geom_vline(xintercept = 0,
+              ggplot2::theme_minimal(base_size = 24) +
+              ggplot2::geom_vline(xintercept = 0,
                          size = 1.1,
                          colour = "#333333") +
-              theme(
-                panel.grid.major.x  = element_line(color = "#cbcbcb"),
-                panel.grid.major.y  = element_blank(),
-                panel.grid.minor = element_blank(),
-                axis.title.y = element_text( size = 8)
+              ggplot2::theme(
+                panel.grid.major.x  = ggplot2::element_line(color = "#cbcbcb"),
+                panel.grid.major.y  = ggplot2::element_blank(),
+                panel.grid.minor = ggplot2::element_blank(),
+                axis.title.y = ggplot2::element_text( size = 8)
               ) +
-              theme(plot.title.position = "plot")
+              ggplot2::theme(plot.title.position = "plot")
             
             return(p) #  print(p)
           }
@@ -255,5 +250,6 @@ plot_select_multiple_cross <- function(datalist = datalist,
     
   }
 }
+
 
 

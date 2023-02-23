@@ -10,6 +10,10 @@
 #' @param n_by if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
 #'            forcats::fct_lump_n()
 #' @export
+
+# prefixer::import_from(fun = kobo_cruncher)
+
+
  
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -141,4 +145,7 @@ kobo_cruncher <- function(datalist = datalist,
   
   }
 }
+
+
+
 

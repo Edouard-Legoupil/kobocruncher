@@ -5,6 +5,7 @@
 #' @param x variable
 #' @export
 
+# prefixer::import_from(fun = kobo_dico)
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' 
@@ -15,4 +16,6 @@ label_varhint <- function(dico, x) {
     dplyr::filter(name == x) |>
     dplyr::pull(hint)
 }
+
+
 

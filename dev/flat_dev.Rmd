@@ -1,5 +1,5 @@
 ---
-title: "Developing and documenting all functions"
+graphics::title: "Developing and documenting all functions"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -17,7 +17,7 @@ pkgload::load_all(export_all = FALSE)
 # Data examples to demo the package
 
 <!-- 
- Store your dataset in a directory named "inst/" at the root of your project.
+ Store your dataset in shiny::a directory named "inst/" at the root of your project.
  Use it for your tests in this Rmd thanks to `pkgload::load_all()` to make it available
 and `system.file()` to read it in your examples.
 -->
@@ -50,7 +50,9 @@ form <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
 #' @return A "datalist" S3 class object (list) formatted to the specifications of "kobocruncher".
 #'  
 #' @export
-
+#' @importFrom readxl excel_sheets read_excel
+# prefixer::import_from(fun = kobo_data)
+  
 kobo_data <- function(datapath) {
    # cat(readxl::excel_sheets(datapath ))
   
@@ -78,6 +80,7 @@ kobo_data <- function(datapath) {
     class(datalist) <- "datalist" # assigns a "datalist" class to the list. Helpful for later on.
     return(datalist)
 }
+
 
 ```
 
@@ -138,8 +141,21 @@ Now we can extend the xlsform that was used to document key next steps in the da
 #' @param ridl If available, it will prefill the RIDL info through what was already recorded there
 #' 
 #' @importFrom tidyselect where
+#' @importFrom dplyr select pull mutate if_else filter transmute case_when left_join
+#' @importFrom jsonlite fromJSON
+#' @importFrom openxlsx createStyle createWorkbook addWorksheet writeData setColWidths addStyle saveWorkbook
+#' @importFrom purrr accumulate2 map_chr map
+#' @importFrom readxl read_excel excel_sheets
+#' @importFrom stringr str_c str_detect
+#' @importFrom tidyr unnest
+#' @importFrom utils tail head
 #'
 #' @export 
+#' 
+#' 
+
+# prefixer::import_from(fun = kobo_prepare_form)
+
 kobo_prepare_form <- function(xlsformpath,
                               xlsformpathout,
                               label_language = "",
@@ -528,11 +544,19 @@ kobo_prepare_form <- function(xlsformpath,
 #' @title Prepare Analysis plan
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' 
-#' @importFrom tidyselect matches
-#' @importFrom purrr map_chr accumulate2
+#' @importFrom dplyr mutate filter rename first recode if_else matches distinct row_number arrange left_join bind_rows summarise group_by case_when select
+#' @importFrom purrr accumulate2 map_chr
+#' @importFrom readxl read_excel
+#' @importFrom stringr str_c
+#' @importFrom tidyr separate
+#' @importFrom tidyselect starts_with matches
+#' @importFrom utils tail head
 #' 
 #' @return A "kobodico" S3 class object (list) formatted to the specifications of "kobocruncher".
 #' @export
+
+
+# prefixer::import_from(fun = kobo_dico)
 
 kobo_dico <- function(xlsformpath) {
    survey <- readxl::read_excel(xlsformpath,   
@@ -614,7 +638,7 @@ kobo_dico <- function(xlsformpath) {
      choices <- readxl::read_excel(xlsformpath,   sheet = "choices")  
     if ("order" %in% colnames( choices)) { } else {  choices$order <- NA   }
      modalities <- choices |>
-                   dplyr::rename(label = dplyr::first(matches("^label")))
+                   dplyr::rename(label = dplyr::first(dplyr::matches("^label")))
      
      settings <- readxl::read_excel(xlsformpath,   
                                 sheet = "settings")
@@ -841,7 +865,7 @@ indicator <- indicator[ ,c("type","name","label", "list_name", "hint",
                                "repeatvar", "calculation",
                                "chapter","subchapter", "disaggregation", "correlate",
                                "cluster", "predict", "score", "mappoint", "mappoly")] %>%
-            dplyr::mutate(across(tidyselect::everything(), as.character))
+            dplyr::mutate(dplyr::across(tidyselect::everything(), as.character))
     
   #   2 - append the one from inidicatoradd if any---->
   if( ! (is.null(indicatoradd) )) {
@@ -1221,6 +1245,7 @@ kobo_anonymise <- function(datalist,
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var variable
 #' @export
+# prefixer::import_from(fun = kobo_dico)
 
 kobo_frame <- function(datalist,
                        dico, 
@@ -1265,6 +1290,8 @@ kobo_frame <- function(datalist,
    # }      
 }
 
+
+
 ```
 
 ```{r examples-kobo_frame}
@@ -1278,6 +1305,27 @@ knitr::kable(utils::head(data,5))
  
 ```
 
+
+```{r tests-kobo_frame}
+# Unit test for kobo_frame()
+
+# context("kobo_frame()")
+# 
+# test_that("kobo_frame() should return a data frame", {
+#   expect_is(kobo_frame(datalist, dico, var), "data.frame") 
+# })
+# 
+# test_that("kobo_frame() should contain the variable specified", {
+#   expect_true(var %in% names(kobo_frame(datalist, dico, var)))
+# })
+# 
+# test_that("kobo_frame() should contain an X_id column", {
+#   expect_true("X_id" %in% names(kobo_frame(datalist, dico, var)))
+# })
+
+```
+
+
 ## Get the label for a specific variable
 
 ```{r function-label_varname}
@@ -1286,11 +1334,17 @@ knitr::kable(utils::head(data,5))
 #' @param x character with the variable name
 #' @export
 
+# prefixer::import_from(fun = kobo_dico)
+
+
 label_varname <- function(dico, x) {
   as.data.frame( dico[["variables"]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(label)
 }
+
+
+
 
 ```
 
@@ -1303,6 +1357,19 @@ label_varname(dico = dico,
 ```
 
 ```{r tests-label_varname}
+
+# # Unit Test
+# 
+# test_that("label_varname() returns the correct label for a given variable name", {
+#   # Create a test dictionary
+#   dico <- list(variables = data_frame(name = c("var1", "var2"),
+#                                       label = c("Variable 1", "Variable 2")))
+#   
+#   # Test that label_varname() returns the correct label
+#   expect_equal(label_varname(dico, "var1"), "Variable 1")
+#   expect_equal(label_varname(dico, "var2"), "Variable 2")
+# })
+
 # test_that("label_varname works", {
 # 
 # })
@@ -1316,11 +1383,14 @@ label_varname(dico = dico,
 #' @param x variable
 #' @export
 
+# prefixer::import_from(fun = kobo_dico)
 label_varhint <- function(dico, x) {
   as.data.frame(dico[["variables"]]) |>
     dplyr::filter(name == x) |>
     dplyr::pull(hint)
 }
+
+
 
 ```
 
@@ -1332,6 +1402,14 @@ label_varhint(dico = dico,
 ```
 
 ```{r tests-label_varhint}
+
+# # Unit Test
+# context("label_varhint")
+# test_that("label_varhint returns the correct hint for a given variable", {
+#   dico <- list(variables = data.frame(name = c("x", "y"), hint = c("This is x", "This is y")))
+#   expect_equal(label_varhint(dico, "x"), "This is x")
+# })
+
 # test_that("label_varhintworks", {
 # 
 # })
@@ -1347,6 +1425,9 @@ label_varhint(dico = dico,
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param x variable
 #' @export
+
+# prefixer::import_from(fun = kobo_dico)
+
 
 label_choiceset <- function(dico,
                             x) {
@@ -1364,6 +1445,8 @@ label_choiceset <- function(dico,
   function(y) { ifelse(is.na(dict[y]), y, dict[y]) }
 
 }
+
+
 
 ```
 
@@ -1390,6 +1473,22 @@ label_choiceset(dico = dico,
 ```
 
 ```{r tests-label_choiceset}
+
+# # Unit test for label_choiceset
+# 
+# context("label_choiceset")
+# 
+# test_that("label_choiceset returns the correct labels", {
+#   dico <- list(variables = data.frame(name = c("x"),
+#                                       list_name = "list"),
+#                list = data.frame(name = c("a", "b"),
+#                                  label = c("apple", "banana"),
+#                                  list_name = "list"))
+#   expect_equal(label_choiceset(dico, "x")("a"), "apple")
+#   expect_equal(label_choiceset(dico, "x")("b"), "banana")
+#   expect_equal(label_choiceset(dico, "x")("c"), "c")
+# })
+
 # test_that("label_choiceset works", {
 # 
 # })
@@ -1416,6 +1515,7 @@ label_choiceset(dico = dico,
 #' @importFrom data.table := 
 #' 
 #' @export
+# prefixer::import_from(fun = kobo_dico)
 
 plot_select_one <- function(datalist  ,
                             dico  ,
@@ -1449,9 +1549,11 @@ plot_select_one <- function(datalist  ,
   ## Put a condition in case there's no record
   if (rr != 0  & ! (is.nan(rr)) ) {
     
-    
+  
+  ## Count number of levels   
+  nlev <-  nlevels( as.factor(data[[var]]) )  
   ## Set the value for n if not set up -
-  if( is.null(n)) { n1 = nlevels( as.factor(data[[var]]) )} else { n1 = n}
+  if( is.null(n)) { n1 = nlev } else { n1 = n}
   
   cnts <- data |>
     tidyr::drop_na(tidyselect::all_of(var)) |>
@@ -1460,7 +1562,7 @@ plot_select_one <- function(datalist  ,
     dplyr::count(x := .data[[var]]) |>
     dplyr::mutate(p = n/nr) |>
     # Lump together factor levels into "other"
-    dplyr::mutate(x = forcats::fct_lump_n( x,    
+    dplyr::mutate(x = forcats::fct_lump_n( as.factor(x),    
                                          n = as.integer(n1),
                                          w = p,
                      other_level = paste0("Other ",
@@ -1497,51 +1599,47 @@ plot_select_one <- function(datalist  ,
   if( showcode == TRUE) { cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
                                       
-     "`plot_select_one(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       datasource = params$datasource,
-                       n = ",n1, ")` \n\n ")) }  else {}
+     "`plot_select_one(datalist, dico, \"", var, "\", datasource = params$datasource, n = ",n1, ")` \n\n ")) }  else {}
   
     
     ## plot
     require(ggplot2)
-    p <- ggplot2::ggplot(cnts, aes(p, x)) +
-      geom_col(fill = "#0072BC") +
+    p <- ggplot2::ggplot(cnts, ggplot2::aes(p, x)) +
+      ggplot2::geom_col(fill = "#0072BC") +
       
       #geom_label(aes(label = scales::label_percent(accuracy = .01)(p))) +
       ## Position label differently in the bar in white - outside bar in black
-      geom_label( data =   function(x) subset(x, p < max(p) / 1.5),
-                  aes(label = scales::label_percent(accuracy = .01)(p)),
+      ggplot2::geom_label( data =   function(x) subset(x, p < max(p) / 1.5),
+                  ggplot2::aes(label = scales::label_percent(accuracy = .01)(p)),
                   hjust = -0.1 ,
                   vjust = 0.5,
                   colour = "black",
                   fill = NA,
                   label.size = NA,
                   size = 6   ) +
-      geom_label( data =   function(x) subset(x, p >= max(p) / 1.5),
-                  aes(label = scales::label_percent(accuracy = .01)(p)),
+      ggplot2::geom_label( data =   function(x) subset(x, p >= max(p) / 1.5),
+                  ggplot2::aes(label = scales::label_percent(accuracy = .01)(p)),
                   hjust = 1.1 ,
                   vjust = 0.5,
                   colour = "white",
                   fill = NA,
                   label.size = NA,
                   size = 6   ) +
-      scale_x_continuous(labels = scales::label_percent()) +
-      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico, x = var)(x) |>
+      ggplot2::scale_x_continuous(labels = scales::label_percent()) +
+      ggplot2::scale_y_discrete(labels = function(x) {label_choiceset(dico = dico, x = var)(x) |>
                       stringr::str_wrap(40)}) +
-      coord_cartesian(clip = "off") +
-      labs(x = NULL, y = NULL,
+      ggplot2::coord_cartesian(clip = "off") +
+      ggplot2::labs(x = NULL, y = NULL,
            title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
            subtitle = if (!is.na(label_varhint(dico = dico, x= var))){
                       stringr::str_wrap(label_varhint(dico = dico, x= var), 90)} else { ""},
-           caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records. \n Source: {datasource}")) +
-      theme_minimal( base_size = 24) +
-      geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
-      theme( panel.grid.major.x  = element_line(color = "#cbcbcb"),
-             panel.grid.major.y  = element_blank(),
-             panel.grid.minor = element_blank()    ) +
-      theme(plot.title.position = "plot")
+           caption = glue::glue("Single choice, Response rate = {scales::label_percent(accuracy = .01)(rr)}  on a total of {nrow(data)} records. \n Source: {datasource}")) +
+      ggplot2::theme_minimal( base_size = 24) +
+      ggplot2::geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
+      ggplot2::theme( panel.grid.major.x  = ggplot2::element_line(color = "#cbcbcb"),
+             panel.grid.major.y  = ggplot2::element_blank(),
+             panel.grid.minor = ggplot2::element_blank()    ) +
+      ggplot2::theme(plot.title.position = "plot")
     
    return(p) #  print(p)
     
@@ -1553,6 +1651,8 @@ plot_select_one <- function(datalist  ,
   # cat("\n\n")
   }
 }  
+
+
 
 ```
 
@@ -1578,6 +1678,22 @@ plot_select_one(datalist = datalist,
 ```
 
 ```{r tests-plot_select_one}
+
+# Unit test
+
+# context("Test plot_select_one()")
+# 
+# test_that("plot_select_one() produces a plot object", {
+#   expect_is(plot_select_one(datalist = NULL, dico = NULL, var = NULL), "gg")
+# })
+# 
+# test_that("plot_select_one() requires three arguments", {
+#   expect_error(plot_select_one(), "argument 'datalist' is missing")
+#   expect_error(plot_select_one(datalist = NULL), "argument 'dico' is missing")
+#   expect_error(plot_select_one(datalist = NULL, dico = NULL), "argument 'var' is missing")
+# })
+
+
 # test_that("plot_select_one works", {
 # 
 # })
@@ -1603,6 +1719,7 @@ plot_select_one(datalist = datalist,
 #' 
 #' @importFrom data.table :=  
 #' @export
+# prefixer::import_from(fun = kobo_dico)
 
 plot_select_multiple <- function(datalist = datalist, 
                                  dico = dico,
@@ -1637,7 +1754,7 @@ plot_select_multiple <- function(datalist = datalist,
   if (rr != 0 & ! (is.nan(rr)) ) {    
   
   ## Count number of levels 
-    nlev <-  nrow(dplyr::distinct(tidyr::separate_rows(as.data.frame(data[[var]]), `data[[var]]`, sep = " ")))
+  nlev <-  nrow(dplyr::distinct(tidyr::separate_rows(as.data.frame(data[[var]]), `data[[var]]`, sep = " ")))
   ##  Set the value for n if not set up -
   if( is.null(n)) { n1 = nlev } else { n1 = n} 
   
@@ -1648,7 +1765,7 @@ plot_select_multiple <- function(datalist = datalist,
     dplyr::count(x := .data[[var]]) |>
     dplyr::mutate(p = n/nr) |> 
     # Lump together factor levels into "other"
-    dplyr::mutate(x = forcats::fct_lump_n( x,    
+    dplyr::mutate(x = forcats::fct_lump_n( as.factor(x),    
                                          n = as.integer(n1),
                                          w = p,
                      other_level = paste0("Other ",
@@ -1679,28 +1796,24 @@ plot_select_multiple <- function(datalist = datalist,
     if( showcode == TRUE) {
       cat(paste0(label_varname(dico = dico, x = var),
                  "\n",
-        "  `plot_select_multiple(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       datasource = params$datasource,
-                       n = ",n1, ")` \n\n "))  }   else {} 
+        "`plot_select_multiple(datalist, dico, \"", var, "\", datasource=params$datasource, n=",n1, ")` \n\n "))  }   else {} 
     
     require(ggplot2)
     ## Plot
-     p <- ggplot2::ggplot(cnts, aes(p, x)) +
-      geom_col(fill = "#0072BC") +
+     p <- ggplot2::ggplot(cnts, ggplot2::aes(p, x)) +
+      ggplot2::geom_col(fill = "#0072BC") +
       #geom_label(aes(label = scales::label_percent(accuracy = .01)(p))) + 
       ## Position label differently in the bar in white - outside bar in black
-      geom_label( data =   function(x) subset(x, p < max(p) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(p)),
+      ggplot2::geom_label( data =   function(x) subset(x, p < max(p) / 1.5),
+                    ggplot2::aes(label = scales::label_percent(accuracy = .01)(p)),
                     hjust = -0.1 ,
                     vjust = 0.5, 
                     colour = "black", 
                     fill = NA, 
                     label.size = NA, 
                     size = 6   ) +  
-      geom_label( data =   function(x) subset(x, p >= max(p) / 1.5),
-                    aes(label = scales::label_percent(accuracy = .01)(p)),
+      ggplot2::geom_label( data =   function(x) subset(x, p >= max(p) / 1.5),
+                    ggplot2::aes(label = scales::label_percent(accuracy = .01)(p)),
                     hjust = 1.1 ,
                     vjust = 0.5, 
                     colour = "white", 
@@ -1708,22 +1821,22 @@ plot_select_multiple <- function(datalist = datalist,
                     label.size = NA,
                     size = 6   ) +   
       
-      scale_x_continuous(labels = scales::label_percent()) +
-      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
+      ggplot2::scale_x_continuous(labels = scales::label_percent()) +
+      ggplot2::scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                         x = var)(x) |>
           stringr::str_wrap(40)}) +
-      coord_cartesian(clip = "off") +
-      labs(x = NULL, y = NULL,
+      ggplot2::coord_cartesian(clip = "off") +
+      ggplot2::labs(x = NULL, y = NULL,
            title = stringr::str_wrap(label_varname(dico = dico, x= var), 90),
            subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
                      stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
-           caption = glue::glue("Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
-      theme_minimal( base_size = 24) + 
-      geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
-      theme( panel.grid.major.x  = element_line(color = "#cbcbcb"), 
-             panel.grid.major.y  = element_blank(), 
-             panel.grid.minor = element_blank()    ) +
-      theme(plot.title.position = "plot")
+           caption = glue::glue("Multiple choice, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+      ggplot2::theme_minimal( base_size = 24) + 
+      ggplot2::geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
+      ggplot2::theme( panel.grid.major.x  = ggplot2::element_line(color = "#cbcbcb"), 
+             panel.grid.major.y  = ggplot2::element_blank(), 
+             panel.grid.minor = ggplot2::element_blank()    ) +
+      ggplot2::theme(plot.title.position = "plot")
      
      
    return(p) #  print(p)
@@ -1739,6 +1852,8 @@ plot_select_multiple <- function(datalist = datalist,
     
   }  
 }
+
+
 
 ```
 
@@ -1772,6 +1887,19 @@ plot_select_multiple(datalist = datalist,
 ```
 
 ```{r tests-plot_select_multiple}
+
+
+# # Unit test
+# context("plot_select_multiple()")
+# 
+# test_that("plot_select_multiple() returns a ggplot object", {
+#   expect_true(inherits(plot_select_multiple(datalist = datalist, dico = dico, var = "var1"), "gg"))
+# })
+# 
+# test_that("plot_select_multiple() returns an invisible object when rr = 0", {
+#   expect_true(invisible(plot_select_multiple(datalist = datalist, dico = dico, var = "var2")))
+# })
+
 # test_that("plot_select_multiple works", {
 # 
 # })
@@ -1791,7 +1919,8 @@ plot_select_multiple(datalist = datalist,
 #' @importFrom   ggplot2 theme element_line element_blank element_text aes labs
 #'             theme_minimal geom_hline
 #' @importFrom datawizard skewness kurtosis
-#' @importFrom stats IQR             
+#' @importFrom stats IQR   
+# prefixer::import_from(fun = kobo_dico)          
 #' 
 #' @export
 
@@ -1827,15 +1956,12 @@ plot_integer <- function(datalist = datalist,
       if( showcode == TRUE) {
         cat(paste0(label_varname(dico = dico,
                                                    x = var), "\n",
-                                      "  `plot_integer(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       datasource = params$datasource)` \n\n "))  }   else {}  
+    "`plot_integer(datalist, dico, \"", var, "\", datasource=params$datasource)` \n\n "))  }   else {}  
     
     
      info <- paste0("Mean: ", round(mean(data[[var]]),2) ,
-                    ", Standard Deviation: ",round(sd(data[[var]]),2) ,
-                    ", Coefficient of Variation: ",round( sd(data[[var]]) / mean(data[[var]]) * 100 ,2) ,
+                    ", Standard Deviation: ",round(stats::sd(data[[var]]),2) ,
+                    ", Coefficient of Variation: ",round( stats::sd(data[[var]]) / mean(data[[var]]) * 100 ,2) ,
                     ", Skewness: ",round(datawizard::skewness(data[[var]]),2) ,
                     " and Kurtosis: ",round(datawizard::kurtosis(data[[var]]),2), ".")
      ## Detect potential outliers based on Interquartile Range
@@ -1847,24 +1973,24 @@ plot_integer <- function(datalist = datalist,
     
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
-      ggplot2::geom_histogram(aes( x= .data[[var]]), 
+      ggplot2::geom_histogram(ggplot2::aes( x= .data[[var]]), 
                     # bins = nclass.FD(na.omit(data[[var]])),
                      fill = "#0072BC", 
                      color = "white" 
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
-      labs(x = NULL, y = NULL,
+      ggplot2::labs(x = NULL, y = NULL,
            title = stringr::str_wrap(label_varname(dico = dico, x = var), 90), 
            subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
                      stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
-           caption = stringr::str_wrap(glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource} - {info} - {infoIQR}")), 100) +
+           caption = stringr::str_wrap(glue::glue("Numeric, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource} - {info} - {infoIQR}")), 100) +
   
-      theme_minimal( base_size = 24) +
+      ggplot2::theme_minimal( base_size = 24) +
      # geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
-      theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
-           panel.grid.major.x  = element_blank(), 
-           panel.grid.minor = element_blank()    ) +
-           theme(plot.title.position = "plot")
+      ggplot2::theme( panel.grid.major.y  = ggplot2::element_line(color = "#cbcbcb"), 
+           panel.grid.major.x  = ggplot2::element_blank(), 
+           panel.grid.minor = ggplot2::element_blank()    ) +
+           ggplot2::theme(plot.title.position = "plot")
     
    return(p) #  print(p)
     
@@ -1876,6 +2002,8 @@ plot_integer <- function(datalist = datalist,
   # cat("\n\n")
   }
 }
+
+
 
 ```
 
@@ -1890,6 +2018,26 @@ plot_integer(datalist = datalist,
 ```
 
 ```{r tests-plot_integer}
+
+# Unit test for plot_integer function
+
+# context("plot_integer function")
+# 
+# test_that("plot_integer function returns a plot", {
+#   expect_true(is.ggplot(plot_integer(datalist = datalist, 
+#                          dico = dico,
+#                          var, 
+#                          datasource = NULL,
+#                          showcode = FALSE)))
+# })
+# 
+# test_that("plot_integer function returns an invisible object when there is no recorded answer", {
+#   expect_true(identical(invisible(plot_integer(datalist = datalist, 
+#                          dico = dico,
+#                          var, 
+#                          datasource = NULL,
+#                          showcode = FALSE)),invisible()))
+# })
 # test_that("plot_integer works", {
 # 
 # })
@@ -1906,17 +2054,20 @@ plot_integer(datalist = datalist,
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' 
-#' @importFrom tm tm_map Corpus content_transformer
+#' 
+#' @importFrom glue glue
+#' @importFrom scales label_percent
+#' @importFrom stringr str_wrap
+#' @importFrom tm content_transformer Corpus VectorSource tm_map removeNumbers removePunctuation stripWhitespace stemDocument removeWords stopwords TermDocumentMatrix  tm_map Corpus content_transformer
 #'              TermDocumentMatrix stopwords
-#'                
-#' @importFrom ggwordcloud geom_text_wordcloud
-#' 
-#' @importFrom ggplot2 labs theme_minimal
-#' 
+#' @importFrom ggwordcloud geom_text_wordcloud  
+#' @importFrom ggplot2 labs theme_minimal aes scale_size_area scale_color_gradient labs theme_minimal
 #' @importFrom SnowballC wordStem
 #' 
 #' 
 #' @export
+#' 
+# prefixer::import_from(fun = plot_text)
 
 plot_text <- function(datalist = datalist, 
                       dico = dico,
@@ -1959,22 +2110,22 @@ plot_text <- function(datalist = datalist,
             tm::tm_map(., toSpace, "@")  %>%
             tm::tm_map(., toSpace, "\\|")  %>%
             # Convert the text to lower case
-            tm::tm_map(., content_transformer(tolower))  %>%
+            tm::tm_map(., tm::content_transformer(tolower))  %>%
             # Remove numbers
-            tm::tm_map(., removeNumbers)  %>%
+            tm::tm_map(., tm::removeNumbers)  %>%
             # Remove punctuations
-            tm::tm_map(.,  removePunctuation)  %>%
+            tm::tm_map(.,  tm::removePunctuation)  %>%
             # Eliminate extra white spaces
-            tm::tm_map(.,  stripWhitespace)  %>%
+            tm::tm_map(.,  tm::stripWhitespace)  %>%
             # Text stemming - reduces words to their root form.
-            tm::tm_map(.,  stemDocument)  %>%
+            tm::tm_map(.,  tm::stemDocument)  %>%
             # Remove common stopwords depending on language
             # The information value of ‘stopwords’ is near zero due to the fact that they 
             # are so common in a language. Removing this kind of words is useful before
             # further analyses. 
-            tm::tm_map(., removeWords, stopwords("english"))  %>%
+            tm::tm_map(., tm::removeWords, tm::stopwords("english"))  %>%
             # Remove your own stop word
-            tm::tm_map(., removeWords, c("blabla1", "blabla2")) 
+            tm::tm_map(., tm::removeWords, c("blabla1", "blabla2")) 
   
     # Step 4 : Build a term-document matrix ####
     # Table containing the frequency of the words. Column names are words and row names are documents. 
@@ -1991,10 +2142,7 @@ plot_text <- function(datalist = datalist,
         if( showcode == TRUE) {
           cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
-                                      "  `plot_text(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       datasource = params$datasource)` \n\n "))  }   else {} 
+    " `plot_text(datalist, dico, \"", var, "\", datasource=params$datasource)` \n\n "))  }   else {} 
       
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :
@@ -2025,13 +2173,13 @@ plot_text <- function(datalist = datalist,
             ggplot2::scale_size_area(max_size = 50) +
             # scale_radius(range = c(0, 10),  limits = c(0, NA)) +
             ggplot2::scale_color_gradient(low = "darkred", high = "red") +
-            labs(x = NULL, y = NULL,
+            ggplot2::labs(x = NULL, y = NULL,
                  title = stringr::str_wrap(label_varname(dico = dico, x = var), 90), 
                  subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
                      stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
-                 caption = glue::glue("Wordcloud displaying an Open Text question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
+                 caption = glue::glue("Wordcloud displaying an Open Text, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
 
-            theme_minimal( base_size = 24)
+            ggplot2::theme_minimal( base_size = 24)
       return(p1)
       
     
@@ -2043,6 +2191,9 @@ plot_text <- function(datalist = datalist,
   # cat("\n\n")
   }
 }
+
+
+
 
 ```
 
@@ -2057,6 +2208,17 @@ plot_text(datalist = datalist,
 ```
 
 ```{r tests-plot_text}
+# Unit Test
+
+# context("plot_text()")
+# 
+# test_that("plot_text() returns a valid ggplot object", {
+#   expect_is(plot_text(), "ggplot")
+# })
+# 
+# test_that("plot_text() returns an empty plot when there is no text", {
+#   expect_equal(plot_text(), ggplot2::ggplot() + ggplot2::theme_void())
+# })
 # test_that("plot_text works", {
 # 
 # })
@@ -2088,6 +2250,10 @@ plot_text(datalist = datalist,
 #'             as_labeller facet_wrap
 #' @importFrom data.table :=  
 #' @export
+
+# prefixer::import_from(fun = plot_select_one_cross)
+
+
 
 plot_select_one_cross <- function(datalist = datalist,
                             dico = dico,
@@ -2177,13 +2343,13 @@ plot_select_one_cross <- function(datalist = datalist,
               dplyr::mutate(p = n/nr) |>
               # Lump together factor levels into "other"
               dplyr::mutate(
-                x = as.character(forcats::fct_lump_n(factor(.data[[var]]), 
+                x = as.character(forcats::fct_lump_n( as.factor(.data[[var]]), 
                                          n = n1,
                                          w = p,
                                          other_level = paste0("Other ",
                                     nlevels( as.factor(data[[var]]))-n1,
                                     " response options automatically lumped")) ),
-                y = as.character(forcats::fct_lump_n(factor(.data[[by_var]]), 
+                y = as.character(forcats::fct_lump_n( as.factor(.data[[by_var]]), 
                                          n = n_by1,
                                          w = p,
                                          other_level = paste0("Other ",
@@ -2208,47 +2374,41 @@ plot_select_one_cross <- function(datalist = datalist,
           ## Writing code instruction in report
           if (showcode == TRUE) {
             cat( paste0( label_varname(dico = dico, x = var),  "\n",
-                "  `plot_select_one_cross(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       by_var = \"", by_var, "\",
-                       datasource = params$datasource,
-                       n = ", n1, ",
-                       n_by = ",n_by1, " )` \n\n "))  }   else {} 
+       "`plot_select_one_cross(datalist, dico, var=\"", var, "\", by_var=\"", by_var, "\",datasource=params$datasource, n=", n1, ",n_by=",n_by1, " )` \n\n "))  }   else {} 
              
             
             ## plot
             require(ggplot2)
-            p <- ggplot2::ggplot(cnts, aes(x = pcum,  y = x)) +
-              geom_col(fill = "#0072BC") +
-              geom_label(
+            p <- ggplot2::ggplot(cnts, ggplot2::aes(x = pcum,  y = x)) +
+              ggplot2::geom_col(fill = "#0072BC") +
+              ggplot2::geom_label(
                 data =   function(x)  subset(x, pcum < max(pcum) / 1.5),
-                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                ggplot2::aes(label = scales::label_percent(accuracy = .01)(pcum)),
                 hjust = -0.1 , vjust = 0.5,
                 colour = "black", fill = NA,
                 label.size = NA, size = 5 ) +
-              geom_label( data =   function(x)subset(x, pcum >= max(pcum) / 1.5),
-                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+              ggplot2::geom_label( data =   function(x)subset(x, pcum >= max(pcum) / 1.5),
+                ggplot2::aes(label = scales::label_percent(accuracy = .01)(pcum)),
                 hjust = 1.1 ,  vjust = 0.5,
                 colour = "white", fill = NA,
                 label.size = NA,  size = 5  ) +
-              scale_x_continuous(labels = scales::label_percent()) +
-              facet_wrap(~ y1 , nrow = 3 # ,
+              ggplot2::scale_x_continuous(labels = scales::label_percent()) +
+              ggplot2::facet_wrap(~ y1 , nrow = 3 # ,
                          # labeller = #glue::glue('{
                          #   as_labeller(function(x)
                          #   label_choiceset(dico = dico,
                          #                   x = by_var)(x) ) 
                          # #  } ')
                          ) +
-              scale_y_discrete(
+              ggplot2::scale_y_discrete(
                 labels = function(x) {
                   label_choiceset(dico = dico,
                                   x = var)(x) |>
                     stringr::str_wrap(40)
                 }
               ) +
-              coord_cartesian(clip = "off") +
-              labs(
+              ggplot2::coord_cartesian(clip = "off") +
+              ggplot2::labs(
                 x = NULL,
                 y = NULL,
                 title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
@@ -2256,19 +2416,19 @@ plot_select_one_cross <- function(datalist = datalist,
                   "Crossed by ", label_varname(dico = dico, x = by_var)
                 ), 90),
                 caption = glue::glue(
-                  "Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
+                  "Single choice, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
                 )
               ) +
-              theme_minimal(base_size = 24) +
-              geom_vline(xintercept = 0,
+              ggplot2::theme_minimal(base_size = 24) +
+              ggplot2::geom_vline(xintercept = 0,
                          size = 1.1,
                          colour = "#333333") +
-              theme(
-                panel.grid.major.x  = element_line(color = "#cbcbcb"),
-                panel.grid.major.y  = element_blank(),
-                panel.grid.minor = element_blank()
+              ggplot2::theme(
+                panel.grid.major.x  = ggplot2::element_line(color = "#cbcbcb"),
+                panel.grid.major.y  = ggplot2::element_blank(),
+                panel.grid.minor = ggplot2::element_blank()
               ) +
-              theme(plot.title.position = "plot")
+              ggplot2::theme(plot.title.position = "plot")
             
             return(p) #  print(p)
           }
@@ -2285,6 +2445,9 @@ plot_select_one_cross <- function(datalist = datalist,
     # cat("\n\n")
   }
 }
+
+
+
 
 ```
 
@@ -2311,6 +2474,21 @@ plot_select_one_cross(datalist = datalist,
 ```
 
 ```{r tests-plot_select_one_cross}
+
+# # Unit test
+# context("plot_select_one_cross()")
+# 
+# test_that("plot_select_one_cross() produces a plot when all the arguments are provided", {
+#   expect_true(!is.null(plot_select_one_cross(datalist = datalist,
+#                             dico = dico,
+#                             var = "age", 
+#                             by_var = "gender",
+#                             datasource = NULL,
+#                             n = NULL,
+#                             n_by = NULL,
+#                             showcode = FALSE)))
+# })
+
 # test_that("plot_select_one_cross works", {
 # 
 # })
@@ -2343,6 +2521,10 @@ plot_select_one_cross(datalist = datalist,
 #' 
 #' @export
 
+# prefixer::import_from(fun = plot_select_multiple_cross)
+
+
+
 plot_select_multiple_cross <- function(datalist = datalist,
                                        dico = dico,
                                        var, 
@@ -2351,10 +2533,7 @@ plot_select_multiple_cross <- function(datalist = datalist,
                                        n = NULL,
                                        n_by = NULL,
                                        showcode = FALSE) {
-  
-  
-  requireNamespace("ggplot2")
-  requireNamespace("dplyr")
+
   ## Get default data source name
   if (is.null(datasource)) {
     datasource <- as.character(dico[[3]]$form_title)
@@ -2437,14 +2616,14 @@ plot_select_multiple_cross <- function(datalist = datalist,
             dplyr::summarise(n = dplyr::n()) |>
             dplyr::mutate(p = n/nr)  |>
             ## Lump together factor levels into "other"
-            dplyr::mutate(x = forcats::fct_lump_n( .data[[var]],
+            dplyr::mutate(x = forcats::fct_lump_n( as.factor(.data[[var]]) ,
                                                    n = as.integer(n1),
                                                    w = p,
                                                    other_level = paste0("Other ",
                                                                         nlev  - n1,
                                                                         " response options automatically lumped") )) |>
             ## Lump together factor levels into "other"
-            dplyr::mutate(y = forcats::fct_lump_n( .data[[by_var]],
+            dplyr::mutate(y = forcats::fct_lump_n( as.factor(.data[[by_var]] ),
                                                    n = as.integer(n_by1),
                                                    w = p,
                                                    other_level = paste0("Other ",
@@ -2469,25 +2648,19 @@ plot_select_multiple_cross <- function(datalist = datalist,
           ## Writing code instruction in report
           if (showcode == TRUE) {
             cat( paste0( label_varname(dico = dico,  x = var), "\n",
-                "  `plot_select_multiple_cross(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       by_var = \"", by_var, "\",
-                       datasource = params$datasource,
-                       n = ", n1, ",
-                       n_by = ",n_by1, " )` \n\n "))  }   else {} 
+     "`plot_select_multiple_cross(datalist, dico, var=\"", var, "\", by_var=\"", by_var, "\", datasource=params$datasource, n=", n1, ", n_by=",n_by1, " )` \n\n "))  }   else {} 
             ##plot
             require(ggplot2)
             p <- ggplot2::ggplot(cntscross,
-                                 aes(x = pcum,
+                                 ggplot2::aes(x = pcum,
                                      y = x)) +
-              geom_col(fill = "#0072BC") +
+              ggplot2::geom_col(fill = "#0072BC") +
               #geom_label(aes(label = scales::label_percent(accuracy = .01)(pcum)), size = 2) +
               ## Position label differently in the bar in white - outside bar in black
-              geom_label(
+              ggplot2::geom_label(
                 data =   function(x)
                   subset(x, pcum < max(pcum) / 1.5),
-                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                ggplot2::aes(label = scales::label_percent(accuracy = .01)(pcum)),
                 hjust = -0.1 ,
                 vjust = 0.5,
                 colour = "black",
@@ -2495,10 +2668,10 @@ plot_select_multiple_cross <- function(datalist = datalist,
                 label.size = NA,
                 size = 5
               ) +
-              geom_label(
+              ggplot2::geom_label(
                 data =   function(x)
                   subset(x, pcum >= max(pcum) / 1.5),
-                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                ggplot2::aes(label = scales::label_percent(accuracy = .01)(pcum)),
                 hjust = 1.1 ,
                 vjust = 0.5,
                 colour = "white",
@@ -2506,22 +2679,22 @@ plot_select_multiple_cross <- function(datalist = datalist,
                 label.size = NA,
                 size = 5
               ) +
-              scale_x_continuous(labels = scales::label_percent()) +
-              facet_wrap(~ y1 ,
+              ggplot2::scale_x_continuous(labels = scales::label_percent()) +
+              ggplot2::facet_wrap(~ y1 ,
                          nrow = 3,
                          # labeller = as_labeller(function(x)
                          #   label_choiceset(dico = dico,
                          #                   x = by_var)(x))
                          ) +
-              scale_y_discrete(
+              ggplot2::scale_y_discrete(
                 labels = function(x) {
                   label_choiceset(dico = dico,
                                   x = var)(x) |>
                     stringr::str_wrap(40)
                 }
               ) +
-              coord_cartesian(clip = "off") +
-              labs(
+              ggplot2::coord_cartesian(clip = "off") +
+              ggplot2::labs(
                 x = NULL,
                 y = NULL,
                 title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
@@ -2529,20 +2702,20 @@ plot_select_multiple_cross <- function(datalist = datalist,
                   "Crossed by ", label_varname(dico = dico,  x = by_var)
                 ), 90),
                 caption = glue::glue(
-                  "Multiple choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
+                  "Multiple choice, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
                 )
               ) +
-              theme_minimal(base_size = 24) +
-              geom_vline(xintercept = 0,
+              ggplot2::theme_minimal(base_size = 24) +
+              ggplot2::geom_vline(xintercept = 0,
                          size = 1.1,
                          colour = "#333333") +
-              theme(
-                panel.grid.major.x  = element_line(color = "#cbcbcb"),
-                panel.grid.major.y  = element_blank(),
-                panel.grid.minor = element_blank(),
-                axis.title.y = element_text( size = 8)
+              ggplot2::theme(
+                panel.grid.major.x  = ggplot2::element_line(color = "#cbcbcb"),
+                panel.grid.major.y  = ggplot2::element_blank(),
+                panel.grid.minor = ggplot2::element_blank(),
+                axis.title.y = ggplot2::element_text( size = 8)
               ) +
-              theme(plot.title.position = "plot")
+              ggplot2::theme(plot.title.position = "plot")
             
             return(p) #  print(p)
           }
@@ -2560,6 +2733,7 @@ plot_select_multiple_cross <- function(datalist = datalist,
     
   }
 }
+
 
 
 ```
@@ -2583,6 +2757,44 @@ plot_select_multiple_cross(datalist = datalist,
 ```
 
 ```{r tests-plot_select_multiple_cross}
+
+
+# 
+# # Unit test
+# context("Testing the plot_select_multiple_cross function")
+# 
+# # Create a mock dataset
+# datalist <- list(
+#   data1 = list(
+#     data1_var1 = c("A", "B", "C"),
+#     data1_var2 = c("A", "B", NA)
+#   ),
+#   data2 = list(
+#     data2_var1 = c("A", "B", "C"),
+#     data2_var2 = c("A", "B", NA)
+#   )
+# )
+# 
+# # Create a mock dictionary
+# dico <- list(
+#   data1_var1 = list(
+#     type = "select_multiple",
+#     label = "Var1",
+#     labelset = c("A", "B", "C")
+#   ),
+#   data1_var2 = list(
+#     type = "select_one",
+#     label = "Var2",
+#     labelset = c("A", "B")
+#   ),
+#   form_title = "Data1"
+# )
+# 
+# # Test that the function returns an invisible object when there is no intersection between the answers from the variables
+# test_that("The function returns an invisible object when there is no intersection between the answers from the variables", {
+#   expect_invisible(plot_select_multiple_cross(datalist = datalist, dico = dico, var = "data1_var1", by_var = "data1_var2"))
+# })
+
 # test_that("plot_select_multiple_cross works", {
 # 
 # })
@@ -2605,6 +2817,10 @@ plot_select_multiple_cross(datalist = datalist,
 #'             theme_minimal geom_hline geom_boxplot scale_size_area 
 #'              scale_y_discrete theme_minimal
 #' @export
+
+# prefixer::import_from(fun = plot_integer_cross)
+
+
 
 plot_integer_cross <- function(datalist = datalist, 
                          dico = dico,
@@ -2653,34 +2869,30 @@ plot_integer_cross <- function(datalist = datalist,
       ## Writing code instruction in report
       if( showcode == TRUE) {
         cat(paste0(label_varname(dico = dico, x = var), "\n",
-                   "  `plot_integer_cross(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       by_var = \"", by_var, "\",
-                       datasource = params$datasource )` \n\n "))  }   else {} 
+      "`plot_integer_cross(datalist, dico, var=\"", var, "\", by_var=\"", by_var, "\", datasource=params$datasource)` \n\n "))  }   else {} 
     
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
-      geom_boxplot(aes(x = .data[[var]], y =  .data[[by_var]]), 
+      ggplot2::geom_boxplot(ggplot2::aes(x = .data[[var]], y =  .data[[by_var]]), 
                      fill = "#0072BC", 
                      color = "white" 
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
-      labs(x = NULL, y = NULL,
+      ggplot2::labs(x = NULL, y = NULL,
           title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
           subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico, x = by_var)), 90),
-          caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+          caption = glue::glue("Numeric, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
       
-      scale_size_area(max_size = 10) +        
-      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
+      ggplot2::scale_size_area(max_size = 10) +        
+      ggplot2::scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                           x = var)(x) |>
             stringr::str_wrap(40)}) +
-      theme_minimal( base_size = 24) +
-      geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
-      theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
-           panel.grid.major.x  = element_blank(), 
-           panel.grid.minor = element_blank()    ) +
-           theme(plot.title.position = "plot")
+      ggplot2::theme_minimal( base_size = 24) +
+      ggplot2::geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
+      ggplot2::theme( panel.grid.major.y  = ggplot2::element_line(color = "#cbcbcb"), 
+           panel.grid.major.x  = ggplot2::element_blank(), 
+           panel.grid.minor = ggplot2::element_blank()    ) +
+           ggplot2::theme(plot.title.position = "plot")
     
    return(p) #  print(p)
     
@@ -2730,6 +2942,10 @@ plot_integer_cross(datalist = datalist,
 #' 
 #' @export
 
+# prefixer::import_from(fun = plot_correlation)
+
+
+
 plot_correlation <- function(datalist = datalist, 
                              dico = dico,
                              var, 
@@ -2754,7 +2970,7 @@ plot_correlation <- function(datalist = datalist,
        #  cat(paste0("The two variables: ",var , " &  ", by_var ," are not in the same data frame \n"))
     } else  {
          formula <- frame1 |>
-                  dplyr::select( all_of(var), all_of(by_var)) 
+                  dplyr::select( dplyr::all_of(var), dplyr::all_of(by_var)) 
          names(formula)[1] <- "target"
          names(formula)[2] <- "tested"
     
@@ -2790,7 +3006,7 @@ plot_correlation <- function(datalist = datalist,
             ## Writing code instruction in report
             if( showcode == TRUE) {
               cat(paste0("\n ", label_varname(dico = dico, x = var), "\n", 
-                         " `plot_correlation(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))} else {}
+           " `plot_correlation(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\",datasource=params$datasource)` \n\n "))} else {}
               
 
 
@@ -2814,7 +3030,7 @@ plot_correlation <- function(datalist = datalist,
                       ggplot2::aes_string(size = "intense")
                     ) +
                 
-                    ggplot2::geom_text(aes(label = round(Freq),3), 
+                    ggplot2::geom_text(ggplot2::aes(label = round(Freq),3), 
                               colour = "white", 
                               size = 3)    +
                     #ggplot2::scale_size(range = c(mincor, maxcor)) +
@@ -2829,13 +3045,13 @@ plot_correlation <- function(datalist = datalist,
                                                        label_varname(dico = dico, x = by_var), "[col]" ), 100),
                       subtitle = stringr::str_wrap(paste0("(p:",p.value,"). Correlogram Interpretation hint: the size of the dots indicates the strenght of association, the color indicates its type (positive/attraction=blue, negative/repulsion= red) "), 110),
                       caption = glue::glue("Source: {datasource}")) +
-                    theme_minimal( base_size = 24) +
-                    theme( panel.grid.major.x  = element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
-                           panel.grid.major.y  = element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
-                           panel.grid.minor = element_blank() ,
+                    ggplot2::theme_minimal( base_size = 24) +
+                    ggplot2::theme( panel.grid.major.x  = ggplot2::element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
+                           panel.grid.major.y  = ggplot2::element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
+                           panel.grid.minor = ggplot2::element_blank() ,
                            legend.position = 'none',
-                           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
-                    theme(plot.title.position = "plot")
+                           axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1)) +
+                    ggplot2::theme(plot.title.position = "plot")
                  
                 return(p) #  print(p)
               } 
@@ -2939,11 +3155,11 @@ plot_correlation(datalist = datalist,
 #' @importFrom ggplot2 labs theme_minimal theme margin
 #' @importFrom likert likert
 #' 
-#'  
-#' 
-#' 
-#' 
 #' @export
+
+# prefixer::import_from(fun = plot_likert)
+
+
 
 plot_likert <- function(datalist = datalist,
                         dico = dico,
@@ -2963,10 +3179,7 @@ plot_likert <- function(datalist = datalist,
    ## Writing code instruction in report
     if( showcode == TRUE) {
       cat(paste0( 
-         " `plot_likert(datalist = datalist, dico = dico,  scopei =  \"", 
-         scopei, "\",   list_namei =  \"", 
-         list_namei, "\",  repeatvari =  \"", 
-         repeatvari, "\")` \n\n "))} else {}
+   "`plot_likert(datalist, dico, scopei=\"",scopei, "\", list_namei=\"", list_namei, "\", repeatvari=\"", repeatvari, "\",datasource=params$datasource)` \n\n "))} else {}
              
    labelgroup <- as.data.frame(dico[["variables"]]) |>
             dplyr::filter( name  %in%  c(scopei)) |>
@@ -2977,7 +3190,7 @@ plot_likert <- function(datalist = datalist,
             dplyr::filter( list_name ==   list_namei) |>
             dplyr::select( name, label)  |>
             dplyr::distinct() 
-    labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
+    labelrecode <- stats::setNames(as.character(nlevel_likert$label), nlevel_likert$name)
           
     ##  Subsetting data - checking levels - and applying label
     var <- as.data.frame(dico[["variables"]]) |>
@@ -2992,16 +3205,16 @@ plot_likert <- function(datalist = datalist,
             ## select only likert variable
             dplyr::select ( tidyselect::any_of( c(var$name)) ) |>
             ## Ensure they all have the same levels as factor
-            mutate_all(funs(factor(., levels =c(nlevel_likert$name ))))  |>
+            dplyr::mutate_all(dplyr::funs(factor(., levels =c(nlevel_likert$name ))))  |>
             ## Recode variable with the label
-            mutate_all(funs(dplyr::recode(., !!!labelrecode)))  |>
+            dplyr::mutate_all(dplyr::funs(dplyr::recode(., !!!labelrecode)))  |>
             #mutate_all(dplyr::recode( !!!labelrecode)) |>
             ## convert to dataframe to ensure likert() works
             as.data.frame() |> 
             ## remove potential var used for appearance 'label'
             dplyr::select_if(~!all(is.na(.))) |>
             ## Remove records where all na
-            dplyr::filter(if_any(everything(), ~ !is.na(.)))
+            dplyr::filter(dplyr::if_any(dplyr::everything(), ~ !is.na(.)))
     
     
      
@@ -3026,12 +3239,12 @@ plot_likert <- function(datalist = datalist,
         a <- plot(likertframe.obj,
                   #center = 2,
                   wrap= 70) +
-          labs(title = labelgroup, 
-               caption = glue::glue("Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records. \n Source: {datasource}"))+
+          ggplot2::labs(title = labelgroup, 
+               caption = glue::glue("Response rate = {scales::label_percent(accuracy = .01)(rr)}, {nrow(likertframe)} on a total of {nrow(data)} records. \n Source: {datasource}"))+
           # guides(fill=guide_legend(title=NULL),    color=guide_legend(nrow=2, byrow=TRUE))  +
           #unhcrthemes::theme_unhcr(grid="X") +
-          theme_minimal( base_size = 22) +
-          theme( #plot.title=element_text(size=32, face="bold", color="black"), 
+          ggplot2::theme_minimal( base_size = 22) +
+          ggplot2::theme( #plot.title=element_text(size=32, face="bold", color="black"), 
                  #plot.subtitle=element_text(size=19, face="italic", color="black"), 
                 #text = element_text(size=22, color = "#333333"), 
                 #legend.position="right",legend.direction="vertical"), legend.margin=margin()
@@ -3040,10 +3253,10 @@ plot_likert <- function(datalist = datalist,
         
         ## Extract the legend to put it fully belwo the main chart
         p1_legend <- cowplot::get_legend(a + 
-                                  theme(legend.position="bottom", legend.box="vertical", legend.margin=margin(t = 0, unit='cm')) )
+                                  ggplot2::theme(legend.position="bottom", legend.box="vertical", legend.margin=ggplot2::margin(t = 0, unit='cm')) )
         
         #cowplot::ggdraw(p1_legend)
-        p <-  cowplot::plot_grid(a +  theme(legend.position = 'none'), 
+        p <-  cowplot::plot_grid(a +  ggplot2::theme(legend.position = 'none'), 
                                   p1_legend ,
                                   nrow = 2, 
                                   rel_heights = c(1, 0.1))
@@ -3110,6 +3323,10 @@ plot_likert(datalist = datalistlikert,
 #' @return text formatted as markdown
 #' 
 #' @export
+
+# prefixer::import_from(fun = plot_header)
+
+
 
 plot_header <- function(dico = dico,
                             var) {
@@ -3213,6 +3430,10 @@ test_that("plot_header works", {
 #' @param n_by if not NULL, lumps all levels for the cross tabulation variable except for the n_by most frequent (or least frequent if n < 0) - cf
 #'            forcats::fct_lump_n()
 #' @export
+
+# prefixer::import_from(fun = kobo_cruncher)
+
+
  
 kobo_cruncher <- function(datalist = datalist, 
                           datasource = NULL,
@@ -3336,6 +3557,9 @@ kobo_cruncher <- function(datalist = datalist,
   }
 }
 
+
+
+
 ```
 
 ```{r examples-kobo_cruncher}
@@ -3350,6 +3574,16 @@ kobo_cruncher(datalist = datalist,
 ```
 
 ```{r tests-kobo_cruncher}
+
+# Unit Test: 
+
+# context("Testing kobo_cruncher() function")
+# 
+# test_that("kobo_cruncher() produces the correct output", {
+#   expect_equal(class(kobo_cruncher()), "list")
+#   expect_equal(length(kobo_cruncher()), 5)
+# })
+
 # test_that("survey_label works", {
 # 
 # })
@@ -3364,6 +3598,10 @@ kobo_cruncher(datalist = datalist,
 #' @param dico path to the xlsform file used to colllect the data
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @export
+
+# prefixer::import_from(fun = kobo_likert)
+
+
  
 kobo_likert <- function(datalist = datalist, 
                           datasource = NULL,
@@ -3410,6 +3648,8 @@ kobo_likert <- function(datalist = datalist,
     }
 }
 
+
+
 ```
 
 ```{r examples-kobo_likert}
@@ -3424,6 +3664,29 @@ kobo_likert(datalist = datalistlikert,
 ```
 
 ```{r tests-kobo_likert}
+
+# ## Unit Test
+# context("kobo_likert()")
+# 
+# test_that("kobo_likert() runs without errors", {
+#   expect_error(kobo_likert())
+# })
+# 
+# test_that("kobo_likert() returns the correct number of groups", {
+#   expect_equal(nrow(grouplikert), kobo_likert())
+# })
+# 
+# test_that("kobo_likert() plots the correct likert questions", {
+#   expect_equal(plot_likert(datalist = datalist, 
+#                       datasource = datasource,
+#                       dico = dico,
+#                       scopei =  scopei,
+#                       repeatvari =  repeatvari,
+#                       list_namei = list_namei,
+#                       showcode = TRUE),
+#               kobo_likert())
+# })
+
 # test_that("survey_label works", {
 # 
 # })
@@ -3479,6 +3742,10 @@ kobo_likert(datalist = datalistlikert,
 #' @return nothing all analysis files are added as a resources
 #'
 #' @export
+
+# prefixer::import_from(fun = kobo_ridl)
+
+
 
 kobo_ridl <- function(ridl,
                       datafolder,
@@ -3699,6 +3966,10 @@ kobo_ridl <- function(ridl,
   ## Once all of it done, let's the user know about it...
   return( cat(paste0("Congrat! The Notebook", name, " together with linked output and analysis plan have been published on RIDL")))
 }
+
+
+
+
 ```
   
 ```{r example-kobo_ridl}
@@ -3718,6 +3989,25 @@ kobo_ridl <- function(ridl,
 ```
   
 ```{r tests-kobo_ridl}
+
+
+# Unit test for kobo_ridl() using testthat
+# 
+# context("kobo_ridl()")
+# 
+# # Create mock objects to use in the test
+# ridl <- "testRidl"
+# datafolder <- "data"
+# form <- "form.xlsx"
+# namethisfile <- "testFile"
+# visibility <- "public"
+# stage <- "explo_initial"
+# 
+# # Create test for function
+# test_that("kobo_ridl() creates the right resources", {
+#   expect_true(kobo_ridl(ridl, datafolder, form, namethisfile, visibility, stage))
+# })
+
 # test_that("kobo_ridl works", {   expect_true(inherits(kobo_ridl, "function")) })
 ```
   
@@ -3762,6 +4052,10 @@ kobo_ridl <- function(ridl,
 #' @return nothing the file for the report is generated
 #' 
 #' @export 
+
+# prefixer::import_from(fun = template_1_exploration)
+
+
 #'
 template_1_exploration <- function(datafolder= "data-raw",
                                    ridl =  "ridlproject",
@@ -3920,7 +4214,7 @@ app_kobocruncher <- function(maxRequestSize=50,
                         ..., 
                         shiny.server = FALSE) {
   if(!shiny.server)
-    runApp(app_kobocruncher(maxRequestSize, debug, theme, ..., shiny.server = TRUE))
+    shiny::runApp(app_kobocruncher(maxRequestSize, debug, ggplot2::theme, ..., shiny.server = TRUE))
   
   if (!is.numeric(maxRequestSize)) {
     stop("argument 'maxRequestSize' must be numeric!\n")
@@ -3941,39 +4235,39 @@ app_kobocruncher <- function(maxRequestSize=50,
   options(shiny.trace=debug)
 
   #.GlobalEnv$.startdir <- getwd()
-  shinyOptions(.startdir = getwd())
-  shinyOptions(.appDir = appDir)
+  shiny::shinyOptions(.startdir = getwd())
+  shiny::shinyOptions(.appDir = appDir)
 
-  if (!theme %in% c("yeti","journal","flatly", "IHSN")) {
+  if (! theme %in% c("yeti","journal","flatly", "IHSN")) {
     stop("Invalid value for argument 'theme'\n")
   }
 
   if (theme=="yeti") {
-    shinyOptions(.guitheme = "bootswatch_yeti.css")
-    shinyOptions(.guijsfile = NULL)
+    shiny::shinyOptions(.guitheme = "bootswatch_yeti.css")
+    shiny::shinyOptions(.guijsfile = NULL)
   }
 
   if (theme=="journal") {
-    shinyOptions(.guitheme = "bootswatch_journal.css")
-    shinyOptions(.guijsfile = NULL)
+    shiny::shinyOptions(.guitheme = "bootswatch_journal.css")
+    shiny::shinyOptions(.guijsfile = NULL)
   }
   if (theme=="flatly") {
-    shinyOptions(.guitheme = "bootswatch_flatly.css")
-    shinyOptions(.guijsfile = NULL)
+    shiny::shinyOptions(.guitheme = "bootswatch_flatly.css")
+    shiny::shinyOptions(.guijsfile = NULL)
   }
 
   if (theme=="IHSN") {
-    shinyOptions(.guitheme = "ihsn-root.css")
-    shinyOptions(.guijsfile = "js/ihsn-style.js")
+    shiny::shinyOptions(.guitheme = "ihsn-root.css")
+    shiny::shinyOptions(.guijsfile = "js/ihsn-style.js")
   }
   
   source_from_appdir <- function(filename){
     source(file.path(appDir, filename), local = parent.frame(), chdir = TRUE)$value
   }
   
-  shinyOptions(kobocruncherAppInvoked = TRUE)
+  shiny::shinyOptions(kobocruncherAppInvoked = TRUE)
   source_from_appdir("global.R")
-  shinyOptions(kobocruncherAppInvoked = NULL)
+  shiny::shinyOptions(kobocruncherAppInvoked = NULL)
 
   shiny::shinyApp(
     ui = source_from_appdir("ui.R"),

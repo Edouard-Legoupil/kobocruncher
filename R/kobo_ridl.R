@@ -47,6 +47,10 @@
 #'
 #' @export
 
+# prefixer::import_from(fun = kobo_ridl)
+
+
+
 #' @examples
 #' 
 #' ### Example used for each template 
@@ -280,3 +284,7 @@ kobo_ridl <- function(ridl,
   ## Once all of it done, let's the user know about it...
   return( cat(paste0("Congrat! The Notebook", name, " together with linked output and analysis plan have been published on RIDL")))
 }
+
+
+
+

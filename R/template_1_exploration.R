@@ -34,6 +34,10 @@
 #' @return nothing the file for the report is generated
 #' 
 #' @export 
+
+# prefixer::import_from(fun = template_1_exploration)
+
+
 #'
 #' @examples
 #' # template_1_exploration(datafolder= "data-raw",

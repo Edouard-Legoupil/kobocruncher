@@ -18,11 +18,11 @@
 #' @importFrom ggplot2 labs theme_minimal theme margin
 #' @importFrom likert likert
 #' 
-#'  
-#' 
-#' 
-#' 
 #' @export
+
+# prefixer::import_from(fun = plot_likert)
+
+
 
 #' @examples
 #' dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package = "kobocruncher") )
@@ -54,10 +54,7 @@ plot_likert <- function(datalist = datalist,
    ## Writing code instruction in report
     if( showcode == TRUE) {
       cat(paste0( 
-         " `plot_likert(datalist = datalist, dico = dico,  scopei =  \"", 
-         scopei, "\",   list_namei =  \"", 
-         list_namei, "\",  repeatvari =  \"", 
-         repeatvari, "\")` \n\n "))} else {}
+   "`plot_likert(datalist, dico, scopei=\"",scopei, "\", list_namei=\"", list_namei, "\", repeatvari=\"", repeatvari, "\",datasource=params$datasource)` \n\n "))} else {}
              
    labelgroup <- as.data.frame(dico[["variables"]]) |>
             dplyr::filter( name  %in%  c(scopei)) |>
@@ -68,7 +65,7 @@ plot_likert <- function(datalist = datalist,
             dplyr::filter( list_name ==   list_namei) |>
             dplyr::select( name, label)  |>
             dplyr::distinct() 
-    labelrecode <- setNames(as.character(nlevel_likert$label), nlevel_likert$name)
+    labelrecode <- stats::setNames(as.character(nlevel_likert$label), nlevel_likert$name)
           
     ##  Subsetting data - checking levels - and applying label
     var <- as.data.frame(dico[["variables"]]) |>
@@ -83,16 +80,16 @@ plot_likert <- function(datalist = datalist,
             ## select only likert variable
             dplyr::select ( tidyselect::any_of( c(var$name)) ) |>
             ## Ensure they all have the same levels as factor
-            mutate_all(funs(factor(., levels =c(nlevel_likert$name ))))  |>
+            dplyr::mutate_all(dplyr::funs(factor(., levels =c(nlevel_likert$name ))))  |>
             ## Recode variable with the label
-            mutate_all(funs(dplyr::recode(., !!!labelrecode)))  |>
+            dplyr::mutate_all(dplyr::funs(dplyr::recode(., !!!labelrecode)))  |>
             #mutate_all(dplyr::recode( !!!labelrecode)) |>
             ## convert to dataframe to ensure likert() works
             as.data.frame() |> 
             ## remove potential var used for appearance 'label'
             dplyr::select_if(~!all(is.na(.))) |>
             ## Remove records where all na
-            dplyr::filter(if_any(everything(), ~ !is.na(.)))
+            dplyr::filter(dplyr::if_any(dplyr::everything(), ~ !is.na(.)))
     
     
      
@@ -117,12 +114,12 @@ plot_likert <- function(datalist = datalist,
         a <- plot(likertframe.obj,
                   #center = 2,
                   wrap= 70) +
-          labs(title = labelgroup, 
-               caption = glue::glue("Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records. \n Source: {datasource}"))+
+          ggplot2::labs(title = labelgroup, 
+               caption = glue::glue("Response rate = {scales::label_percent(accuracy = .01)(rr)}, {nrow(likertframe)} on a total of {nrow(data)} records. \n Source: {datasource}"))+
           # guides(fill=guide_legend(title=NULL),    color=guide_legend(nrow=2, byrow=TRUE))  +
           #unhcrthemes::theme_unhcr(grid="X") +
-          theme_minimal( base_size = 22) +
-          theme( #plot.title=element_text(size=32, face="bold", color="black"), 
+          ggplot2::theme_minimal( base_size = 22) +
+          ggplot2::theme( #plot.title=element_text(size=32, face="bold", color="black"), 
                  #plot.subtitle=element_text(size=19, face="italic", color="black"), 
                 #text = element_text(size=22, color = "#333333"), 
                 #legend.position="right",legend.direction="vertical"), legend.margin=margin()
@@ -131,10 +128,10 @@ plot_likert <- function(datalist = datalist,
         
         ## Extract the legend to put it fully belwo the main chart
         p1_legend <- cowplot::get_legend(a + 
-                                  theme(legend.position="bottom", legend.box="vertical", legend.margin=margin(t = 0, unit='cm')) )
+                                  ggplot2::theme(legend.position="bottom", legend.box="vertical", legend.margin=ggplot2::margin(t = 0, unit='cm')) )
         
         #cowplot::ggdraw(p1_legend)
-        p <-  cowplot::plot_grid(a +  theme(legend.position = 'none'), 
+        p <-  cowplot::plot_grid(a +  ggplot2::theme(legend.position = 'none'), 
                                   p1_legend ,
                                   nrow = 2, 
                                   rel_heights = c(1, 0.1))

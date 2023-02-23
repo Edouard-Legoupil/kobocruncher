@@ -5,6 +5,9 @@
 #' @param x character with the variable name
 #' @export
 
+# prefixer::import_from(fun = kobo_dico)
+
+
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' 
@@ -16,4 +19,7 @@ label_varname <- function(dico, x) {
     dplyr::filter(name == x) |>
     dplyr::pull(label)
 }
+
+
+
 

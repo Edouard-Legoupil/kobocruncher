@@ -6,6 +6,10 @@
 #' @param dico path to the xlsform file used to colllect the data
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @export
+
+# prefixer::import_from(fun = kobo_likert)
+
+
  
 #' @examples
 #' dicolikert <- kobo_dico( xlsformpath = system.file("form_likert.xlsx", package = "kobocruncher") )
@@ -60,4 +64,6 @@ kobo_likert <- function(datalist = datalist,
         }
     }
 }
+
+
 

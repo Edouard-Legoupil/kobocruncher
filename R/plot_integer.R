@@ -10,7 +10,8 @@
 #' @importFrom   ggplot2 theme element_line element_blank element_text aes labs
 #'             theme_minimal geom_hline
 #' @importFrom datawizard skewness kurtosis
-#' @importFrom stats IQR             
+#' @importFrom stats IQR   
+# prefixer::import_from(fun = kobo_dico)          
 #' 
 #' @export
 
@@ -54,15 +55,12 @@ plot_integer <- function(datalist = datalist,
       if( showcode == TRUE) {
         cat(paste0(label_varname(dico = dico,
                                                    x = var), "\n",
-                                      "  `plot_integer(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       datasource = params$datasource)` \n\n "))  }   else {}  
+    "`plot_integer(datalist, dico, \"", var, "\", datasource=params$datasource)` \n\n "))  }   else {}  
     
     
      info <- paste0("Mean: ", round(mean(data[[var]]),2) ,
-                    ", Standard Deviation: ",round(sd(data[[var]]),2) ,
-                    ", Coefficient of Variation: ",round( sd(data[[var]]) / mean(data[[var]]) * 100 ,2) ,
+                    ", Standard Deviation: ",round(stats::sd(data[[var]]),2) ,
+                    ", Coefficient of Variation: ",round( stats::sd(data[[var]]) / mean(data[[var]]) * 100 ,2) ,
                     ", Skewness: ",round(datawizard::skewness(data[[var]]),2) ,
                     " and Kurtosis: ",round(datawizard::kurtosis(data[[var]]),2), ".")
      ## Detect potential outliers based on Interquartile Range
@@ -74,24 +72,24 @@ plot_integer <- function(datalist = datalist,
     
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
-      ggplot2::geom_histogram(aes( x= .data[[var]]), 
+      ggplot2::geom_histogram(ggplot2::aes( x= .data[[var]]), 
                     # bins = nclass.FD(na.omit(data[[var]])),
                      fill = "#0072BC", 
                      color = "white" 
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
-      labs(x = NULL, y = NULL,
+      ggplot2::labs(x = NULL, y = NULL,
            title = stringr::str_wrap(label_varname(dico = dico, x = var), 90), 
            subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
                      stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
-           caption = stringr::str_wrap(glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource} - {info} - {infoIQR}")), 100) +
+           caption = stringr::str_wrap(glue::glue("Numeric, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource} - {info} - {infoIQR}")), 100) +
   
-      theme_minimal( base_size = 24) +
+      ggplot2::theme_minimal( base_size = 24) +
      # geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
-      theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
-           panel.grid.major.x  = element_blank(), 
-           panel.grid.minor = element_blank()    ) +
-           theme(plot.title.position = "plot")
+      ggplot2::theme( panel.grid.major.y  = ggplot2::element_line(color = "#cbcbcb"), 
+           panel.grid.major.x  = ggplot2::element_blank(), 
+           panel.grid.minor = ggplot2::element_blank()    ) +
+           ggplot2::theme(plot.title.position = "plot")
     
    return(p) #  print(p)
     
@@ -103,4 +101,6 @@ plot_integer <- function(datalist = datalist,
   # cat("\n\n")
   }
 }
+
+
 

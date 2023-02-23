@@ -36,8 +36,21 @@
 #' @param ridl If available, it will prefill the RIDL info through what was already recorded there
 #' 
 #' @importFrom tidyselect where
+#' @importFrom dplyr select pull mutate if_else filter transmute case_when left_join
+#' @importFrom jsonlite fromJSON
+#' @importFrom openxlsx createStyle createWorkbook addWorksheet writeData setColWidths addStyle saveWorkbook
+#' @importFrom purrr accumulate2 map_chr map
+#' @importFrom readxl read_excel excel_sheets
+#' @importFrom stringr str_c str_detect
+#' @importFrom tidyr unnest
+#' @importFrom utils tail head
 #'
 #' @export 
+#' 
+#' 
+
+# prefixer::import_from(fun = kobo_prepare_form)
+
 #' @examples
 #' # kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
 #' #                   xlsformpathout = "form_with_plan.xlsx",

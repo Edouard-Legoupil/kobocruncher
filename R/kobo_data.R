@@ -6,7 +6,9 @@
 #' @return A "datalist" S3 class object (list) formatted to the specifications of "kobocruncher".
 #'  
 #' @export
-
+#' @importFrom readxl excel_sheets read_excel
+# prefixer::import_from(fun = kobo_data)
+  
 #' @examples
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
 #' # MainFrame
@@ -41,4 +43,5 @@ kobo_data <- function(datapath) {
     class(datalist) <- "datalist" # assigns a "datalist" class to the list. Helpful for later on.
     return(datalist)
 }
+
 

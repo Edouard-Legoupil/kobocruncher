@@ -16,6 +16,10 @@
 #' 
 #' @export
 
+# prefixer::import_from(fun = plot_correlation)
+
+
+
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
@@ -49,7 +53,7 @@ plot_correlation <- function(datalist = datalist,
        #  cat(paste0("The two variables: ",var , " &  ", by_var ," are not in the same data frame \n"))
     } else  {
          formula <- frame1 |>
-                  dplyr::select( all_of(var), all_of(by_var)) 
+                  dplyr::select( dplyr::all_of(var), dplyr::all_of(by_var)) 
          names(formula)[1] <- "target"
          names(formula)[2] <- "tested"
     
@@ -85,7 +89,7 @@ plot_correlation <- function(datalist = datalist,
             ## Writing code instruction in report
             if( showcode == TRUE) {
               cat(paste0("\n ", label_varname(dico = dico, x = var), "\n", 
-                         " `plot_correlation(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\")` \n\n "))} else {}
+           " `plot_correlation(datalist = datalist, dico = dico, \"", var, "\",\"", by_var, "\",datasource=params$datasource)` \n\n "))} else {}
               
 
 
@@ -109,7 +113,7 @@ plot_correlation <- function(datalist = datalist,
                       ggplot2::aes_string(size = "intense")
                     ) +
                 
-                    ggplot2::geom_text(aes(label = round(Freq),3), 
+                    ggplot2::geom_text(ggplot2::aes(label = round(Freq),3), 
                               colour = "white", 
                               size = 3)    +
                     #ggplot2::scale_size(range = c(mincor, maxcor)) +
@@ -124,13 +128,13 @@ plot_correlation <- function(datalist = datalist,
                                                        label_varname(dico = dico, x = by_var), "[col]" ), 100),
                       subtitle = stringr::str_wrap(paste0("(p:",p.value,"). Correlogram Interpretation hint: the size of the dots indicates the strenght of association, the color indicates its type (positive/attraction=blue, negative/repulsion= red) "), 110),
                       caption = glue::glue("Source: {datasource}")) +
-                    theme_minimal( base_size = 24) +
-                    theme( panel.grid.major.x  = element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
-                           panel.grid.major.y  = element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
-                           panel.grid.minor = element_blank() ,
+                    ggplot2::theme_minimal( base_size = 24) +
+                    ggplot2::theme( panel.grid.major.x  = ggplot2::element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
+                           panel.grid.major.y  = ggplot2::element_line(color = "#cbcbcb", size =0.3, linetype = "dotted"), #element_blank(),
+                           panel.grid.minor = ggplot2::element_blank() ,
                            legend.position = 'none',
-                           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
-                    theme(plot.title.position = "plot")
+                           axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1)) +
+                    ggplot2::theme(plot.title.position = "plot")
                  
                 return(p) #  print(p)
               } 

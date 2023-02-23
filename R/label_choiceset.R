@@ -8,6 +8,9 @@
 #' @param x variable
 #' @export
 
+# prefixer::import_from(fun = kobo_dico)
+
+
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
@@ -44,4 +47,6 @@ label_choiceset <- function(dico,
   function(y) { ifelse(is.na(dict[y]), y, dict[y]) }
 
 }
+
+
 

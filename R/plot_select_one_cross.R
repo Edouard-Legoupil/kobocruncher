@@ -22,6 +22,10 @@
 #' @importFrom data.table :=  
 #' @export
 
+# prefixer::import_from(fun = plot_select_one_cross)
+
+
+
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
@@ -130,13 +134,13 @@ plot_select_one_cross <- function(datalist = datalist,
               dplyr::mutate(p = n/nr) |>
               # Lump together factor levels into "other"
               dplyr::mutate(
-                x = as.character(forcats::fct_lump_n(factor(.data[[var]]), 
+                x = as.character(forcats::fct_lump_n( as.factor(.data[[var]]), 
                                          n = n1,
                                          w = p,
                                          other_level = paste0("Other ",
                                     nlevels( as.factor(data[[var]]))-n1,
                                     " response options automatically lumped")) ),
-                y = as.character(forcats::fct_lump_n(factor(.data[[by_var]]), 
+                y = as.character(forcats::fct_lump_n( as.factor(.data[[by_var]]), 
                                          n = n_by1,
                                          w = p,
                                          other_level = paste0("Other ",
@@ -161,47 +165,41 @@ plot_select_one_cross <- function(datalist = datalist,
           ## Writing code instruction in report
           if (showcode == TRUE) {
             cat( paste0( label_varname(dico = dico, x = var),  "\n",
-                "  `plot_select_one_cross(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       by_var = \"", by_var, "\",
-                       datasource = params$datasource,
-                       n = ", n1, ",
-                       n_by = ",n_by1, " )` \n\n "))  }   else {} 
+       "`plot_select_one_cross(datalist, dico, var=\"", var, "\", by_var=\"", by_var, "\",datasource=params$datasource, n=", n1, ",n_by=",n_by1, " )` \n\n "))  }   else {} 
              
             
             ## plot
             require(ggplot2)
-            p <- ggplot2::ggplot(cnts, aes(x = pcum,  y = x)) +
-              geom_col(fill = "#0072BC") +
-              geom_label(
+            p <- ggplot2::ggplot(cnts, ggplot2::aes(x = pcum,  y = x)) +
+              ggplot2::geom_col(fill = "#0072BC") +
+              ggplot2::geom_label(
                 data =   function(x)  subset(x, pcum < max(pcum) / 1.5),
-                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+                ggplot2::aes(label = scales::label_percent(accuracy = .01)(pcum)),
                 hjust = -0.1 , vjust = 0.5,
                 colour = "black", fill = NA,
                 label.size = NA, size = 5 ) +
-              geom_label( data =   function(x)subset(x, pcum >= max(pcum) / 1.5),
-                aes(label = scales::label_percent(accuracy = .01)(pcum)),
+              ggplot2::geom_label( data =   function(x)subset(x, pcum >= max(pcum) / 1.5),
+                ggplot2::aes(label = scales::label_percent(accuracy = .01)(pcum)),
                 hjust = 1.1 ,  vjust = 0.5,
                 colour = "white", fill = NA,
                 label.size = NA,  size = 5  ) +
-              scale_x_continuous(labels = scales::label_percent()) +
-              facet_wrap(~ y1 , nrow = 3 # ,
+              ggplot2::scale_x_continuous(labels = scales::label_percent()) +
+              ggplot2::facet_wrap(~ y1 , nrow = 3 # ,
                          # labeller = #glue::glue('{
                          #   as_labeller(function(x)
                          #   label_choiceset(dico = dico,
                          #                   x = by_var)(x) ) 
                          # #  } ')
                          ) +
-              scale_y_discrete(
+              ggplot2::scale_y_discrete(
                 labels = function(x) {
                   label_choiceset(dico = dico,
                                   x = var)(x) |>
                     stringr::str_wrap(40)
                 }
               ) +
-              coord_cartesian(clip = "off") +
-              labs(
+              ggplot2::coord_cartesian(clip = "off") +
+              ggplot2::labs(
                 x = NULL,
                 y = NULL,
                 title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
@@ -209,19 +207,19 @@ plot_select_one_cross <- function(datalist = datalist,
                   "Crossed by ", label_varname(dico = dico, x = by_var)
                 ), 90),
                 caption = glue::glue(
-                  "Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
+                  "Single choice, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}"
                 )
               ) +
-              theme_minimal(base_size = 24) +
-              geom_vline(xintercept = 0,
+              ggplot2::theme_minimal(base_size = 24) +
+              ggplot2::geom_vline(xintercept = 0,
                          size = 1.1,
                          colour = "#333333") +
-              theme(
-                panel.grid.major.x  = element_line(color = "#cbcbcb"),
-                panel.grid.major.y  = element_blank(),
-                panel.grid.minor = element_blank()
+              ggplot2::theme(
+                panel.grid.major.x  = ggplot2::element_line(color = "#cbcbcb"),
+                panel.grid.major.y  = ggplot2::element_blank(),
+                panel.grid.minor = ggplot2::element_blank()
               ) +
-              theme(plot.title.position = "plot")
+              ggplot2::theme(plot.title.position = "plot")
             
             return(p) #  print(p)
           }
@@ -238,4 +236,7 @@ plot_select_one_cross <- function(datalist = datalist,
     # cat("\n\n")
   }
 }
+
+
+
 

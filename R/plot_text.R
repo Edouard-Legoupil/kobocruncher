@@ -7,17 +7,20 @@
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' 
-#' @importFrom tm tm_map Corpus content_transformer
+#' 
+#' @importFrom glue glue
+#' @importFrom scales label_percent
+#' @importFrom stringr str_wrap
+#' @importFrom tm content_transformer Corpus VectorSource tm_map removeNumbers removePunctuation stripWhitespace stemDocument removeWords stopwords TermDocumentMatrix  tm_map Corpus content_transformer
 #'              TermDocumentMatrix stopwords
-#'                
-#' @importFrom ggwordcloud geom_text_wordcloud
-#' 
-#' @importFrom ggplot2 labs theme_minimal
-#' 
+#' @importFrom ggwordcloud geom_text_wordcloud  
+#' @importFrom ggplot2 labs theme_minimal aes scale_size_area scale_color_gradient labs theme_minimal
 #' @importFrom SnowballC wordStem
 #' 
 #' 
 #' @export
+#' 
+# prefixer::import_from(fun = plot_text)
 
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -68,22 +71,22 @@ plot_text <- function(datalist = datalist,
             tm::tm_map(., toSpace, "@")  %>%
             tm::tm_map(., toSpace, "\\|")  %>%
             # Convert the text to lower case
-            tm::tm_map(., content_transformer(tolower))  %>%
+            tm::tm_map(., tm::content_transformer(tolower))  %>%
             # Remove numbers
-            tm::tm_map(., removeNumbers)  %>%
+            tm::tm_map(., tm::removeNumbers)  %>%
             # Remove punctuations
-            tm::tm_map(.,  removePunctuation)  %>%
+            tm::tm_map(.,  tm::removePunctuation)  %>%
             # Eliminate extra white spaces
-            tm::tm_map(.,  stripWhitespace)  %>%
+            tm::tm_map(.,  tm::stripWhitespace)  %>%
             # Text stemming - reduces words to their root form.
-            tm::tm_map(.,  stemDocument)  %>%
+            tm::tm_map(.,  tm::stemDocument)  %>%
             # Remove common stopwords depending on language
             # The information value of ‘stopwords’ is near zero due to the fact that they 
             # are so common in a language. Removing this kind of words is useful before
             # further analyses. 
-            tm::tm_map(., removeWords, stopwords("english"))  %>%
+            tm::tm_map(., tm::removeWords, tm::stopwords("english"))  %>%
             # Remove your own stop word
-            tm::tm_map(., removeWords, c("blabla1", "blabla2")) 
+            tm::tm_map(., tm::removeWords, c("blabla1", "blabla2")) 
   
     # Step 4 : Build a term-document matrix ####
     # Table containing the frequency of the words. Column names are words and row names are documents. 
@@ -100,10 +103,7 @@ plot_text <- function(datalist = datalist,
         if( showcode == TRUE) {
           cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
-                                      "  `plot_text(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       datasource = params$datasource)` \n\n "))  }   else {} 
+    " `plot_text(datalist, dico, \"", var, "\", datasource=params$datasource)` \n\n "))  }   else {} 
       
       # Step 5 : Generate the Word cloud  ####
       #The importance of words can be illustrated as a word cloud as follow :
@@ -134,13 +134,13 @@ plot_text <- function(datalist = datalist,
             ggplot2::scale_size_area(max_size = 50) +
             # scale_radius(range = c(0, 10),  limits = c(0, NA)) +
             ggplot2::scale_color_gradient(low = "darkred", high = "red") +
-            labs(x = NULL, y = NULL,
+            ggplot2::labs(x = NULL, y = NULL,
                  title = stringr::str_wrap(label_varname(dico = dico, x = var), 90), 
                  subtitle = if (!is.na(label_varhint(dico = dico, x = var))){ 
                      stringr::str_wrap(label_varhint(dico = dico, x = var), 90)} else { ""},
-                 caption = glue::glue("Wordcloud displaying an Open Text question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
+                 caption = glue::glue("Wordcloud displaying an Open Text, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records")) +
 
-            theme_minimal( base_size = 24)
+            ggplot2::theme_minimal( base_size = 24)
       return(p1)
       
     
@@ -152,4 +152,7 @@ plot_text <- function(datalist = datalist,
   # cat("\n\n")
   }
 }
+
+
+
 

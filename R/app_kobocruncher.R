@@ -35,7 +35,7 @@ app_kobocruncher <- function(maxRequestSize=50,
                         ..., 
                         shiny.server = FALSE) {
   if(!shiny.server)
-    runApp(app_kobocruncher(maxRequestSize, debug, theme, ..., shiny.server = TRUE))
+    shiny::runApp(app_kobocruncher(maxRequestSize, debug, ggplot2::theme, ..., shiny.server = TRUE))
   
   if (!is.numeric(maxRequestSize)) {
     stop("argument 'maxRequestSize' must be numeric!\n")
@@ -56,39 +56,39 @@ app_kobocruncher <- function(maxRequestSize=50,
   options(shiny.trace=debug)
 
   #.GlobalEnv$.startdir <- getwd()
-  shinyOptions(.startdir = getwd())
-  shinyOptions(.appDir = appDir)
+  shiny::shinyOptions(.startdir = getwd())
+  shiny::shinyOptions(.appDir = appDir)
 
-  if (!theme %in% c("yeti","journal","flatly", "IHSN")) {
+  if (! theme %in% c("yeti","journal","flatly", "IHSN")) {
     stop("Invalid value for argument 'theme'\n")
   }
 
   if (theme=="yeti") {
-    shinyOptions(.guitheme = "bootswatch_yeti.css")
-    shinyOptions(.guijsfile = NULL)
+    shiny::shinyOptions(.guitheme = "bootswatch_yeti.css")
+    shiny::shinyOptions(.guijsfile = NULL)
   }
 
   if (theme=="journal") {
-    shinyOptions(.guitheme = "bootswatch_journal.css")
-    shinyOptions(.guijsfile = NULL)
+    shiny::shinyOptions(.guitheme = "bootswatch_journal.css")
+    shiny::shinyOptions(.guijsfile = NULL)
   }
   if (theme=="flatly") {
-    shinyOptions(.guitheme = "bootswatch_flatly.css")
-    shinyOptions(.guijsfile = NULL)
+    shiny::shinyOptions(.guitheme = "bootswatch_flatly.css")
+    shiny::shinyOptions(.guijsfile = NULL)
   }
 
   if (theme=="IHSN") {
-    shinyOptions(.guitheme = "ihsn-root.css")
-    shinyOptions(.guijsfile = "js/ihsn-style.js")
+    shiny::shinyOptions(.guitheme = "ihsn-root.css")
+    shiny::shinyOptions(.guijsfile = "js/ihsn-style.js")
   }
   
   source_from_appdir <- function(filename){
     source(file.path(appDir, filename), local = parent.frame(), chdir = TRUE)$value
   }
   
-  shinyOptions(kobocruncherAppInvoked = TRUE)
+  shiny::shinyOptions(kobocruncherAppInvoked = TRUE)
   source_from_appdir("global.R")
-  shinyOptions(kobocruncherAppInvoked = NULL)
+  shiny::shinyOptions(kobocruncherAppInvoked = NULL)
 
   shiny::shinyApp(
     ui = source_from_appdir("ui.R"),

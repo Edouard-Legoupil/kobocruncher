@@ -152,7 +152,7 @@ indicator <- indicator[ ,c("type","name","label", "list_name", "hint",
                                "repeatvar", "calculation",
                                "chapter","subchapter", "disaggregation", "correlate",
                                "cluster", "predict", "score", "mappoint", "mappoly")] %>%
-            dplyr::mutate(across(tidyselect::everything(), as.character))
+            dplyr::mutate(dplyr::across(tidyselect::everything(), as.character))
     
   #   2 - append the one from inidicatoradd if any---->
   if( ! (is.null(indicatoradd) )) {

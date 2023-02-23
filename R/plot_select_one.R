@@ -14,6 +14,7 @@
 #' @importFrom data.table := 
 #' 
 #' @export
+# prefixer::import_from(fun = kobo_dico)
 
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -66,9 +67,11 @@ plot_select_one <- function(datalist  ,
   ## Put a condition in case there's no record
   if (rr != 0  & ! (is.nan(rr)) ) {
     
-    
+  
+  ## Count number of levels   
+  nlev <-  nlevels( as.factor(data[[var]]) )  
   ## Set the value for n if not set up -
-  if( is.null(n)) { n1 = nlevels( as.factor(data[[var]]) )} else { n1 = n}
+  if( is.null(n)) { n1 = nlev } else { n1 = n}
   
   cnts <- data |>
     tidyr::drop_na(tidyselect::all_of(var)) |>
@@ -77,7 +80,7 @@ plot_select_one <- function(datalist  ,
     dplyr::count(x := .data[[var]]) |>
     dplyr::mutate(p = n/nr) |>
     # Lump together factor levels into "other"
-    dplyr::mutate(x = forcats::fct_lump_n( x,    
+    dplyr::mutate(x = forcats::fct_lump_n( as.factor(x),    
                                          n = as.integer(n1),
                                          w = p,
                      other_level = paste0("Other ",
@@ -114,51 +117,47 @@ plot_select_one <- function(datalist  ,
   if( showcode == TRUE) { cat(paste0("\n", label_varname(dico = dico,
                                                    x = var), "\n",
                                       
-     "`plot_select_one(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       datasource = params$datasource,
-                       n = ",n1, ")` \n\n ")) }  else {}
+     "`plot_select_one(datalist, dico, \"", var, "\", datasource = params$datasource, n = ",n1, ")` \n\n ")) }  else {}
   
     
     ## plot
     require(ggplot2)
-    p <- ggplot2::ggplot(cnts, aes(p, x)) +
-      geom_col(fill = "#0072BC") +
+    p <- ggplot2::ggplot(cnts, ggplot2::aes(p, x)) +
+      ggplot2::geom_col(fill = "#0072BC") +
       
       #geom_label(aes(label = scales::label_percent(accuracy = .01)(p))) +
       ## Position label differently in the bar in white - outside bar in black
-      geom_label( data =   function(x) subset(x, p < max(p) / 1.5),
-                  aes(label = scales::label_percent(accuracy = .01)(p)),
+      ggplot2::geom_label( data =   function(x) subset(x, p < max(p) / 1.5),
+                  ggplot2::aes(label = scales::label_percent(accuracy = .01)(p)),
                   hjust = -0.1 ,
                   vjust = 0.5,
                   colour = "black",
                   fill = NA,
                   label.size = NA,
                   size = 6   ) +
-      geom_label( data =   function(x) subset(x, p >= max(p) / 1.5),
-                  aes(label = scales::label_percent(accuracy = .01)(p)),
+      ggplot2::geom_label( data =   function(x) subset(x, p >= max(p) / 1.5),
+                  ggplot2::aes(label = scales::label_percent(accuracy = .01)(p)),
                   hjust = 1.1 ,
                   vjust = 0.5,
                   colour = "white",
                   fill = NA,
                   label.size = NA,
                   size = 6   ) +
-      scale_x_continuous(labels = scales::label_percent()) +
-      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico, x = var)(x) |>
+      ggplot2::scale_x_continuous(labels = scales::label_percent()) +
+      ggplot2::scale_y_discrete(labels = function(x) {label_choiceset(dico = dico, x = var)(x) |>
                       stringr::str_wrap(40)}) +
-      coord_cartesian(clip = "off") +
-      labs(x = NULL, y = NULL,
+      ggplot2::coord_cartesian(clip = "off") +
+      ggplot2::labs(x = NULL, y = NULL,
            title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
            subtitle = if (!is.na(label_varhint(dico = dico, x= var))){
                       stringr::str_wrap(label_varhint(dico = dico, x= var), 90)} else { ""},
-           caption = glue::glue("Single choice question, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records. \n Source: {datasource}")) +
-      theme_minimal( base_size = 24) +
-      geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
-      theme( panel.grid.major.x  = element_line(color = "#cbcbcb"),
-             panel.grid.major.y  = element_blank(),
-             panel.grid.minor = element_blank()    ) +
-      theme(plot.title.position = "plot")
+           caption = glue::glue("Single choice, Response rate = {scales::label_percent(accuracy = .01)(rr)}  on a total of {nrow(data)} records. \n Source: {datasource}")) +
+      ggplot2::theme_minimal( base_size = 24) +
+      ggplot2::geom_vline(xintercept = 0, size = 1.1, colour = "#333333") +
+      ggplot2::theme( panel.grid.major.x  = ggplot2::element_line(color = "#cbcbcb"),
+             panel.grid.major.y  = ggplot2::element_blank(),
+             panel.grid.minor = ggplot2::element_blank()    ) +
+      ggplot2::theme(plot.title.position = "plot")
     
    return(p) #  print(p)
     
@@ -170,4 +169,6 @@ plot_select_one <- function(datalist  ,
   # cat("\n\n")
   }
 }  
+
+
 

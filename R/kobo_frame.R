@@ -5,6 +5,7 @@
 #' @param dico An object of the "kobodico" class format as defined in kobocruncher
 #' @param var variable
 #' @export
+# prefixer::import_from(fun = kobo_dico)
 
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -57,4 +58,6 @@ kobo_frame <- function(datalist,
             return(data )
    # }      
 }
+
+
 

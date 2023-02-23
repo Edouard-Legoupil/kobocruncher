@@ -3,11 +3,19 @@
 #' @title Prepare Analysis plan
 #' @param xlsformpath path to the (extended) xlsform file used to collect the data
 #' 
-#' @importFrom tidyselect matches
-#' @importFrom purrr map_chr accumulate2
+#' @importFrom dplyr mutate filter rename first recode if_else matches distinct row_number arrange left_join bind_rows summarise group_by case_when select
+#' @importFrom purrr accumulate2 map_chr
+#' @importFrom readxl read_excel
+#' @importFrom stringr str_c
+#' @importFrom tidyr separate
+#' @importFrom tidyselect starts_with matches
+#' @importFrom utils tail head
 #' 
 #' @return A "kobodico" S3 class object (list) formatted to the specifications of "kobocruncher".
 #' @export
+
+
+# prefixer::import_from(fun = kobo_dico)
 
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
@@ -106,7 +114,7 @@ kobo_dico <- function(xlsformpath) {
      choices <- readxl::read_excel(xlsformpath,   sheet = "choices")  
     if ("order" %in% colnames( choices)) { } else {  choices$order <- NA   }
      modalities <- choices |>
-                   dplyr::rename(label = dplyr::first(matches("^label")))
+                   dplyr::rename(label = dplyr::first(dplyr::matches("^label")))
      
      settings <- readxl::read_excel(xlsformpath,   
                                 sheet = "settings")

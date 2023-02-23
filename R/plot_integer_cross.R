@@ -13,6 +13,10 @@
 #'              scale_y_discrete theme_minimal
 #' @export
 
+# prefixer::import_from(fun = plot_integer_cross)
+
+
+
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
@@ -69,34 +73,30 @@ plot_integer_cross <- function(datalist = datalist,
       ## Writing code instruction in report
       if( showcode == TRUE) {
         cat(paste0(label_varname(dico = dico, x = var), "\n",
-                   "  `plot_integer_cross(datalist = datalist, 
-                       dico = dico, 
-                       var = \"", var, "\",
-                       by_var = \"", by_var, "\",
-                       datasource = params$datasource )` \n\n "))  }   else {} 
+      "`plot_integer_cross(datalist, dico, var=\"", var, "\", by_var=\"", by_var, "\", datasource=params$datasource)` \n\n "))  }   else {} 
     
     require(ggplot2)
     p <- ggplot2::ggplot(data) + 
-      geom_boxplot(aes(x = .data[[var]], y =  .data[[by_var]]), 
+      ggplot2::geom_boxplot(ggplot2::aes(x = .data[[var]], y =  .data[[by_var]]), 
                      fill = "#0072BC", 
                      color = "white" 
       ) +
       # scale_y_continuous(labels = scales::label_percent()) +
-      labs(x = NULL, y = NULL,
+      ggplot2::labs(x = NULL, y = NULL,
           title = stringr::str_wrap(label_varname(dico = dico, x = var), 90),
           subtitle = stringr::str_wrap( paste0("Crossed by ", label_varname(dico = dico, x = by_var)), 90),
-          caption = glue::glue("Numeric response, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
+          caption = glue::glue("Numeric, Response rate = {scales::label_percent(accuracy = .01)(rr)} on a total of {nrow(data)} records \n Source: {datasource}")) +
       
-      scale_size_area(max_size = 10) +        
-      scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
+      ggplot2::scale_size_area(max_size = 10) +        
+      ggplot2::scale_y_discrete(labels = function(x) {label_choiceset(dico = dico,
                                                           x = var)(x) |>
             stringr::str_wrap(40)}) +
-      theme_minimal( base_size = 24) +
-      geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
-      theme( panel.grid.major.y  = element_line(color = "#cbcbcb"), 
-           panel.grid.major.x  = element_blank(), 
-           panel.grid.minor = element_blank()    ) +
-           theme(plot.title.position = "plot")
+      ggplot2::theme_minimal( base_size = 24) +
+      ggplot2::geom_hline(yintercept = 0, size = 1.1, colour = "#333333") +
+      ggplot2::theme( panel.grid.major.y  = ggplot2::element_line(color = "#cbcbcb"), 
+           panel.grid.major.x  = ggplot2::element_blank(), 
+           panel.grid.minor = ggplot2::element_blank()    ) +
+           ggplot2::theme(plot.title.position = "plot")
     
    return(p) #  print(p)
     

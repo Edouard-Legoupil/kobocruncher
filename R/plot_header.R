@@ -17,6 +17,10 @@
 #' 
 #' @export
 
+# prefixer::import_from(fun = plot_header)
+
+
+
 #' @examples
 #' dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 #' 
