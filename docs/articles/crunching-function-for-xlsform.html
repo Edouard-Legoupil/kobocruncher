@@ -89,7 +89,7 @@
 <h2 id="data-examples-to-demo-the-package">Data examples to demo the package<a class="anchor" aria-label="anchor" href="#data-examples-to-demo-the-package"></a>
 </h2>
 <!-- 
- Store your dataset in a directory named "inst/" at the root of your project.
+ Store your dataset in shiny::a directory named "inst/" at the root of your project.
  Use it for your tests in this Rmd thanks to `pkgload::load_all()` to make it available
 and `system.file()` to read it in your examples.
 -->
@@ -875,11 +875,7 @@ steps in the data preparation.</p>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; What is your country of Origin?</span></span>
-<span><span class="co">#&gt; `plot_select_one(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.country",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 4)` </span></span>
+<span><span class="co">#&gt; `plot_select_one(datalist, dico, "profile.country", datasource = params$datasource, n = 4)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span></code></pre></div>
@@ -893,11 +889,7 @@ steps in the data preparation.</p>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; What is your country of Origin?</span></span>
-<span><span class="co">#&gt; `plot_select_one(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.country",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 1)` </span></span>
+<span><span class="co">#&gt; `plot_select_one(datalist, dico, "profile.country", datasource = params$datasource, n = 1)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_one-2.png" width="700"></p>
@@ -923,11 +915,7 @@ steps in the data preparation.</p>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>            <span class="op">)</span></span>
 <span><span class="co">#&gt; Why did you left?</span></span>
-<span><span class="co">#&gt;   `plot_select_multiple(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.reason",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 7)` </span></span>
+<span><span class="co">#&gt; `plot_select_multiple(datalist, dico, "profile.reason", datasource=params$datasource, n=7)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_multiple-1.png" width="700"></p>
@@ -942,11 +930,7 @@ steps in the data preparation.</p>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>            <span class="op">)</span></span>
 <span><span class="co">#&gt; Why did you left?</span></span>
-<span><span class="co">#&gt;   `plot_select_multiple(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.reason",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 5)` </span></span>
+<span><span class="co">#&gt; `plot_select_multiple(datalist, dico, "profile.reason", datasource=params$datasource, n=5)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_multiple-2.png" width="700"></p>
@@ -970,10 +954,7 @@ steps in the data preparation.</p>
 <span>              var <span class="op">=</span> <span class="st">"members.age"</span>,</span>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Age</span></span>
-<span><span class="co">#&gt;   `plot_integer(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "members.age",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource)` </span></span>
+<span><span class="co">#&gt; `plot_integer(datalist, dico, "members.age", datasource=params$datasource)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span></code></pre></div>
@@ -1001,24 +982,23 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., toSpace, "@"): transformation drops documents</span></span>
 <span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., toSpace, "\\|"): transformation drops</span></span>
 <span><span class="co">#&gt; documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., content_transformer(tolower)): transformation</span></span>
-<span><span class="co">#&gt; drops documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., removeNumbers): transformation drops documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., removePunctuation): transformation drops</span></span>
-<span><span class="co">#&gt; documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., stripWhitespace): transformation drops</span></span>
-<span><span class="co">#&gt; documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., stemDocument): transformation drops documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., removeWords, stopwords("english")):</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::content_transformer(tolower)):</span></span>
 <span><span class="co">#&gt; transformation drops documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., removeWords, c("blabla1", "blabla2")):</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::removeNumbers): transformation drops</span></span>
+<span><span class="co">#&gt; documents</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::removePunctuation): transformation drops</span></span>
+<span><span class="co">#&gt; documents</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::stripWhitespace): transformation drops</span></span>
+<span><span class="co">#&gt; documents</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::stemDocument): transformation drops</span></span>
+<span><span class="co">#&gt; documents</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::removeWords, tm::stopwords("english")):</span></span>
+<span><span class="co">#&gt; transformation drops documents</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::removeWords, c("blabla1", "blabla2")):</span></span>
 <span><span class="co">#&gt; transformation drops documents</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; What's you occupation?</span></span>
-<span><span class="co">#&gt;   `plot_text(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.occupation",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource)` </span></span>
+<span><span class="co">#&gt;  `plot_text(datalist, dico, "profile.occupation", datasource=params$datasource)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_text-1.png" width="700"></p>
@@ -1041,13 +1021,7 @@ steps in the data preparation.</p>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>              <span class="op">)</span></span>
 <span><span class="co">#&gt; What is your country of Origin?</span></span>
-<span><span class="co">#&gt;   `plot_select_one_cross(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.country",</span></span>
-<span><span class="co">#&gt;                        by_var = "profile.occupation",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 4,</span></span>
-<span><span class="co">#&gt;                        n_by = 4 )` </span></span>
+<span><span class="co">#&gt; `plot_select_one_cross(datalist, dico, var="profile.country", by_var="profile.occupation",datasource=params$datasource, n=4,n_by=4 )` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_one_cross-1.png" width="700"></p>
@@ -1074,13 +1048,7 @@ steps in the data preparation.</p>
 <span>              by_var <span class="op">=</span> <span class="st">"location"</span>,</span>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Why did you left?</span></span>
-<span><span class="co">#&gt;   `plot_select_multiple_cross(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.reason",</span></span>
-<span><span class="co">#&gt;                        by_var = "location",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 7,</span></span>
-<span><span class="co">#&gt;                        n_by = 3 )` </span></span>
+<span><span class="co">#&gt; `plot_select_multiple_cross(datalist, dico, var="profile.reason", by_var="location", datasource=params$datasource, n=7, n_by=3 )` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_multiple_cross-1.png" width="700"></p>
@@ -1094,13 +1062,7 @@ steps in the data preparation.</p>
 <span>              n <span class="op">=</span> <span class="fl">4</span>, </span>
 <span>              showcode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Why did you left?</span></span>
-<span><span class="co">#&gt;   `plot_select_multiple_cross(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.reason",</span></span>
-<span><span class="co">#&gt;                        by_var = "location",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 4,</span></span>
-<span><span class="co">#&gt;                        n_by = 3 )` </span></span>
+<span><span class="co">#&gt; `plot_select_multiple_cross(datalist, dico, var="profile.reason", by_var="location", datasource=params$datasource, n=4, n_by=3 )` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_select_multiple_cross-2.png" width="700"></p>
@@ -1271,11 +1233,7 @@ steps in the data preparation.</p>
 <span>              datasource <span class="op">=</span> <span class="st">"a great survey!"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Where is the interview taking place</span></span>
-<span><span class="co">#&gt; `plot_select_one(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "location",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 5)` </span></span>
+<span><span class="co">#&gt; `plot_select_one(datalist, dico, "location", datasource = params$datasource, n = 5)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-1.png" width="700"></p>
@@ -1287,73 +1245,54 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; What is your country of Origin?</span></span>
-<span><span class="co">#&gt; `plot_select_one(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.country",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 5)` </span></span>
+<span><span class="co">#&gt; `plot_select_one(datalist, dico, "profile.country", datasource = params$datasource, n = 5)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., toSpace, "/"): transformation drops documents</span></span>
 <span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., toSpace, "@"): transformation drops documents</span></span>
 <span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., toSpace, "\\|"): transformation drops</span></span>
 <span><span class="co">#&gt; documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., content_transformer(tolower)): transformation</span></span>
-<span><span class="co">#&gt; drops documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., removeNumbers): transformation drops documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., removePunctuation): transformation drops</span></span>
-<span><span class="co">#&gt; documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., stripWhitespace): transformation drops</span></span>
-<span><span class="co">#&gt; documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., stemDocument): transformation drops documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., removeWords, stopwords("english")):</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::content_transformer(tolower)):</span></span>
 <span><span class="co">#&gt; transformation drops documents</span></span>
-<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., removeWords, c("blabla1", "blabla2")):</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::removeNumbers): transformation drops</span></span>
+<span><span class="co">#&gt; documents</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::removePunctuation): transformation drops</span></span>
+<span><span class="co">#&gt; documents</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::stripWhitespace): transformation drops</span></span>
+<span><span class="co">#&gt; documents</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::stemDocument): transformation drops</span></span>
+<span><span class="co">#&gt; documents</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::removeWords, tm::stopwords("english")):</span></span>
+<span><span class="co">#&gt; transformation drops documents</span></span>
+<span><span class="co">#&gt; Warning in tm_map.SimpleCorpus(., tm::removeWords, c("blabla1", "blabla2")):</span></span>
 <span><span class="co">#&gt; transformation drops documents</span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-2.png" width="700"></p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; What's you occupation?</span></span>
-<span><span class="co">#&gt;   `plot_text(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.occupation",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource)` </span></span>
+<span><span class="co">#&gt;  `plot_text(datalist, dico, "profile.occupation", datasource=params$datasource)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-3.png" width="700"></p>
 <pre><code><span><span class="co">#&gt; Why did you left?</span></span>
-<span><span class="co">#&gt;   `plot_select_multiple(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.reason",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 5)` </span></span>
+<span><span class="co">#&gt; `plot_select_multiple(datalist, dico, "profile.reason", datasource=params$datasource, n=5)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-4.png" width="700"></p>
 <pre><code><span><span class="co">#&gt; What's the size of your household?</span></span>
-<span><span class="co">#&gt;   `plot_integer(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "profile.HHSize",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource)` </span></span>
+<span><span class="co">#&gt; `plot_integer(datalist, dico, "profile.HHSize", datasource=params$datasource)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-5.png" width="700"></p>
 <pre><code><span><span class="co">#&gt; Age</span></span>
-<span><span class="co">#&gt;   `plot_integer(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "members.age",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource)` </span></span>
+<span><span class="co">#&gt; `plot_integer(datalist, dico, "members.age", datasource=params$datasource)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-6.png" width="700"></p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Sex</span></span>
-<span><span class="co">#&gt; `plot_select_one(datalist = datalist, </span></span>
-<span><span class="co">#&gt;                        dico = dico, </span></span>
-<span><span class="co">#&gt;                        var = "members.sex",</span></span>
-<span><span class="co">#&gt;                        datasource = params$datasource,</span></span>
-<span><span class="co">#&gt;                        n = 5)` </span></span>
+<span><span class="co">#&gt; `plot_select_one(datalist, dico, "members.sex", datasource = params$datasource, n = 5)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_cruncher-7.png" width="700"></p>
@@ -1369,15 +1308,15 @@ steps in the data preparation.</p>
 <span><span class="fu"><a href="../reference/kobo_likert.html">kobo_likert</a></span><span class="op">(</span>datalist <span class="op">=</span> <span class="va">datalistlikert</span>,</span>
 <span>              dico <span class="op">=</span> <span class="va">dicolikert</span>,</span>
 <span>              datasource <span class="op">=</span> <span class="st">"a great survey!"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 3 groups of likert questions in the form `plot_likert(datalist = datalist, dico = dico,  scopei =  "group_ei8jz33",   list_namei =  "yk0td68",  repeatvari =  "main")` </span></span>
+<span><span class="co">#&gt; 3 groups of likert questions in the form`plot_likert(datalist, dico, scopei="group_ei8jz33", list_namei="yk0td68", repeatvari="main",datasource=params$datasource)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_likert-1.png" width="700"></p>
-<pre><code><span><span class="co">#&gt;  `plot_likert(datalist = datalist, dico = dico,  scopei =  "group_pm0cj55",   list_namei =  "yk0td68",  repeatvari =  "main")` </span></span>
+<pre><code><span><span class="co">#&gt; `plot_likert(datalist, dico, scopei="group_pm0cj55", list_namei="yk0td68", repeatvari="main",datasource=params$datasource)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_likert-2.png" width="700"></p>
-<pre><code><span><span class="co">#&gt;  `plot_likert(datalist = datalist, dico = dico,  scopei =  "group_wc0ig44",   list_namei =  "yk0td68",  repeatvari =  "main")` </span></span>
+<pre><code><span><span class="co">#&gt; `plot_likert(datalist, dico, scopei="group_wc0ig44", list_namei="yk0td68", repeatvari="main",datasource=params$datasource)` </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-kobo_likert-3.png" width="700"></p>

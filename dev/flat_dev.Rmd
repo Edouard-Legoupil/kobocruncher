@@ -3810,7 +3810,7 @@ kobo_ridl <- function(ridl,
     
     ## Build resource metadata
     metadataanalysisplan <- riddle::resource_metadata(
-      type = "attachment",
+      type = "script",
       url = paste0("analysisPlan_", stage,"_", name, "_", ridl,"_", time, ".xlsx"),
       name = nameanalysisplan,
       description = paste0("Analysis Plan to use with: ", stage,"_", name,"_", ridl,"_", time,
@@ -3834,7 +3834,7 @@ kobo_ridl <- function(ridl,
   } else {
     
     metadataanalysisplan <- riddle::resource_metadata(
-      type = "attachment",
+      type = "script",
       url = paste0("analysisPlan_", stage,"_", name, "_", ridl,"_", time, ".xlsx"),
       name = nameanalysisplan,
       description = paste0("Analysis Plan to use with: ", stage,"_", name,"_", ridl,"_", time,
@@ -3869,13 +3869,13 @@ kobo_ridl <- function(ridl,
     curversion <- list_of_resources |>
       dplyr::filter ( name == nameanalysisplan) |>
       dplyr::pull(version)
-    metadataanalysisscript <- riddle::resource_metadata(type = "attachment",
+    metadataanalysisscript <- riddle::resource_metadata(type = "script",
                                                         url = paste0("notebook_", stage, name, ridl, time, ".Rmd"),
                                                         name = namenotebook,
                                                         description = paste0("Notebook for ",
                                                                              stage,"_", name,"_", ridl,"_", time,
                                                                              " report. Built using kobocruncher "),
-                                                        format = "Rmd",
+                                                        format = "rmd",
                                                         version = (curversion + 1),
                                                         visibility =  visibility,
                                            #             file_type = "other",
@@ -3893,7 +3893,7 @@ kobo_ridl <- function(ridl,
     riddle::resource_update(id = resourceid,
                             res_metadata =  metadataanalysisscript)
   } else {
-    metadataanalysisscript <- riddle::resource_metadata(type = "attachment",
+    metadataanalysisscript <- riddle::resource_metadata(type = "script",
                                                         url = paste0("notebook_", stage, name, ridl, time, ".Rmd"),
                                                         name = namenotebook,
                                                         description = paste0("Notebook for ",
