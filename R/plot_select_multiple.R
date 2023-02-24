@@ -105,7 +105,9 @@ plot_select_multiple <- function(datalist = datalist,
     ## case there are duplicated answers options - for instance if allow_choice_duplicates = yes
     ll <- dplyr::filter(dico[[2]], list_name == listvar) |>
           dplyr::group_by(name) |> 
-          dplyr::slice_head(n = 1)
+          dplyr::slice_head(n = 1)|>
+          ## Fix in case some orders are empty... 
+          dplyr::mutate( order = ifelse(is.na(order),1, order))
     
     cnts <- cnts |>
       dplyr::left_join( dplyr::filter(ll), by = c("x"="name"))|>

@@ -113,7 +113,7 @@ kobo_ridl <- function(ridl,
   #  "script_software"
   # "source_code_repo"
   
-  ### Publish the analysis plan ####
+  ### 1.  Publish the analysis plan #######
   nameanalysisplan = paste0("analysisPlan_", stage,"_", name,"_", ridl,"_", time )
   ### Check if the name is already in the resources
   if(nameanalysisplan %in% list_of_resources$name) {
@@ -126,7 +126,7 @@ kobo_ridl <- function(ridl,
       dplyr::filter ( name == nameanalysisplan) |>
       dplyr::pull(version)
     
-    ## Build resource metadata
+    ##  Build resource metadata
     metadataanalysisplan <- riddle::resource_metadata(
       type = "script",
       url = paste0("analysisPlan_", stage,"_", name, "_", ridl,"_", time, ".xlsx"),
@@ -175,7 +175,7 @@ kobo_ridl <- function(ridl,
   }
   
   
-  ### Now publish the current notebook ####
+  ### 2.  Now publish the current notebook #######
   namenotebook = paste0("notebook_", stage, name, ridl, time)
   ### Check if the name is already in the resources
   if(namenotebook %in% list_of_resources$name) {
@@ -234,9 +234,9 @@ kobo_ridl <- function(ridl,
                             res_metadata = metadataanalysisscript)
   }
   
-  ## and now the generated report - that should be hopefully already generated ####
-  namereport = paste0("notebook_", stage, name, ridl, time)
-  if(stage == "interpretation_prez") { filext <- ".pptx"} else { filext <- ".html" }
+  ## 3.  and now the generated report - that should be hopefully already generated ####
+  namereport = paste0("output_", stage, name, ridl, time)
+  if(stage == "interpretation_prez") { filext <- ".pptx"} else if(stage == "technical_report") { filext <- ".docx" } else { filext <- ".html" }
   ### Check if the name is already in the resources
   if(namereport %in% list_of_resources$name) {
     ## get the resource id
