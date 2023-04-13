@@ -1,11 +1,5 @@
 input_UI <- function(id) {
 
-  # tagList(
-  #   selectInput(NS(id, "var"), "Variable", choices = names(mtcars)),
-  #   numericInput(NS(id, "bins"), "bins", value = 10, min = 1),
-  #   plotOutput(NS(id, "hist"))
-  # )
-
   shinydashboard::tabItem(
     tabName = "upload",
     column(
@@ -29,13 +23,6 @@ input_UI <- function(id) {
 }
 
 input_server <- function(id) {
-
-  # moduleServer(id, function(input, output, session) {
-  #   data <- reactive(mtcars[[input$var]])
-  #   output$hist <- renderPlot({
-  #     hist(data(), breaks = input$bins, main = input$var)
-  #   }, res = 96)
-  # })
 
   moduleServer(id, function(input, output, session) {
 
@@ -67,7 +54,7 @@ input_server <- function(id) {
     # plot framework
     output$framework <- plotly::renderPlotly({
       req(coin())
-      f_plot_framework(coin())
+      iCOINr::iplot_framework(coin())
     })
 
   })
