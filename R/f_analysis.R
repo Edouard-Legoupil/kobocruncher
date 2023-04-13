@@ -25,7 +25,7 @@
 #' @export
 f_analyse_indicators <- function(coin){
 
-  stopifnot(is.coin(coin))
+  stopifnot(COINr::is.coin(coin))
 
   # Settings ----
 
@@ -123,7 +123,7 @@ f_gather_correlations <- function(X){
 # either a coin input, or else a list with Xd and Xh data frames in that order
 f_display_indicator_analysis <- function(coin, filter_to_flagged = TRUE){
 
-  if(is.coin(coin)){
+  if(COINr::is.coin(coin)){
     Xd <- coin$Analysis$Raw$FlaggedStats
     Xh <- coin$Analysis$Raw$Flags
   } else if (is.list(coin)){
