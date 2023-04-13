@@ -2,16 +2,36 @@ analysis_UI <- function(id) {
 
   shinydashboard::tabItem(
     tabName = "analyse",
-    shinydashboardPlus::box(
-      title = "Indicator analysis",
-      collapsible = TRUE,
-      status = "info",
-      width = 12,
-      DT::DTOutput(NS(id, "analysis_table")),
-      checkboxInput(
-        NS(id, "filter_table"),
-        label = "Filter to flagged indicators",
-        value = FALSE)
+    column(6,
+           shinydashboardPlus::box(
+             title = "Indicator analysis",
+             collapsible = TRUE, width = 12,
+             status = "info",
+             DT::DTOutput(NS(id, "analysis_table")),
+             checkboxInput(
+               NS(id, "filter_table"),
+               label = "Filter to flagged indicators",
+               value = FALSE)
+           )
+    ),
+    column(6,
+           shinydashboardPlus::box(
+             title = "Scatter plot",
+             collapsible = TRUE,
+             status = "info", width = 12,
+             sidebar = shinydashboardPlus::boxSidebar(
+               id = "scatter_sidebar",
+               width = 25,
+               selectInput("iplot2", label = "Plot against", choices = c("a", "b"))
+             ),
+             plotly::plotlyOutput(NS(id, "scatter_plot"))
+           ),
+           shinydashboardPlus::box(
+             title = "Distribution",
+             collapsible = TRUE,
+             status = "info", width = 12,
+             plotly::plotlyOutput(NS(id, "violin_plot"))
+           )
     )
   )
 
@@ -64,22 +84,22 @@ analysis_server <- function(id, coin, parent_input) {
 
     })
 
-    # # selected code from table
-    # icode_selected <- reactiveVal(NULL)
-    #
-    # # update selected row variable
-    # observeEvent(input$analysis_table_rows_selected, {
-    #   if(input$filter_table){
-    #     icode_selected(
-    #       l_analysis_f()$FlaggedStats$iCode[input$analysis_table_rows_selected]
-    #     )
-    #   } else {
-    #     icode_selected(
-    #       l_analysis()$FlaggedStats$iCode[input$analysis_table_rows_selected]
-    #     )
-    #   }
-    # })
-    #
+    # selected code from table
+    icode_selected <- reactiveVal(NULL)
+
+    # update selected row variable
+    observeEvent(input$analysis_table_rows_selected, {
+      if(input$filter_table){
+        icode_selected(
+          l_analysis_f()$FlaggedStats$iCode[input$analysis_table_rows_selected]
+        )
+      } else {
+        icode_selected(
+          l_analysis()$FlaggedStats$iCode[input$analysis_table_rows_selected]
+        )
+      }
+    })
+
     # # Remove indicators
     # observeEvent(input$remove_indicator, {
     #   coin(f_remove_indicators(coin(), icode_selected()))
@@ -97,23 +117,23 @@ analysis_server <- function(id, coin, parent_input) {
     #     coin()$Analysis$Raw[c("FlaggedStats", "Flags")]
     #   )
     # })
-    #
-    # # violin plot
-    # output$violin_plot <- plotly::renderPlotly({
-    #   req(icode_selected())
-    #   iCOINr::iplot_dist(coin_full(), dset = "Raw", iCode = icode_selected(), ptype = "Violin")
-    # })
-    #
-    # # scatter plot
-    # output$scatter_plot <- plotly::renderPlotly({
-    #   req(icode_selected())
-    #   iCOINr::iplot_scatter(
-    #     coin_full(),
-    #     dsets = "Raw",
-    #     iCodes = c(icode_selected(), input$iplot2),
-    #     Levels = 1
-    #   )
-    # })
+
+    # violin plot
+    output$violin_plot <- plotly::renderPlotly({
+      req(icode_selected())
+      iCOINr::iplot_dist(coin(), dset = "Raw", iCode = icode_selected(), ptype = "Violin")
+    })
+
+    # scatter plot
+    output$scatter_plot <- plotly::renderPlotly({
+      req(icode_selected())
+      iCOINr::iplot_scatter(
+        coin(),
+        dsets = "Raw",
+        iCodes = c(icode_selected(), "A.D.1"),
+        Levels = 1
+      )
+    })
 
   })
 
