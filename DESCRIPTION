@@ -10,4 +10,12 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
-    shiny
+    COINr,
+    DT,
+    iCOINr (>= 0.1.0),
+    plotly,
+    readxl,
+    shiny,
+    utils
+Remotes: 
+    bluefoxr/iCOINr
