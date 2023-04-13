@@ -57,6 +57,8 @@ input_server <- function(id) {
       iCOINr::iplot_framework(coin())
     })
 
+    # the coin is passed back out of the module for use in other modules
+    return(reactive(coin()))
   })
 
 }
