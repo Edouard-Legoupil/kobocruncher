@@ -2,7 +2,7 @@ analysis_UI <- function(id) {
 
   shinydashboard::tabItem(
     tabName = "analyse",
-    column(6,
+    column(7,
            shinydashboardPlus::box(
              title = "Indicator analysis",
              collapsible = TRUE, width = 12,
@@ -12,9 +12,28 @@ analysis_UI <- function(id) {
                NS(id, "filter_table"),
                label = "Filter to flagged indicators",
                value = FALSE)
+           ),
+           shinydashboardPlus::box(
+             title = "Add/remove indicators",
+             collapsible = TRUE, width = 12,
+             status = "danger",
+             "Click on a row in the table and use the buttons to add or remove indicators.",
+             br(),br(),
+             shinyWidgets::actionBttn(
+               inputId = NS(id, "add_indicator"),
+               label = "Add",
+               style = "unite",
+               color = "success", icon = icon("plus"), size = "sm"
+             ),
+             shinyWidgets::actionBttn(
+               inputId = NS(id, "remove_indicator"),
+               label = "Remove",
+               style = "unite",
+               color = "danger", icon = icon("minus"), size = "sm"
+             )
            )
     ),
-    column(6,
+    column(5,
            shinydashboardPlus::box(
              title = "Scatter plot",
              collapsible = TRUE,
@@ -22,7 +41,9 @@ analysis_UI <- function(id) {
              sidebar = shinydashboardPlus::boxSidebar(
                id = "scatter_sidebar",
                width = 25,
-               selectInput("iplot2", label = "Plot against", choices = c("a", "b"))
+               selectInput(NS(id, "scat_v2"), label = "Plot against", choices = c("a", "b")),
+               shinyWidgets::prettySwitch(NS(id, "scat_logx"), label = "Log X"),
+               shinyWidgets::prettySwitch(NS(id, "scat_logy"), label = "Log Y")
              ),
              plotly::plotlyOutput(NS(id, "scatter_plot"))
            ),
@@ -30,6 +51,11 @@ analysis_UI <- function(id) {
              title = "Distribution",
              collapsible = TRUE,
              status = "info", width = 12,
+             sidebar = shinydashboardPlus::boxSidebar(
+               id = "violin_sidebar",
+               width = 25,
+               selectInput(NS(id, "dist_plottype"), label = "Plot type", choices = c("Violin", "Histogram"))
+             ),
              plotly::plotlyOutput(NS(id, "violin_plot"))
            )
     )
@@ -67,7 +93,7 @@ analysis_server <- function(id, coin, parent_input) {
         )
 
         updateSelectInput(
-          inputId = "iplot2",
+          inputId = "scat_v2",
           choices = coin2$Meta$Lineage[[1]]
         )
 
@@ -121,7 +147,7 @@ analysis_server <- function(id, coin, parent_input) {
     # violin plot
     output$violin_plot <- plotly::renderPlotly({
       req(icode_selected())
-      iCOINr::iplot_dist(coin(), dset = "Raw", iCode = icode_selected(), ptype = "Violin")
+      iCOINr::iplot_dist(coin(), dset = "Raw", iCode = icode_selected(), ptype = input$dist_plottype)
     })
 
     # scatter plot
@@ -130,8 +156,9 @@ analysis_server <- function(id, coin, parent_input) {
       iCOINr::iplot_scatter(
         coin(),
         dsets = "Raw",
-        iCodes = c(icode_selected(), "A.D.1"),
-        Levels = 1
+        iCodes = c(icode_selected(), input$scat_v2),
+        Levels = 1,
+        log_axes = c(input$scat_logx, input$scat_logy)
       )
     })
 
