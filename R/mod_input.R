@@ -1,11 +1,5 @@
 input_UI <- function(id) {
 
-  # tagList(
-  #   selectInput(NS(id, "var"), "Variable", choices = names(mtcars)),
-  #   numericInput(NS(id, "bins"), "bins", value = 10, min = 1),
-  #   plotOutput(NS(id, "hist"))
-  # )
-
   shinydashboard::tabItem(
     tabName = "upload",
     column(
@@ -30,13 +24,6 @@ input_UI <- function(id) {
 
 input_server <- function(id) {
 
-  # moduleServer(id, function(input, output, session) {
-  #   data <- reactive(mtcars[[input$var]])
-  #   output$hist <- renderPlot({
-  #     hist(data(), breaks = input$bins, main = input$var)
-  #   }, res = 96)
-  # })
-
   moduleServer(id, function(input, output, session) {
 
     coin <- reactiveVal({NULL})
@@ -46,7 +33,7 @@ input_server <- function(id) {
 
       req(input$xlsx_file)
 
-      data_message <- capture.output({
+      data_message <- utils::capture.output({
         coin(f_data_input(input$xlsx_file$datapath))
       }, type = "message")
 
@@ -67,9 +54,11 @@ input_server <- function(id) {
     # plot framework
     output$framework <- plotly::renderPlotly({
       req(coin())
-      f_plot_framework(coin())
+      iCOINr::iplot_framework(coin())
     })
 
+    # the coin is passed back out of the module for use in other modules
+    return(reactive(coin()))
   })
 
 }

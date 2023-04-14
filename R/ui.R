@@ -14,6 +14,7 @@ app_ui <- function() {
   db_sidebar <- shinydashboardPlus::dashboardSidebar(
     minified = TRUE, collapsed = FALSE, width = "15vw",
     shinydashboard::sidebarMenu(
+      id = "tab_selected",
       shinydashboard::menuItem("Upload", tabName = "upload", icon = icon("upload")),
       shinydashboard::menuItem("Analyse", tabName = "analyse", icon = icon("magnifying-glass-chart")),
       shinydashboard::menuItem("Results", tabName = "results", icon = icon("square-poll-vertical")),
@@ -31,10 +32,7 @@ app_ui <- function() {
   db_body <- shinydashboard::dashboardBody(
     shinydashboard::tabItems(
       input_UI("id_input"),
-      shinydashboard::tabItem(
-        tabName = "analyse",
-        shinydashboardPlus::box(title = "Indicator analysis", collapsible = TRUE, status = "info")
-      ),
+      analysis_UI("id_analysis"),
       shinydashboard::tabItem(tabName = "results"),
       shinydashboard::tabItem(tabName = "exports")
     )
