@@ -9,6 +9,9 @@
 app_ui <- function() {
 
 
+  # enable alert messages
+  shinyWidgets::useSweetAlert()
+
   # Sidebar -----------------------------------------------------------------
 
   db_sidebar <- shinydashboardPlus::dashboardSidebar(
@@ -20,8 +23,8 @@ app_ui <- function() {
       shinydashboard::menuItem("Results", tabName = "results", icon = icon("square-poll-vertical")),
       shinydashboard::menuItem("Export", tabName = "export", icon = icon("file-export")),
       shinydashboard::menuItem("Save/load", icon = icon("floppy-disk"),
-                               shinydashboard::menuSubItem("Save session", tabName = "subitem1"),
-                               shinydashboard::menuSubItem("Load session", tabName = "subitem2")
+                               shinydashboard::menuSubItem("Save session", tabName = "subitem1", icon = icon("angles-right")),
+                               shinydashboard::menuSubItem("Load session", tabName = "subitem2", icon = icon("angles-right"))
       )
     )
   )
@@ -46,11 +49,11 @@ app_ui <- function() {
 
   shinydashboardPlus::dashboardPage(md = FALSE, skin = "blue",
     options = list(sidebarExpandOnHover = TRUE),
-    header = shinydashboardPlus::dashboardHeader(title = title_logo, titleWidth = "15vw"),
+    header = shinydashboardPlus::dashboardHeader(title = title_logo, titleWidth = "15vw", controlbarIcon = icon("gear")),
     footer = shinydashboardPlus::dashboardFooter(left = "Left content", right = "Right content"),
     sidebar = db_sidebar,
     body = db_body,
-    controlbar = shinydashboardPlus::dashboardControlbar(),
+    controlbar = shinydashboardPlus::dashboardControlbar(disable = FALSE),
     title = "DashboardPage"
   )
 

@@ -22,12 +22,9 @@ input_UI <- function(id) {
 
 }
 
-input_server <- function(id) {
+input_server <- function(id, coin, coin_full) {
 
   moduleServer(id, function(input, output, session) {
-
-    coin <- reactiveVal({NULL})
-    coin_full <- reactiveVal(NULL)
 
     observeEvent(input$load_click, {
 
@@ -42,6 +39,13 @@ input_server <- function(id) {
 
       # Outputs
       output$data_message <- renderText(data_message, sep = "\n")
+
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = "Data uploaded",
+        text = "Please check the messages for more info.",
+        type = "success"
+      )
 
     })
 
@@ -58,7 +62,7 @@ input_server <- function(id) {
     })
 
     # the coin is passed back out of the module for use in other modules
-    return(reactive(coin()))
+    # return(reactive(coin()))
   })
 
 }
