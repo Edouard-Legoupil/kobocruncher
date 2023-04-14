@@ -12,7 +12,7 @@ app_ui <- function() {
   # Sidebar -----------------------------------------------------------------
 
   db_sidebar <- shinydashboardPlus::dashboardSidebar(
-    minified = TRUE, collapsed = FALSE, width = "15vw",
+    minified = FALSE, collapsed = FALSE, width = "15vw",
     shinydashboard::sidebarMenu(
       id = "tab_selected",
       shinydashboard::menuItem("Upload", tabName = "upload", icon = icon("upload")),
@@ -41,9 +41,12 @@ app_ui <- function() {
 
   # Assemble ----------------------------------------------------------------
 
-  shinydashboardPlus::dashboardPage(
+  # define UNHCR logo
+  title_logo <- tags$div(tags$img(src="https://raw.githubusercontent.com/UNHCR-Guatemala/A2SIT/main/www/logo.svg", height ='30vh'), "  A2SIT")
+
+  shinydashboardPlus::dashboardPage(md = FALSE, skin = "blue",
     options = list(sidebarExpandOnHover = TRUE),
-    header = shinydashboardPlus::dashboardHeader(title = "A2SIT", titleWidth = "15vw"),
+    header = shinydashboardPlus::dashboardHeader(title = title_logo, titleWidth = "15vw"),
     footer = shinydashboardPlus::dashboardFooter(left = "Left content", right = "Right content"),
     sidebar = db_sidebar,
     body = db_body,
