@@ -22,13 +22,13 @@ analysis_UI <- function(id) {
              shinyWidgets::actionBttn(
                inputId = NS(id, "add_indicator"),
                label = "Add",
-               style = "unite",
+               style = "jelly",
                color = "success", icon = icon("plus"), size = "sm"
              ),
              shinyWidgets::actionBttn(
                inputId = NS(id, "remove_indicator"),
                label = "Remove",
-               style = "unite",
+               style = "jelly",
                color = "danger", icon = icon("minus"), size = "sm"
              )
            )
@@ -128,11 +128,14 @@ analysis_server <- function(id, coin, parent_input) {
 
     # # Remove indicators
     # observeEvent(input$remove_indicator, {
-    #   coin(f_remove_indicators(coin(), icode_selected()))
+    #   coin2 <- coin()
+    #   coin2 <- f_remove_indicators(coin2, icode_selected())
     #   # update analysis tables
     #   l_analysis(
-    #     coin()$Analysis$Raw[c("FlaggedStats", "Flags")]
+    #     coin2$Analysis$Raw[c("FlaggedStats", "Flags")]
     #   )
+    #
+    #   coin <- reactive(coin2)
     # })
     #
     # # Add indicators

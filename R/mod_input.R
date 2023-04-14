@@ -33,7 +33,7 @@ input_server <- function(id) {
 
       req(input$xlsx_file)
 
-      data_message <- capture.output({
+      data_message <- utils::capture.output({
         coin(f_data_input(input$xlsx_file$datapath))
       }, type = "message")
 

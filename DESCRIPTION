@@ -16,6 +16,9 @@ Imports:
     plotly,
     readxl,
     shiny,
+    shinydashboard,
+    shinydashboardPlus,
+    shinyWidgets,
     utils
 Remotes: 
     bluefoxr/iCOINr
