@@ -1,23 +1,25 @@
-- Est-ce que mon code respecte les standards de qualité de mise en production de packages ?
-- Est-ce que la personne qui révise à toutes les informations pour valider les fonctionnalités / résolutions de problèmes sans trop de recherches ?
-- Est-ce que le client qui validera les tickets associés à les informations pour le faire sans perte de temps ?
+- Does my code meet the quality standards for releasing packages?
+- Does the reviewer have all the information to validate the features/issues without too much research?
+- Does the customer who will validate the associated tickets have the information to do so without wasting time?
 
-## Issues à faire valider pour fermer : 
+## Issues to validate to close : 
 
 - [ ] issue #
 
 
-## Issues traitées à garder ouvertes ou en cours : 
+## Processed issues to keep open or in progress: 
 
 - [ ] issue #
 
 ## Checklist:
 
-- [ ] Est-ce que le check du package passe en local ?
-- [ ] Est-ce que le CI passe ?
-- [ ] Est-ce que les fonctionnalités ajoutées / corrigées, sont documentées, testées ?
-- [ ] Est-ce que les fonctionnalités ajoutées / problèmes résolus sont brièvement présentées dans le message de la MR ?
-- [ ] Est-ce que les modifications sont liées à des tickets / issues que j'ai listés dans les commits et dans la MR elle-même ?
-- [ ] Est-ce que les tickets sont en mode "révision" dans le Board de suivi du projet ?
-- [ ] Est-ce que chaque ticket, s'il doit être fermé après acceptation de la MR contient un commentaire qui dit comment le valider ?
+- [ ] Does the package check go local?
+- [ ] Does the CI pass?
+- [ ] Are the added / fixed features documented, tested?
+- [ ] Are the added features / solved problems briefly presented in the PM message?
+- [ ] Are the changes related to tickets / issues that I have listed in the commits and in the PM itself?
+- [ ] Are the tickets in "review" mode in the Project Tracking Board?
+- [ ] Does each ticket, if it is to be closed after acceptance of the PR, contain a comment that tells how to validate it?
+
+ 
 
