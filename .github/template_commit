@@ -1,0 +1,53 @@
+# Define a direct explicite title with main tag
+# Example: feat: Create my_fun to build xml
+# 50-character subject line
+# Add an empty line after that title
+
+# Note that all lines that starts with #, will not be included
+# in your commit message
+# Choose one or more tags to add: the main and the secondary ones
+# Possible tags from most to less important (see more info below):
+# ci, fix, feat, doc, test, refactor, style, chore
+tags:
+
+Why?
+
+-
+
+What?
+
+-
+
+# List corresponding issues
+# example :Issue #12
+# Be careful with # as it will not be commit if line starts with #
+Issues
+
+issue #
+
+# Explication for tags:
+# ci : everything related to ci, even the ci fix for the moment
+# fix : fix a bug in the code base
+# feat : the addition of a new feature
+# doc: package doc, we should see that on these 3 days roughly
+# test: for unit tests
+# refactor : Refactoring of code, like factoring, moving code
+# style: for code formatting, tabulation, ...
+# chore: everything that touches the project itself, classic background tasks, like a version upgrade
+
+# Exemple of commit
+# [feat]: a wonderful new feature - part 1
+#
+# tags: feat, doc, test
+#
+# Why?
+#
+# - There is a need for this feature
+#
+# What?
+#
+# - Created this
+# - Started implementation of that
+#
+# issue #123
+
