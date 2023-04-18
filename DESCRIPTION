@@ -12,7 +12,7 @@ RoxygenNote: 7.2.3
 Imports: 
     COINr,
     DT,
-    iCOINr (>= 0.1.0),
+    iCOINr (>= 0.2.0),
     plotly,
     readxl,
     shiny,
