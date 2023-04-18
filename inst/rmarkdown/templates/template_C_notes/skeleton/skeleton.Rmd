@@ -1,6 +1,6 @@
 ---
-title: "Data Interpretation Notes"
-subtitle: "Based on Key Research Questions"
+title: "Tecnical Report "
+subtitle: "Survey Documentation"
 author: "Your name"
 date: "`r format(Sys.Date(),  '%d %B %Y')`"
 output:
@@ -8,7 +8,9 @@ output:
     toc: yes
     toc_depth: 2
     number_sections: yes
-params:
+params: 
+  year: 2022
+  country: "ARG"
   datafolder: "data-raw"
   data: "data.xlsx"
   form: "form.xlsx"
@@ -16,7 +18,7 @@ params:
   ridl: "ridlproject" ## Name of the ridl project where you data is documented and archived
   publish: "no" ## put to "yes" in order to add your report, source and analysis plan as ressource within the same ridl dataset
   visibility: "public"
-  stage: "interpretation_note"
+  stage: "technical_report"
   
 ---
 
@@ -41,7 +43,6 @@ set.seed(1)
 extrafont::loadfonts(quiet=TRUE)
 
 library("tidyverse")
-library("kobocruncher")
 library("officedown")
 library("officer")
 library("unhcrthemes")
@@ -51,6 +52,9 @@ library("tidyverse")
 library("scales")
 library("lubridate")
 
+##  make sure to get last version 
+if ( packageVersion("kobocruncher") != "0.2.5"){pak::pkg_install("edouard-legoupil/kobocruncher")}
+library("kobocruncher")
 # turn off the automatic use of showtext functionality, so that the dml function can works properly
 showtext::showtext_auto(FALSE) 
 ```
@@ -64,12 +68,15 @@ list_of_resources <- p[["resources"]][[1]]
 
 ```
 
+Report based on `r p[["short_title" ]]`
 
+Note that most part of this reports pull metadata from [RIDL](`r paste0("https://ridl.unhcr.org/dataset/",params$ridl ) `).
+
+If information is missing please, document in RIDL and regenerate the report.
 
 #	I  Abstract
 
-`r p[["short_title" ]]`
-
+`r as.character(p[["notes"]])`
 
 #	II - Introduction
 
@@ -84,7 +91,19 @@ Data Operational purpose is `r p[["operational_purpose_of_data"]]`
 The covered area is `r p[["geographies"]]` and coverage is `r p[["geog_coverage"]]`
 
 
-##	b.PoC situation 
+##	Background on population data 
+
+```{r examples-plot_ctr_population_type_per_year, fig.retina = 1, fig.width = 12, fig.asp = 0.618, fig.align = "left", dev = "ragg_png", out.width = "110%"}
+unhcrdatapakage::plot_ctr_population_type_per_year(year = 2022,
+                                  lag = 5,
+                         country_asylum_iso3c = params$country,
+                          pop_type = c("REF",
+                                       "ASY",
+                                       "OIP",
+                                       "OOC",
+                                       "STA",
+                                       "IDP" ))
+```
 
 
 #	III - Methodology and Limitations
@@ -94,9 +113,6 @@ The covered area is `r p[["geographies"]]` and coverage is `r p[["geog_coverage"
 ###	Survey design
 
 Unit of measurement for the study is `r p[["unit_of_measurement" ]]`.
-
- 
-
 
 ###	Sample design
 
@@ -156,7 +172,7 @@ Data Collection started on `r p[["date_range_start" ]]` and ended on `r p[["date
 
 ## b-	Data limitations and fieldwork challenges
 
-`r as.character(p[["notes"]])`
+
 
 # IV -	Findings 
 

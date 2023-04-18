@@ -125,18 +125,22 @@ Your data need to have:
 
 ## Language
 
-You can prepare your  crunching in different languages
+You can prepare your  crunching in different languages. This is set up by a specific YAML parameter.
  *   `language`: "" 
  
  Set up the language you will use for the analysis in case your questionnaire was multilingual.
  
-Check what you have in your `xlsform` - for instance, this could be:
+Check what you __PRECISELY__ have in your specific `xlsform` - for instance, if you have and want to select :
 
- * `::english (en)` -or
+ * `label::english (en)` then set up the parameter as `language: "english (en)"`  
+ 
+ * `label::spanish (es)`then set up the parameter as `language: "spanish (es)"` -- ake sure not add the double comma
 
- * `::french (fr)` or
+ * `label::French (fr)` then set up the parameter as `language: "French (fr)"` -- note that it is case sensitive
 
- * `::spanish (es)`
+  * `label::Español (es)`then set up the parameter as `language: "Español (es)"` -- make sure to use UTF8 encoding when you have special character. 
+  
+In this last case, note that this would not be a correct questionnaire encoding practice as language description should be aligned with [standard language description from  Internet Assigned Numbers Authority (IANA)](http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry) which are precisely designed to avoid special characters management. Language name first letter should also be capitalised.
  
  
  

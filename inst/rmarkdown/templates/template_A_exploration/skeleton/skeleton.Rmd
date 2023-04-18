@@ -49,6 +49,9 @@ library("ggplot2")
 library("unhcrthemes")
 ggplot2::theme_set( unhcrthemes::theme_unhcr(font_size = 16))
 
+
+##  make sure to get last version 
+if ( packageVersion("kobocruncher") != "0.2.5"){pak::pkg_install("edouard-legoupil/kobocruncher")}
 library("kobocruncher")
 ```
 
@@ -85,7 +88,7 @@ datalist <- kobo_data(datapath = datapath )
 dico <- kobo_dico(xlsformpath = xlsformpath)
 ### Uncomment if you want to review
 # allvar <- as.data.frame(dico[["variables"]])
-# plan <- as.data.frame(dico[["plan"]])
+#
 ```
 
 
@@ -132,6 +135,9 @@ datalist <- expanded[["datalist"]]
 # Automatic Exploration
 
 ```{r cruncher, results='asis' }
+## Check what will be crunched
+plan <- as.data.frame(dico[["plan"]])
+## and go crunching..
 kobo_cruncher(datalist = datalist,
               dico = dico,
               datasource = params$datasource,

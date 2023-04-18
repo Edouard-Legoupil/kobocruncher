@@ -11,9 +11,13 @@ kobo_prepare_form(xlsformpath, xlsformpathout, label_language = "", ridl = "")
 
 \item{xlsformpathout}{The full path and filename of the xlsform to be accessed (has to be xlsx file)}
 
-\item{label_language}{Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file -default is  ::english (en)}
+\item{label_language}{Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file.
+This is strictly based on what is inside your form  for instance \code{english (en)} , \code{Español (es)}, or \code{spanish (es)}.
+Noe that language encoding description should follow https://xlsform.org/en/#multiple-language-support
 
-\item{ridl}{If available, it will prefill the RIDL info through what was already recorded there}
+Do not includ the \code{::} that comes after the label and that separates it from the language suffix}
+
+\item{ridl}{If available, it will pre-fill the RIDL info through what was already recorded there}
 }
 \description{
 Prepare XLSform by adding instructions for the analysis plan and checking that structure and settings are correct.
@@ -25,8 +29,8 @@ An additional worksheet is also created to document the information required for
 \enumerate{
 \item Configuration of how questions are grouped together in the report:
 \itemize{
-\item chapter: by default the crunching report is presented according to the group. Once set, this will replace the original grouping. Only variable defined within a chapter will be displayed in the crunching report. By dafault chapter will follow the questions sequence - if chapters start with a number that number will overrule the sequence
-\item subchapter: provides a second level of details below the chapter if subchapters start with a number that number will overrule the sequence
+\item chapter: by default the crunching report is presented according to the group. Once set, this will replace the original grouping. Only variable defined within a chapter will be displayed in the crunching report. By default chapter will follow the questions sequence - if chapters start with a number that number will overrule the sequence
+\item subchapter: provides a second level of details below the chapter if sub-chapters start with a number that number will overrule the sequence
 }
 \item Configuration for data manipulation:
 \itemize{

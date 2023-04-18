@@ -24,6 +24,8 @@ Presentations / tutorials for a one day training workshop are accessible here:
 
 ## Install and configure authentication token
 
+ If you are on Windows, you will first need to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) on the top of [R](https://cran.r-project.org/bin/windows/base/) and [Rstudio](https://posit.co/download/rstudio-desktop/) in order to install the package locally.
+
 ```{r}
 install.packages("pak")
 

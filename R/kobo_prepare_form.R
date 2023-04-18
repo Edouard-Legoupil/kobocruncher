@@ -11,8 +11,8 @@
 #'  An additional worksheet is also created to document the information required for registration on UNHCR CKAN instance http://ridl.unhcr.org
 #'  
 #'  1. Configuration of how questions are grouped together in the report:
-#'     - chapter: by default the crunching report is presented according to the group. Once set, this will replace the original grouping. Only variable defined within a chapter will be displayed in the crunching report. By dafault chapter will follow the questions sequence - if chapters start with a number that number will overrule the sequence
-#'     - subchapter: provides a second level of details below the chapter if subchapters start with a number that number will overrule the sequence
+#'     - chapter: by default the crunching report is presented according to the group. Once set, this will replace the original grouping. Only variable defined within a chapter will be displayed in the crunching report. By default chapter will follow the questions sequence - if chapters start with a number that number will overrule the sequence
+#'     - subchapter: provides a second level of details below the chapter if sub-chapters start with a number that number will overrule the sequence
 #' 
 #'  2. Configuration for data manipulation:
 #'     - clean: define what variable shall be re-categorized during cleaning - a local copy of all levels will be locally saved in order to do the mapping in excel. When the mapping is available, it will be automatically applied to the data. Can be useful to reduce the number of categories.
@@ -32,8 +32,13 @@
 #'
 #' @param xlsformpath The full path and filename of the xlsform to be accessed (has to be xlsx file)
 #' @param xlsformpathout The full path and filename of the xlsform to be accessed (has to be xlsx file)
-#' @param label_language Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file -default is  ::english (en)
-#' @param ridl If available, it will prefill the RIDL info through what was already recorded there
+#' @param label_language Optional if the form used multiple languages, indicate the language to use to prepare the analysis plan - check first in your original file. 
+#'    This is strictly based on what is inside your form  for instance `english (en)` , `Español (es)`, or `spanish (es)`. 
+#'    Noe that language encoding description should follow https://xlsform.org/en/#multiple-language-support 
+#'    
+#'    Do not includ the `::` that comes after the label and that separates it from the language suffix
+#'    
+#' @param ridl If available, it will pre-fill the RIDL info through what was already recorded there
 #' 
 #' @importFrom tidyselect where
 #' @importFrom dplyr select pull mutate if_else filter transmute case_when left_join
@@ -104,6 +109,7 @@ kobo_prepare_form <- function(xlsformpath,
         
     settings <- readxl::read_excel(xlsformpath,  sheet = "settings")
     #form_instance <- as.character(settings$form_title)
+    if ("form_title" %in% colnames(settings)) {   } else {   settings$form_title <- ""   }
   
     ## Check if a default language is set up in the settings - and add the correct separator
     # for test settings$default_language <- NULL
@@ -113,7 +119,6 @@ kobo_prepare_form <- function(xlsformpath,
                                       paste0("::",settings$default_language)),
                               paste0("::",label_language))
     if (settings$form_title =="" | is.na(settings$form_title)) { } else {settings$form_title <- "Study"}
-   
 
     
     
