@@ -101,7 +101,8 @@ f_analyse_indicators <- function(coin){
   # add outputs to coin
   coin$Analysis$Raw <- list(
     FlaggedStats = df_disp,
-    Flags = df_flag
+    Flags = df_flag,
+    Stats = df_stats
   )
 
   coin
