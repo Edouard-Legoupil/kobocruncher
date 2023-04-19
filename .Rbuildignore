@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^A2SIT\.Rproj$
+^.github$
+^\.github$
