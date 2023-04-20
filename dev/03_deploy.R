@@ -3,7 +3,9 @@
 # 4. Test my package
 
 devtools::test()
-rhub::check_for_cran()
+#rhub::check_for_cran()
+
+#rsconnect::writeManifest()
 
 # 5. Deployment elements
 
