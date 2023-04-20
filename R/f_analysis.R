@@ -101,7 +101,8 @@ f_analyse_indicators <- function(coin){
   # add outputs to coin
   coin$Analysis$Raw <- list(
     FlaggedStats = df_disp,
-    Flags = df_flag
+    Flags = df_flag,
+    Stats = df_stats
   )
 
   coin
@@ -132,7 +133,7 @@ f_display_indicator_analysis <- function(coin, filter_to_flagged = TRUE){
   }
 
   if(is.null(Xd) || is.null(Xh)){
-    abort("Indicator analysis not found in coin. Run f_analyse_indicators() first.")
+    stop("Indicator analysis not found in coin. Run f_analyse_indicators() first.", call. = FALSE)
   }
 
   if(filter_to_flagged){
@@ -232,9 +233,9 @@ f_remove_indicators <- function(coin, remove_indicators = NULL){
     coin$Analysis$Raw <- ind_analysis
   }
 
-  if(!is.null(coin$Data$Aggregated)){
-    coin <- f_generate_results(coin)
-  }
+  # if(!is.null(coin$Data$Aggregated)){
+  #   coin <- f_generate_results(coin)
+  # }
 
   coin
 
@@ -261,9 +262,9 @@ f_add_indicators <- function(coin, add_indicators = NULL){
     coin$Analysis$Raw <- ind_analysis
   }
 
-  if(!is.null(coin$Data$Aggregated)){
-    coin <- f_generate_results(coin)
-  }
+  # if(!is.null(coin$Data$Aggregated)){
+  #   coin <- f_generate_results(coin)
+  # }
 
   coin
 

@@ -21,13 +21,11 @@ analysis_UI <- function(id) {
 
              column(
                8,
-               h4("Info"),
                htmlOutput(NS(id, "indicator_summary"))
              ),
 
              column(
                4,
-               h4("Add/remove"),
                shinyWidgets::actionBttn(
                  inputId = NS(id, "add_indicator"),
                  label = "Add",
@@ -54,7 +52,7 @@ analysis_UI <- function(id) {
                id = "scatter_sidebar",
                icon = icon("gear"),
                width = 25,
-               selectInput(NS(id, "scat_v2"), label = "Plot against", choices = c("a", "b")),
+               selectInput(NS(id, "scat_v2"), label = "Plot against", choices = c("tmp_999")),
                shinyWidgets::prettySwitch(NS(id, "scat_logx"), label = "Log X"),
                shinyWidgets::prettySwitch(NS(id, "scat_logy"), label = "Log Y")
              ),
@@ -113,6 +111,8 @@ analysis_server <- function(id, coin, coin_full, parent_input) {
         )
       }
 
+      icode_selected(coin_full()$Meta$Lineage[[1]][1])
+
     })
 
     # Generate and display results table
@@ -123,21 +123,15 @@ analysis_server <- function(id, coin, coin_full, parent_input) {
 
     })
 
+    # selected code from table
+    icode_selected <- reactiveVal(NULL)
+
+    # text (html) summary of selected indicator
     output$indicator_summary <- renderText({
       req(icode_selected())
 
-      cat_string <- paste0("<b>Category:</b> ", get_parent(coin_full(), icode_selected(), 2))
-      dim_string <- paste0("<b>Dimension:</b> ", get_parent(coin_full(), icode_selected(), 3))
-
-      ind_status <- l_analysis()$FlaggedStats$Status[l_analysis()$FlaggedStats$iCode == icode_selected()]
-
-      stat_string <- paste0("<b>Status:</b> ", ind_status)
-
-      paste0(cat_string, "<br>", dim_string, "<br>", stat_string)
+      get_indicator_info(coin_full(), coin(), icode_selected())
     })
-
-    # selected code from table
-    icode_selected <- reactiveVal(NULL)
 
     # update selected row variable
     observeEvent(input$analysis_table_rows_selected, {
@@ -162,36 +156,66 @@ analysis_server <- function(id, coin, coin_full, parent_input) {
           title = h2(COINr::icodes_to_inames(coin_full(), icode_selected()))
         )
       )
+      shinydashboardPlus::updateBox("indbox", action = "restore")
     })
 
     # Remove indicators
     observeEvent(input$remove_indicator, {
 
-      # remove indicators and update coin
-      coin(f_remove_indicators(coin(), icode_selected()))
+      if(get_inclusion_status(l_analysis(), icode_selected()) == "OUT"){
 
-      shinyWidgets::show_toast(
-        title = "Indicator removed",
-        text = paste0("Indicator ", icode_selected(), " was successfully removed."),
-        type = "info",
-        timer = 5000,
-        position = "bottom-end"
-      )
+        shinyWidgets::show_toast(
+          title = "Already removed",
+          text = paste0("Indicator ", icode_selected(), " has already been removed."),
+          type = "error",
+          timer = 5000,
+          position = "bottom-end"
+        )
 
-      # update analysis tables
-      l_analysis(
-        coin()$Analysis$Raw[c("FlaggedStats", "Flags")]
-      )
+      } else {
+
+        # remove indicators and update coin
+        coin(f_remove_indicators(coin(), icode_selected()))
+
+        shinyWidgets::show_toast(
+          title = "Indicator removed",
+          text = paste0("Indicator ", icode_selected(), " was successfully removed."),
+          type = "info",
+          timer = 5000,
+          position = "bottom-end"
+        )
+
+        # update analysis tables
+        l_analysis(
+          coin()$Analysis$Raw[c("FlaggedStats", "Flags")]
+        )
+
+      }
 
     })
 
     # Add indicators
     observeEvent(input$add_indicator, {
-      coin(f_add_indicators(coin(), icode_selected()))
-      # update analysis tables
-      l_analysis(
-        coin()$Analysis$Raw[c("FlaggedStats", "Flags")]
-      )
+
+      if(get_inclusion_status(l_analysis(), icode_selected()) == "In"){
+
+        shinyWidgets::show_toast(
+          title = "Already in",
+          text = paste0("Indicator ", icode_selected(), " is already included in the framework."),
+          type = "error",
+          timer = 5000,
+          position = "bottom-end"
+        )
+
+      } else {
+
+        coin(f_add_indicators(coin(), icode_selected()))
+        # update analysis tables
+        l_analysis(
+          coin()$Analysis$Raw[c("FlaggedStats", "Flags")]
+        )
+
+      }
     })
 
     # violin plot
@@ -203,6 +227,9 @@ analysis_server <- function(id, coin, coin_full, parent_input) {
     # scatter plot
     output$scatter_plot <- plotly::renderPlotly({
       req(icode_selected())
+      req(input$scat_v2 != "tmp_999")
+
+      browser
       iCOINr::iplot_scatter(
         coin_full(),
         dsets = "Raw",

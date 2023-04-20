@@ -1,5 +1,16 @@
-# Define a direct explicite title with main tag
-# Example: feat: Create my_fun to build xml
+# Define a direct explicit title with main tag
+# Explication for tags:
+# [ci] : everything related to ci, even the ci fix for the moment
+# [fix] : fix a bug in the code base
+# [feat] : the addition of a new feature
+# [doc]: package doc, we should see that on these 3 days roughly
+# [test]: for unit tests
+# [refactor] : Refactoring of code, like factoring, moving code
+# [style]: for code formatting, tabulation, ...
+# [chore]: everything that touches the project itself, classic background tasks, like a version upgrade
+
+
+# Example: [feat]: Create my_fun to build xml
 # 50-character subject line
 # Add an empty line after that title
 
@@ -25,15 +36,6 @@ Issues
 
 issue #
 
-# Explication for tags:
-# ci : everything related to ci, even the ci fix for the moment
-# fix : fix a bug in the code base
-# feat : the addition of a new feature
-# doc: package doc, we should see that on these 3 days roughly
-# test: for unit tests
-# refactor : Refactoring of code, like factoring, moving code
-# style: for code formatting, tabulation, ...
-# chore: everything that touches the project itself, classic background tasks, like a version upgrade
 
 # Exemple of commit
 # [feat]: a wonderful new feature - part 1

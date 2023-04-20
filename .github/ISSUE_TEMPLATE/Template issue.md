@@ -1,7 +1,7 @@
 ---
 name: Standard Issue EN
 about: Use this template to create a new issue.
-title: "ETQ <user/dev/...>, I would like to ... in order to ..."
+title: "As <user/dev/...>, I would like to ... in order to ..."
 ---
 
 <!-- This part should be helping to understand why is this issue important. What is the final objective ? -->
