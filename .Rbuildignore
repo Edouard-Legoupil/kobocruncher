@@ -11,3 +11,6 @@
 ^kobocruncher\.Rproj$
 ^pkgdown$
 ^rsconnect$
+^app\.R$
+$run_dev.*
+^rsconnect$
