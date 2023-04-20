@@ -13,12 +13,25 @@ Imports:
     COINr,
     DT,
     iCOINr (>= 0.1.0),
+    golem,
+    pkgload,
     plotly,
     readxl,
     shiny,
     shinydashboard,
     shinydashboardPlus,
     shinyWidgets,
-    utils
+    utils,
+    attempt,
+    glue,
+    htmltools
 Remotes: 
     bluefoxr/iCOINr
+Suggests: 
+    knitr,
+    rmarkdown,
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Language: en-US

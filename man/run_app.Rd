@@ -4,7 +4,10 @@
 \alias{run_app}
 \title{Run the app}
 \usage{
-run_app()
+run_app(...)
+}
+\arguments{
+\item{...}{A list of Options to be added to the app}
 }
 \description{
 Run the app

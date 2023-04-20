@@ -1,0 +1,19 @@
+---
+title: "A2SIT"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{A2SIT}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(A2SIT)
+```

@@ -1,3 +1,4 @@
+#' @import shiny
 app_server <- function(input, output, session) {
 
   # initialise reactives to be shared between modules. These can be modified
