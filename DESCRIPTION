@@ -14,17 +14,13 @@ Imports:
     DT,
     iCOINr (>= 0.1.0),
     golem,
-    pkgload,
     plotly,
     readxl,
     shiny,
     shinydashboard,
     shinydashboardPlus,
     shinyWidgets,
-    utils,
-    attempt,
-    glue,
-    htmltools
+    utils
 Remotes: 
     bluefoxr/iCOINr
 Suggests: 
@@ -35,3 +31,5 @@ Suggests:
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Language: en-US
+URL: https://github.com/UNHCR-Guatemala/A2SIT
+BugReports: https://github.com/UNHCR-Guatemala/A2SIT/issues

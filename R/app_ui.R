@@ -2,7 +2,8 @@
 #'
 #' @return Front end of app
 #'
-#' @importFrom shinydashboardPlus box
+#' @importFrom shinydashboardPlus box dashboardPage
+#' @importFrom shinydashboard menuItem menuSubItem tabItem
 #'
 #'
 #' @export

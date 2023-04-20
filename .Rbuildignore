@@ -5,3 +5,8 @@
 ^\.travis\.yml$
 ^app\.R$
 ^rsconnect$
+^.github
+^dev$
+$run_dev.*
+^app\.R$
+^rsconnect$
