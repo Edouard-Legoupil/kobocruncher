@@ -7,14 +7,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="kobocruncher">
 <title>Crunching Function for XlsForm • kobocruncher</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Lato-0.4.5/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.5/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Lato-0.4.6/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.6/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Crunching Function for XlsForm">
 <meta property="og:description" content="kobocruncher">
+<meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -28,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">kobocruncher</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +50,9 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Troubleshooting.html">Troubleshooting</a>
     <a class="dropdown-item" href="../articles/crunching-function-for-xlsform.html">Crunching Function for XlsForm</a>
+    <a class="dropdown-item" href="../articles/shinyapp.html">ShinyApp</a>
   </div>
 </li>
 <li class="nav-item">
@@ -73,7 +82,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Crunching Function for XlsForm</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Crunching Function for XlsForm</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/Edouard-Legoupil/kobocruncher/blob/HEAD/vignettes/crunching-function-for-xlsform.Rmd" class="external-link"><code>vignettes/crunching-function-for-xlsform.Rmd</code></a></small>
@@ -105,44 +114,43 @@ and `system.file()` to read it in your examples.
 <span><span class="co"># MainFrame</span></span>
 <span><span class="va">datalist</span><span class="op">[[</span><span class="st">"main"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 26</span></span></span>
-<span><span class="co">#&gt;   start               end                 location       profi…¹ profi…² profi…³</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 2022-10-27 <span style="color: #949494;">08:57:57</span> 2022-11-10 <span style="color: #949494;">08:49:09</span> private_facil… VEN     Consul… accomo…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2022-10-24 <span style="color: #949494;">11:36:52</span> 2022-10-24 <span style="color: #949494;">15:46:00</span> home           HND     farmer  accomo…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2022-10-26 <span style="color: #949494;">16:19:35</span> 2022-10-26 <span style="color: #949494;">18:15:07</span> subcenter      SLV     vendor  educat…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 2022-10-26 <span style="color: #949494;">16:19:35</span> 2022-10-26 <span style="color: #949494;">17:51:14</span> subcenter      SLV     teacher safety…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2022-10-26 <span style="color: #949494;">14:02:06</span> 2022-10-26 <span style="color: #949494;">16:10:25</span> home           COL     farmer  employ…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 20 more variables: profile.reason.accomodation &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.employment &lt;dbl&gt;, profile.reason.education &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.community &lt;dbl&gt;, profile.reason.safety &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.movement &lt;dbl&gt;, profile.reason.reunification &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.no_answer &lt;dbl&gt;, profile.reason.other &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   profile.HHSize &lt;dbl&gt;, `_id` &lt;dbl&gt;, `_uuid` &lt;chr&gt;, `_submission_time` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   `_validation_status` &lt;lgl&gt;, `_notes` &lt;lgl&gt;, `_status` &lt;chr&gt;, …</span></span></span>
+<span><span class="co">#&gt;   start               end                 location         profile.country</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 2022-10-27 <span style="color: #949494;">08:57:57</span> 2022-11-10 <span style="color: #949494;">08:49:09</span> private_facility VEN            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2022-10-24 <span style="color: #949494;">11:36:52</span> 2022-10-24 <span style="color: #949494;">15:46:00</span> home             HND            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2022-10-26 <span style="color: #949494;">16:19:35</span> 2022-10-26 <span style="color: #949494;">18:15:07</span> subcenter        SLV            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 2022-10-26 <span style="color: #949494;">16:19:35</span> 2022-10-26 <span style="color: #949494;">17:51:14</span> subcenter        SLV            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2022-10-26 <span style="color: #949494;">14:02:06</span> 2022-10-26 <span style="color: #949494;">16:10:25</span> home             COL            </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 22 more variables: profile.occupation &lt;chr&gt;, profile.reason &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.accomodation &lt;dbl&gt;, profile.reason.employment &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.education &lt;dbl&gt;, profile.reason.community &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.safety &lt;dbl&gt;, profile.reason.movement &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.reunification &lt;dbl&gt;, profile.reason.no_answer &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   profile.reason.other &lt;dbl&gt;, profile.HHSize &lt;dbl&gt;, `_id` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `_uuid` &lt;chr&gt;, `_submission_time` &lt;dbl&gt;, `_validation_status` &lt;lgl&gt;, …</span></span></span>
 <span><span class="co"># Second Frame - based on presence of repeat within the form, aka nested or</span></span>
 <span><span class="co"># hierarchical data structure, etc... </span></span>
 <span><span class="va">datalist</span><span class="op">[[</span><span class="st">"members"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 14</span></span></span>
-<span><span class="co">#&gt;    members.age members…¹ _inde…² _pare…³ _pare…⁴ _subm…⁵ _subm…⁶ _subm…⁷ _subm…⁸</span></span>
-<span><span class="co">#&gt;          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>          56 male            1 Sample…       1  2.08<span style="color: #949494;">e</span>7 48cc75…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>           2 male            2 Sample…       2  2.08<span style="color: #949494;">e</span>7 f1c3d3…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>           3 male            3 Sample…       2  2.08<span style="color: #949494;">e</span>7 f1c3d3…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>          10 female          4 Sample…       2  2.08<span style="color: #949494;">e</span>7 f1c3d3…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>          45 male            5 Sample…       2  2.08<span style="color: #949494;">e</span>7 f1c3d3…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>          35 female          6 Sample…       2  2.08<span style="color: #949494;">e</span>7 f1c3d3…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>           4 male            7 Sample…       3  2.08<span style="color: #949494;">e</span>7 1bac72…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>          34 female          8 Sample…       3  2.08<span style="color: #949494;">e</span>7 1bac72…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>          34 male            9 Sample…       3  2.08<span style="color: #949494;">e</span>7 1bac72…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>          51 female         10 Sample…       4  2.08<span style="color: #949494;">e</span>7 aa9f07…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>          21 male           11 Sample…       5  2.08<span style="color: #949494;">e</span>7 e83161…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>          25 female         12 Sample…       5  2.08<span style="color: #949494;">e</span>7 e83161…  <span style="text-decoration: underline;">44</span>686. <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 5 more variables: `_submission__notes` &lt;lgl&gt;,</span></span></span>
+<span><span class="co">#&gt;    members.age members.sex `_index` `_parent_table_name`      `_parent_index`</span></span>
+<span><span class="co">#&gt;          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>          56 male               1 Sample Dataset KoboloadeR               1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>           2 male               2 Sample Dataset KoboloadeR               2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>           3 male               3 Sample Dataset KoboloadeR               2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>          10 female             4 Sample Dataset KoboloadeR               2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>          45 male               5 Sample Dataset KoboloadeR               2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>          35 female             6 Sample Dataset KoboloadeR               2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>           4 male               7 Sample Dataset KoboloadeR               3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>          34 female             8 Sample Dataset KoboloadeR               3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>          34 male               9 Sample Dataset KoboloadeR               3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>          51 female            10 Sample Dataset KoboloadeR               4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>          21 male              11 Sample Dataset KoboloadeR               5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>          25 female            12 Sample Dataset KoboloadeR               5</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 9 more variables: `_submission__id` &lt;dbl&gt;, `_submission__uuid` &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `_submission__submission_time` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `_submission__validation_status` &lt;lgl&gt;, `_submission__notes` &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `_submission__status` &lt;chr&gt;, `_submission__submitted_by` &lt;lgl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   `_submission__tags` &lt;lgl&gt;, parent_index &lt;dbl&gt;, and abbreviated variable</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   names ¹​members.sex, ²​`_index`, ³​`_parent_table_name`, ⁴​`_parent_index`,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ⁵​`_submission__id`, ⁶​`_submission__uuid`, ⁷​`_submission__submission_time`,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ⁸​`_submission__validation_status`</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `_submission__tags` &lt;lgl&gt;, parent_index &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="extend-the-xlsform-to-add-instructions-for-the-analysis-plan">Extend the xlsform to add instructions for the analysis plan<a class="anchor" aria-label="anchor" href="#extend-the-xlsform-to-add-instructions-for-the-analysis-plan"></a>
@@ -1144,7 +1152,10 @@ steps in the data preparation.</p>
 <span><span class="co">#&gt; # Using lambdas list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">kobocruncher</span> package.</span></span>
 <span><span class="co">#&gt;   Please report the issue at</span></span>
-<span><span class="co">#&gt;   <span style="color: #0000BB; font-style: italic;">&lt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/Edouard-Legoupil/kobocruncher/issues&gt;</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre></div>
 <p><img src="crunching-function-for-xlsform_files/figure-html/examples-plot_likert-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -1407,13 +1418,6 @@ increase your audience</p>
 <span><span class="co">#   template_description = "Data brief and Story Telling",</span></span>
 <span><span class="co">#   template_create_dir = TRUE</span></span>
 <span><span class="co"># )</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="shiny-app">Shiny App<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
-</h3>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># app_kobocruncher(theme="flatly")</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

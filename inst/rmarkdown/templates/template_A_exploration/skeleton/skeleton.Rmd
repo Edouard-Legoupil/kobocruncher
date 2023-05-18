@@ -94,6 +94,9 @@ dico <- kobo_dico(xlsformpath = xlsformpath)
 
 ```{r clean_data}
 ## When iterating during the initial data exploration, you may add here specific cleaning steps 
+### For instance below keepe all records with consent -- here coded 1: yes 
+# datalist[["main"]] <- datalist[["main"]] |>
+#                   dplyr::filter(group_consent.Intro04 == 1 )
 ```
 
 

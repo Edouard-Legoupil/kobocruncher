@@ -80,7 +80,7 @@ kobo_cruncher <- function(datalist = datalist,
                                                           n = n,
                                                           showcode = TRUE))
       
-      if (type %in% c("numeric", "integer", "range")) print(plot_integer(datalist = datalist, 
+      if (type %in% c("numeric", "integer", "range", "calculate")) print(plot_integer(datalist = datalist, 
                                                           dico = dico,
                                                           var = name,  
                                                           datasource = datasource,
@@ -118,7 +118,7 @@ kobo_cruncher <- function(datalist = datalist,
                                   n_by = n_by,
                                   showcode = TRUE)) }
       }
-      if (type %in% c("numeric", "integer") &  length(disaggregation)>=1 ) {
+      if (type %in% c("numeric", "integer", "range", "calculate") &  length(disaggregation)>=1 ) {
         for (disag in disaggregation  ){
           
           if(disag  != "")

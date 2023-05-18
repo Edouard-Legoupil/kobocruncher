@@ -23,7 +23,7 @@ reference:
 - title: Shiny App
   desc: Graphical User Interface with Shiny
   contents:
-  - starts_with("app_")
+  - starts_with("run_")
 
 - text: News
   href: news/index.html

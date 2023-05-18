@@ -93,7 +93,7 @@ plot_likert <- function(datalist = datalist,
     
     
      
-    if( nrow(likertframe) == 0 ) {
+    if( nrow(likertframe) == 0 | ncol(likertframe) == 0  ) {
       cat("Chart could not be generated")
     } else {
       

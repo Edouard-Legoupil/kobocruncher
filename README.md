@@ -1,9 +1,11 @@
 # {kobocruncher}
-An organized workflow generating 'Rmd' files from an extended 'xlsform' questionnaire structure to facilitate survey data crunching. 
+An organized workflow generating 'Rmd' files from an extended 'xlsform' questionnaire structure to facilitate survey data crunching.  
 
 `{kobocruncher}` support organised data analysis workflow, to conduct data discovery and analysis for data collected through  [KoboToolbox](https://www.kobotoolbox.org/), [ODK](https://opendatakit.org/), [ONA](https://ona.io/home/) or any __[xlsform](http://xlsform.org)__ compliant data collection platform.
 
 This package first builds on the capacity of [UNHCR Kobo server](http://kobo.unhcr.org) but it can also be used from any structured dataset. It comes as a companion tool to the [Integrated Framework for Household Survey](https://unhcr.github.io/Integrated-framework-household-survey).
+
+
 
 ## Tutorial 
 
@@ -37,7 +39,7 @@ pak::pkg_install('edouard-legoupil/riddle')
 pak::pkg_install("edouard-legoupil/kobocruncher")  
 ```  
 
-The `{riddle}` package is used to ensure integration with UNHCR Data Repository](https://ridl.unhcr.org).
+The `{riddle}` package is used to ensure integration with [RIDL - UNHCR Internal Data Repository](https://ridl.unhcr.org).
 It requires you to add your __API token__ and store it for further use. 
 The easiest way to do that is to store your API token in your `.Renviron` file which 
 is automatically read by R on startup.

@@ -1,4 +1,5 @@
 #' @import shiny
+#' @keywords internal
 app_server <- function(input, output, session) {
 
   wd <- setwd(getShinyOption(".appDir", getwd()))

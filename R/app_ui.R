@@ -4,6 +4,7 @@
 #'
 #' @import shiny
 #' @import shinydashboard
+#' @keywords internal
 #'
 #'
 #' @export

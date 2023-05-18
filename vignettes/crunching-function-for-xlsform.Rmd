@@ -633,10 +633,7 @@ It will generate a PDF or an paginated HTML page
 
 ```
 
-## Shiny App
+ 
 
-```{r examples-app_kobocruncher}
 
-# app_kobocruncher(theme="flatly")
-```
 
