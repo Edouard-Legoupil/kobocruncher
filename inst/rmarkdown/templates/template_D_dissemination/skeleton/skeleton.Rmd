@@ -54,7 +54,7 @@ ggplot2::theme_set( unhcrthemes::theme_unhcr(font_size = 22))
 
 
 ##  make sure to get last version 
-if ( packageVersion("kobocruncher") != "0.2.5"){pak::pkg_install("edouard-legoupil/kobocruncher")}
+if ( packageVersion("kobocruncher") != "0.2.6"){pak::pkg_install("edouard-legoupil/kobocruncher")}
 library("kobocruncher")
 
 ```

@@ -53,7 +53,7 @@ library("scales")
 library("lubridate")
 
 ##  make sure to get last version 
-if ( packageVersion("kobocruncher") != "0.2.5"){pak::pkg_install("edouard-legoupil/kobocruncher")}
+if ( packageVersion("kobocruncher") != "0.2.6"){pak::pkg_install("edouard-legoupil/kobocruncher")}
 library("kobocruncher")
 # turn off the automatic use of showtext functionality, so that the dml function can works properly
 showtext::showtext_auto(FALSE) 
@@ -94,7 +94,7 @@ The covered area is `r p[["geographies"]]` and coverage is `r p[["geog_coverage"
 ##	Background on population data 
 
 ```{r examples-plot_ctr_population_type_per_year, fig.retina = 1, fig.width = 12, fig.asp = 0.618, fig.align = "left", dev = "ragg_png", out.width = "110%"}
-unhcrdatapakage::plot_ctr_population_type_per_year(year = 2022,
+unhcrdatapackage::plot_ctr_population_type_per_year(year = 2022,
                                   lag = 5,
                          country_asylum_iso3c = params$country,
                           pop_type = c("REF",

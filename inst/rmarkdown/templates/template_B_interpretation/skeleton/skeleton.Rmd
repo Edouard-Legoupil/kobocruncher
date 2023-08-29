@@ -48,7 +48,7 @@ library("lubridate")
 
 
 ##  make sure to get last version 
-if ( packageVersion("kobocruncher") != "0.2.5"){pak::pkg_install("edouard-legoupil/kobocruncher")}
+if ( packageVersion("kobocruncher") != "0.2.6"){pak::pkg_install("edouard-legoupil/kobocruncher")}
 library("kobocruncher")
 # turn off the automatic use of showtext functionality, so that the dml function can works properly
 showtext::showtext_auto(FALSE) 
