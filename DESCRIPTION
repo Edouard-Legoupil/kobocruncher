@@ -1,9 +1,9 @@
 Package: kobocruncher
 Title: A Metapackage For Survey Data Crunching
-Version: 0.2.5
+Version: 0.2.6
 Authors@R: c(
     person("Edouard", "Legoupil", , "legoupil@unhcr.org", role = c("aut", "cre")),
-    person("Hisham", "Galal", , "galalh@unhcr.org", role = "aut")
+    person("Hisham", "Galal", , "galalh@unhcr.org", role = "ctb")
   )
 Description: An organized workflow generating 'Rmd' files from an extended
     'xlsform' questionnaire structure to facilitate survey data crunching.
@@ -13,11 +13,11 @@ BugReports: https://github.com/Edouard-Legoupil/kobocruncher/issues
 Imports: 
     config,
     cowplot,
-    dashboardthemes,
     data.table,
     datawizard,
     dplyr,
     forcats,
+    fs,
     ggplot2,
     ggwordcloud,
     glue,
@@ -44,9 +44,12 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
+    tidyverse,
     tm,
     unhcrdown,
-    utils
+    unhcrshiny,
+    utils,
+    XlsFormUtil
 Suggests: 
     knitr,
     testthat
@@ -54,7 +57,10 @@ VignetteBuilder:
     knitr
 Remotes: 
     edouard-legoupil/riddle,
+    edouard-legoupil/unhcrshiny,
+    unhcr-americas/XlsFormUtil,
     vidonne/unhcrdown
+Config/fusen/version: 0.5.2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3.9000

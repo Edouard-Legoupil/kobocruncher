@@ -1,3 +1,8 @@
+# kobocruncher 0.2.6
+
+ * Added shinyapp
+
+
 # kobocruncher 0.2.4
 
  * Added template in word

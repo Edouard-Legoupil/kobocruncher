@@ -1,9 +1,8 @@
-pandoc: 2.19.2
+pandoc: 3.1.1
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   Troubleshooting: Troubleshooting.html
   crunching-function-for-xlsform: crunching-function-for-xlsform.html
-  shinyapp: shinyapp.html
-last_built: 2023-05-18T18:01Z
+last_built: 2023-08-29T02:42Z
 

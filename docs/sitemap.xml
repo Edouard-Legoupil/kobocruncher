@@ -16,9 +16,6 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/shinyapp.html</loc>
-  </url>
-  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -28,16 +25,10 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/app_kobocruncher.html</loc>
-  </url>
-  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
     <loc>/reference/kobo_anonymise.html</loc>
-  </url>
-  <url>
-    <loc>/reference/kobo_clean.html</loc>
   </url>
   <url>
     <loc>/reference/kobo_cruncher.html</loc>
@@ -110,38 +101,5 @@
   </url>
   <url>
     <loc>/reference/template_1_exploration.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/00-Intro.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/01-First_Report.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/02-Relabeling.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/03-Grouping_Questions.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/04-Setting_Crosstabulation.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/05-Searching_Asssociation.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/06-Cleaning_and_Indicator_calculation.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/07-Weighting.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/08-Anonymising.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/09-Interpreting.html</loc>
-  </url>
-  <url>
-    <loc>/tutorial/09-Publishing.html</loc>
   </url>
 </urlset>

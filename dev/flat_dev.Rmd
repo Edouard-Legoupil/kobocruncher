@@ -345,18 +345,7 @@ kobo_prepare_form <- function(xlsformpath,
     ## need to delete empty rows from the form
     survey <- as.data.frame(survey[!is.na(survey$type), ])
     survey[is.na(survey)] <-  ""
-    sheetname <- "survey"
-    openxlsx::addWorksheet(wb, sheetname)
-    openxlsx::writeData(wb, sheetname, survey, withFilter = TRUE)
-    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(survey), widths = "auto")
-    openxlsx::setColWidths(wb, sheetname, cols = 2:3, widths = 30)
-    all.cols <- 1:ncol(survey)
-    hdr.rows <- 1
-    group.rows <- which(stringr::str_detect(survey$type, "group"))+1
-    repeat.rows <- which(stringr::str_detect(survey$type, "repeat"))+1
-    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, all.cols, gridExpand = TRUE)
-    openxlsx::addStyle(wb, sheetname, cs1, group.rows, all.cols, gridExpand = TRUE)
-    openxlsx::addStyle(wb, sheetname, cs2, repeat.rows, all.cols, gridExpand = TRUE)
+   
     
     ### Choices sheet ----------------------------------->
     choices <- tryCatch({
@@ -394,65 +383,34 @@ kobo_prepare_form <- function(xlsformpath,
       dplyr::filter(namesOfCho %in% colnames(choices)) |>
       dplyr::pull() 
     choices <- choices[ ,namesOfCho]
-    sheetname <- "choices"
-    openxlsx::addWorksheet(wb, sheetname)
-    openxlsx::writeData(wb, sheetname, choices, withFilter = TRUE)
-    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(choices), widths = "auto")
-    openxlsx::setColWidths(wb, sheetname, cols = 2:3, widths = 30)
-    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(choices), gridExpand = TRUE)
-    
-     ### settings sheets ----------------------------------->
-    sheetname <- "settings"
-    all.cols <- 1:ncol(settings)
-    hdr.rows <- 1
-    openxlsx::addWorksheet(wb, sheetname)
-    openxlsx::writeData(wb, sheetname, settings, withFilter = TRUE)
-    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(settings), widths = "auto")
-    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(settings), gridExpand = TRUE)
+   
     
     ### RIDL sheets ----------------------------------->
-    ridl_schema <- jsonlite::fromJSON("https://raw.githubusercontent.com/okfn/ckanext-unhcr/master/ckanext/unhcr/schemas/dataset.json")
-    ridl_dataset_fields <- ridl_schema$dataset_fields # |> tibble::as_tibble()
-    ridl_resource_fields <- ridl_schema$resource_fields # |> tibble::as_tibble()
-    ridl_choices <-
-      ridl_dataset_fields |>
-      dplyr::mutate(choices = purrr::map(choices, as.data.frame)) |>
-      dplyr::select(field_name, choices) |>
-      tidyr::unnest(choices) |>
-      dplyr::select(list_name = field_name, name = value, label) |>
-      as.data.frame()
-    ridl_metadata <-
-      ridl_dataset_fields |>
-      dplyr::transmute(
-        type =
-          dplyr::case_when(
-            preset == "multiple_select" ~ stringr::str_c("select_multiple", field_name, sep = " "),
-            field_name %in% ridl_choices$list_name ~ stringr::str_c("select_one", field_name, sep = " "),
-            TRUE ~ "text"),
-        name = field_name,
-        label,
-        required,
-        hint = dplyr::if_else(!is.na(help_text), help_text, form_placeholder),
-        value = "")
-    
-    sheetname <- "ridl-metadata"
-    if (sheetname %in% readxl::excel_sheets(xlsformpath)) {
-      ridl_metadata <-
-        ridl_metadata |>
-        dplyr::select(-value) |>
-        dplyr::left_join(readxl::read_excel(xlsformpath, sheet = sheetname) |> dplyr::select(name, value), by = "name")
-    }
-    
-    sheetname <- "ridl-metadata"
-    openxlsx::addWorksheet(wb, sheetname)
-    openxlsx::writeData(wb, sheetname, ridl_metadata, withFilter = TRUE)
-    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(ridl_metadata), widths = "auto")
-    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(ridl_metadata), gridExpand = TRUE)
-    sheetname <- "ridl-choices"
-    openxlsx::addWorksheet(wb, sheetname)
-    openxlsx::writeData(wb, sheetname, ridl_choices, withFilter = TRUE)
-    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(ridl_choices), widths = "auto")
-    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(ridl_choices), gridExpand = TRUE)
+    # ridl_schema <- jsonlite::fromJSON("https://raw.githubusercontent.com/okfn/ckanext-unhcr/master/ckanext/unhcr/schemas/dataset.json")
+    # ridl_dataset_fields <- ridl_schema$dataset_fields # |> tibble::as_tibble()
+    # ridl_resource_fields <- ridl_schema$resource_fields # |> tibble::as_tibble()
+    # ridl_choices <-
+    #   ridl_dataset_fields |>
+    #   dplyr::mutate(choices = purrr::map(choices, as.data.frame)) |>
+    #   dplyr::select(field_name, choices) |>
+    #   tidyr::unnest(choices) |>
+    #   dplyr::select(list_name = field_name, name = value, label) |>
+    #   as.data.frame()
+    # ridl_metadata <-
+    #   ridl_dataset_fields |>
+    #   dplyr::transmute(
+    #     type =
+    #       dplyr::case_when(
+    #         preset == "multiple_select" ~ stringr::str_c("select_multiple", field_name, sep = " "),
+    #         field_name %in% ridl_choices$list_name ~ stringr::str_c("select_one", field_name, sep = " "),
+    #         TRUE ~ "text"),
+    #     name = field_name,
+    #     label,
+    #     required,
+    #     hint = dplyr::if_else(!is.na(help_text), help_text, form_placeholder),
+    #     value = "")
+    # 
+
     
     
     
@@ -502,39 +460,102 @@ kobo_prepare_form <- function(xlsformpath,
                                "repeatvar", "calculation",
                                "chapter","subchapter", "disaggregation", "correlate",
                                 "cluster", "predict", "score", "mappoint", "mappoly")]
+  
+    
+  ## Save to file if defined    
+  if ( ! (is.null(xlsformpathout)) ) {
+    
+    sheetname <- "survey"
+    openxlsx::addWorksheet(wb, sheetname)
+    openxlsx::writeData(wb, sheetname, survey, withFilter = TRUE)
+    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(survey), widths = "auto")
+    openxlsx::setColWidths(wb, sheetname, cols = 2:3, widths = 30)
+    all.cols <- 1:ncol(survey)
+    hdr.rows <- 1
+    group.rows <- which(stringr::str_detect(survey$type, "group"))+1
+    repeat.rows <- which(stringr::str_detect(survey$type, "repeat"))+1
+    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, all.cols, gridExpand = TRUE)
+    openxlsx::addStyle(wb, sheetname, cs1, group.rows, all.cols, gridExpand = TRUE)
+    openxlsx::addStyle(wb, sheetname, cs2, repeat.rows, all.cols, gridExpand = TRUE)
+    
+    sheetname <- "choices"
+    openxlsx::addWorksheet(wb, sheetname)
+    openxlsx::writeData(wb, sheetname, choices, withFilter = TRUE)
+    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(choices), widths = "auto")
+    openxlsx::setColWidths(wb, sheetname, cols = 2:3, widths = 30)
+    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(choices), gridExpand = TRUE)
+    
+     ### settings sheets ----------------------------------->
+    sheetname <- "settings"
+    all.cols <- 1:ncol(settings)
+    hdr.rows <- 1
+    openxlsx::addWorksheet(wb, sheetname)
+    openxlsx::writeData(wb, sheetname, settings, withFilter = TRUE)
+    openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(settings), widths = "auto")
+    openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(settings), gridExpand = TRUE)
+    
+    
+    sheetname <- "ridl-metadata"
+    if (sheetname %in% readxl::excel_sheets(xlsformpath)) {
+      ridl_metadata <-
+        ridl_metadata |>
+        dplyr::select(-value) |>
+        dplyr::left_join(readxl::read_excel(xlsformpath, sheet = sheetname) |> dplyr::select(name, value), by = "name")
+    }
+    
+    # sheetname <- "ridl-metadata"
+    # openxlsx::addWorksheet(wb, sheetname)
+    # openxlsx::writeData(wb, sheetname, ridl_metadata, withFilter = TRUE)
+    # openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(ridl_metadata), widths = "auto")
+    # openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(ridl_metadata), gridExpand = TRUE)
+    # 
+    # sheetname <- "ridl-choices"
+    # openxlsx::addWorksheet(wb, sheetname)
+    # openxlsx::writeData(wb, sheetname, ridl_choices, withFilter = TRUE)
+    # openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(ridl_choices), widths = "auto")
+    # openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(ridl_choices), gridExpand = TRUE)
+    
+      
     sheetname <- "indicator"
     openxlsx::addWorksheet(wb, sheetname)
     openxlsx::writeData(wb, sheetname, indicator, withFilter = TRUE)
     openxlsx::setColWidths(wb, sheetname, cols = 1:ncol(indicator), widths = "auto")
     openxlsx::addStyle(wb, sheetname, headerSt, hdr.rows, 1:ncol(indicator), gridExpand = TRUE)
-
-    
-    
     ### Saving final ######################################    
     if (file.exists(xlsformpathout)) file.remove(xlsformpathout)
-    openxlsx::saveWorkbook(wb, xlsformpathout)
+    openxlsx::saveWorkbook(wb, xlsformpathout)      
+      
+    }
     
+  result <- list (
+    survey = survey,
+    choices = choices,
+    settings = settings,
+   # ridl-metadata = ridl-metadata,
+   # ridl-choices = ridl-choices,
+    indicator = indicator
     
-    
+  )    
+  return(result)
     
     
 
-    
-    
-    
+
   }, error = function(err) {
     print("There was an error in the xlsform preparation step!!! \n\n")
     return(structure(err, class = "try-error"))
   })
+  
+  
   
 }
 
 ```
 
 ```{r examples-kobo_prepare_form}
-# kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
-#                   xlsformpathout = "form_with_plan.xlsx",
-#                   label_language = "")
+kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
+                  xlsformpathout = NULL,
+                  label_language = "")
 ```
 
 ```{r tests-kobo_prepare_form}
@@ -1048,7 +1069,7 @@ indicator <- indicator[ ,c("type","name","label", "list_name", "hint",
 
 ```{r examples-kobo_indicator}
 xlsformpath <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
-xlsformpathout <- "sample_xlsform_withindic.xlsx"
+xlsformpathout <- paste0(tempdir(),"/", "sample_xlsform_withindic.xlsx")
 
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
@@ -1066,7 +1087,8 @@ indicatoradd <- c(  name =  "inColombia",
                     type = "select_one",
                     label = "Is from Colombia",
                     repeatvar = "main",
-                    calculation = "dplyr::if_else(datalist[[\"main\"]]$profile.country ==\"COL\", \"yes\",\"no\")")
+  calculation = "dplyr::if_else(datalist[[\"main\"]]$profile.country == 
+   \"COL\", \"yes\",\"no\")")
 
 expanded  <- kobo_indicator(datalist = datalist,
                     dico = dico,
@@ -1516,7 +1538,8 @@ label_choiceset(dico = dico,
 #'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
-#' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous scale_y_discrete coord_cartesian labs theme_minimal geom_vline theme element_line element_blank
+#' @import ggplot2 
+#' @import dplyr
 #' @importFrom data.table := 
 #' 
 #' @export
@@ -1529,8 +1552,8 @@ plot_select_one <- function(datalist  ,
                             n = NULL, 
                             showcode = FALSE) {
 
-  requireNamespace("ggplot2")
-  requireNamespace("dplyr")
+  #requireNamespace("ggplot2")
+  #requireNamespace("dplyr")
   ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
@@ -1610,7 +1633,7 @@ plot_select_one <- function(datalist  ,
   
     
     ## plot
-    require(ggplot2)
+    #require(ggplot2)
     p <- ggplot2::ggplot(cnts, ggplot2::aes(p, x)) +
       ggplot2::geom_col(fill = "#0072BC") +
       
@@ -1725,7 +1748,9 @@ plot_select_one(datalist = datalist,
 #' @importFrom tidyr separate_rows  drop_na
 #' 
 #' @importFrom data.table :=  
-#' @export
+#' @import ggplot2
+#' @import dplyr
+#' @export 
 # prefixer::import_from(fun = kobo_dico)
 
 plot_select_multiple <- function(datalist = datalist, 
@@ -1735,8 +1760,8 @@ plot_select_multiple <- function(datalist = datalist,
                                  n = NULL,
                                  showcode = FALSE) {
   
-  requireNamespace("ggplot2")
-  requireNamespace("dplyr")
+  #requireNamespace("ggplot2")
+  #requireNamespace("dplyr")
   
   ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
@@ -1807,7 +1832,7 @@ plot_select_multiple <- function(datalist = datalist,
                  "\n",
         "`plot_select_multiple(datalist, dico, \"", var, "\", datasource=params$datasource, n=",n1, ")` \n\n "))  }   else {} 
     
-    require(ggplot2)
+    #require(ggplot2)
     ## Plot
      p <- ggplot2::ggplot(cnts, ggplot2::aes(p, x)) +
       ggplot2::geom_col(fill = "#0072BC") +
@@ -1925,8 +1950,8 @@ plot_select_multiple(datalist = datalist,
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' 
-#' @importFrom   ggplot2 theme element_line element_blank element_text aes labs
-#'             theme_minimal geom_hline
+#' @import ggplot2 
+#' @import dplyr
 #' @importFrom datawizard skewness kurtosis
 #' @importFrom stats IQR   
 # prefixer::import_from(fun = kobo_dico)          
@@ -1939,8 +1964,8 @@ plot_integer <- function(datalist = datalist,
                          datasource = NULL,
                          showcode = FALSE) {
   
-  requireNamespace("ggplot2") 
-  requireNamespace("dplyr")
+  #requireNamespace("ggplot2") 
+  #requireNamespace("dplyr")
   ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
    
@@ -1968,11 +1993,11 @@ plot_integer <- function(datalist = datalist,
     "`plot_integer(datalist, dico, \"", var, "\", datasource=params$datasource)` \n\n "))  }   else {}  
     
     
-     info <- paste0("Mean: ", round(mean(data[[var]]),2) ,
-                    ", Standard Deviation: ",round(stats::sd(data[[var]]),2) ,
-                    ", Coefficient of Variation: ",round( stats::sd(data[[var]]) / mean(data[[var]]) * 100 ,2) ,
-                    ", Skewness: ",round(datawizard::skewness(data[[var]]),2) ,
-                    " and Kurtosis: ",round(datawizard::kurtosis(data[[var]]),2), ".")
+     info <- paste0("Mean: ", round(mean(data[[var]], na.rm = TRUE),2) ,
+                    ", Standard Deviation: ",round(stats::sd(data[[var]], na.rm = TRUE),2) ,
+                    ", Coefficient of Variation: ",round( stats::sd(data[[var]], na.rm = TRUE) / mean(data[[var]], na.rm = TRUE) * 100 ,2) ,
+                    ", Skewness: ",round(datawizard::skewness(data[[var]], remove_na = TRUE),2) ,
+                    " and Kurtosis: ",round(datawizard::kurtosis(data[[var]], remove_na = TRUE),2), ".")
      ## Detect potential outliers based on Interquartile Range
      iqr <- stats::IQR(data[[var]], na.rm = T)
      infoIQR <- dplyr::if_else ( iqr >= 1.349,
@@ -1980,7 +2005,7 @@ plot_integer <- function(datalist = datalist,
         paste0("Interquartile Range is ", round(iqr,2), " which suggests that there are outliers"))
                  
     
-    require(ggplot2)
+    #require(ggplot2)
     p <- ggplot2::ggplot(data) + 
       ggplot2::geom_histogram(ggplot2::aes( x= .data[[var]]), 
                     # bins = nclass.FD(na.omit(data[[var]])),
@@ -2070,9 +2095,9 @@ plot_integer(datalist = datalist,
 #' @importFrom tm content_transformer Corpus VectorSource tm_map removeNumbers removePunctuation stripWhitespace stemDocument removeWords stopwords TermDocumentMatrix  tm_map Corpus content_transformer
 #'              TermDocumentMatrix stopwords
 #' @importFrom ggwordcloud geom_text_wordcloud  
-#' @importFrom ggplot2 labs theme_minimal aes scale_size_area scale_color_gradient labs theme_minimal
 #' @importFrom SnowballC wordStem
-#' 
+#' @import ggplot2 
+#' @import dplyr
 #' 
 #' @export
 #' 
@@ -2084,9 +2109,9 @@ plot_text <- function(datalist = datalist,
                       datasource = NULL,
                       showcode = FALSE) {
   
-  requireNamespace("dplyr")
-  requireNamespace("SnowballC")
-  requireNamespace("ggplot2")
+  #requireNamespace("dplyr")
+  #requireNamespace("SnowballC")
+  #requireNamespace("ggplot2")
  # require("ggplot2")
   ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
@@ -2109,7 +2134,7 @@ plot_text <- function(datalist = datalist,
      
   } else { 
       
-  require("tm")
+  #require("tm")
   #Replacing “/”, “@” and “|” with space:
   toSpace <- tm::content_transformer(function (x , pattern ) gsub(pattern, " ", x))  
   # Cleaning the text  #### 
@@ -2252,11 +2277,8 @@ plot_text(datalist = datalist,
 #'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
-#' @importFrom ggplot2 aes  geom_col geom_label 
-#'             scale_x_continuous scale_y_discrete 
-#'             coord_cartesian labs theme_minimal 
-#'             geom_vline theme element_line element_blank
-#'             as_labeller facet_wrap
+#' @import ggplot2 
+#' @import dplyr
 #' @importFrom data.table :=  
 #' @export
 
@@ -2273,8 +2295,8 @@ plot_select_one_cross <- function(datalist = datalist,
                             n_by = NULL,
                             showcode = FALSE) {
   
-  requireNamespace("ggplot2")
-  requireNamespace("dplyr")
+  #requireNamespace("ggplot2")
+  #requireNamespace("dplyr")
   ## Get default data source name
   if (is.null(datasource)) {
     datasource <- as.character(dico[[3]]$form_title)
@@ -2387,7 +2409,7 @@ plot_select_one_cross <- function(datalist = datalist,
              
             
             ## plot
-            require(ggplot2)
+            #require(ggplot2)
             p <- ggplot2::ggplot(cnts, ggplot2::aes(x = pcum,  y = x)) +
               ggplot2::geom_col(fill = "#0072BC") +
               ggplot2::geom_label(
@@ -2522,9 +2544,8 @@ plot_select_one_cross(datalist = datalist,
 #'            forcats::fct_lump_n()
 #' @param showcode display the code
 #' 
-#' @importFrom ggplot2 aes  geom_col geom_label scale_x_continuous
-#'            scale_y_discrete coord_cartesian labs theme_minimal 
-#'            geom_vline theme element_line element_blank facet_wrap as_labeller 
+#' @import ggplot2 
+#' @import dplyr
 #' @importFrom tidyr separate_rows drop_na          
 #' @importFrom data.table :=  
 #' 
@@ -2659,7 +2680,7 @@ plot_select_multiple_cross <- function(datalist = datalist,
             cat( paste0( label_varname(dico = dico,  x = var), "\n",
      "`plot_select_multiple_cross(datalist, dico, var=\"", var, "\", by_var=\"", by_var, "\", datasource=params$datasource, n=", n1, ", n_by=",n_by1, " )` \n\n "))  }   else {} 
             ##plot
-            require(ggplot2)
+            #require(ggplot2)
             p <- ggplot2::ggplot(cntscross,
                                  ggplot2::aes(x = pcum,
                                      y = x)) +
@@ -2822,9 +2843,8 @@ plot_select_multiple_cross(datalist = datalist,
 #' @param datasource name of the data source to display, if set to NULL - then pulls the form_title within the settings of the xlsform 
 #' @param showcode display the code
 #' 
-#' @importFrom   ggplot2 theme element_line element_blank element_text aes labs
-#'             theme_minimal geom_hline geom_boxplot scale_size_area 
-#'              scale_y_discrete theme_minimal
+#' @import ggplot2 
+#' @import dplyr
 #' @export
 
 # prefixer::import_from(fun = plot_integer_cross)
@@ -2838,8 +2858,8 @@ plot_integer_cross <- function(datalist = datalist,
                          datasource = NULL,
                          showcode = FALSE) {
   
-  requireNamespace("ggplot2")
-  requireNamespace("dplyr")
+  #requireNamespace("ggplot2")
+  #requireNamespace("dplyr")
   ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
@@ -2880,7 +2900,7 @@ plot_integer_cross <- function(datalist = datalist,
         cat(paste0(label_varname(dico = dico, x = var), "\n",
       "`plot_integer_cross(datalist, dico, var=\"", var, "\", by_var=\"", by_var, "\", datasource=params$datasource)` \n\n "))  }   else {} 
     
-    require(ggplot2)
+    #require(ggplot2)
     p <- ggplot2::ggplot(data) + 
       ggplot2::geom_boxplot(ggplot2::aes(x = .data[[var]], y =  .data[[by_var]]), 
                      fill = "#0072BC", 
@@ -3164,6 +3184,7 @@ plot_correlation(datalist = datalist,
 #' @importFrom ggplot2 labs theme_minimal theme margin
 #' @importFrom likert likert
 #' 
+#' 
 #' @export
 
 # prefixer::import_from(fun = plot_likert)
@@ -3180,10 +3201,10 @@ plot_likert <- function(datalist = datalist,
  
    ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
-  require(dplyr)
-  require(ggplot2)
-  require(likert)
-  require(cowplot)
+  #require(dplyr)
+  #require(ggplot2)
+  #require(likert)
+  #require(cowplot)
   
    ## Writing code instruction in report
     if( showcode == TRUE) {
@@ -3619,7 +3640,7 @@ kobo_likert <- function(datalist = datalist,
   ## Get default data source name 
   if( is.null(datasource)) {datasource <- as.character(  dico[[3]]$form_title ) }
   
-  require(dplyr)
+  #require(dplyr)
   ## Check the frequency of list_name within each group,
   ## Filter the combination of list and group where we have more than 3 occurrences
   # not taking in account when the appearance is not "label"
@@ -4189,7 +4210,134 @@ It will generate a PDF or an paginated HTML page
 ```
 
  
+## run_app
 
+
+<!--
+Create a chunk for the core of the function
+
+- The chunk needs to be named `function` at least
+- It contains the code of a documented function
+- The chunk can also be named `function-my_function` to make it easily
+findable in your Rmd
+- Let the `@examples` part empty, and use the next `examples` chunk instead to present reproducible examples
+
+After inflating the template
+
+-  This function code will automatically be added in a new file in the "R/" directory
+-->
+    
+```{r function-run_app}
+#' Run the Shiny Application
+#' 
+#' 
+#' @param onStart A function that will be called before the app is actually run.
+#' This is only needed for \code{shinyAppObj}, since in the \code{shinyAppDir}
+#' case, a \code{global.R} file can be used for this purpose.
+
+#' @param options Named options that should be passed to the \code{runApp} call
+#' (these can be any of the following: "port", "launch.browser", "host", "quiet",
+#' "display.mode" and "test.mode"). You can also specify \code{width} and
+#' \code{height} parameters which provide a hint to the embedding environment
+#' about the ideal height/width for the app.
+
+#' @param enableBookmarking Can be one of \code{"url"}, \code{"server"}, or
+#' \code{"disable"}. The default value, \code{NULL}, will respect the setting from
+#' any previous calls to  \code{\link[shiny:enableBookmarking]{enableBookmarking()}}. See 
+#' #' \code{\link[shiny:enableBookmarking]{enableBookmarking()}}
+#' for more information on bookmarking your app.
+
+#' @param uiPattern A regular expression that will be applied to each \code{GET}
+#' request to determine whether the \code{ui} should be used to handle the
+#' request. Note that the entire request path must match the regular
+#' expression in order for the match to be considered successful.
+#' 
+#' 
+#' @param ... arguments to pass to golem_opts.
+#' See `?golem::get_golem_options` for more details.
+#'
+#' @importFrom shiny shinyApp
+#' @importFrom golem with_golem_options
+#' 
+#' @return a shiny app
+#' 
+#' @export
+
+run_app <- function(
+    onStart = NULL,
+    options = list(),
+    enableBookmarking = NULL,
+    uiPattern = "/",
+    ...
+) {
+  with_golem_options(
+    app = shinyApp(
+      ui = app_ui,
+      server = app_server,
+      onStart = onStart,
+      options = options,
+      enableBookmarking = enableBookmarking,
+      uiPattern = uiPattern
+    ),
+    golem_opts = list(...)
+  )
+}
+
+```
+
+<!--
+Create a chunk with an example of use for your function
+
+- The chunk needs to be named `examples` at least
+- It contains working examples of your function
+- The chunk is better be named `examples-my_median` to be handled
+correctly when inflated as a vignette
+
+After inflating the template
+
+-  This example will automatically be added in the '@examples' part of our function above in the "R/" directory
+- This example will automatically be added in the vignette created from this Rmd template
+-->
+
+```{r example-run_app}
+# run_app()
+```
+
+<!--
+Create a chunk with a test of use for your function
+
+- The chunk needs to be named `tests` at least
+- It contains working tests of your function
+- The chunk is better be named `tests-my_median` to be handled
+correctly when inflated as a vignette
+
+After inflating the template
+
+-  This test code will automatically be added in the "tests/testthat/" directory
+-->
+ 
+```{r tests-run_app}
+# test_that("run_app works", {
+#   expect_true(inherits(run_app, "function")) 
+# })
+```
+  
+
+
+
+<!--
+ Once you have created your back office functions , run the next chunk to install and package them
+
+# There can be development actions
+
+Create a chunk with 'development' actions
+
+- The chunk needs to be named `development` or `dev`
+- It contains functions that are used for package development only
+- Note that you may want to store most of these functions in the 0-dev_history.Rmd file
+
+These are only included in the present flat template file, their content will not be part of the package anywhere else.
+-->
 
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop

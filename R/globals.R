@@ -29,19 +29,21 @@ globalVariables(unique(c(
   # plot_likert:
   ".", "appearance", "dataframe", "label", "list_name", "name", "scope",
   # plot_select_multiple:
-  ".data", "list_name", "listvar", "n", "name", "x", "X_id",
+  ".data", "list_name", "listvar", "n", "name", "x", "X_id","data[[var]]",
   # plot_select_multiple_cross:
-  ".data", "n", "pcum", "x", "X_id", "y",
+  ".data", "n", "pcum", "x", "X_id", "y", "data[[var]]", "rec", "y0", "y1",
   # plot_select_multiple_cross : <anonymous>:
   "pcum",
   # plot_select_one:
   ".data", "list_name", "n", "name", "x",
   # plot_select_one_cross:
-  ".data", "n", "pcum", "x", "y",
+  ".data", "n", "pcum", "x", "y", "y0",
   # plot_select_one_cross : <anonymous>:
   "pcum",
   # plot_text:
   ".", "freq", "removeNumbers", "removePunctuation", "removeWords", "stemDocument", "stripWhitespace", "word",
   # template_1_exploration:
-  "country_asylum_iso3c", "year"
+  "country_asylum_iso3c", "year",
+  # mod_home_server:
+  "parent_session"
 )))

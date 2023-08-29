@@ -52,7 +52,7 @@ In case if those fields do not yet exist, the function will create dummy column 
 Also, coloring all rows that have type equal to "begin group", "end group", "begin repeat" or "end repeat" for better legibility
 }
 \examples{
-# kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
-#                   xlsformpathout = "form_with_plan.xlsx",
-#                   label_language = "")
+kobo_prepare_form(xlsformpath = system.file("form.xlsx", package = "kobocruncher"),
+                  xlsformpathout = NULL,
+                  label_language = "")
 }

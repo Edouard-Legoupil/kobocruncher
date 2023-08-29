@@ -3,7 +3,9 @@ An organized workflow generating 'Rmd' files from an extended 'xlsform' question
 
 `{kobocruncher}` support organised data analysis workflow, to conduct data discovery and analysis for data collected through  [KoboToolbox](https://www.kobotoolbox.org/), [ODK](https://opendatakit.org/), [ONA](https://ona.io/home/) or any __[xlsform](http://xlsform.org)__ compliant data collection platform.
 
-This package first builds on the capacity of [UNHCR Kobo server](http://kobo.unhcr.org) but it can also be used from any structured dataset. It comes as a companion tool to the [Integrated Framework for Household Survey](https://unhcr.github.io/Integrated-framework-household-survey).
+You can use this tool through a dedicated shiny App: [https://rstudio.unhcr.org/kobocruncher/](https://rstudio.unhcr.org/kobocruncher/)
+
+This R package first builds on the capacity of [UNHCR Kobo server](http://kobo.unhcr.org) but it can also be used from any structured dataset. It comes as a companion tool to the [Integrated Framework for Household Survey](https://unhcr.github.io/Integrated-framework-household-survey).
 
 
 
@@ -24,29 +26,27 @@ Presentations / tutorials for a one day training workshop are accessible here:
   *  [08-Anonymising](tutorial/08-Anonymising.html)  
   *  [09-Publishing](tutorial/09-Publishing.html)  
 
-## Install and configure authentication token
+## Install 
+
+Beside the [shinyApp](https://rstudio.unhcr.org/kobocruncher/), you can install the package on Rstudio.
 
  If you are on Windows, you will first need to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) on the top of [R](https://cran.r-project.org/bin/windows/base/) and [Rstudio](https://posit.co/download/rstudio-desktop/) in order to install the package locally.
 
-```{r}
+```
 install.packages("pak")
-
-### Install Key unhcRverse packages in order to get the corporate style & brand
-pak::pkg_install('vidonne/unhcrdown')
-pak::pkg_install('vidonne/unhcrthemes')
-pak::pkg_install('edouard-legoupil/riddle')
-## Now get {kobocruncher}
 pak::pkg_install("edouard-legoupil/kobocruncher")  
 ```  
 
-The `{riddle}` package is used to ensure integration with [RIDL - UNHCR Internal Data Repository](https://ridl.unhcr.org).
+### Configure authentication token
+
+The [`{riddle}` package](https://edouard-legoupil.github.io/riddle/) is used to ensure integration with [RIDL - UNHCR Internal Data Repository](https://ridl.unhcr.org).
 It requires you to add your __API token__ and store it for further use. 
 The easiest way to do that is to store your API token in your `.Renviron` file which 
 is automatically read by R on startup.
 
 You can retrieve your `API TOKEN` in your [user page](https://ridl.unhcr.org/user/).
 
-![api_token_img](https://raw.githubusercontent.com/Edouard-Legoupil/riddle/main/inst/token.png)
+![](https://raw.githubusercontent.com/Edouard-Legoupil/riddle/main/inst/token.png)
 
 To use the package, you’ll need to store your RIDL API token in the `RIDL_API_TOKEN` environment variable. 
 The easiest way to do that is by calling `usethis::edit_r_environ()` and adding the line

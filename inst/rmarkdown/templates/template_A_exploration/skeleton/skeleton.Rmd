@@ -57,6 +57,9 @@ library("kobocruncher")
 
 
 ```{r param, include=FALSE}
+## tweak to reset here::here when knitting the template from shiny
+if (file.exists(".here")) here::i_am(".here") 
+
 ## Retrieve the path from the report parameters
 datapath <- here::here(params$datafolder, params$data)
 xlsformpath <- here::here(params$datafolder, params$form) 

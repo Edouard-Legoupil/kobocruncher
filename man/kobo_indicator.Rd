@@ -42,7 +42,7 @@ kobo_frame() function for further plotting
 }
 \examples{
 xlsformpath <- system.file("sample_xlsform.xlsx", package = "kobocruncher")
-xlsformpathout <- "sample_xlsform_withindic.xlsx"
+xlsformpathout <- paste0(tempdir(),"/", "sample_xlsform_withindic.xlsx")
 
 dico <- kobo_dico( xlsformpath = system.file("sample_xlsform.xlsx", package = "kobocruncher") )
 datalist <- kobo_data(datapath = system.file("data.xlsx", package = "kobocruncher") )
@@ -60,7 +60,8 @@ indicatoradd <- c(  name =  "inColombia",
                     type = "select_one",
                     label = "Is from Colombia",
                     repeatvar = "main",
-                    calculation = "dplyr::if_else(datalist[[\"main\"]]$profile.country ==\"COL\", \"yes\",\"no\")")
+  calculation = "dplyr::if_else(datalist[[\"main\"]]$profile.country == 
+   \"COL\", \"yes\",\"no\")")
 
 expanded  <- kobo_indicator(datalist = datalist,
                     dico = dico,
