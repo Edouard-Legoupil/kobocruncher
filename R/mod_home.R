@@ -28,7 +28,7 @@ mod_home_ui <- function(id) {
 		    " compliant data collection platform.",
 		    style = "font-size: 20px"),
 		  br(),
-		  p( "This ",tags$span("companion app", style = "color:#00B398"), " helps configuring your data analysis plan within the
+		  p( "This ",tags$span("companion app", style = "color:#00B398"), " helps configuring a data analysis plan within the
 		      original XlsForm that has been used to collect your dataset.
 		      The original xlsform is extended with additional columns to record your
 		      analysis settings. The advantage of this approach is that most processing is de-facto documented.

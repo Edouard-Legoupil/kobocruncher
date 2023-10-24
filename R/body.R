@@ -11,6 +11,7 @@
 body <- function() {
   shinydashboard::dashboardBody(
     unhcrshiny::theme_shinydashboard_unhcr(),
+    golem::activate_js(),
     tags$head(
       tags$script(src = "custom.js")
     ),

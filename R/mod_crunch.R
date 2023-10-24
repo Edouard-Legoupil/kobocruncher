@@ -20,9 +20,11 @@ mod_crunch_ui <- function(id) {
 		  column(
 		    width = 12,
 		      br(),
-		    p("Upload your data and obtain an initial exploration report.
-		    You can then iterate: download back your extended form and regenerate your report
-		      until you get what you need.")
+		    p("Survey analysis is an iterative process involving multiple rounds of
+          data exploration, and refinement.
+          Each new round can help uncover insights, validate findings, and refine
+          the understanding of the surveyed population, allowing for a dynamic
+          and evolving analysis.")
 		  )
 		) ,
 
@@ -31,7 +33,7 @@ mod_crunch_ui <- function(id) {
 
 
 		  shinydashboard::box(
-		    title = "Iterate ",
+		    title = "Iterative Exploration ",
 		    #  status = "primary",
 		    status = "info",
 		    solidHeader = FALSE,
@@ -40,30 +42,51 @@ mod_crunch_ui <- function(id) {
 		    width = 12,
 		    fluidRow(
 		      column(
-		        width = 6,
-
-		        fileInput(inputId = ns("dataupload"),
-		                  label = "Load your data",
-		                  multiple = F),
-
-
-
-		        ),
-
-		      column(
-		        width = 6,
-
+		        width = 4,
+		        h3("Generate your report... "),
+		        downloadButton(ns("downloadreport"),
+		                       "Get your exploration report",
+		                 style="color: #fff; background-color: #672D53"),
 		        ## If yes to ridlyes -
+
+
+		        div(
+		          id = ns("show_ridl3"),
+		          br(),
+		          p("All this analysis is fully reproducible and therefore re-usable.
+		          In order to keep track of your work, record it within RIDL with predefined
+		          attachment ressources metadata"),
+
+  		        actionButton( inputId = ns("ridlpublish"),
+  		                      label = " Record in RIDL your analysis",
+  		                      icon = icon("upload"),
+  		                      width = "100%"  )
+		        )
+
             ## Ask a few question about the final report
 		        ## 	    # publish =  Do you want to publish the report in RIDL,
 		        # visibility= visibility,
 		        # stage = stage,
+		        ),
 
-		        downloadButton(ns("downloadreport"),
-		                       "Get your exploration report",
-		                 style="color: #fff; background-color: #672D53")
+		      column(
+		        width = 8,
+		        h3(" ... and iterate"),
+		         p("You can work offline directly with Excel on the extended form to
+		         amend your analysis plan"),
+		         p("This can include: Adjusting label, grouping questions,
+		         setting crosstabulation, adding indicator calculation, etc."),
+		         br(),
+		         downloadButton(ns("downloadform"),
+		                       "Download back your extended form"),
+		         hr(),
+		        fileInput(inputId = ns("xlsform"),
+		                  label = "Reload your extended XlsForm ",
+		                  multiple = F),
 
-
+		         p("Once done, reload it and click on the
+		         'Get your exploration report' button on the left to
+		         generate new versions of the exploration report")
 
 		      )
 		    )
@@ -85,26 +108,14 @@ mod_crunch_server <- function(input, output, session, AppReactiveValue) {
 
 
 
-	## Load Data input$dataupload
-	observeEvent(input$dataupload,{
-	  req(input$dataupload)
-	  message("Please upload a file")
-	  AppReactiveValue$datauploadpath <- input$dataupload$datapath
-	  AppReactiveValue$thistempfolder <- dirname(AppReactiveValue$datauploadpath)
-	  AppReactiveValue$datauploadname <- input$dataupload$name
-
-	  ## Create a sub folder data-raw and paste data there
-	  dir.create(file.path(AppReactiveValue$thistempfolder, "data-raw"), showWarnings = FALSE)
-	  file.copy( AppReactiveValue$datauploadpath,
-	             paste0(AppReactiveValue$thistempfolder,
-	                    "/data-raw/",
-	                   # fs::path_file(AppReactiveValue$datauploadpath)),
-	                   AppReactiveValue$datauploadname),
-	             overwrite = TRUE)
+	## Manage visibility for RIDL mode....
+	observeEvent(AppReactiveValue$showridl, {
+	  if(isTRUE(AppReactiveValue$showridl)) {
+	    golem::invoke_js("show", paste0("#", ns("show_ridl3")))
+	  } else {
+	    golem::invoke_js("hide", paste0("#", ns("show_ridl3")))
+	  }
 	})
-
-
-
 
 
 	output$downloadreport <- downloadHandler(
