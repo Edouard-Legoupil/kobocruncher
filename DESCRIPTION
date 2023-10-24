@@ -3,12 +3,13 @@ Title: A Metapackage For Survey Data Crunching
 Version: 0.2.6
 Authors@R: c(
     person("Edouard", "Legoupil", , "legoupil@unhcr.org", role = c("aut", "cre")),
-    person("Hisham", "Galal", , "galalh@unhcr.org", role = "ctb")
+    person("Hisham", "Galal", , "galalh@unhcr.org", role = "ctb"),
+    person("UNHCR", role = "cph")
   )
 Description: An organized workflow generating 'Rmd' files from an extended
     'xlsform' questionnaire structure to facilitate survey data crunching.
 License: GPL-3
-URL: https://Edouard-Legoupil.github.io/kobocruncher/docs/
+URL: https://Edouard-Legoupil.github.io/kobocruncher/
 BugReports: https://github.com/Edouard-Legoupil/kobocruncher/issues
 Imports: 
     config,
