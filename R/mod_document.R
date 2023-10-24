@@ -113,7 +113,6 @@ mod_document_ui <- function(id) {
 #' @import tidyverse
 #' @import riddle
 #' @import golem
-#' @import kobocruncher
 #' @import dplyr
 #' @keywords internal
 
