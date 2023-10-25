@@ -75,7 +75,7 @@ mod_document_ui <- function(id) {
 		          hr(),
 
 		          actionButton( inputId = ns("pull"),
-		                        label = " 1- Find",
+		                        label = " Find",
 		                        width = "400px" ,
 		                        icon = icon("magnifying-glass") ),
 
@@ -85,7 +85,7 @@ mod_document_ui <- function(id) {
 		                        width = "100%"    ),
 
 		          actionButton( inputId = ns("pull2"),
-		                        label = " 2- Pull selected RIDL Dataset",
+		                        label = " Pull selected RIDL Dataset",
 		                        icon = icon("filter"),
 		                        width = "400px" )
 		        ## Then pull metadata and display them in in a Verbatim-
@@ -266,11 +266,7 @@ mod_document_server <- function(input, output, session, AppReactiveValue) {
 	                       dplyr::filter( format == "XLS") |>
 	                       dplyr::mutate (label = glue::glue('{file_type} ({format}) '))|>
 	                       dplyr::pull(label) )
-	  # print(AppReactiveValue$form)
-	  # ## update dropdown
-	  updateSelectInput(session,
-	                    "ridlform",
-	                    choices = AppReactiveValue$form  )
+
 
 
 	  AppReactiveValue$data <- AppReactiveValue$resources |>
@@ -282,11 +278,7 @@ mod_document_server <- function(input, output, session, AppReactiveValue) {
 	                       dplyr::filter( format == "XLSX") |>
 	                       dplyr::mutate (label = glue::glue('{file_type} ({format}, {process_status}) '))|>
 	                       dplyr::pull(label) )
-	  # print(AppReactiveValue$data)
-	  # ## update dropdown
-	  updateSelectInput(session,
-	                    "ridldata",
-	                    choices = AppReactiveValue$data )
+
 	})
 
 

@@ -27,11 +27,7 @@ mod_crunch_ui <- function(id) {
           and evolving analysis.")
 		  )
 		) ,
-
-
 		fluidRow(
-
-
 		  shinydashboard::box(
 		    title = "Iterative Exploration ",
 		    #  status = "primary",
@@ -48,8 +44,6 @@ mod_crunch_ui <- function(id) {
 		                       "Get your exploration report",
 		                 style="color: #fff; background-color: #672D53"),
 		        ## If yes to ridlyes -
-
-
 		        div(
 		          id = ns("show_ridl3"),
 		          br(),
@@ -57,16 +51,16 @@ mod_crunch_ui <- function(id) {
 		          In order to keep track of your work, record it within RIDL with predefined
 		          attachment ressources metadata"),
 
+            ## Ask a few question about the final report
+		        ## 	    # publish =  Do you want to publish the report in RIDL,
+		        # visibility= visibility,
+		        # stage = stage,
   		        actionButton( inputId = ns("ridlpublish"),
   		                      label = " Record in RIDL your analysis",
   		                      icon = icon("upload"),
   		                      width = "100%"  )
 		        )
 
-            ## Ask a few question about the final report
-		        ## 	    # publish =  Do you want to publish the report in RIDL,
-		        # visibility= visibility,
-		        # stage = stage,
 		        ),
 
 		      column(
@@ -118,30 +112,40 @@ mod_crunch_server <- function(input, output, session, AppReactiveValue) {
 	})
 
 
+	observeEvent(input$ridlpublish, {
+	})
+
 	output$downloadreport <- downloadHandler(
 	  filename = "exploration_report.html",
 	  content = function(file) {
 	    # Copy the report file and form to a temporary directory before processing it, in
 	    # case we don't have write permissions to the current working dir (which
 	    # can happen when deployed).
-
 	    tempReport <- file.path(AppReactiveValue$thistempfolder,
 	                            "report.Rmd")
+
+	    ## Copy the report notebook template in the tempfolder..
 	    file.copy(system.file("rmarkdown/templates/template_A_exploration/skeleton/skeleton.Rmd",
 	                          package = "kobocruncher"),
 	              tempReport, overwrite = TRUE)
 
+	    ## tweak to get here::here working - create .here file
+	    file.create(  paste0(AppReactiveValue$thistempfolder, "/.here") ,
+	                  "/.here")
 
-	    ## paste the form in the data-raw folder for furthere knitting
+	    ## paste the form in the data-raw folder for further knitting
 	    file.copy( AppReactiveValue$xlsformpath,
 	               paste0(AppReactiveValue$thistempfolder,
 	                       "/data-raw/",
 	               AppReactiveValue$xlsformname),
 	               overwrite = TRUE)
 
-	    ## tweak to get here::here working - create .here file
-	    file.create(  paste0(AppReactiveValue$thistempfolder, "/.here") ,
-	                  "/.here")
+      ## A few check in the console...
+      print(paste0( "thistempfolder: ", AppReactiveValue$thistempfolder))
+	    print(paste0( "xlsformname: ", AppReactiveValue$xlsformname))
+	    print(paste0( "datauploadname: ", AppReactiveValue$datauploadname))
+
+
 
       #browser()
 	    # Set up parameters to pass to Rmd document
@@ -156,14 +160,7 @@ mod_crunch_server <- function(input, output, session, AppReactiveValue) {
 	    # stage = stage,
 	      language = AppReactiveValue$language )
 
-
-	    id <- showNotification(
-	      "Rendering report... Patience is the mother of wisdom!",
-	      duration = NULL,
-	      closeButton = FALSE
-	    )
-	    on.exit(removeNotification(id), add = TRUE)
-
+	    showModal(modalDialog("Please wait, compiling the report... The more questions in your report, the more time it will take...", footer=NULL))
 	    # Knit the document, passing in the `params` list, and eval it in a
 	    # child of the global environment (this isolates the code in the document
 	    # from the code in this app).
@@ -171,45 +168,27 @@ mod_crunch_server <- function(input, output, session, AppReactiveValue) {
 	                      output_file = file,
 	                      params = params,
 	                      envir = new.env(parent = globalenv())
+
 	    )
+	    removeModal()
 	  }
 	)
 
 
-	# # 3 tab of the excel settings
-	# Form3 <- reactiveVal()
-	# observeEvent(
-	#   input$form_upload,
-	#   { filename <- tolower(input$form_upload$name)
-	#   # this is to get the same structure of the excel form on 3 tabs
-	#   Form(read_excel(input$form_upload$datapath, sheet = 1))
-	#   Form2(read_excel(input$form_upload$datapath, sheet = 2))
-	#   Form3(read_excel(input$form_upload$datapath, sheet = 3))
-	#   write.xlsx(Form(), './form.xlsx', sheetName = 'survey',showNA=FALSE )
-	#   write.xlsx(Form2(), './form.xlsx', sheetName = 'choices',append=TRUE,showNA=FALSE )
-	#   write.xlsx(Form3(), './form.xlsx', sheetName = 'settings',append=TRUE,showNA=FALSE)
-	#   showNotification("Data Processing Complete",duration = 10, type = "error")
-	#   kobo_prepare_form('./form.xlsx', './form.xlsx', language = "") }
-	# )
-	# observeEvent(
-	#   input$data_upload,{
-	#     filename <- tolower(input$data_upload$name)
-	#     Data(read_excel(input$data_upload$datapath))
-	#     write.xlsx(Data(), './data.xlsx', showNA=FALSE)
-	#     showNotification("Data Processing Complete",duration = 10, type = "error")  })
-	# observeEvent(input$run_rmd,
-	#              {rmarkdown::render(system.file("rmarkdown/templates/template_A_exploration/skeleton/skeleton.Rmd",
-	#                                             package = "kobocruncher"),
-	#                                 output_dir = "./")
-	#                showNotification("Successful",
-	#                                 duration = 10,
-	#                                 type = "message") })
-	# output$download_form <- downloadHandler(filename <- function() {
-	#   paste("form", "xlsx", sep=".")  },
-	#   content <- function(file) {  file.copy("./form.xlsx", file)})
-	# output$download <- downloadHandler(
-	#   filename <- function() {paste("Kobocruncher", "html", sep=".")},
-	#   content <- function(file) { file.copy("./kobocruncher.html", file)})
+	### Enabling iterations ######
+	## Get download ready for expanded form
+	output$downloadform <- downloadHandler(
+	  filename =  function(){paste0(AppReactiveValue$xlsformfilename, "_expanded.xlsx") },
+	  content <- function(file) { file.copy( AppReactiveValue$expandedform , file)}
+	)
+  ## new upload...
+	observeEvent(input$xlsform,{
+	  req(input$xlsform)
+	  message("Please upload a file")
+	  AppReactiveValue$xlsformpath <- input$xlsform$datapath
+	  AppReactiveValue$xlsformname <- input$xlsform$name
+
+	})
 
 }
 

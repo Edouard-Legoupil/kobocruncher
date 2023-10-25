@@ -106,6 +106,7 @@ mod_configure_ui <- function(id) {
 #' @noRd
 #' @import shiny
 #' @import golem
+#' @import riddle
 #' @import tidyverse
 #' @importFrom XlsFormUtil fct_xlsfrom_language
 #' @keywords internal
@@ -128,9 +129,7 @@ mod_configure_server <- function(input, output, session, AppReactiveValue) {
     }
   })
 
-
-
-
+  ## Case 1 --  uploading data
   observeEvent(input$dataupload,{
     req(input$dataupload)
     message("Please upload a file")
@@ -140,6 +139,7 @@ mod_configure_server <- function(input, output, session, AppReactiveValue) {
 
     ## Create a sub folder data-raw and paste data there
     dir.create(file.path(AppReactiveValue$thistempfolder, "data-raw"), showWarnings = FALSE)
+    ## Move the data there...
     file.copy( AppReactiveValue$datauploadpath,
                paste0(AppReactiveValue$thistempfolder,
                       "/data-raw/",
@@ -148,61 +148,7 @@ mod_configure_server <- function(input, output, session, AppReactiveValue) {
                overwrite = TRUE)
   })
 
-
-
-  observeEvent(input$ridldata, {
-    AppReactiveValue$ridldata <- input$ridldata
-  })
-
-  observeEvent(input$pull4, {
-    ## some message for user...
-    data_message <- utils::capture.output({
-      ### So let's fetch the resource and create the corresponding reactive objects
-      # for the rest of the flow...
-
-      showModal(modalDialog("Please wait, pulling all the files from the server at the moment...", footer=NULL))
-
-      ## now the data
-      req(AppReactiveValue$ridldata)
-      ridldata <- tempfile()
-      resource_fetch(url = AppReactiveValue$ridldata,
-                     path = ridldata)
-      AppReactiveValue$datalist <- kobocruncher::kobo_data(datapath = ridldata)
-
-      removeModal()
-
-    },  type = "message")
-
-    if(is.null(AppReactiveValue$datalist )){
-      # not successful
-      shinyWidgets::sendSweetAlert(
-        session = session,
-        title = "Problem with Data",
-        text = "Please check your access rights...",
-        type = "warning"
-      )
-    } else   {
-
-      shinyWidgets::sendSweetAlert(
-        session = session,
-        title = "You are done!",
-        text =  paste0("Session loaded: the dataset includes ",
-                       nrow(AppReactiveValue$datalist$main),
-                       " records"),
-        type = "success" )
-    }
-  })
-
-
-  observeEvent(input$language, {
-    AppReactiveValue$language <- input$language
-    ## if language change, regenerate the expanded form
-    kobo_prepare_form(xlsformpath = AppReactiveValue$xlsformpath,
-                      label_language = AppReactiveValue$language,
-                      xlsformpathout = AppReactiveValue$expandedform )
-  })
-
-  ## Load Form input$xlsform
+  ## Case 1 --  uploading xlsform
   observeEvent(input$xlsform,{
     req(input$xlsform)
     message("Please upload a file")
@@ -227,9 +173,9 @@ mod_configure_server <- function(input, output, session, AppReactiveValue) {
 
     ## Define the path and name for the expanded version
     AppReactiveValue$expandedform <-  paste0( dirname(AppReactiveValue$xlsformpath) ,
-                                 "/",
-                                 AppReactiveValue$xlsformfilename,
-                                 "_expanded.xlsx")
+                                              "/",
+                                              AppReactiveValue$xlsformfilename,
+                                              "_expanded.xlsx")
     ## Generate expanded form
     kobo_prepare_form(xlsformpath = AppReactiveValue$xlsformpath,
                       label_language = AppReactiveValue$language,
@@ -237,60 +183,84 @@ mod_configure_server <- function(input, output, session, AppReactiveValue) {
 
   })
 
-  ## Get download ready for expanded form
-  output$downloadform <- downloadHandler(
-    filename =  function(){paste0(AppReactiveValue$xlsformfilename, "_expanded.xlsx") },
-    content <- function(file) { file.copy( AppReactiveValue$expandedform , file)}
-  )
 
-  observeEvent(input$ridlform, {
-    AppReactiveValue$ridlform <- input$ridlform
+
+
+  ### Case 2  - fill dropdown
+  observe({
+    req(AppReactiveValue$form)
+    updateSelectInput(session,
+                      "ridlform",
+                      choices = AppReactiveValue$form  )
+    req(AppReactiveValue$data)
+    updateSelectInput(session,
+                      "ridldata",
+                      choices = AppReactiveValue$data )
   })
 
-  observeEvent(input$pull3, {
-    ## some message for user...
-    data_message <- utils::capture.output({
+  ### Case 2 -- download data from RIDL
+  observeEvent(input$ridldata, {
+    AppReactiveValue$ridldata <- input$ridldata
+  })
+
+  observeEvent(input$pull4, {
       ### So let's fetch the resource and create the corresponding reactive objects
       # for the rest of the flow...
 
       showModal(modalDialog("Please wait, pulling all the files from the server at the moment...", footer=NULL))
-
-      req(AppReactiveValue$ridlform)
-      ridlformfile <- tempfile()
-      riddle::resource_fetch(url = AppReactiveValue$ridlform,
-                             path = ridlformfile)
-
-      ## Now let's load with koboloader
-      kobocruncher::kobo_prepare_form(xlsformpath = ridlformfile,
-                                      label_language = NULL,
-                                      xlsformpathout = ridlformfile )
-
-      ## Let's extract the analysis plan from the xlsform - or extend the current one
-      AppReactiveValue$dico <- kobocruncher::kobo_dico(xlsformpath = ridlformfile)
-
+      ## now the data
+      req(AppReactiveValue$ridldata)
+      AppReactiveValue$datauploadpath  <- tempfile()
+      riddle::resource_fetch(url = AppReactiveValue$ridldata,
+                     path = AppReactiveValue$datauploadpath)
+      AppReactiveValue$thistempfolder <- dirname(AppReactiveValue$datauploadpath)
+      AppReactiveValue$datauploadname <- basename(AppReactiveValue$datauploadpath)
+      ## Create a subfolder
+      dir.create(file.path(AppReactiveValue$thistempfolder, "data-raw"), showWarnings = FALSE)
+      ## Move the data there...
+      file.copy( AppReactiveValue$datauploadpath,
+                 paste0(AppReactiveValue$thistempfolder,
+                        "/data-raw/",
+                        # fs::path_file(AppReactiveValue$datauploadpath)),
+                        AppReactiveValue$datauploadname),
+                 overwrite = TRUE)
 
       removeModal()
 
-    },  type = "message")
+  })
 
-    if(is.null(AppReactiveValue$dico )){
-      # not successful
-      shinyWidgets::sendSweetAlert(
+
+  ### Case 2  -- download Form from RIDL
+  observeEvent(input$ridlform, {
+    AppReactiveValue$ridlform <- input$ridlform
+  })
+  observeEvent(input$pull3, {
+      showModal(modalDialog("Please wait, pulling all the files from the server at the moment...", footer=NULL))
+      req(AppReactiveValue$ridlform)
+      AppReactiveValue$xlsformpath <- tempfile()
+      riddle::resource_fetch(url = AppReactiveValue$ridlform,
+                             path = AppReactiveValue$xlsformpath)
+      ## Get the name for the file...
+      AppReactiveValue$xlsformname <- basename(AppReactiveValue$xlsformpath)
+
+      ## updatethe dropdown for language selection...
+      updateSelectInput(
         session = session,
-        title = "Problem with Form",
-        text = "Please check your access rights...",
-        type = "warning"
+        inputId = "language",
+        choices =  XlsFormUtil::fct_xlsfrom_language( xlsformpath = AppReactiveValue$xlsformpath  )
       )
-    }   else   {
+      removeModal()
+  })
 
-      shinyWidgets::sendSweetAlert(
-        session = session,
-        title = "You are done!",
-        text =  paste0("Session loaded: the form includes ",
-                       nrow(AppReactiveValue$dico$variables),
-                       " questions"),
-        type = "success" )
-    }
+
+  ### Apply form preparation...
+  observeEvent(input$language, {
+    AppReactiveValue$language <- input$language
+    ## if language change, regenerate the expanded form
+    req(AppReactiveValue$xlsformpath )
+    kobo_prepare_form(xlsformpath = AppReactiveValue$xlsformpath,
+                      label_language = AppReactiveValue$language,
+                      xlsformpathout = AppReactiveValue$expandedform )
   })
 
 
