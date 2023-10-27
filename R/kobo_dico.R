@@ -40,6 +40,8 @@ kobo_dico <- function(xlsformpath) {
   
    ## variables  ----------------------------------->
   variables <-  survey |>
+    ## keep record of orginal name...
+    dplyr::mutate(name_or = name) |>
     ## Rename and use what ever label set is coming first 
     dplyr::rename(label = dplyr::first(tidyselect::starts_with("label")),
                   hint = dplyr::first(tidyselect::starts_with("hint"))) |>
@@ -110,8 +112,9 @@ kobo_dico <- function(xlsformpath) {
   # to check and check and remove label appearance 
     if ("appearance" %in% colnames(variables)) {   } else {   variables$appearance <- ""  }
   
-
-     choices <- readxl::read_excel(xlsformpath,   sheet = "choices")  
+   ## Modalities  ----------------------------------->
+    choices <- readxl::read_excel(xlsformpath,   sheet = "choices")  
+    
     if ("order" %in% colnames( choices)) { } else {  choices$order <- NA   }
      modalities <- choices |>
                    dplyr::rename(label = dplyr::first(dplyr::matches("^label")))
