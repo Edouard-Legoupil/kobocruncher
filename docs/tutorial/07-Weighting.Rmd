@@ -1,7 +1,7 @@
 ---
 title: "Survey Data Analysis with Kobocruncher"
 subtitle: "Session 7 - Weighting"
-author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](06-Cleaning_and_Indicator_calculation.html) -- [Link to Next Session](08-Anonymising.html)  "
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](06-Indicator_calculation.html) -- [Link to Next Session](08-Interpreting.html)  "
 date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
 output:
   unhcrdown::html_slides:
@@ -301,8 +301,8 @@ countdown::countdown(minutes = 10,
 
 
 
-__Next session__:   
+__Last session__:   
 
 
-[08-Anonymising In order to provide other people to work with the data, a first level of data anonymisation should be implemented](08-Anonymising.html)
+[08-AInterpreting](08-Interpreting.html)
 

@@ -1,0 +1,321 @@
+---
+title: "Survey Data Analysis with Kobocruncher"
+subtitle: "Session 6 - Indicator Calculation"
+author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](05-Searching_Asssociation.html) -- [Link to Next Session](07-Weighting.html)  "
+date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
+output:
+  unhcrdown::html_slides:
+    self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: true
+      ratio: "16:9"
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = TRUE
+)
+library(tidyverse)
+library(unhcrthemes)
+library(fontawesome)
+```
+
+ 
+
+
+---
+
+## Use case for new calculated variables 
+ 
+ 
+ * filters on specific criteria
+ 
+ * Create a filters on specific criteria 
+ 
+ * Ratio between 2 numeric variable 
+ 
+ * Calculation on date 
+ 
+ * Discretization of numeric variable according to quintile 
+ 
+ * Discretization of numeric variable according to fixed break 
+ 
+ * Aggregate variable from nested frame (aka within repeat) to parent table 
+ 
+ * filters on specific criteria
+ 
+
+---
+
+## kobo_indicator
+ 
+In kobocruncher, this is done with [kobo_indicator](https://edouard-legoupil.github.io/kobocruncher/reference/kobo_indicator.html) function. The function goes through steps:
+
+  1 - load the already defined indicators in the xlsform 
+  
+  2 - append new indicator supplied to the function if any, 
+  
+  3 - apply the indicator, i.e. do the calculation,
+  
+  4 - re-save all the working indicator definition within the extended xlsform, dedicated indicator worksheet 
+  
+  5 - bind the new indicators in the dictionary for further plotting 
+  
+  6 - rebuild the plan if indicators are allocated to chapter, subchapter 
+ 
+---
+
+## Create a new variable based on a combination of specific criteria 
+
+
+.pull-lef[
+
+When adding a new indicator a few elements should be provided:
+
+ * Name and Label for the new variable: ideally name should be consice and meaningful (less than 12 characters) and label for any regula label should be less than 80 characters
+ 
+ * Type: a calculated variable will be either of type `select_one` or `numeric`. Documenting the indicator type will allow the indicator to be crunched automatically
+ 
+ * list_name and list_label are the labeling for the response options in case the indicator is of type `select_one`. This will allow for automatic relablling for charting 
+ 
+ * repeatvar: you need to document to what frame the new indicator will be calculated. Basically for most household survey, this will be either the household (aka the first frame, named main per default and referenced as `datalist[[\"main\"]]` ) or the frame for individuals (for intance if,within the repeat of xlsform,  the frame was named  members, `datalist[[\"members\"]]`)
+ 
+ * Calculation: this is the complex part. Calculation should be defined as an R statement using data manipulation functions. In order to build the statement you will need to identify the correct variable name and response name. 
+
+
+
+
+]
+.pull-right[
+
+```{r eval=FALSE, include=TRUE}
+indicatoradd <- c(  name =  "inColombia",
+                    label = "Is from Colombia",
+                    type = "select_one",
+                    repeatvar = "datalist[[\"main\"]]",
+calculation = "dplyr::if_else(datalist[[\"main\"]]$variable ==\"criteria\",
+                                   \"yes\",\"no\")"
+                    )
+
+## then we add our indicators and expand
+expanded  <- kobo_indicator(datalist = datalist,
+                    dico = dico,
+                 indicatoradd = indicatoradd ,
+                 xlsformpath = xlsformpath,
+                 xlsformpathout = xlsformpathout)
+dico <- expanded[["dico"]]
+datalist <- expanded[["datalist"]]
+
+
+```
+
+]
+
+
+---
+
+## The key data manipulation verbs for indicator calculations
+
+
+ * `dplyr::mutate()` used to create a new variable
+ 
+  * `dplyr::filter()` Extract rows that meet logical criteria- for instance when you want to extract the information from the head of household from the nested information and append it to the household information 
+
+  * `dplyr::if_else()` & `dplyr::case_when()` used to apply a specific condition (if) or multiplace condition (case) in order to create a calculated variable
+  
+  * `dplyr::group_by()`,  `dplyr::summarise()` & `dplyr::ungroup()` are used to perform aggregation and calculation (count, sum) based on specific group
+  
+  * `dplyr::left_join()` used to merge information from 2 frames, for instance on one side the information available at household level and the one on individual level
+
+???
+
+https://posit.co/wp-content/uploads/2022/10/data-transformation-1.pdf 
+https://posit.co/wp-content/uploads/2022/10/tidyr.pdf
+
+
+
+
+---
+
+## Ratio between 2 numeric variable 
+
+.pull-lef[
+
+]
+.pull-right[
+
+```{r eval=FALSE, include=TRUE}
+
+indicatoradd <- c(  name =  "ratio",
+                    label = "Ratio varnum1 on varnum2",
+                    type = "numeric",
+                    repeatvar = "datalist[[\"main\"]]",
+        calculation = "datalist[[\"main\"]]varnum1 /
+                        datalist[[\"main\"]]varnum2"
+                            )
+ 
+```
+
+]
+ 
+---
+
+## Calculation on date 
+
+.pull-lef[
+
+]
+.pull-right[
+
+```{r eval=FALSE, include=TRUE}
+
+indicatoradd <- c(  name =  "duration",
+                    label = "Difference between today and datetocheck",
+                    type = "numeric",
+                    repeatvar = "datalist[[\"main\"]]",
+        calculation = "lubridate::interval( datalist[[\"main\"]]$datetocheck,
+                        lubridate::today()) %/% months(1)"
+                            )
+
+
+```
+
+]
+ 
+---
+
+## Discretization of numeric variable according to quintile 
+
+.pull-lef[
+
+]
+.pull-right[
+
+```{r eval=FALSE, include=TRUE}
+
+indicatoradd <- c(  name =  "varnum_cat",
+                    label = "Discretise the varnum into quintile",
+                    type = "select_one",
+                    repeatvar = "datalist[[\"main\"]]",
+        calculation = "Hmisc::cut2(datalist[1]$varnum, g =5)"
+                            )
+
+
+```
+
+]
+ 
+---
+
+## Discretization of numeric variable according to fixed break 
+
+
+.pull-lef[
+
+for instance case size from integer to categoric
+]
+.pull-right[
+
+```{r eval=FALSE, include=TRUE}
+
+indicatoradd <- c(  name =  "varnum_cat",
+                    label = "Discretise the varnum into fixed break",
+                    type = "select_one",
+                    repeatvar = "datalist[[\"main\"]]",
+        calculation = "cut(datalist[1]$casesize, 
+                              breaks = c(0, 1, 2, 3,5,30),
+                             labels = c(\"Case.size.1\", 
+                                        \"Case.size.2\", 
+                                        \"Case.size.3\", 
+                                        \"Case.size.4.5\", 
+                                        \"Case.size.6.or.more\" ),
+                         include.lowest=TRUE)"
+                            )
+
+
+```
+
+]
+ 
+---
+
+## Aggregate variable from nested frame (aka within repeat) to parent table 
+
+.pull-lef[
+
+]
+.pull-right[
+
+```{r eval=FALSE, include=TRUE}
+
+indicatoradd <- c(  name =  "vnumber_femala_HH",
+                    label = "Number of female in the household",
+                    hint = "this indicator counts the number of females 
+                            as registered in the household roster"
+                    type = "integer",
+                    repeatvar = "datalist[[\"main\"]]",
+        calculation = "datalist[2] |> 
+                       dplyr::select( members.sex, parent_index) |> 
+                       tidyr::gather( parent_index, members.sex) |> 
+                       dplyr::count(parent_index, members.sex) |> 
+                       tidyr::spread(members.sex, n, fill = 0) |> 
+                       dplyr::select( female)"
+                            )
+
+datalist[2] |> dplyr::select( members.sex, parent_index) |> tidyr::gather( parent_index, members.sex) |> dplyr::count(parent_index, members.sex) |> tidyr::spread(members.sex, n, fill = 0) |> dplyr::select( female)
+```
+
+]
+
+
+
+
+---
+class: inverse, center, middle
+
+# TIME TO PRACTISE ON YOUR OWN! 
+
+### .large[.white[`r fontawesome::fa("fas fa-pen-nib"  )  `] **10 minutes! **] 
+
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 10,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+Open again your expanded xlsfrom,  set up the outliers treatment, clean the _"or_other"_ in the .large[clean] column. Then add calculated variables. Save and knit again your report!
+ 
+
+Do not hesitate to raise your questions in the [ticket system](https://github.com/Edouard-Legoupil/kobocruncher/issues/new) or in the chat so the training content can be improved accordingly! 
+ 
+---
+class: inverse, center, middle
+
+
+
+### .large[.white[`r fontawesome::fa("fas fa-clock"  )  `] **Let's take a break! **] 
+ 
+```{r echo=FALSE}
+countdown::countdown(minutes = 5,
+                     seconds = 0,
+                     margin = "5%",
+                     font_size = "8em",
+                     style = "position: relative; width: min-content;",
+                     # Fanfare when it's over
+                     play_sound = TRUE)
+```
+
+__Next session__:  
+
+[07-Weighting If the data was created through a probabilistic selection sampling approach, then we can apply weighting to the data before and regenerate the report so that those weights are reflected](07-Weighting.html)
+

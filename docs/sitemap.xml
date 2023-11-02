@@ -102,4 +102,31 @@
   <url>
     <loc>/reference/template_1_exploration.html</loc>
   </url>
+  <url>
+    <loc>/tutorial/00-Intro.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/01-First_Report.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/02-Relabeling.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/03-Grouping_Questions.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/04-Setting_Crosstabulation.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/05-Searching_Asssociation.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/06-Indicator_calculation.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/07-Weighting.html</loc>
+  </url>
+  <url>
+    <loc>/tutorial/08-Interpreting.html</loc>
+  </url>
 </urlset>
