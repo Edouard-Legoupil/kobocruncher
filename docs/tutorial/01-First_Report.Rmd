@@ -1,5 +1,5 @@
 ---
-title: "Survey Data Analysis with Kobocruncher"
+title: "Survey Data Analysis with {Kobocruncher}"
 subtitle: "Session 1 - Your first report"
 author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](00-Intro.html) -- [Link to Next Session](02-Relabeling.html)  "
 date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"

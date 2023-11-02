@@ -61,7 +61,8 @@ Remotes:
     edouard-legoupil/riddle,
     edouard-legoupil/unhcrshiny,
     unhcr-americas/XlsFormUtil,
-    vidonne/unhcrdown
+    unhcr-dataviz/unhcrdown,
+    unhcr-dataviz/unhcrthemes
 Config/fusen/version: 0.5.2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

@@ -1,5 +1,10 @@
 # {kobocruncher}
 
+<!-- badges: start -->
+[![:name status badge](https://unhcrverse.r-universe.dev/badges/:name)](https://unhcrverse.r-universe.dev/)
+[![IndicatorCalc status badge](https://unhcrverse.r-universe.dev/badges/HighFrequencyChecks)](https://unhcrverse.r-universe.dev/HighFrequencyChecks)
+<!-- badges: end -->
+
 An organized workflow generating 'Rmd' files from an extended 'xlsform' questionnaire structure to facilitate survey data crunching.  
 
 `{kobocruncher}` support organised data analysis workflow, to conduct data discovery and analysis for data collected through  [KoboToolbox](https://www.kobotoolbox.org/), [ODK](https://opendatakit.org/), [ONA](https://ona.io/home/) or any __[xlsform](http://xlsform.org)__ compliant data collection platform.
@@ -57,7 +62,9 @@ The easiest way to do that is by calling `usethis::edit_r_environ()` and adding 
 
 Contributions to the packages are welcome. Please read first the [contribution guidelines](CONTRIBUTING.html), follow the [code of conduct](CODE_OF_CONDUCT.html) and use the [issue template](ISSUE_TEMPLATE.html).
 
-## References and rational for the package
+## References  
+
+ *  JIPS Essential Toolkit, "How do we process and prepare data for analysis":  https://jet.jips.org/wp-content/uploads/Guidance-Data-Processing-Phase5-JET.pdf
 
 The package falls into the category of Automatic Data Exploration package (see an [extensive review here](https://github.com/mstaniak/autoEDA-resources)) and mostly act as a __wrapper__ for different specialized packages from the [tidyverse](https://www.tidyverse.org/) . 
 
@@ -71,4 +78,4 @@ Compare to those packages, `{kobocruncher}` provides:
 
  * Relabeling functions and Questions grouping ability
 
- * Full integration with UNHCR Brand Style
+ * Full integration with [UNHCR Brand Style](https://dataviz.unhcr.org/tools/r/)

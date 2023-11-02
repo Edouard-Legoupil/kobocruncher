@@ -1,5 +1,5 @@
 ---
-title: "Survey Data Analysis with Kobocruncher"
+title: "Survey Data Analysis with {Kobocruncher}"
 subtitle: "Session 0 - Introduction"
 author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Next Session](01-First_Report.html)  "
 date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
@@ -39,19 +39,17 @@ Based on a questionnaires, __standardized indicators are calculated__ with a vie
 
 ## Survey Data, aka micro-data have secificities
 
-The raw data need to go through a number of __technical manipulations__ before one can use them for interpretation:
+[Clean and anonymized data](https://edouard-legoupil.github.io/HighFrequencyChecks/tutorial/index.html) need to go through a number of __technical manipulations__ before one can use them for interpretation:
 
- * _relabeling_ the original question wording to make them quickly legible when doing the interpretation
+ * Need to __relabel__ the original question wording to make them quickly legible when doing the interpretation
+
+ * Need to __regroup__ and  __crosstabulate__  questions
  
- * perform some data _cleaning_ to account for any issues on the raw data
+ * create intermediary indicator __calculations__
  
- * apply some basic data _anonymization_ treatment techniques to manage statistical disclosure and re-identification risks
+ * use specific survey __weights__ to correctly express the representativeness of each records in the raw data in relation with the original sampling universe  
  
- * create intermediary indicator _calculations_
- 
- * use specific survey _weights_ to correctly express the representativeness of each records in the raw data in relation with the original sampling universe  
- 
- * translate the data into _visual charts_ than be easily consumed (understood and intepretated) by subject matter experts 
+ * translate the data into __visual charts__ than be easily consumed (understood and interpreted) by subject matter experts 
 
 
 ---

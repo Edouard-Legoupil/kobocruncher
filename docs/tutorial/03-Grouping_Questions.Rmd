@@ -1,5 +1,5 @@
 ---
-title: "Survey Data Analysis with Kobocruncher"
+title: "Survey Data Analysis with {Kobocruncher}"
 subtitle: "Session 3 - Grouping Questions"
 author: "[Link to Documentation](https://edouard-legoupil.github.io/kobocruncher/) -- [Link to Previous Session](02-Relabeling.html) -- [Link to Next Session](04-Setting_Crosstabulation.html)  "
 date: "Training Content as of `r format(Sys.Date(),  '%d %B %Y')`"
